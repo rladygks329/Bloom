@@ -1,4 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.edu.bloom.MemberMapper">
+<mapper namespace="com.edu.blooming.MemberMapper">
+
+	<insert id="insert">
+		insert into ${member}
+		(${memberEmail}, ${memberPassword}, ${memberPhone}, ${memberAddress}, ${memberLevel}, 
+		${memberIntroduce}, ${memberProfileUrl})
+		values (#{memberEmail}, #{memberPassword}, #{memberPhone}, #{memberAddress}, #{memberLevel}, 
+		#{memberIntroduce}, #{memberProfileUrl})	
+	</insert>
+	
+	<select id="select_by_member_email" resultType="MemberVO">
+		select * from ${member} where ${memberEmail} = #{memberEmail}
+	</select>
+	
+	<update id="update">
+		update ${member}
+		set ${memberPassword} = #{memberPassword}, ${memberPhone} = #{memberPhone},
+			${memberAddress} = #{memberAddress}, ${memberIntroduce} = #{memberIntroduce}
+			${memberProfileUrl} = #{memberProfileUrl}
+		where ${memberEmail} = #{memberEmail}	
+	</update>
+	
+	<delete id="delete">
+		delete from ${member}
+		where ${memberEmail} = #{memberEmail}	
+	</delete>
+	
+	<select id="select_by_member_email_and_password" resultType="String">
+		select ${memberEmail} from ${member}
+		where ${memberEmail} = #{memberEmail} and ${memberPassword} = #{memberPassword}	
+	</select>
+	
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
