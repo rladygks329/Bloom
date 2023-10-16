@@ -11,6 +11,13 @@
 		<property name="memberLevel" value="member_lebel"/>
 		<property name="memberIntroduce" value="member_introduce"/>
 		<property name="memberProfileURL" value="member_profile_url"/>
+		
+		<!-- LESSON -->
+		<property name="lesson" value="lesson"/>
+		<property name="lessonId" value="lesson_id"/>
+		<property name="lectureId" value="lecture_id"/>
+		<property name="lessonName" value="lesson_name"/>
+		<property name="lessonUrl" value="lesson_url"/>
 	</properties>
 	
 	<!-- underscore 명명법을 camel 명명법으로 변환 가능하도록 세팅 -->
