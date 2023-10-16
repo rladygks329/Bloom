@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<properties>
+		<property name="member" value="member"/>
+		<property name="memberId" value="member_id"/>
+		<property name="memberEmail" value="member_email"/>
+		<property name="memberPassword" value="member_password"/>
+		<property name="memberPhone" value="member_phone"/>
+		<property name="memberAddress" value="member_address"/>
+		<property name="memberLevel" value="member_lebel"/>
+		<property name="memberIntroduce" value="member_introduce"/>
+		<property name="memberProfileURL" value="member_profile_url"/>
+	</properties>
+	
+	<!-- underscore 명명법을 camel 명명법으로 변환 가능하도록 세팅 -->
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+	</settings>
+	
+	<!--  typeAliases : mapper.xml의 select 리턴 타입에 들어갈 클래스 경로를 설정 -->
+	<typeAliases>
+		<package name="com.edu.blooming.domain"/>
+	</typeAliases>
+	
+</configuration>
