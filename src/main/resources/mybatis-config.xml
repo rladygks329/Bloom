@@ -18,6 +18,20 @@
 		<property name="lectureId" value="lecture_id"/>
 		<property name="lessonName" value="lesson_name"/>
 		<property name="lessonUrl" value="lesson_url"/>
+		
+		<!-- LECUTRE -->
+		<property name="lecture" value="lecture"/>
+		<property name="memberId" value="member_Id"/>
+		<property name="lectureTitle" value="lecture_title"/>
+		<property name="lecturePrice" value="lecture_price"/>		
+		<property name="lectureSalesCount" value="lecture_sales_count"/>		
+		<property name="lectureTotalScore" value="lecture_total_score"/>
+		<property name="lectureReplyCount" value="lecture_reply_count"/>
+		<property name="lectureLikeCount" value="lecture_like_count"/>
+		<property name="lectureDateCreated" value="lecture_date_created"/>
+		
+		<!-- LECTURE_LIKE  -->
+		<property name="lecture_like" value="lecture_like"/>
 	</properties>
 	
 	<!-- underscore 명명법을 camel 명명법으로 변환 가능하도록 세팅 -->
