@@ -6,7 +6,7 @@
 	<insert id="insert">
 		insert into ${lecture}
 		(${memberId}, ${lectureTitle}, ${lecturePrice})
-		values (#{memberId}, #{lectureTitle}, ${lecturePrice})
+		values (#{memberId}, #{lectureTitle}, #{lecturePrice})
 	</insert>
 
 	<!-- 강좌 정보 수정 -->	
@@ -45,18 +45,51 @@
 		where ${lectureId} = #{lectureId}
 	</update>
 		
-	<!-- 특정 강사의 강의 조회 -->
-	<select id="select_by_member_id" resultType="LectureVO">
+	<!-- 특정 강사의 강의 조회 pagenation-->
+	<select id="paging_select_by_member_id" resultType="LectureVO">
+		select 
+			${lectureId}, ${memberId}, ${lectureTitle}, ${lecturePrice}, ${lectureSalesCount},
+			${lectureTotalScore}, ${lectureReplyCount}, ${lectureLikeCount}, ${lectureDateCreated} 
+		from (
+			select rownum rn, a.* 
+			from (
+					select * 
+					from ${lecture} 
+					where ${memberId} = #{memberId}
+					order by ${lectureId} desc
+				) a
+			) 
+		where rn between #{start} and #{end}	
 	</select>
 	
 	<!-- 강좌 조회 PageNation -->
-	<select id="select">
+	<select id="paing_select" resultType="LectureVO">
+		select 
+			${lectureId}, ${memberId}, ${lectureTitle}, ${lecturePrice}, ${lectureSalesCount},
+			${lectureTotalScore}, ${lectureReplyCount}, ${lectureLikeCount}, ${lectureDateCreated} 
+		from (
+			select rownum rn, a.* 
+			from (
+					select * 
+					from ${lecture} 
+					order by ${lectureId} desc
+				) a
+			) 
+		where rn between #{start} and #{end}
+	
 	</select>
 	
 	<!-- 페이지 네이션을 위한 전체 강의 수 조회 -->
-	<select id="get_total" resultType="Integer">
+	<select id="total_count" resultType="Integer">
 		select count(${lectureId})
 		from ${lecture}	
+	</select>
+	
+	<!-- 페이지 네이션을 위한 특정 강사 강의 수 조회 -->
+	<select id="member_lecture_count" resultType="Integer">
+		select count(${lectureId})
+		from ${lecture}	
+		where ${memberId} = #{memberId}
 	</select>
 	 
 </mapper>
