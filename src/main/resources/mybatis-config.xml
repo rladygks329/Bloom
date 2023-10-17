@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE configuration PUBLIC "//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!DOCTYPE configuration PUBLIC "//mybatis.org//DTD Config 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
 	<properties>
 		<property name="member" value="member"/>
@@ -8,9 +9,9 @@
 		<property name="memberPassword" value="member_password"/>
 		<property name="memberPhone" value="member_phone"/>
 		<property name="memberAddress" value="member_address"/>
-		<property name="memberLevel" value="member_lebel"/>
 		<property name="memberIntroduce" value="member_introduce"/>
 		<property name="memberProfileURL" value="member_profile_url"/>
+		<property name="memberLevel" value="member_level"/>
 	</properties>
 	
 	<!-- underscore 명명법을 camel 명명법으로 변환 가능하도록 세팅 -->

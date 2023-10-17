@@ -3,13 +3,13 @@
 <mapper namespace="com.edu.blooming.MemberMapper">
 
 	<insert id="insert">
-		insert into ${member}
-		(${memberEmail}, ${memberPassword}, ${memberPhone}, ${memberAddress}, ${memberLevel}, 
-		${memberIntroduce}, ${memberProfileUrl})
-		values (#{memberEmail}, #{memberPassword}, #{memberPhone}, #{memberAddress}, #{memberLevel}, 
-		#{memberIntroduce}, #{memberProfileUrl})	
+		insert into member
+		(memberId, memberEmail, memberPassword, memberPhone, memberAddress,
+		 memberIntroduce, memberProfileUrl, memberLevel)
+		values (seq_bloom_member.nextval, #{memberEmail}, #{memberPassword}, #{memberPhone},
+		 #{memberAddress}, #{memberIntroduce}, #{memberProfileUrl}, #{memberLevel})	
 	</insert>
-	
+	<!--  
 	<select id="select_by_member_email" resultType="MemberVO">
 		select * from ${member} where ${memberEmail} = #{memberEmail}
 	</select>
@@ -27,11 +27,11 @@
 		where ${memberEmail} = #{memberEmail}	
 	</delete>
 	
-	<select id="select_by_member_email_and_password" resultType="String">
+	<select id="select_by_member_email_and_password" resultType="MemberVO">
 		select ${memberEmail} from ${member}
 		where ${memberEmail} = #{memberEmail} and ${memberPassword} = #{memberPassword}	
 	</select>
-	
+	-->
 </mapper>
 
 

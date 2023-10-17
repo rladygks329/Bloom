@@ -4,10 +4,11 @@ import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.edu.blooming.domain.MemberVO;
 
-
+@Repository
 public class MemberDAOImple implements MemberDAO {
 	
 	private static final Logger logger =
@@ -22,7 +23,7 @@ public class MemberDAOImple implements MemberDAO {
 	@Override
 	public int insert(MemberVO vo) {
 		logger.info("insert() »£√‚");
-		return 0;
+		return sqlSession.insert(NAMESPACE + ".insert", vo);
 	}
 
 	@Override
