@@ -22,31 +22,31 @@ public class MemberDAOImple implements MemberDAO {
 	
 	@Override
 	public int insert(MemberVO vo) {
-		logger.info("insert() È£Ãâ");
+		logger.info("insert() í˜¸ì¶œ");
 		return sqlSession.insert(NAMESPACE + ".insert", vo);
 	}
 
 	@Override
 	public MemberVO select(String memberEmail) {
-		logger.info("select() È£Ãâ : memberId = " + memberEmail);
+		logger.info("select() í˜¸ì¶œ : memberId = " + memberEmail);
 		return null;
 	}
 
 	@Override
 	public int update(String memberEmail, MemberVO vo) {
-		logger.info("update() È£Ãâ : memberId = " + memberEmail);
+		logger.info("update() í˜¸ì¶œ : memberId = " + memberEmail);
 		return 0;
 	}
 
 	@Override
 	public int delete(String memberEmail) {
-		logger.info("delete() È£Ãâ  memberId = " + memberEmail);
+		logger.info("delete() í˜¸ì¶œ  memberId = " + memberEmail);
 		return 0;
 	}
 
 	@Override
 	public String select(String memberEmail, String memberPassword) {
-		logger.info("select() È£Ãâ : memberEmail, memberPassword = " + memberEmail + ", " + memberPassword);
+		logger.info("select() í˜¸ì¶œ : memberEmail, memberPassword = " + memberEmail + ", " + memberPassword);
 		return null;
 	}
 	

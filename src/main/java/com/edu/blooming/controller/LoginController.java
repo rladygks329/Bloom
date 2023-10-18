@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.edu.blooming.domain.MemberVO;
@@ -28,19 +30,18 @@ public class LoginController {
 	
 	@PostMapping("/register")
 	public String registerPOST(MemberVO vo, RedirectAttributes reAttr) {
-		// RedirectAttributes : Àç¿äÃ»½Ã µ¥ÀÌÅÍ¸¦ Àü´ŞÇÏ±â À§ÇÑ ÀÎÅÍÆäÀÌ½º
-		logger.info("registerPOST() È£Ãâ");
+		// RedirectAttributes : ì¬ìš”ì²­ì‹œ ë°ì´í„°ë¥¼ ì „ë‹¬í•˜ê¸° ìœ„í•œ ì¸í„°í˜ì´ìŠ¤
+		logger.info("registerPOST() í˜¸ì¶œ");
 		logger.info(vo.toString());
 		int result = memberService.create(vo);
-		logger.info(result + "Çà »ğÀÔ ¿Ï·á");
+		logger.info(result + "í–‰ ì‚½ì… ì™„ë£Œ");
 		if(result == 1) {
 			reAttr.addFlashAttribute("insert_result", "success");
-			return "redirect:/main01";			
+			return "redirect:/main01";	
 		} else {
 			return "redirect:/main02";
 		}				
 	} // end PostMapping()
-	
 	
 	
 } // end LoginController

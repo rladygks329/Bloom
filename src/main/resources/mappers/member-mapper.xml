@@ -4,8 +4,7 @@
 
 	<insert id="insert">
 		insert into member
-		(memberId, memberEmail, memberPassword, memberPhone, memberAddress,
-		 memberIntroduce, memberProfileUrl, memberLevel)
+		(member_id, member_email, member_password, member_phone, member_address, member_introduce, member_profile_url, member_level)
 		values (seq_bloom_member.nextval, #{memberEmail}, #{memberPassword}, #{memberPhone},
 		 #{memberAddress}, #{memberIntroduce}, #{memberProfileUrl}, #{memberLevel})	
 	</insert>
