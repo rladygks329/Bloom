@@ -11,13 +11,14 @@ public class LectureVO {
   private int lectureTotalScore;
   private int lectureReplyCount;
   private int lectureLikeCount;
+  private String lectureThumbnailUrl;
   private Date lectureDateCreated;
 
   public LectureVO() {}
 
   public LectureVO(int lectureId, int memberId, String lectureTitle, int lecturePrice,
       int lectureSalesCount, int lectureTotalScore, int lectureReplyCount, int lectureLikeCount,
-      Date lectureDateCreated) {
+      String lectureThumbnailUrl, Date lectureDateCreated) {
     this.lectureId = lectureId;
     this.memberId = memberId;
     this.lectureTitle = lectureTitle;
@@ -26,6 +27,7 @@ public class LectureVO {
     this.lectureTotalScore = lectureTotalScore;
     this.lectureReplyCount = lectureReplyCount;
     this.lectureLikeCount = lectureLikeCount;
+    this.lectureThumbnailUrl = lectureThumbnailUrl;
     this.lectureDateCreated = lectureDateCreated;
   }
 
@@ -93,6 +95,14 @@ public class LectureVO {
     this.lectureLikeCount = lectureLikeCount;
   }
 
+  public String getLectureThumbnailUrl() {
+    return lectureThumbnailUrl;
+  }
+
+  public void setLectureThumbnailUrl(String lectureThumbnailUrl) {
+    this.lectureThumbnailUrl = lectureThumbnailUrl;
+  }
+
   public Date getLectureDateCreated() {
     return lectureDateCreated;
   }
@@ -106,8 +116,8 @@ public class LectureVO {
     return "LectureVO [lectureId=" + lectureId + ", memberId=" + memberId + ", lectureTitle="
         + lectureTitle + ", lecturePrice=" + lecturePrice + ", lectureSalesCount="
         + lectureSalesCount + ", lectureTotalScore=" + lectureTotalScore + ", lectureReplyCount="
-        + lectureReplyCount + ", lectureLikeCount=" + lectureLikeCount + ", lectureDateCreated="
-        + lectureDateCreated + "]";
+        + lectureReplyCount + ", lectureLikeCount=" + lectureLikeCount + ", lectureThumbnailUrl="
+        + lectureThumbnailUrl + ", lectureDateCreated=" + lectureDateCreated + "]";
   }
 
 }

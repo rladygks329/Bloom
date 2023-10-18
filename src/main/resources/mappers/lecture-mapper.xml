@@ -5,15 +5,16 @@
 	<!-- 강좌 추가 -->
 	<insert id="insert">
 		insert into ${lecture}
-		(${memberId}, ${lectureTitle}, ${lecturePrice})
-		values (#{memberId}, #{lectureTitle}, #{lecturePrice})
+		(${memberId}, ${lectureTitle}, ${lecturePrice}, ${lectureThumbnailUrl})
+		values (#{memberId}, #{lectureTitle}, #{lecturePrice}, #{lectureThumbnailUrl})
 	</insert>
 
 	<!-- 강좌 정보 수정 -->	
 	<update id="update">
 		update ${lecture}
 		set ${lectureTitle} = #{lectureTitle},
-			${lecturePrice} = #{lecturePrice}
+			${lecturePrice} = #{lecturePrice},
+			${lectureThumbnailUrl} = #{lectureThumbnailUrl}
 		where ${lectureId} = #{lectureId}
 	</update>
 	
@@ -38,18 +39,25 @@
 		where ${lectureId} = #{lectureId}
 	</update>
 	
-	<!-- 강좌 좋아요 갯수 수정 -->
+	<!-- 강좌 총점 수정 -->
 	<update id="update_total_score">
 		update ${lecture}
 		set ${lectureTotalScore} = ${lectureTotalScore} + #{amount}
 		where ${lectureId} = #{lectureId}
 	</update>
+	
+	<!-- 강좌 번호로 강좌 조회 -->
+	<select id="select_by_lecture_id" resultType="LectureVO">
+		select *
+		from ${lecture}
+		where ${lectureId} = #{lectureId}	
+	</select>
 		
 	<!-- 특정 강사의 강의 조회 pagenation-->
 	<select id="paging_select_by_member_id" resultType="LectureVO">
 		select 
 			${lectureId}, ${memberId}, ${lectureTitle}, ${lecturePrice}, ${lectureSalesCount},
-			${lectureTotalScore}, ${lectureReplyCount}, ${lectureLikeCount}, ${lectureDateCreated} 
+			${lectureTotalScore}, ${lectureReplyCount}, ${lectureLikeCount}, ${lectureThumbnailUrl}, ${lectureDateCreated}
 		from (
 			select rownum rn, a.* 
 			from (
@@ -66,7 +74,7 @@
 	<select id="paing_select" resultType="LectureVO">
 		select 
 			${lectureId}, ${memberId}, ${lectureTitle}, ${lecturePrice}, ${lectureSalesCount},
-			${lectureTotalScore}, ${lectureReplyCount}, ${lectureLikeCount}, ${lectureDateCreated} 
+			${lectureTotalScore}, ${lectureReplyCount}, ${lectureLikeCount}, ${lectureThumbnailUrl} , ${lectureDateCreated} 
 		from (
 			select rownum rn, a.* 
 			from (
@@ -92,4 +100,23 @@
 		where ${memberId} = #{memberId}
 	</select>
 	 
+	 <!-- 특정 멤버가 어떤 강의를 좋아요눌렀는지 조회 -->
+	 <select id="select_is_member_like_lecture" resultType="Integer">
+	 	select count(*)
+	 	from ${lecture_like} a join ${lecture} b on a.${lectureId} = b.${lectureId}  
+	 	where a.${lectureId} = #{lectureId} and a.${memberId} = #{memberId}
+	 </select>
+	 
+	 <!-- 강좌 좋아요 -->
+	 <insert id="insert_lecture_like">
+	 	insert into ${lecture_like}
+	 	(${lectureId}, ${memberId})
+	 	values(#{lectureId}, #{memberId})
+	 </insert>
+	 
+	 <!-- 강좌 좋아요 취소 -->
+	 <delete id="delete_lecture_like">
+	 	delete from ${lecture_like}
+	 	where ${lectureId} = #{lectureId} and ${memberId} = #{memberId} 
+	 </delete>
 </mapper>

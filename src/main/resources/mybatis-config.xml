@@ -28,6 +28,7 @@
 		<property name="lectureTotalScore" value="lecture_total_score"/>
 		<property name="lectureReplyCount" value="lecture_reply_count"/>
 		<property name="lectureLikeCount" value="lecture_like_count"/>
+		<property name="lectureThumbnailUrl" value="lecture_thumbnail_url"/>
 		<property name="lectureDateCreated" value="lecture_date_created"/>
 		
 		<!-- LECTURE_REPLY -->

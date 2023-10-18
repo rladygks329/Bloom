@@ -28,34 +28,51 @@ public class LectureDAOImple implements LectureDAO {
   @Override
   public int update(LectureVO vo) {
     logger.info("update() 호출 : vo = " + vo);
-    return sqlSession.insert(NAMESPACE + ".update", vo);
+    return sqlSession.update(NAMESPACE + ".update", vo);
   }
 
   @Override
   public int updateLikeCount(int lectureId, int amount) {
     logger.info("updateLikeCount() 호출 : lectureId = " + lectureId + " amount : " + amount);
+
     HashMap<String, Integer> args = new HashMap<>();
     args.put("lectureId", lectureId);
     args.put("amount", amount);
-    return sqlSession.insert(NAMESPACE + ".update_like", args);
+
+    return sqlSession.update(NAMESPACE + ".update_like", args);
   }
 
   @Override
   public int updateSalesCount(int lectureId, int amount) {
     logger.info("updateSalesCount() 호출 : lectureId = " + lectureId + " amount : " + amount);
+
     HashMap<String, Integer> args = new HashMap<>();
     args.put("lectureId", lectureId);
     args.put("amount", amount);
-    return sqlSession.insert(NAMESPACE + ".update_sales_count", args);
+
+    return sqlSession.update(NAMESPACE + ".update_sales_count", args);
   }
 
   @Override
   public int updateReplyCount(int lectureId, int amount) {
     logger.info("updateReplyCount() 호출 : lectureId = " + lectureId + " amount : " + amount);
+
     HashMap<String, Integer> args = new HashMap<>();
     args.put("lectureId", lectureId);
     args.put("amount", amount);
-    return sqlSession.insert(NAMESPACE + ".update_reply_count", args);
+
+    return sqlSession.update(NAMESPACE + ".update_reply_count", args);
+  }
+
+  @Override
+  public int updateReplyTotalScore(int lectureId, int amount) {
+    logger.info("updateReplyTotalScore() 호출 : lectureId = " + lectureId + " amount : " + amount);
+
+    HashMap<String, Integer> args = new HashMap<>();
+    args.put("lectureId", lectureId);
+    args.put("amount", amount);
+
+    return sqlSession.update(NAMESPACE + ".update_total_score", args);
   }
 
   @Override
@@ -95,6 +112,51 @@ public class LectureDAOImple implements LectureDAO {
     args.put("memberId", memberId);
 
     return sqlSession.selectList(NAMESPACE + ".paging_select_by_member_id", args);
+  }
+
+  @Override
+  public boolean selectIsMemberLikeLecture(int memberId, int lectureId) {
+    logger
+        .info("selectIsMemberLikeLecture() 호출 memberId: " + memberId + " lectureId : " + lectureId);
+
+    HashMap<String, Integer> args = new HashMap<>();
+    args.put("memberId", memberId);
+    args.put("lectureId", lectureId);
+
+    int result = sqlSession.selectOne(NAMESPACE + ".select_is_member_like_lecture", args);
+    return result == 1;
+  }
+
+  @Override
+  public LectureVO select(int lectureId) {
+    logger.info("select() 호출 : lectureId : " + lectureId);
+
+    HashMap<String, Integer> args = new HashMap<>();
+    args.put("lectureId", lectureId);
+
+    return sqlSession.selectOne(NAMESPACE + ".select_by_lecture_id", args);
+  }
+
+  @Override
+  public int insertLike(int memberId, int lectureId) {
+    logger.info("insertLike() 호출 ");
+
+    HashMap<String, Integer> args = new HashMap<>();
+    args.put("memberId", memberId);
+    args.put("lectureId", lectureId);
+
+    return sqlSession.insert(NAMESPACE + ".insert_lecture_like", args);
+  }
+
+  @Override
+  public int deleteLike(int memberId, int lectureId) {
+    logger.info("deleteLike() 호출");
+
+    HashMap<String, Integer> args = new HashMap<>();
+    args.put("memberId", memberId);
+    args.put("lectureId", lectureId);
+
+    return sqlSession.delete(NAMESPACE + ".delete_lecture_like", args);
   }
 
 }
