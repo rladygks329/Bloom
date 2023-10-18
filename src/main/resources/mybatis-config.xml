@@ -30,8 +30,29 @@
 		<property name="lectureLikeCount" value="lecture_like_count"/>
 		<property name="lectureDateCreated" value="lecture_date_created"/>
 		
+		<!-- LECTURE_REPLY -->
+		<property name="lecture_reply" value="lecture_reply"/>
+		<property name="lectureId" value="lecture_id"/>
+		<property name="memberId" value="member_Id"/>
+		<property name="lecutreReplyContent" value="lecture_reply_content"/>
+		<property name="lectureReplyScore" value="lecture_reply_score"/>
+		
 		<!-- LECTURE_LIKE  -->
 		<property name="lecture_like" value="lecture_like"/>
+		<property name="lectureId" value="lecture_id"/>
+		<property name="memberId" value="member_Id"/>
+		
+		<!-- CART -->
+		<property name="cart" value="cart"/>
+		<property name="lectureId" value="lecture_id"/>
+		<property name="memberId" value="member_Id"/>
+		
+		<!-- PURCHASE -->
+		<property name="purchase" value="purchase"/>
+		<property name="lectureId" value="lecture_id"/>
+		<property name="memberId" value="member_Id"/>
+		<property name="purchasePrice" value="purchase_price"/>
+		<property name="purchaseDateCreated" value="purchase_date_created"/>	
 	</properties>
 	
 	<!-- underscore 명명법을 camel 명명법으로 변환 가능하도록 세팅 -->
