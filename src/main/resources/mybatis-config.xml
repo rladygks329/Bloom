@@ -32,9 +32,10 @@
 		
 		<!-- LECTURE_REPLY -->
 		<property name="lecture_reply" value="lecture_reply"/>
+		<property name="lectureReplyId" value="lecture_reply_id"/>
 		<property name="lectureId" value="lecture_id"/>
 		<property name="memberId" value="member_Id"/>
-		<property name="lecutreReplyContent" value="lecture_reply_content"/>
+		<property name="lectureReplyContent" value="lecture_reply_content"/>
 		<property name="lectureReplyScore" value="lecture_reply_score"/>
 		
 		<!-- LECTURE_LIKE  -->
