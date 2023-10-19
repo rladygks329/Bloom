@@ -10,6 +10,9 @@ public interface LectureReplyDAO {
 
   int delete(int lectureReplyId);
 
-  List<LectureReplyVO> select(int lectureId);
+  LectureReplyVO selectByLectureReplyId(int lectureReplyId);
+
+  List<LectureReplyVO> selectByLectureId(int lectureId);
+
 
 }

@@ -26,7 +26,8 @@ public class LectureReplyDAOTest {
   public void testDAO() {
     // testInsert();
     // testUpdate();
-    // testSelect();
+    // testSelectByLectureId();
+    // testSelectByLectureReplyId();
     // testDelete();
   }
 
@@ -42,11 +43,16 @@ public class LectureReplyDAOTest {
     logger.info(result + "행 삽입");
   }
 
-  private void testSelect() {
-    List<LectureReplyVO> list = dao.select(1);
+  private void testSelectByLectureId() {
+    List<LectureReplyVO> list = dao.selectByLectureId(1);
     for (LectureReplyVO vo : list) {
       logger.info(vo.toString());
     }
+  }
+
+  private void testSelectByLectureReplyId() {
+    LectureReplyVO vo = dao.selectByLectureReplyId(5);
+    logger.info(vo.toString());
   }
 
   private void testDelete() {

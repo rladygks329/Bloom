@@ -19,8 +19,15 @@
 		where ${lectureReplyId} = #{lectureReplyId}	
 	</delete>
 	
+	<!-- 특정 수강평 조회 -->
+	<select id="select_by_lecture_reply_id" resultType="LectureReplyVO">
+		select *
+		from ${lecture_reply}
+		where ${lectureReplyId} = #{lectureReplyId}
+	</select>
+	
 	<!-- 특정 강의 수강평 조회 -->
-	<select id="select" resultType="LectureReplyVO">
+	<select id="select_by_lecture_id" resultType="LectureReplyVO">
 		select *
 		from ${lecture_reply}
 		where ${lectureId} = #{lectureId}

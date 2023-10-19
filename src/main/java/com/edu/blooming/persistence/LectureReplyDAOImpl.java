@@ -42,13 +42,23 @@ public class LectureReplyDAOImpl implements LectureReplyDAO {
   }
 
   @Override
-  public List<LectureReplyVO> select(int lectureId) {
-    logger.info("select() 호출,  lectureId : " + lectureId);
+  public LectureReplyVO selectByLectureReplyId(int lectureReplyId) {
+    logger.info("selectByLectureReplyId() 호출,  lectureReplyId : " + lectureReplyId);
+
+    Map<String, Integer> args = new HashMap<>();
+    args.put("lectureReplyId", lectureReplyId);
+
+    return sqlSession.selectOne(NAMESPACE + ".select_by_lecture_reply_id", args);
+  }
+
+  @Override
+  public List<LectureReplyVO> selectByLectureId(int lectureId) {
+    logger.info("selectByLectureId() 호출,  lectureId : " + lectureId);
 
     Map<String, Integer> args = new HashMap<>();
     args.put("lectureId", lectureId);
 
-    return sqlSession.selectList(NAMESPACE + ".select", args);
+    return sqlSession.selectList(NAMESPACE + ".select_by_lecture_id", args);
   }
 
 }
