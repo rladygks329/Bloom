@@ -3,10 +3,13 @@ package com.edu.blooming.persistence;
 import com.edu.blooming.domain.MemberVO;
 
 public interface MemberDAO {
-	public abstract int insert(MemberVO vo);	// È¸¿ø°¡ÀÔ
-	public abstract MemberVO select(String memberEmail);	// È¸¿øÁ¤º¸Á¶È¸
-	public abstract int update(String memberEmail, MemberVO vo);	// È¸¿øÁ¤º¸¾÷µ¥ÀÌÆ®
-	public abstract int delete(String memberEmail);	// È¸¿øÅ»Åğ
-	public abstract String select(String memberEmail, String memberPassword);	// ·Î±×ÀÎ
-	// Áßº¹°Ë»ç µî Á¦¾àÁ¶°Ç
+	public abstract int insert(MemberVO vo);	// íšŒì›ê°€ì…
+	
+	public MemberVO memberLogin(MemberVO vo);	// ë¡œê·¸ì¸
+
+	public abstract int emailCheck(String memberEmail);	// ì´ë©”ì¼ ì¤‘ë³µì²´í¬
+	public abstract MemberVO select(String memberEmail);	// íšŒì›ì •ë³´ì¡°íšŒ
+	public abstract int update(String memberEmail, MemberVO vo);	// íšŒì›ì •ë³´ì—…ë°ì´íŠ¸
+	public abstract int delete(String memberEmail);	// íšŒì›íƒˆí‡´
+	// ì¤‘ë³µê²€ì‚¬ ë“± ì œì•½ì¡°ê±´
 }

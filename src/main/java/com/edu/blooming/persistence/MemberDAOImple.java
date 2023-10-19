@@ -24,7 +24,23 @@ public class MemberDAOImple implements MemberDAO {
 	public int insert(MemberVO vo) {
 		logger.info("insert() 호출");
 		return sqlSession.insert(NAMESPACE + ".insert", vo);
+	} // end insert()
+	
+	@Override
+	public int emailCheck(String memberEmail) {
+		logger.info("emailCheck() 호출");
+		return sqlSession.selectOne(NAMESPACE + ".check_email_duplicated", memberEmail);
+	} // end emailCheck()
+	
+	@Override
+	public MemberVO memberLogin(MemberVO vo) {
+		logger.info("memberLogin() 호출");
+		return sqlSession.selectOne(NAMESPACE + ".login", vo);
 	}
+
+	
+	
+	
 
 	@Override
 	public MemberVO select(String memberEmail) {
@@ -44,11 +60,12 @@ public class MemberDAOImple implements MemberDAO {
 		return 0;
 	}
 
-	@Override
-	public String select(String memberEmail, String memberPassword) {
-		logger.info("select() 호출 : memberEmail, memberPassword = " + memberEmail + ", " + memberPassword);
-		return null;
-	}
+
+
+
+
+
+
 	
 
 

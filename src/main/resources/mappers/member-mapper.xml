@@ -8,6 +8,18 @@
 		values (seq_bloom_member.nextval, #{memberEmail}, #{memberPassword}, #{memberPhone},
 		 #{memberAddress}, #{memberIntroduce}, #{memberProfileUrl}, #{memberLevel})	
 	</insert>
+	
+	<select id="check_email_duplicated" resultType="Integer">
+		select count(*) from member 
+		where member_email = #{memberEmail}	
+	</select>
+	
+	<select id="login" resultType="MemberVO">
+		select * from member where member_email = #{memberEmail} and member_password = #{memberPassword} 
+		
+	</select>
+	
+	
 	<!--  
 	<select id="select_by_member_email" resultType="MemberVO">
 		select * from ${member} where ${memberEmail} = #{memberEmail}

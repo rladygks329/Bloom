@@ -13,7 +13,12 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 	<h2>회원 가입하기</h2>
   	<form action="register" method="post">
     	<p>이메일</p>
-	    <input type="text" name="memberEmail" placeholder="이메일 입력" required="required">
+	    <input class="email_input" type="text" name="memberEmail" required="required"> <br>
+	    <span class="email_input_re_1" style="display: none;">사용 가능한 이메일입니다.></span> <br>
+	    <span class="email_input_re_2" style="display: none;">이메일이 이미 존재합니다.></span>
+	    
+	    
+	    
 	    <p>패스워드</p>
 	    <input type="password" name="memberPassword" placeholder="비밀번호 입력" required="required">
 	    
@@ -23,7 +28,7 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 	    <p>주소</p>
 	    <!-- <input type="text" name="memberAddress" placeholder="주소 입력" required="required"> <br> -->
 	    
-	    <!-- 카카오API -->
+	    
 	    <input type="text" id="sample6_postcode" placeholder="우편번호">
 		<input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
 		<input type="text" id="sample6_address" name="memberAddress" placeholder="주소"><br>
@@ -33,6 +38,7 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 		
 		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 		<script>
+			// 카카오API
 		    function sample6_execDaumPostcode() {
 		        new daum.Postcode({
 		            oncomplete: function(data) {
@@ -79,9 +85,34 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 		                document.getElementById("sample6_detailAddress").focus();
 		            }
 		        }).open();
-		    }
+		    } // end 카카오API
+	    
+		    // 이메일 중복검사
+		    $('.email_input').on("propertychange change keyup paste input", function() {
+		    	// console.log("keyup 테스트");
+		    	var memberEmail = $('.email_input').val();
+		    	var data = {memberEmail : memberEmail}	// 컨트롤러에 넘길 데이터 이름
+		    	
+		    	$.ajax({
+		    		type : 'POST',
+		    		url : '/blooming/member/email',
+		    		data : data,	
+		    		success : function(result){
+		    			if (result === 'success') {
+		                    $('.email_input_re_1').show();
+		                    $('.email_input_re_2').hide();
+		                } else if (result === 'faile') {
+		                    $('.email_input_re_1').hide();
+		                    $('.email_input_re_2').show();
+		                }
+		    		} // end success		    				    		
+		    	}) // end ajax		    	
+		    }) // end on
+		    
+		    
+		    
+		    
 		</script>
-	    <!-- end 카카오API -->	    
 	        	 
 	    <p>회원등급</p>
 	    <input type="text" name="memberLevel" placeholder="회원등급" required="required">
@@ -142,8 +173,6 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 			    	dataType : 'json'
 				});
 				
-				
-				
 			}); // end input[file]
 			
 			
@@ -154,8 +183,7 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 	    <input type="submit" value="전송" >
   	</form>
   	
-  	<!-- 카카오API -->
-  	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
   	
   	
   	<!-- 
