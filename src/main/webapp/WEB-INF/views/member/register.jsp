@@ -12,15 +12,23 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 <body>
 	<h2>회원 가입하기</h2>
   	<form action="register" method="post">
+    	
     	<p>이메일</p>
 	    <input class="email_input" type="text" name="memberEmail" required="required"> <br>
-	    <span class="email_input_re_1" style="display: none;">사용 가능한 이메일입니다.></span> <br>
-	    <span class="email_input_re_2" style="display: none;">이메일이 이미 존재합니다.></span>
+		<span class="email_input_warning" style="display: none;">유효한 이메일 형식이 아닙니다.</span><br>
+	    <span class="email_input_re_1" style="display: none;">사용 가능한 이메일입니다.</span> 
+	    <span class="email_input_re_2" style="display: none;">이메일이 이미 존재합니다.</span>
 	    
 	    
 	    
-	    <p>패스워드</p>
-	    <input type="password" name="memberPassword" placeholder="비밀번호 입력" required="required">
+	    <p>비밀번호</p>
+	    <input class="pw_input" type="password" name="memberPassword" placeholder="비밀번호 입력" required="required">
+	    
+	    <p>비밀번호 확인</p>
+	    <input class="pwck_input" type="password" name="memberPasswordCheck" placeholder="비밀번호 확인" required="required">
+	    
+	    <span class="pwck_input_re_1" style="display: none;">비밀번호가 일치합니다.</span>
+        <span class="pwck_input_re_2" style="display: none;">비밀번호가 일치하지 않습니다.</span>
 	    
 	    <p>핸드폰</p>
 	    <input type="text" name="memberPhone" placeholder="번호 입력">
@@ -38,6 +46,27 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 		
 		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 		<script>
+		
+			// 비밀번호 확인 일치 유효성 검사
+			// propertychange change keyup paste input
+			$('.pwck_input').on("change", function(){
+			 
+			    var pw = $('.pw_input').val();
+			    var pwck = $('.pwck_input').val();
+			 
+			    if(pw == pwck){
+			        $('.pwck_input_re_1').css('display','block');
+			        $('.pwck_input_re_2').css('display','none');
+			        pwckcorCheck = true;
+			    }else{
+			        $('.pwck_input_re_1').css('display','none');
+			        $('.pwck_input_re_2').css('display','block');
+			        pwckcorCheck = false;
+			    }        
+			    
+			});  
+
+		
 			// 카카오API
 		    function sample6_execDaumPostcode() {
 		        new daum.Postcode({
@@ -86,31 +115,41 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 		            }
 		        }).open();
 		    } // end 카카오API
+		    
+		    
+		    /* 입력 이메일 형식 유효성 검사 */
+		    function mailFormCheck(email){
+		       var form = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+		       return form.test(email);
+		   }		    
 	    
 		    // 이메일 중복검사
-		    $('.email_input').on("propertychange change keyup paste input", function() {
-		    	// console.log("keyup 테스트");
-		    	var memberEmail = $('.email_input').val();
-		    	var data = {memberEmail : memberEmail}	// 컨트롤러에 넘길 데이터 이름
+		    $('.email_input').on("input", function() {
 		    	
-		    	$.ajax({
-		    		type : 'POST',
-		    		url : '/blooming/member/email',
-		    		data : data,	
-		    		success : function(result){
-		    			if (result === 'success') {
-		                    $('.email_input_re_1').show();
-		                    $('.email_input_re_2').hide();
-		                } else if (result === 'faile') {
-		                    $('.email_input_re_1').hide();
-		                    $('.email_input_re_2').show();
-		                }
-		    		} // end success		    				    		
-		    	}) // end ajax		    	
+		    	var memberEmail = $('.email_input').val();
+		    	
+		    	if(mailFormCheck(memberEmail)) {	// 유효성 검사 값이 true일 때
+		    		var data = {memberEmail : memberEmail}	// 컨트롤러에 넘길 데이터 이름
+			    	
+			    	$.ajax({
+			    		type : 'POST',
+			    		url : '/blooming/member/email',
+			    		data : data,	
+			    		success : function(result){
+			    			if (result === 'success') {
+			                    $('.email_input_re_1').show();
+			                    $('.email_input_re_2').hide();
+			                } else if (result === 'faile') {
+			                    $('.email_input_re_1').hide();
+			                    $('.email_input_re_2').show();
+			                }
+			    		} // end success		    				    		
+			    	}) // end ajax		 		    		
+		    	} else {
+		    		$('.email_input_warning').show();
+		    	}		    	
+		    	   	
 		    }) // end on
-		    
-		    
-		    
 		    
 		</script>
 	        	 
@@ -180,7 +219,7 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 		</script>	    
 	    
 	    <br>
-	    <input type="submit" value="전송" >
+	    <input type="submit" value="회원가입" >
   	</form>
   	
 
