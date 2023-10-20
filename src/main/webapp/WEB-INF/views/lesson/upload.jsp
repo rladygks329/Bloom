@@ -19,13 +19,61 @@
 	<meta charset="UTF-8">
 	<title>레슨 : 등록</title>
 	<script>
+		function validateInputs(event){
+			const title = $('#lectureTitle').val();
+			const price = $('#lecturePrice').val();
+			const thumbnail = $('#lectureThumbnailUrl').val();
+			const lectureVideos = $('input[name=lectureVideos]');
+			const uploadRate = $('.progress-bar');
+			
+			if(!title){
+				alert("강좌 제목을 입력해주세요");
+				return false;
+			}
+			
+			if(!price){
+				alert("가격을 입력해주세요");
+				return false;
+			}
+			
+			if(Number(price) < 0){
+				alert("0 이상의 가격을 입력해주세요");
+				return false;
+			}
+			
+			if(!thumbnail){
+				alert("미리보기 이미지를 넣어주세요");
+				return false;	
+			}
+			
+			if(lectureVideos.length === 0){
+				alert("강의 영상을 하나라도 업로드 해주세요");
+				return false;	
+			}
+			
+			
+			let result = true;
+			$.each (uploadRate, function (index, el) {
+				const proccessRate = $(this).text();
+				if(proccessRate != "100%"){
+					result = false;
+				}
+			});
+			
+			if(!result){
+				alert("모든 강의 영상을 업로드 완료 해주세요");
+				return false;
+			}
+			return result;
+		} //end validateInputs()
+		
 		function handleFile(file){
 			const name = file.name;
 			const progressBarContainer = $('<div class="small text-muted mt-2">').text(name);
 			const progressBarWrapper = $(`<div class="progress">`);
 			const progressBar = $(`<div class="progress-bar progress-bar-striped" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">`).text("0%");
 			const button = $(`<button type="button" class="btn btn-primary my-3">전송 시작</button>`);
-			const input = $(`<input name="lectureVideos" type="hidden">`);
+			const input = $(`<input name="lectureVideos" type="hidden" required>`);
 			
 			progressBarWrapper.append(progressBar)
 			progressBarContainer.append(progressBarWrapper).append(button).append(input);
@@ -166,7 +214,7 @@
 	<section class="py-2 bg-secondary">
 	  <div class="container">
 	    <div class="row d-flex justify-content-center align-items-center h-100">
-	    <form action="/blooming/lesson" method="post">
+	    <form action="/blooming/lesson" method="post" onsubmit="return validateInputs(event)">
 	      <div class="col-xl-9">
 	      
 	        <h1 class="text-white my-2">강좌 등록</h1>
@@ -180,7 +228,7 @@
 	                <h6 class="mb-0">강좌 제목</h6>
 	              </div>
 	              <div class="col-md-9 pe-5">
-	                <input id="lectureTitle" name="lectureTitle" type="text" class="form-control form-control-lg" placeholder="제목을 입력해주세요 " autofocus/>
+	                <input id="lectureTitle" name="lectureTitle" type="text" class="form-control form-control-lg" placeholder="제목을 입력해주세요 " autofocus required/>
 	              </div>
 	            </div>
 	
@@ -194,7 +242,7 @@
 	              </div>
 	              <div class="col-md-9 pe-5">
 					<div id="lecturePriceLabel" class="small text-muted mt-2" hidden></div>
-	                <input id="lecturePrice" name="lecturePrice" type="number" min="0" step="1000" class="form-control form-control-lg" placeholder="10000" />
+	                <input id="lecturePrice" name="lecturePrice" type="number" min="0" step="1000" class="form-control form-control-lg" placeholder="10000" required/>
 	              </div>
 	            </div>
 	
@@ -207,7 +255,7 @@
 	              </div>
 	              <div class="col-md-9 pe-5">
 	              	<img id="lectureThumbnailImg"src="https://placehold.co/600x200" class="img-fluid file-drop" alt="Responsive image">
-	              	<input id="lectureThumbnailUrl" name="lectureThumbnailUrl" type="hidden"></div>
+	              	<input id="lectureThumbnailUrl" name="lectureThumbnailUrl" type="hidden" required></div>
 	              	<div class="small text-muted mt-2">파일을 끌어다가 올려주세요</div>
 	              </div>
 	            </div>
