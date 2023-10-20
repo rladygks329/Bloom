@@ -46,7 +46,7 @@ public class ImageController {
 		for(MultipartFile multipartFile : uploadFile) {
 			// 파일 이름
 			String uploadFileName = multipartFile.getOriginalFilename();
-			
+			logger.info("uploadFileName = " + uploadFileName);
 			// 파일 이름에 uuid 적용
 			String uuid = UUID.randomUUID().toString();
 			uploadFileName = uuid + "_" + uploadFileName;
@@ -59,13 +59,6 @@ public class ImageController {
 				e.printStackTrace();
 			}
 		} // end for()
-		
-		
-		
-		
-		
-		
-		
 		
 	} // end uploadAjaxActionPost()
 	
