@@ -2,10 +2,11 @@ package com.edu.blooming.service;
 
 import java.util.List;
 import com.edu.blooming.domain.LectureVO;
+import com.edu.blooming.domain.LessonVO;
 import com.edu.blooming.util.PageCriteria;
 
 public interface LectureService {
-  int create(LectureVO vo);
+  int create(LectureVO vo, List<LessonVO> lessons);
 
   int update(LectureVO vo);
 

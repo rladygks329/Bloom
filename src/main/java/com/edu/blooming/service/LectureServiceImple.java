@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.edu.blooming.domain.LectureVO;
+import com.edu.blooming.domain.LessonVO;
 import com.edu.blooming.persistence.LectureDAO;
+import com.edu.blooming.persistence.LessonDAO;
 import com.edu.blooming.util.PageCriteria;
 
 @Service
@@ -17,10 +19,19 @@ public class LectureServiceImple implements LectureService {
   @Autowired
   private LectureDAO lectureDAO;
 
+  @Autowired
+  private LessonDAO lessonDAO;
+
+  @Transactional(value = "transactionManager")
   @Override
-  public int create(LectureVO vo) {
-    logger.info("create() 호출 : vo = " + vo.toString());
-    return lectureDAO.insert(vo);
+  public int create(LectureVO vo, List<LessonVO> lessons) {
+    logger.info("create() 호출 : vo = " + vo.toString() + " lessons.size() : " + lessons.size());
+    int lectureId = lectureDAO.insert(vo);
+    for (LessonVO lesson : lessons) {
+      lesson.setLectureId(lectureId);
+      lessonDAO.insert(lesson);
+    }
+    return 1;
   }
 
   @Override

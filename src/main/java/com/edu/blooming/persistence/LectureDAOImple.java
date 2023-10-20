@@ -22,7 +22,8 @@ public class LectureDAOImple implements LectureDAO {
   @Override
   public int insert(LectureVO vo) {
     logger.info("insert() 호출 : vo = " + vo);
-    return sqlSession.insert(NAMESPACE + ".insert", vo);
+    sqlSession.insert(NAMESPACE + ".insert", vo);
+    return vo.getLectureId();
   }
 
   @Override

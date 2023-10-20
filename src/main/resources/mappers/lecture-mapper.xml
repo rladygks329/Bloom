@@ -7,6 +7,11 @@
 		insert into ${lecture}
 		(${memberId}, ${lectureTitle}, ${lecturePrice}, ${lectureThumbnailUrl})
 		values (#{memberId}, #{lectureTitle}, #{lecturePrice}, #{lectureThumbnailUrl})
+		
+		<!-- 입력후 lecture_Id를 리턴함 -->
+		<selectKey keyProperty="lectureId" resultType="Integer" order="AFTER">
+			SELECT LECTURE_SEQ.CURRVAL FROM DUAL
+		</selectKey>
 	</insert>
 
 	<!-- 강좌 정보 수정 -->	

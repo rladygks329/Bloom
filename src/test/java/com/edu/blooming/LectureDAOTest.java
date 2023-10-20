@@ -47,7 +47,7 @@ public class LectureDAOTest {
   private void testInsert() {
     LectureVO vo = new LectureVO(0, 1, "강좌 1의 제목", 9000, 0, 0, 0, 0, "테스트 파일 경로", null);
     int result = dao.insert(vo);
-    logger.info(result + "행 삽입");
+    logger.info("lectureId: " + result);
   } // end testInsert()
 
   private void testUpdate() {

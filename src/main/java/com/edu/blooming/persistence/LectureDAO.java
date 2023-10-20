@@ -5,6 +5,9 @@ import com.edu.blooming.domain.LectureVO;
 import com.edu.blooming.util.PageCriteria;
 
 public interface LectureDAO {
+  /*
+   * @return : 입력된 lectureId
+   */
   int insert(LectureVO vo);
 
   int update(LectureVO vo);
