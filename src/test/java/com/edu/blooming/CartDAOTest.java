@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import com.edu.blooming.domain.LectureVO;
@@ -15,6 +16,7 @@ import com.edu.blooming.persistence.CartDAO;
 @RunWith(SpringJUnit4ClassRunner.class)
 
 @ContextConfiguration(locations = {"file:src/main/webapp/WEB-INF/spring/**/*.xml"})
+@TestPropertySource("classpath:database.properties")
 @WebAppConfiguration
 public class CartDAOTest {
   private static final Logger logger = LoggerFactory.getLogger(CartDAOTest.class);
@@ -24,10 +26,10 @@ public class CartDAOTest {
 
   @Test
   public void testDAO() {
-    // testInsert();
-    // testDelete();
-    // testSelect();
-    // testCalcTotal();
+    testInsert();
+    testDelete();
+    testSelect();
+    testCalcTotal();
   }
 
   private void testInsert() {

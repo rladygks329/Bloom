@@ -13,6 +13,7 @@
 	http://www.springframework.org/schema/tx
 	http://www.springframework.org/schema/tx/spring-tx.xsd">
 	
+	<context:property-placeholder location="classpath:database.properties" />
 	<!-- 트랜잭션 관리를 수행하는 Aspect를 annotation 기반으로 사용 -->
 	<tx:annotation-driven />
 	
@@ -23,10 +24,9 @@
 	
 	<bean id="ds" class="oracle.jdbc.pool.OracleDataSource">
 		<property name="dataSourceName" value="ds"></property>
-		<property name="URL"
-		value="jdbc:oracle:thin:@localhost:1521:xe"></property>
-		<property name="user" value="scott"></property>
-		<property name="password" value="tiger"></property>
+		<property name="URL" value="${database.url}"></property>
+		<property name="user" value="${database.user}"></property>
+		<property name="password" value="${database.password}"></property>
 	</bean>
 	
 	<bean id="sqlSessionFactory"

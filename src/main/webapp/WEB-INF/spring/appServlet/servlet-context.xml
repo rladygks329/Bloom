@@ -10,7 +10,7 @@
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 	
 	<!-- Enables the Spring MVC @Controller programming model -->
-	
+	<context:property-placeholder location="classpath:uploadPath.properties" />
 	<annotation-driven>
 	    <message-converters>
 	        <!-- @ResponseBody Content-Type:application/json;charset=UTF-8  -->
@@ -36,11 +36,11 @@
 	<!-- 문자열 리소스를 bean으로 추가 -->
 	<!--  String uploadPath = new String("path"); -->
 	<beans:bean id="uploadPath" class="java.lang.String">
-		<beans:constructor-arg value="C:\\Study\\BloomingBucket"></beans:constructor-arg>
+		<beans:constructor-arg value="${uploadPath.img}"></beans:constructor-arg>
 	</beans:bean>
 	
 	<beans:bean id="uploadVideoPath" class="java.lang.String">
-		<beans:constructor-arg value="C:\\Study\\BloomingBucket\\video"></beans:constructor-arg>
+		<beans:constructor-arg value="${uploadPath.video}"></beans:constructor-arg>
 	</beans:bean>
 	
 	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
