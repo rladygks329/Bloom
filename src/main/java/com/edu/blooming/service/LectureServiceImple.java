@@ -51,7 +51,7 @@ public class LectureServiceImple implements LectureService {
     return lectureDAO.select(lectureId);
   }
 
-  @Transactional
+  @Transactional(value = "transactionManager")
   @Override
   public int likeLecture(int lectureId, int memberId) {
     logger.info("likeLecture() 호출, LectureId : " + lectureId + " memberId : " + memberId);
@@ -59,7 +59,7 @@ public class LectureServiceImple implements LectureService {
     return lectureDAO.insertLike(memberId, lectureId);
   }
 
-  @Transactional
+  @Transactional(value = "transactionManager")
   @Override
   public int dislikeLecture(int lectureId, int memberId) {
     logger.info("dislikeLecture() 호출, LectureId : " + lectureId + " memberId : " + memberId);

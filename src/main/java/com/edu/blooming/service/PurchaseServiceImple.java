@@ -20,7 +20,7 @@ public class PurchaseServiceImple implements PurchaseService {
   @Autowired
   private LectureDAO lectureDAO;
 
-  @Transactional
+  @Transactional(value = "transactionManager")
   @Override
   public int purchase(int memberId, int lectureId) {
     logger.info("purchase() 호출, memberId : " + memberId + " lectureId : " + lectureId);
@@ -30,7 +30,7 @@ public class PurchaseServiceImple implements PurchaseService {
     return 1;
   }
 
-  @Transactional
+  @Transactional(value = "transactionManager")
   @Override
   public int purchase(int memberId, List<Integer> lectureIds) {
     logger
@@ -43,7 +43,7 @@ public class PurchaseServiceImple implements PurchaseService {
     return 1;
   }
 
-  @Transactional
+  @Transactional(value = "transactionManager")
   @Override
   public int refund(int memberId, int lectureId) {
     logger.info("refund() 호출, memberId : " + memberId + " lectureId : " + lectureId);

@@ -21,7 +21,7 @@ public class LectureReplyServiceImple implements LectureReplyService {
   private LectureDAO lectureDAO;
 
 
-  @Transactional
+  @Transactional(value = "transactionManager")
   @Override
   public int create(int memberId, LectureReplyVO vo) {
     logger.info("create() 호출 : memberId :" + memberId + " vo : " + vo.toString());
@@ -33,7 +33,7 @@ public class LectureReplyServiceImple implements LectureReplyService {
     return 1;
   }
 
-  @Transactional
+  @Transactional(value = "transactionManager")
   @Override
   public int update(LectureReplyVO vo) {
     logger.info("update() 호출 : vo : " + vo.toString());
@@ -48,7 +48,7 @@ public class LectureReplyServiceImple implements LectureReplyService {
     return 0;
   }
 
-  @Transactional
+  @Transactional(value = "transactionManager")
   @Override
   public int delete(int lectureReplyId) {
     logger.info("delete() 호출 : lectureReplyId : " + lectureReplyId);
