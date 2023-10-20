@@ -16,7 +16,7 @@ public class FileUploadUtil {
 
   private static final Logger logger = LoggerFactory.getLogger(FileUploadUtil.class);
 
-  public static String saveUploadedFile(String uploadPath, String fileName, byte[] data)
+  public static String saveUploadedImage(String uploadPath, String fileName, byte[] data)
       throws IOException {
 
     UUID uuid = UUID.randomUUID();
@@ -41,12 +41,27 @@ public class FileUploadUtil {
     return result;
   }
 
+  public static String saveUploadedVideo(String uploadPath, String fileName, byte[] data)
+      throws IOException {
+    UUID uuid = UUID.randomUUID();
+    String saveName = uuid.toString() + "_" + fileName;
+    String savePath = getUploadPath(uploadPath);
+    File target = new File(uploadPath + File.separator + savePath, saveName);
+
+    FileCopyUtils.copy(data, target);
+    String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+
+    String result = null;
+
+
+    return result;
+  }
 
   // 파일이 저장되는 폴더 이름을 날짜 형식(yyyy/MM/dd)으로 생성하기 위한 유틸
   // 상위 폴더가 생성되어 있지 않으면 하위 폴더를 생성할 수 없다
   // -> 연도 폴더 생성 -> 달 폴더 생성 -> 날짜 폴더 생성
   // 마지막 리턴은 yyyy/MM/dd 형식으로
-  private static String getUploadPath(String uploadPath) {
+  public static String getUploadPath(String uploadPath) {
     Calendar calendar = Calendar.getInstance();
 
     String yearPath = String.valueOf(calendar.get(Calendar.YEAR));
