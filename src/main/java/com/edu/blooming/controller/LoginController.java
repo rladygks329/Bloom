@@ -37,7 +37,7 @@ public class LoginController {
 	
 	@PostMapping("/login")
 	public String loginPOST(HttpServletRequest request, MemberVO vo, RedirectAttributes rttr) throws Exception {
-		logger.info("loginPOST() 호출");
+		logger.info("loginPOST() 호출 memberEmail = " + vo.getMemberEmail());
 		
 		HttpSession session = request.getSession();
 		MemberVO loginVo = memberService.memberLogin(vo);
@@ -48,7 +48,8 @@ public class LoginController {
 			return "redirect:/member/login";
 		} else {
 			session.setAttribute("vo", loginVo);
-			return "redirect:/member/main";
+			logger.info("memberVO =  " +  vo.toString());
+			return "redirect:/main";
 		} 
 		
 	} // end loginPOST()
@@ -58,7 +59,7 @@ public class LoginController {
 		logger.info("logoutGET() 호출");
 		HttpSession session = request.getSession();
 		session.invalidate();
-		return "redirect:/member/main";
+		return "redirect:/main";
 	}
 	
 //	@GetMapping("/logout")

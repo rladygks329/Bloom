@@ -32,6 +32,21 @@ public class RegisterController {
 		logger.info("registerGET()");
 	} // end registerGET()
 	
+	@GetMapping("/register-type")
+	public void registerTypeGET() {
+		logger.info("registerTypeGET()");
+	} // end registerTypeGET()
+	
+	@GetMapping("/register-student")
+	public void registerStudentGET() {
+		logger.info("registerStudentGET()");
+	} // end registerStudentGET()
+	
+	@GetMapping("/register-teacher")
+	public void registerteacherGET() {
+		logger.info("registerteacherGET()");
+	} // end registerteacherGET()
+	
 	@PostMapping("/register")
 	public String registerPOST(MemberVO vo, RedirectAttributes reAttr) {
 		// RedirectAttributes : 재요청시 데이터를 전달하기 위한 인터페이스
@@ -60,6 +75,7 @@ public class RegisterController {
 			return new ResponseEntity<String>("faile", HttpStatus.METHOD_FAILURE);
 		}
 	} // end emailCheckPOST()
+	
 	
 } // end RegisterController
 

@@ -35,6 +35,7 @@ public class MemberDAOImple implements MemberDAO {
 	@Override
 	public MemberVO memberLogin(MemberVO vo) {
 		logger.info("memberLogin() 호출");
+		logger.info(vo.toString());
 		return sqlSession.selectOne(NAMESPACE + ".login", vo);
 	}
 

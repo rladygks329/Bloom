@@ -4,6 +4,7 @@ public class MemberVO {
 	private int memberId;
 	private String memberEmail;
 	private String memberPassword;
+	private String memberName;
 	private String memberPhone;
 	private String memberAddress;
 	private String memberLevel;
@@ -15,18 +16,20 @@ public class MemberVO {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public MemberVO(int memberId, String memberEmail, String memberPassword, String memberPhone, String memberAddress,
-			String memberLevel, String memberIntroduce, String memberProfileUrl) {
+	public MemberVO(int memberId, String memberEmail, String memberPassword, String memberName, String memberPhone,
+			String memberAddress, String memberLevel, String memberIntroduce, String memberProfileUrl) {
 		super();
 		this.memberId = memberId;
 		this.memberEmail = memberEmail;
 		this.memberPassword = memberPassword;
+		this.memberName = memberName;
 		this.memberPhone = memberPhone;
 		this.memberAddress = memberAddress;
 		this.memberLevel = memberLevel;
 		this.memberIntroduce = memberIntroduce;
 		this.memberProfileUrl = memberProfileUrl;
 	}
+	
 	public int getMemberId() {
 		return memberId;
 	}
@@ -44,6 +47,12 @@ public class MemberVO {
 	}
 	public void setMemberPassword(String memberPassword) {
 		this.memberPassword = memberPassword;
+	}
+	public String getMemberName() {
+		return memberName;
+	}
+	public void setMemberName(String memberName) {
+		this.memberName = memberName;
 	}
 	public String getMemberPhone() {
 		return memberPhone;
@@ -79,8 +88,10 @@ public class MemberVO {
 	@Override
 	public String toString() {
 		return "MemberVO [memberId=" + memberId + ", memberEmail=" + memberEmail + ", memberPassword=" + memberPassword
-				+ ", memberPhone=" + memberPhone + ", memberAddress=" + memberAddress + ", memberLevel=" + memberLevel
-				+ ", memberIntroduce=" + memberIntroduce + ", memberProfileUrl=" + memberProfileUrl + "]";
+				+ ", memberName=" + memberName + ", memberPhone=" + memberPhone + ", memberAddress=" + memberAddress
+				+ ", memberLevel=" + memberLevel + ", memberIntroduce=" + memberIntroduce + ", memberProfileUrl="
+				+ memberProfileUrl + "]";
 	}
+	
 		
 }

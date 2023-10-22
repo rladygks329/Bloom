@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,8 +16,15 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 		<input type="text" name="memberEmail"><br>
 		<input type="password" name="memberPassword"><br>
 		<input type="hidden" name="targetURL" value="${param.targetURL }">
-		<input type="submit" value="로그인" >
+		<input type="submit" value="로그인" >	
+		<a href="/blooming/member/register-type">회원가입</a>
+		
+		<c:if test = "${result == 0 }">
+                <div class = "login_warn">사용자 ID 또는 비밀번호를 잘못 입력하셨습니다.</div>
+        </c:if>
+		
 	</form>
+
 	
 	<!-- 
 	<script>
