@@ -11,8 +11,53 @@
 		<property name="memberPhone" value="member_phone"/>
 		<property name="memberAddress" value="member_address"/>
 		<property name="memberIntroduce" value="member_introduce"/>
-		<property name="memberProfileUrl" value="member_profile_url"/>
+    <property name="memberProfileUrl" value="member_profile_url"/>
 		<property name="memberLevel" value="member_level"/>
+		
+		<!-- LESSON -->
+		<property name="lesson" value="lesson"/>
+		<property name="lessonId" value="lesson_id"/>
+		<property name="lectureId" value="lecture_id"/>
+		<property name="lessonName" value="lesson_name"/>
+		<property name="lessonUrl" value="lesson_url"/>
+		
+		<!-- LECUTRE -->
+		<property name="lecture" value="lecture"/>
+		<property name="memberId" value="member_Id"/>
+		<property name="lectureTitle" value="lecture_title"/>
+		<property name="lecturePrice" value="lecture_price"/>		
+		<property name="lectureSalesCount" value="lecture_sales_count"/>		
+		<property name="lectureTotalScore" value="lecture_total_score"/>
+		<property name="lectureReplyCount" value="lecture_reply_count"/>
+		<property name="lectureLikeCount" value="lecture_like_count"/>
+		<property name="lectureThumbnailUrl" value="lecture_thumbnail_url"/>
+		<property name="lectureDateCreated" value="lecture_date_created"/>
+		
+		<!-- LECTURE_REPLY -->
+		<property name="lecture_reply" value="lecture_reply"/>
+		<property name="lectureReplyId" value="lecture_reply_id"/>
+		<property name="lectureId" value="lecture_id"/>
+		<property name="memberId" value="member_Id"/>
+		<property name="lectureReplyContent" value="lecture_reply_content"/>
+		<property name="lectureReplyScore" value="lecture_reply_score"/>
+		
+		<!-- LECTURE_LIKE  -->
+		<property name="lecture_like" value="lecture_like"/>
+		<property name="lectureId" value="lecture_id"/>
+		<property name="memberId" value="member_Id"/>
+		
+		<!-- CART -->
+		<property name="cart" value="cart"/>
+		<property name="lectureId" value="lecture_id"/>
+		<property name="memberId" value="member_Id"/>
+		
+		<!-- PURCHASE -->
+		<property name="purchase" value="purchase"/>
+		<property name="lectureId" value="lecture_id"/>
+		<property name="memberId" value="member_Id"/>
+		<property name="purchasePrice" value="purchase_price"/>
+		<property name="purchaseDateCreated" value="purchase_date_created"/>	
+
 	</properties>
 	
 	<!-- underscore 명명법을 camel 명명법으로 변환 가능하도록 세팅 -->

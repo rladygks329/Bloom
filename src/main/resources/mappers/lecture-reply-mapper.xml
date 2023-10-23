@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.blooming.LectureReplyMapper">
+	<insert id="insert">
+		insert into ${lecture_reply}
+		(${memberId}, ${lectureId}, ${lectureReplyContent}, ${lectureReplyScore})
+		values (#{memberId}, #{lectureId}, #{lectureReplyContent}, #{lectureReplyScore})
+	</insert>
+	
+	<update id="update">
+		update ${lecture_reply}
+		set ${lectureReplyContent} = #{lectureReplyContent},
+			${lectureReplyScore} = #{lectureReplyScore}
+		where ${lectureReplyId} = #{lectureReplyId}
+	</update>
+	
+	<delete id="delete">
+		delete from ${lecture_reply}
+		where ${lectureReplyId} = #{lectureReplyId}	
+	</delete>
+	
+	<!-- 특정 수강평 조회 -->
+	<select id="select_by_lecture_reply_id" resultType="LectureReplyVO">
+		select *
+		from ${lecture_reply}
+		where ${lectureReplyId} = #{lectureReplyId}
+	</select>
+	
+	<!-- 특정 강의 수강평 조회 -->
+	<select id="select_by_lecture_id" resultType="LectureReplyVO">
+		select *
+		from ${lecture_reply}
+		where ${lectureId} = #{lectureId}
+	</select>
+
+</mapper>
