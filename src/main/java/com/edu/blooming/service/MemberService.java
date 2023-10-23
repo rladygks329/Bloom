@@ -8,7 +8,7 @@ import com.edu.blooming.domain.MemberVO;
 public interface MemberService {
 	int create(MemberVO vo);
 	int emailCheck(String memberEmail) throws Exception;
-	public MemberVO memberLogin(MemberVO vo) throws Exception;	// 로그인
+	public MemberVO memberLogin(MemberVO loginVo) throws Exception;	// 로그인
 	
 	public void logout(HttpSession session);
 

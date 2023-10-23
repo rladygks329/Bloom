@@ -8,11 +8,14 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -27,9 +30,10 @@ public class ImageController {
 			LoggerFactory.getLogger(ImageController.class);
 	
 	@PostMapping
-	public void uploadAjaxActionPost(@RequestParam("uploadFile") MultipartFile[] uploadFile) {
+	@ResponseBody
+	public ResponseEntity<String> uploadAjaxActionPost(@RequestParam("uploadFile") MultipartFile[] uploadFile) {
 		logger.info("uploadAjaxActionPost 호출");
-		
+		String result = null;
 		String uploadFolder = "C:\\upload";
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -50,6 +54,7 @@ public class ImageController {
 			// 파일 이름에 uuid 적용
 			String uuid = UUID.randomUUID().toString();
 			uploadFileName = uuid + "_" + uploadFileName;
+			logger.info("uploadFileName = " + uploadFileName);
 			
 			File saveFile = new File(uploadPath, uploadFileName);
 			try {
@@ -59,6 +64,7 @@ public class ImageController {
 				e.printStackTrace();
 			}
 		} // end for()
+		return new ResponseEntity<String>(result, HttpStatus.OK);
 		
 	} // end uploadAjaxActionPost()
 	

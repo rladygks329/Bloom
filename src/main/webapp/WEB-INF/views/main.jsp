@@ -13,7 +13,7 @@
     
     <%-- 세션에서 로그인 정보 가져오기 --%>
     <%
-        Object loginInfo = session.getAttribute("vo"); // 세션에서 로그인 정보를 가져옴
+        Object loginInfo = session.getAttribute("loginVo"); // 세션에서 로그인 정보를 가져옴
     %>
     
     <c:choose>
@@ -29,12 +29,6 @@
     </c:choose>
 
 
-
-	<!-- 
-	<h1>메인페이지</h1>
-    <a href="/blooming/member/register-type">회원가입</a>
-    <a href="/blooming/member/login">로그인</a>
-     -->
 	
 </body>
 </html>
