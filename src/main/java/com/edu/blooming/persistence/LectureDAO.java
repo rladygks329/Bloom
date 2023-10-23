@@ -24,7 +24,11 @@ public interface LectureDAO {
 
   int getLectureCount(int memberId);
 
+  int getLectureCount(String keyword);
+
   LectureVO select(int lectureId);
+
+  List<LectureVO> select(PageCriteria criteria, String keyword);
 
   List<LectureVO> select(PageCriteria criteria);
 

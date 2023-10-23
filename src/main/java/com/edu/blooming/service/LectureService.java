@@ -12,9 +12,13 @@ public interface LectureService {
 
   List<LectureVO> read(PageCriteria criteria);
 
+  List<LectureVO> read(PageCriteria criteria, String keyword);
+
   List<LectureVO> findLectureByAuthorId(PageCriteria criteria, int authorId);
 
   LectureVO read(int lectureId);
+
+  boolean checkIsLike(int memberId, int lectureId);
 
   int likeLecture(int lectureId, int memberId);
 
@@ -23,4 +27,6 @@ public interface LectureService {
   int getTotalCounts();
 
   int getTotalCounts(int authorId);
+
+  int getTotalCounts(String keyword);
 }

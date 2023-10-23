@@ -5,7 +5,9 @@ import java.util.Date;
 public class LectureVO {
   private int lectureId;
   private int memberId;
+  private String authorName;
   private String lectureTitle;
+  private String lectureDescription;
   private int lecturePrice;
   private int lectureSalesCount;
   private int lectureTotalScore;
@@ -16,12 +18,16 @@ public class LectureVO {
 
   public LectureVO() {}
 
-  public LectureVO(int lectureId, int memberId, String lectureTitle, int lecturePrice,
-      int lectureSalesCount, int lectureTotalScore, int lectureReplyCount, int lectureLikeCount,
-      String lectureThumbnailUrl, Date lectureDateCreated) {
+  public LectureVO(int lectureId, int memberId, String authorName, String lectureTitle,
+      String lectureDescription, int lecturePrice, int lectureSalesCount, int lectureTotalScore,
+      int lectureReplyCount, int lectureLikeCount, String lectureThumbnailUrl,
+      Date lectureDateCreated) {
+    super();
     this.lectureId = lectureId;
     this.memberId = memberId;
+    this.authorName = authorName;
     this.lectureTitle = lectureTitle;
+    this.lectureDescription = lectureDescription;
     this.lecturePrice = lecturePrice;
     this.lectureSalesCount = lectureSalesCount;
     this.lectureTotalScore = lectureTotalScore;
@@ -47,12 +53,28 @@ public class LectureVO {
     this.memberId = memberId;
   }
 
+  public String getAuthorName() {
+    return authorName;
+  }
+
+  public void setAuthorName(String authorName) {
+    this.authorName = authorName;
+  }
+
   public String getLectureTitle() {
     return lectureTitle;
   }
 
   public void setLectureTitle(String lectureTitle) {
     this.lectureTitle = lectureTitle;
+  }
+
+  public String getLectureDescription() {
+    return lectureDescription;
+  }
+
+  public void setLectureDescription(String lectureDescription) {
+    this.lectureDescription = lectureDescription;
   }
 
   public int getLecturePrice() {
@@ -113,8 +135,9 @@ public class LectureVO {
 
   @Override
   public String toString() {
-    return "LectureVO [lectureId=" + lectureId + ", memberId=" + memberId + ", lectureTitle="
-        + lectureTitle + ", lecturePrice=" + lecturePrice + ", lectureSalesCount="
+    return "LectureVO [lectureId=" + lectureId + ", memberId=" + memberId + ", authorName="
+        + authorName + ", lectureTitle=" + lectureTitle + ", lectureDescription="
+        + lectureDescription + ", lecturePrice=" + lecturePrice + ", lectureSalesCount="
         + lectureSalesCount + ", lectureTotalScore=" + lectureTotalScore + ", lectureReplyCount="
         + lectureReplyCount + ", lectureLikeCount=" + lectureLikeCount + ", lectureThumbnailUrl="
         + lectureThumbnailUrl + ", lectureDateCreated=" + lectureDateCreated + "]";

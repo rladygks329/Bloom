@@ -11,7 +11,7 @@
 		<property name="memberPhone" value="member_phone"/>
 		<property name="memberAddress" value="member_address"/>
 		<property name="memberIntroduce" value="member_introduce"/>
-    <property name="memberProfileUrl" value="member_profile_url"/>
+    	<property name="memberProfileUrl" value="member_profile_url"/>
 		<property name="memberLevel" value="member_level"/>
 		
 		<!-- LESSON -->
@@ -24,7 +24,9 @@
 		<!-- LECUTRE -->
 		<property name="lecture" value="lecture"/>
 		<property name="memberId" value="member_Id"/>
+		<property name="authorName" value="author_name"/>
 		<property name="lectureTitle" value="lecture_title"/>
+		<property name="lectureDescription" value="lecture_description"/>
 		<property name="lecturePrice" value="lecture_price"/>		
 		<property name="lectureSalesCount" value="lecture_sales_count"/>		
 		<property name="lectureTotalScore" value="lecture_total_score"/>
