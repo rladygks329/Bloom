@@ -20,6 +20,7 @@
 <!-- Bootstrap core JS-->
 <script
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+	
 <script>
 	function addLike() {
 		console.log("addLike() 호출");
@@ -78,7 +79,8 @@
 			<div class="row gx-4 gx-lg-5 align-items-center">
 				<div class="col-md-6">
 					<img class="card-img-top mb-5 mb-md-0"
-						src="${lecture.lectureThumbnailUrl }" alt="..." />
+						src="${lecture.lectureThumbnailUrl }" alt="..."
+						onerror="this.src='	https://dummyimage.com/600x700/dee2e6/6c757d.jpg';" />
 				</div>
 				<div class="col-md-6">
 					<div class="small mb-1"></div>
@@ -105,10 +107,10 @@
 										href="/blooming/lesson/${lectureId }">강의 들으러 가기</a>
 								</c:when>
 								<c:when test="${not purchase and cart}">
-									<i class="bi-cart-fill me-1"></i> Add to cart
+									<i class="bi-cart-fill me-1"></i> 장바구니 바로 가기 
 								</c:when>
 								<c:when test="${not purchase and not cart}">
-									<i class="bi-cart-fill me-1"></i> 장바구니 바로가기
+									<i class="bi-cart-fill me-1"></i> Add to cart
 								</c:when>
 							</c:choose>
 						</button>
@@ -117,6 +119,56 @@
 			</div>
 		</div>
 	</section>
+	<hr>
+
+
+	<div class="container px-4 px-lg-5 my-5">
+		<!-- 영상 리스트 -->
+		<h3 class="display-6 fw-bolder">커리 큘럼</h3>
+		<ul class="list-group">
+			<c:forEach var="lesson" items="${lessons}">
+				<li class="list-group-item">${lesson.lessonName }</li>
+			</c:forEach>
+		</ul>
+		<hr>
+		<h3 class="display-6 fw-bolder">수강평</h3>
+		<c:forEach var="reply" items="${replies}">
+			<div class="card my-3">
+				<div class="card-header">
+					<div class="star-rating">
+						<c:set var="starRating" value="${reply.lectureReplyScore }" />
+						<c:forEach var="i" begin="1" end="5">
+							<c:choose>
+								<c:when test="${i <= starRating}">
+									<i class="bi bi-star-fill"></i>
+								</c:when>
+								<c:when test="${i - 0.5 <= starRating && starRating < i}">
+									<i class="bi bi-star-half"></i>
+								</c:when>
+								<c:otherwise>
+									<i class="bi bi-star"></i>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+					</div>
+					<span class="username">${ reply.authorName}</span>
+				</div> <!-- end card header -->
+				<div class="card-body">
+					<div class="">
+						<span class="username">${ reply.lectureReplyContent}</span>
+					</div>
+				</div>
+			</div>
+		</c:forEach>
+		<div class="input-group">
+			<input type="text" class="form-control" placeholder="Type your reply">
+			<div class="input-group-append">
+				<button class="btn btn-primary" type="button">Send</button>
+			</div>
+		</div>
+	</div>
+
+
 	<!-- footer -->
 	<%@ include file="/WEB-INF/views/component/footer.jsp"%>
 </body>

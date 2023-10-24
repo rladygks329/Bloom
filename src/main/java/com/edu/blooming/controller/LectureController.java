@@ -14,8 +14,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import com.edu.blooming.domain.LectureReplyVO;
 import com.edu.blooming.domain.LectureVO;
+import com.edu.blooming.domain.LessonVO;
+import com.edu.blooming.service.LectureReplyService;
 import com.edu.blooming.service.LectureService;
+import com.edu.blooming.service.LessonService;
 import com.edu.blooming.service.PurchaseService;
 import com.edu.blooming.util.PageCriteria;
 import com.edu.blooming.util.PageMaker;
@@ -29,7 +33,13 @@ public class LectureController {
   private LectureService lectureService;
 
   @Autowired
+  private LessonService lessonService;
+
+  @Autowired
   private PurchaseService purchaseService;
+
+  @Autowired
+  private LectureReplyService lectureReplyService;
 
   @GetMapping("/list")
   public void lectureGET(Model model, Integer page, Integer numsPerPage, String keyword) {
@@ -66,8 +76,17 @@ public class LectureController {
   public String lectureDetailGET(HttpServletRequest request, Model model, int lectureId) {
     logger.info("lectureDetailGET() 호출 lectureId : lectureId");
 
+    LectureVO vo = lectureService.read(lectureId);
+    // 찾는 강의가 없는 경우
+    if (vo == null) {
+      model.addAttribute("msg", "찾으시는 강의가 존재하지 않습니다.");
+      model.addAttribute("url", "list");
+      return "alert";
+    }
+
     // TODO: session에서 memberId를 가져오도록 변경
     int memberId = 1;
+    logger.info("memberId : " + memberId);
     Boolean isLike = lectureService.checkIsLike(lectureId, lectureId);
     Boolean isPurchase = purchaseService.checkPurchase(memberId, lectureId);
     model.addAttribute("like", isLike);
@@ -82,15 +101,11 @@ public class LectureController {
     // model.addAttribute("like", isLike);
     // }
 
-    logger.info("memberId : " + memberId);
-    LectureVO vo = lectureService.read(lectureId);
+    List<LessonVO> lessons = lessonService.getByLectureId(lectureId);
+    List<LectureReplyVO> replies = lectureReplyService.getReplies(lectureId);
 
-    // 찾는 강의가 없는 경우
-    if (vo == null) {
-      model.addAttribute("msg", "찾으시는 강의가 존재하지 않습니다.");
-      model.addAttribute("url", "list");
-      return "alert";
-    }
+    model.addAttribute("replies", replies);
+    model.addAttribute("lessons", lessons);
     model.addAttribute("memberId", memberId);
     model.addAttribute("lectureId", lectureId);
     model.addAttribute("lecture", vo);
