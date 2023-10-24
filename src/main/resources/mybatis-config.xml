@@ -11,7 +11,7 @@
 		<property name="memberPhone" value="member_phone"/>
 		<property name="memberAddress" value="member_address"/>
 		<property name="memberIntroduce" value="member_introduce"/>
-    <property name="memberProfileUrl" value="member_profile_url"/>
+    	<property name="memberProfileUrl" value="member_profile_url"/>
 		<property name="memberLevel" value="member_level"/>
 		
 		<!-- LESSON -->

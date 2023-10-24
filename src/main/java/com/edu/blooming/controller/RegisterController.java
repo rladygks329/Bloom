@@ -1,5 +1,8 @@
 package com.edu.blooming.controller;
 
+import javax.mail.Session;
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,16 +33,27 @@ public class RegisterController {
 	
 	@GetMapping("/register")
 	public void registerGET() {
-		logger.info("registerGET()");
+		logger.info("registerGET() 호출");
 	} // end registerGET()
 	
+	@PostMapping("/register")
+	public String registerPOST(MemberVO vo, HttpSession session) {
+		logger.info("registerPOST() 호출");
+		int result = memberService.create(vo);
+		if(result == 1) {
+			session.setAttribute("loginVo", vo);
+			// 메인 페이지로 리다이렉트
+		    return "main";
+		}
+		    // 회원 가입 실패 시, 회원 가입 페이지로 리다이렉트
+		    return "member/register";
+		
+	} // end registerPOST()	
 
 	@GetMapping("/register-type")
 	public void registerTypeGET() {
 		logger.info("registerTypeGET()");
 	} // end registerTypeGET()
-
-	
 	
 	@PostMapping("/register-type")
 	public String registerTypePOST(@RequestParam("memberLevel") String memberLevel, Model model) {

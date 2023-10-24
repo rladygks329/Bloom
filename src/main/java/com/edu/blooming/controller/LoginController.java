@@ -48,7 +48,7 @@ public class LoginController {
 		} else {
 			HttpSession session = request.getSession();
 			session.setAttribute("loginVo", loginVo);
-			logger.info("memberVO =  " +  loginVo.toString());
+			logger.info("loginVo =  " +  loginVo.toString());
 			return "redirect:/main";
 		} 		
 	} // end loginPOST()

@@ -3,42 +3,73 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script src="https://code.jquery.com/jquery-3.7.1.js" 
-integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous">
-</script>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 	<style>
 		.form_instructor {display: none;}
 	</style>
+	
+	<script>
+	/*
+	function validateInputs(event){
+			const email = $('#lectureTitle').val();
+			const password = $('#lecturePrice').val();
+			const name = $('#lectureThumbnailUrl').val();
+			const address = $('#lectureThumbnailUrl').val();
+			const phone = $('#lectureThumbnailUrl').val();
+			const lectureVideos = $('input[name=lectureVideos]');
+			const uploadRate = $('.progress-bar');
+			
+			if(!title){
+				alert("강좌 제목을 입력해주세요");
+				return false;
+			}
+			
+			if(!price){
+				alert("가격을 입력해주세요");
+				return false;
+			}
+			
+			if(Number(price) < 0){
+				alert("0 이상의 가격을 입력해주세요");
+				return false;
+			}
+			
+			if(!thumbnail){
+				alert("미리보기 이미지를 넣어주세요");
+				return false;	
+			}
+			
+			if(lectureVideos.length === 0){
+				alert("강의 영상을 하나라도 업로드 해주세요");
+				return false;	
+			}			
+			
+			let result = true;
+			$.each (uploadRate, function (index, el) {
+				const proccessRate = $(this).text();
+				if(proccessRate != "100%"){
+					result = false;
+				}
+			});
+			
+			if(!result){
+				alert("모든 강의 영상을 업로드 완료 해주세요");
+				return false;
+			}
+			return result;
+		} //end validateInputs()
+		*/
+		</script>
 
 </head>
 <body>
 	<!--	
-	(1)첫 시작 메인페이지 - 로그인, 회원가입을 클릭할 수 있음
-	(2)회원가입 클릭시 선택가능(일반회원, 강사회원)
-	(3)각 화면에서 회원가입 폼 
-	 - 이메일, 비밀번호, 이름, 연락처, 주소, (회원등급), (자기소개), (프로필사진)
-	 - // 이메일: 형식검사, 중복검사
-	 - // 비밀번호: 형식검사, 비밀번호 확인란
-	 - 이름: 한글로만 입력되어있는지
-	 - // 연락처: 형식검사
-	 - 주소: API, 합쳐서 DB로 넘기기
-	 - 등급: 처음 선택하고 조건문으로 숨기거나 보여주기(값은 디폴트로 고정)
-	 - 자기소개, 프로필사진: 강사만
-	 - 최종유효성검사
-	 	이메일, 비밀번호, 이름, 주소, 비밀번호가 일치할 때만,
-	(4)회원가입하면 로그인되면서 메인페이지 - 이때 로그아웃 버튼만 생성(세션값이 있을 때로)
-		(회원, 강사 메인페이지 나눠야하나 아니면 다 똑같이 하고 강사인 경우에만 마이페이지나 강의등록 활성화)
-	회원정보 세션으로 넘기기
-	로그인상태면 메인페이지에서 로그아웃버튼만 활성화
-	(5)로그아웃시 세션 삭제, 메인페이지 이동 
-	강사 정보 조회화면
-	 - 멤버테이블에서는 이름, 자기소개, 프로필사진 가져오기
-	회원 마이페이지
-	 - 정보수정기능(비밀번호, 연락처, 주소)
-	 - 강사의 경우 자기소개, 프로필사진까지
-	(전체적으로 코드 정리 필요) 
+	2. 최종 유효성검사 - 필수값들이 입력되어있는지 확인(alert창) - 강사소개 제약은 < 글자수로
+	3. url 값 안 들어 가는 현상 
+	4. 강사정보조회에서 저장되어있는 정보 가져오기
+	5. 마이페이지?
 	-->
 	
 	<%
@@ -47,8 +78,8 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 	%>
 
 	<h2>회원 가입하기</h2>
-  	<form action="register" method="post">
-    	
+  	<form action="register" method="post" >
+    	<!-- onsubmit="return validateInputs(event)" -->
     	<p>이메일</p>
 	    <input class="email_input" type="text" name="memberEmail" required="required">
 	    <span class="email_input_warning" style="display: none;">유효한 이메일 형식이 아닙니다.</span><br>
@@ -278,35 +309,21 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 		    	$('#address_input').val(fullAddress);
 		    	
 		    } // end sumAddress()
-		    
-		    /*
-			$(document).ready(function() {
-			    // 주소 입력란 값이 변경될 때마다 실행
-			    $('#sample6_address, #sample6_detailAddress').on('input', function() {
-			        // 두 개의 입력란에서 값을 가져옴
-			        var basicAddress = $('#sample6_address').val();
-			        var detailAddress = $('#sample6_detailAddress').val();
-			        
-			        // 주소 조합 (두 개의 주소를 합침)
-			        var fullAddress = basicAddress + ' ' + detailAddress;
-			        console.log(fullAddress);
-			        // 숨겨진 입력란에 조합된 주소 정보를 설정
-			        $('#memberAddress').val(fullAddress);
-			    });
-			});
-		    */		    
+		    		    
 		</script>
 	
 	    <input type="hidden" name="memberLevel" value="${memberLevel}" required="required">
 	    
-	    <div class="form_instructor">	 
-		    <p>자기소개</p>
-		    <input type="text" name="memberIntroduce" placeholder="자기소개">	
+	    <div class="form_instructor">		    
+		    <p>강사소개</p>
+		    <textarea name="memberIntroduce" rows="5" cols="25"></textarea>	
 		     	     
 		    <p>프로필 사진</p>
 			<input type="file" id ="fileItem" name='uploadFile' style="height: 30px;">	
 		    
-		</div>
+		</div>				
+		
+		<input type="hidden" name="memberProfileUrl" >
 		
 		<script>		
 		    var memberLevel = "${memberLevel}"; // memberLevel 값을 가져옴
@@ -315,65 +332,72 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 		    if (memberLevel === "instructor") {
 		        formInstructor.style.display = "block"; // 자기소개 및 프로필 사진을 보임
 		    }
-		</script>
-				
-		<!-- 파일 업로드 조건 체크 -->
-		<script>
-			var regex = new RegExp("(.*?)\.(jpg|png)$");
-			var maxSize = 1048576; //1MB	
-			
-			function fileCheck(fileName, fileSize){
+		</script>		    
+		    
+		<script>    
+		// 이미지 업로드		    
+		$("input[type='file']").on("change", function(e){
 
-				if(fileSize >= maxSize){
-					alert("파일 사이즈 초과");
-					return false;
-				}
-					  
-				if(!regex.test(fileName)){
-					alert("해당 종류의 파일은 업로드할 수 없습니다.");
-					return false;
-				}				
-				return true;				
-			} // end fileCheck()
+			// FormData 객체를 인스턴스화 하여 변수에 저장 후 전송 (객체의 주소를 변수에 저장)
+			var formData = new FormData();			
+				
+			// fileList, file 객체에 접근
+			var fileInput = $('input[name="uploadFile"]');
+			var fileList = fileInput[0].files;			
+			var fileObj = fileList[0];
 			
-			// 이미지 업로드
-			$("input[type='file']").on("change", function(e){
-				
-				// 첨부파일을 서버로 보내기 위한 가상의 form 태그
-				// FormData 객체를 인스턴스화하여 변수에 저장(객체의 주소를 변수에 저장)
-				var formData = new FormData();
-				
-				var fileInput = $('input[name="uploadFile"]');
-				var fileList = fileInput[0].files;
-				var fileObj = fileList[0];	
-				
-				//fileCheck가 false일 때 !연산자로 인해 true로 반환
-				if(!fileCheck(fileObj.name, fileObj.size)){
-					return false;
-				}		
-				
-				// 사용자가 선택한 파일을 FormData에 uploadFile이란 key로 추가
-				formData.append("uploadFile", fileObj);		
-				
-				// processData와 contentType은 false로 해야 한다
-				$.ajax({
-					url: '/blooming/image',
-			    	processData : false,
-			    	contentType : false,
-			    	data : formData,
-			    	type : 'POST',
-			    	dataType : 'json'
-			    	success : function(result){
-			    		console.log(result);
-			    	}
-				});
-				
-			}); // end input[file]
+			console.log("fileName : " + fileObj.name);
+			console.log("fileSize : " + fileObj.size);
+			console.log("fileType(MimeType) : " + fileObj.type);
 			
+			if(!fileCheck(fileObj.name, fileObj.size)){
+				return false;
+			}
 			
+			// key: uploadFile, value: fileObj
+			formData.append("uploadFile", fileObj);
 			
-		</script>	    
-	    
+			// ajax로 전송
+			$.ajax({
+				url: '/blooming/image',
+				processData : false,
+				contentType : false,
+				data : formData,
+				type : 'POST',
+				dataType : 'text',
+				 
+ 				success: function (result) {
+			    	// 파일 업로드 성공 시 실행되는 코드
+		    		console.log("파일 업로드 성공, 파일 이름: " + result);
+					// 파일 이름을 memberProfileUrl 입력 상자에 설정
+				    $('input[name="memberProfileUrl"]').val(result);
+			   	}	
+			});
+
+		}); // end on()
+
+		// 업로드 파일 양식 및 크기 체크
+		var regex = new RegExp("(.*?)\.(jpg|png)$");
+		var maxSize = 1048576; //1MB	
+		
+		function fileCheck(fileName, fileSize){
+
+			if(fileSize >= maxSize){
+				alert("파일 사이즈 초과");
+				return false;
+			}
+				  
+			if(!regex.test(fileName)){
+				alert("해당 종류의 파일은 업로드할 수 없습니다.");
+				return false;
+			}
+			
+			return true;		
+			
+		} // end fileCheck()
+		
+		</script>		
+	
 	    <br>
 	    <input type="submit" value="회원가입" >
   	</form>

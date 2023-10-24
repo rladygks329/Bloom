@@ -30,10 +30,9 @@ public class ImageController {
 			LoggerFactory.getLogger(ImageController.class);
 	
 	@PostMapping
-	@ResponseBody
-	public ResponseEntity<String> uploadAjaxActionPost(@RequestParam("uploadFile") MultipartFile[] uploadFile) {
+	public ResponseEntity<String> uploadAjaxActionPost(@RequestParam("uploadFile") MultipartFile uploadFile) {
 		logger.info("uploadAjaxActionPost 호출");
-		String result = null;
+		
 		String uploadFolder = "C:\\upload";
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -46,30 +45,30 @@ public class ImageController {
 		if(uploadPath.exists() == false) {
 			uploadPath.mkdirs();
 		}
-		
-		for(MultipartFile multipartFile : uploadFile) {
-			// 파일 이름
-			String uploadFileName = multipartFile.getOriginalFilename();
-			logger.info("uploadFileName = " + uploadFileName);
-			// 파일 이름에 uuid 적용
-			String uuid = UUID.randomUUID().toString();
-			uploadFileName = uuid + "_" + uploadFileName;
-			logger.info("uploadFileName = " + uploadFileName);
+	
+		// 파일 이름
+		String memberProfileUrl = null;
+		String uploadFileName = uploadFile.getOriginalFilename();
+		logger.info("uploadFileName = " + uploadFileName);
+		// 파일 이름에 uuid 적용
+		String uuid = UUID.randomUUID().toString();
+		uploadFileName = uuid + "_" + uploadFileName;
+		logger.info("uploadFileName = " + uploadFileName);
 			
-			File saveFile = new File(uploadPath, uploadFileName);
-			try {
-				multipartFile.transferTo(saveFile);
+		File saveFile = new File(uploadPath, uploadFileName);
+		try {
+			uploadFile.transferTo(saveFile);
 				
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} // end for()
-		return new ResponseEntity<String>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		memberProfileUrl = uploadFolder + File.separator + datePath + File.separator + uploadFileName;
+		logger.info(memberProfileUrl);
+		return new ResponseEntity<String>(memberProfileUrl, HttpStatus.OK);
 		
 	} // end uploadAjaxActionPost()
-	
-	
-} // end LoginController
+		
+} // end ImageController
 
 
 
