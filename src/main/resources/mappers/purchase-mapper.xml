@@ -15,4 +15,18 @@
 		where ${memberId} = #{memberId} and ${lectureId} = #{lectureId} 
 	</delete>
 	
+	<!-- 결제 내역 가져오기 -->
+	<select id="select_by_memberId" resultType="LectureVO">
+		select l.*
+		from ${lecture} l join ${purchase} p on l.${lectureId} = p.${lectureId}
+		where p.${memberId} = #{memberId}
+	</select>
+	
+	<!-- 결제 했는지 체크 -->
+	<select id="select_count" resultType="Integer">
+		select count(*)
+		from ${purchase}
+		where ${memberId} = #{memberId} and ${lectureId} = #{lectureId}
+	</select>
+	
 </mapper>
