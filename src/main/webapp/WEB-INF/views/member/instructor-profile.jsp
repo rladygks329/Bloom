@@ -9,7 +9,8 @@
 <body>
 	<h2>강사소개</h2>
 	
-	<h2>이미지 넣는 부분</h2>
+	<h2>프로필 이미지 출력 부분</h2>
+	<img src="<%= session.getAttribute("memberProfileUrl") %>" alt="프로필 이미지" />
 
 </body>
 </html>

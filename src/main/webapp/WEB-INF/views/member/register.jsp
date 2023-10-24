@@ -5,110 +5,93 @@
 <head>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>회원가입</title>
 	<style>
 		.form_instructor {display: none;}
 	</style>
 	
 	<script>
-	/*
-	function validateInputs(event){
-			const email = $('#lectureTitle').val();
-			const password = $('#lecturePrice').val();
-			const name = $('#lectureThumbnailUrl').val();
-			const address = $('#lectureThumbnailUrl').val();
-			const phone = $('#lectureThumbnailUrl').val();
-			const lectureVideos = $('input[name=lectureVideos]');
-			const uploadRate = $('.progress-bar');
-			
-			if(!title){
-				alert("강좌 제목을 입력해주세요");
-				return false;
-			}
-			
-			if(!price){
-				alert("가격을 입력해주세요");
-				return false;
-			}
-			
-			if(Number(price) < 0){
-				alert("0 이상의 가격을 입력해주세요");
-				return false;
-			}
-			
-			if(!thumbnail){
-				alert("미리보기 이미지를 넣어주세요");
+		var emailFinalCheck = false;
+		var pwFinalCheck = false;
+		var pwckFinalCheck = false;
+		var nameFinalCheck = false;
+		var phoneFinalCheck = false;
+		var addressFinalCheck = false;
+				
+		function validateInputs(event){
+			if(emailFinalCheck == false) {
+				alert("회원가입 정보를 확인해 주세요 : 이메일");
 				return false;	
 			}
 			
-			if(lectureVideos.length === 0){
-				alert("강의 영상을 하나라도 업로드 해주세요");
+			if(pwFinalCheck == false) {
+				alert("회원가입 정보를 확인해 주세요 : 비밀번호");
 				return false;	
-			}			
+			}
 			
-			let result = true;
-			$.each (uploadRate, function (index, el) {
-				const proccessRate = $(this).text();
-				if(proccessRate != "100%"){
-					result = false;
-				}
-			});
+			if(pwckFinalCheck == false) {
+				alert("회원가입 정보를 확인해 주세요 : 비밀번호확인");
+				return false;	
+			}
 			
-			if(!result){
-				alert("모든 강의 영상을 업로드 완료 해주세요");
+			if(nameFinalCheck == false) {
+				alert("회원가입 정보를 확인해 주세요 : 이름");
 				return false;
 			}
-			return result;
-		} //end validateInputs()
-		*/
-		</script>
+			
+			if(phoneFinalCheck == false) {
+				alert("회원가입 정보를 확인해 주세요 : 휴대폰번호");
+				return false;
+			}
+			
+			if(addressFinalCheck == false) {
+				alert("회원가입 정보를 확인해 주세요 : 주소");
+				return false;
+			}
+			
+		} // end validateInputs()		
+	</script>
 
 </head>
 <body>
-	<!--	
-	2. 최종 유효성검사 - 필수값들이 입력되어있는지 확인(alert창) - 강사소개 제약은 < 글자수로
-	3. url 값 안 들어 가는 현상 
-	4. 강사정보조회에서 저장되어있는 정보 가져오기
-	5. 마이페이지?
-	-->
-	
+
 	<%
     String memberLevel = (String) request.getAttribute("memberLevel");
     out.println("Member Level: " + memberLevel);
 	%>
 
 	<h2>회원 가입하기</h2>
-  	<form action="register" method="post" >
-    	<!-- onsubmit="return validateInputs(event)" -->
+  	<form action="register" method="post" onsubmit="return validateInputs(event)">
+    	
     	<p>이메일</p>
-	    <input class="email_input" type="text" name="memberEmail" required="required">
+	    <input class="email_input" type="text" name="memberEmail">
 	    <span class="email_input_warning" style="display: none;">유효한 이메일 형식이 아닙니다.</span><br>
 	    <span class="email_input_re_1" style="display: none;">사용 가능한 이메일입니다.</span> 
-	    <span class="email_input_re_2" style="display: none;">이메일이 이미 존재합니다.</span>
+	    <span class="email_input_re_2" style="display: none;">이메일이 이미 존재합니다.</span>	    
 	    	    
 	    <p>비밀번호</p>
-	    <input class="pw_input" type="password" name="memberPassword" placeholder="비밀번호 입력" required="required">
+	    <input class="pw_input" type="password" name="memberPassword" placeholder="비밀번호 입력">
 	    <span class="pw_input_re" style="display: none;"></span>
 	    
 	    <p>비밀번호 확인</p>
-	    <input class="pwck_input" type="password" name="memberPasswordCheck" placeholder="비밀번호 확인" required="required">
+	    <input class="pwck_input" type="password" name="memberPasswordCheck" placeholder="비밀번호 확인">
 	    <span class="pwck_input_re_1" style="display: none;">비밀번호가 일치합니다.</span>
         <span class="pwck_input_re_2" style="display: none;">비밀번호가 일치하지 않습니다.</span>
 	    
 	    <p>이름</p>
-	    <input class="name_input" type="text" name="memberName" placeholder="이름 입력" required="required">
+	    <input class="name_input" type="text" name="memberName" placeholder="이름 입력">
 	    <span class="name_input_re" style="display: none;"></span>
 	    
 	    <p>휴대폰번호</p>
-	    <input class="pn_input" type="text" name="memberPhone" placeholder="번호 입력" required="required">
+	    <input class="pn_input" type="text" name="memberPhone" placeholder="번호 입력">
 	    <span class="pn_input_re" style="display: none;"></span>
 	    
 	    <p>주소</p>
 	    <input type="text" id="sample6_postcode" placeholder="우편번호">
 		<input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
 		<input type="text" id="sample6_address" name="address" placeholder="주소"><br>
-		<input type="text" id="sample6_detailAddress" name="detailAddress" placeholder="상세주소">
-		<input type="text" id="sample6_extraAddress" placeholder="참고항목">
+		<input type="text" id="sample6_detailAddress" name="detailAddress" placeholder="상세주소: 선택사항">
+		<input type="text" id="sample6_extraAddress" placeholder="참고항목: 선택사항">
 		<input type="hidden" id="address_input" name="memberAddress">
 		
 		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
@@ -125,6 +108,7 @@
 			function checkEmailDuplication(email) {
 				if($('.email_input').val() === "") {
 					$('.email_input_warning').hide();
+					
 				// 유효성 검사를 통과한 경우에만 중복 검사 실행
 				} else if (mailFormCheck(email)) {
 			    	$('.email_input_warning').hide();
@@ -137,9 +121,12 @@
 			                if (result === 'success') {
 			                    $('.email_input_re_1').show();
 			                    $('.email_input_re_2').hide();
+			                    emailFinalCheck = true;
+
 			                } else if (result === 'faile') {
 			                    $('.email_input_re_1').hide();
 			                    $('.email_input_re_2').show();
+			                    
 			                }
 			            }
 			        });
@@ -148,6 +135,7 @@
 			        $('.email_input_warning').show();
 			        $('.email_input_re_1').hide();
 			        $('.email_input_re_2').hide();
+			        	
 			    }
 			} // end checkEmailDuplication()
 
@@ -171,14 +159,17 @@
 		    	var passwordPattern = /^(?=.*[a-zA-Z])(?=.*\d).{4,8}$/;
 		    	if (pw === "") {
 		    		$('.pw_input_re').css('display','none');
+		    		pwFinalCheck = false;
 		    	} else if (!passwordPattern.test(pw)) {
 		    		$('.pw_input_re').css('display','block');
 		    		$('.pw_input_re').text('영문자와 숫자 조합, 4~8자리로 입력해 주세요');
 		    		$('.pw_input_re').css('color', 'red');
+		    		pwFinalCheck = false;
 		    	} else {
 		    		$('.pw_input_re').css('display','block');
 		    		$('.pw_input_re').text('유효한 비밀번호입니다');
 		    		$('.pw_input_re').css('color', 'green');
+		    		pwFinalCheck = true;
 		    	}
 		    } // end checkPasswordValid()
 		    
@@ -189,14 +180,15 @@
 			    if (pw === "" && pwck === "") {			        
 			        $('.pwck_input_re_1').css('display','none');
 			        $('.pwck_input_re_2').css('display','none');
+			        pwckFinalCheck = false;
 			    } else if(pw == pwck) {
 			        $('.pwck_input_re_1').css('display','block');
 			        $('.pwck_input_re_2').css('display','none');
-			        pwckcorCheck = true;
+			        pwckFinalCheck = true;
 			    } else {
 			        $('.pwck_input_re_1').css('display','none');
 			        $('.pwck_input_re_2').css('display','block');
-			        pwckcorCheck = false;
+			        pwckFinalCheck = false;
 			    } 			    
 			};  
 
@@ -210,12 +202,15 @@
 				var namePattern = /^[가-힣]{2,10}$/;
 				if(nm === "") {
 					$('.name_input_re').css('display','none');
+					nameFinalCheck = false;
 				} else if(!namePattern.test(nm)) {
 					$('.name_input_re').css('display','block');
-					$('.name_input_re').text('이름을 확인해 주세요(2자~10자).');
+					$('.name_input_re').text('이름을 확인해 주세요(2자~10자)');
 					$('.name_input_re').css('color','red');
+					nameFinalCheck = false;
 				} else {
-					$('.name_input_re').css('display','none');					
+					$('.name_input_re').css('display','none');
+					nameFinalCheck = true;
 				}		
 			} // end checkNameValid()			
 			
@@ -233,12 +228,15 @@
 				// var phonePattern = new RegExp('^01(?:0|1|[6-9])(\\d{3}|\\d{4})(\\d{4})$');
 				if(pn === "") {
 					$('.pn_input_re').css('display','none');
+					phoneFinalCheck = false;
 				} else if(!phonePattern.test(pn)) {
 					$('.pn_input_re').css('display','block');
 					$('.pn_input_re').text('휴대전화번호 형식을 확인해 주세요.');
 					$('.pn_input_re').css('color','red');
+					phoneFinalCheck = false;
 				} else {
-					$('.pn_input_re').css('display','none');					
+					$('.pn_input_re').css('display','none');	
+					phoneFinalCheck = true;
 				}		
 			} // end checkPhoneValid()
 					
@@ -312,7 +310,7 @@
 		    		    
 		</script>
 	
-	    <input type="hidden" name="memberLevel" value="${memberLevel}" required="required">
+	    <input type="hidden" name="memberLevel" value="${memberLevel}">
 	    
 	    <div class="form_instructor">		    
 		    <p>강사소개</p>
