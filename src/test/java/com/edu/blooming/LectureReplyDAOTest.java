@@ -34,13 +34,13 @@ public class LectureReplyDAOTest {
   }
 
   private void testInsert() {
-    LectureReplyVO vo = new LectureReplyVO(-1, 1, 1, "강의가 좋네요", 5);
+    LectureReplyVO vo = new LectureReplyVO(-1, 1, 1, "강의가 좋네요", null, null, 5);
     int result = dao.insert(vo);
     logger.info(result + "행 삽입");
   }
 
   private void testUpdate() {
-    LectureReplyVO vo = new LectureReplyVO(5, 1, 1, "변경된 수강평", 3);
+    LectureReplyVO vo = new LectureReplyVO(5, 1, 1, "변경된 수강평", null, null, 3);
     int result = dao.update(vo);
     logger.info(result + "행 삽입");
   }

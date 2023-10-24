@@ -21,15 +21,15 @@
 	
 	<!-- 특정 수강평 조회 -->
 	<select id="select_by_lecture_reply_id" resultType="LectureReplyVO">
-		select *
-		from ${lecture_reply}
+		select r.*, m.${memberName} ${authorName}, m.${memberProfileUrl} ${authorProfileUrl}
+		from ${lecture_reply} r join ${member} m on r.${memberId} = m.${memberId} 
 		where ${lectureReplyId} = #{lectureReplyId}
 	</select>
 	
 	<!-- 특정 강의 수강평 조회 -->
 	<select id="select_by_lecture_id" resultType="LectureReplyVO">
-		select *
-		from ${lecture_reply}
+		select r.*, m.${memberName} authorName, m.${memberProfileUrl} authorProfileUrl
+		from ${lecture_reply} r join ${member} m on r.${memberId} = m.${memberId}
 		where ${lectureId} = #{lectureId}
 	</select>
 
