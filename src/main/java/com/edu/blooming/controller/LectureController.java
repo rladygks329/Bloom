@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import com.edu.blooming.domain.LectureReplyVO;
 import com.edu.blooming.domain.LectureVO;
 import com.edu.blooming.domain.LessonVO;
 import com.edu.blooming.service.LectureReplyService;
@@ -76,13 +75,15 @@ public class LectureController {
   public String lectureDetailGET(HttpServletRequest request, Model model, int lectureId) {
     logger.info("lectureDetailGET() 호출 lectureId : lectureId");
 
-    LectureVO vo = lectureService.read(lectureId);
+    LectureVO lecture = lectureService.read(lectureId);
     // 찾는 강의가 없는 경우
-    if (vo == null) {
+    if (lecture == null) {
       model.addAttribute("msg", "찾으시는 강의가 존재하지 않습니다.");
       model.addAttribute("url", "list");
       return "alert";
     }
+
+    List<LessonVO> lessons = lessonService.getByLectureId(lectureId);
 
     // TODO: session에서 memberId를 가져오도록 변경
     int memberId = 1;
@@ -101,14 +102,10 @@ public class LectureController {
     // model.addAttribute("like", isLike);
     // }
 
-    List<LessonVO> lessons = lessonService.getByLectureId(lectureId);
-    List<LectureReplyVO> replies = lectureReplyService.getReplies(lectureId);
-
-    model.addAttribute("replies", replies);
     model.addAttribute("lessons", lessons);
     model.addAttribute("memberId", memberId);
     model.addAttribute("lectureId", lectureId);
-    model.addAttribute("lecture", vo);
+    model.addAttribute("lecture", lecture);
     return "/lecture/detail";
   }
 

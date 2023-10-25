@@ -31,6 +31,7 @@
 		select r.*, m.${memberName} authorName, m.${memberProfileUrl} authorProfileUrl
 		from ${lecture_reply} r join ${member} m on r.${memberId} = m.${memberId}
 		where ${lectureId} = #{lectureId}
+		order by ${lectureReplyId}
 	</select>
 
 </mapper>

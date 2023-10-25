@@ -20,7 +20,20 @@
 <!-- Bootstrap core JS-->
 <script
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-	
+<style>
+.star-rating {
+	line-height: 32px;
+	font-size: 1.25em;
+}
+
+.review-rating .bi-star-fill {
+	color: #F4CE14;
+}
+
+.star-rating .bi-star-fill {
+	color: #F4CE14;
+}
+</style>
 <script>
 	function addLike() {
 		console.log("addLike() 호출");
@@ -33,7 +46,8 @@
 				'Content-Type' : 'application/json'
 			},
 			success : function(result) {
-				$("#btn-like i").removeClass("bi-suit-heart").addClass("bi-suit-heart-fill");
+				$("#btn-like i").removeClass("bi-suit-heart").addClass(
+						"bi-suit-heart-fill");
 				$("#btn-like i").text(result);
 				$("#btn-like").off("click");
 				$("#btn-like").click(removeLike);
@@ -51,16 +65,17 @@
 				'Content-Type' : 'application/json'
 			},
 			success : function(result) {
-				$("#btn-like i").removeClass("bi-suit-heart-fill").addClass("bi-suit-heart");
+				$("#btn-like i").removeClass("bi-suit-heart-fill").addClass(
+						"bi-suit-heart");
 				$("#btn-like i").text(result);
 				$("#btn-like").off("click");
 				$("#btn-like").click(addLike);
 			},
 		}); // end ajax
 	}
-	$(function(){
+	$(function() {
 		let like = $("#like").val();
-		 $("#btn-like").click((like === 'false') ? addLike : removeLike);
+		$("#btn-like").click((like === 'false') ? addLike : removeLike);
 	})
 </script>
 <meta charset="UTF-8">
@@ -132,43 +147,100 @@
 		</ul>
 		<hr>
 		<h3 class="display-6 fw-bolder">수강평</h3>
-		<c:forEach var="reply" items="${replies}">
-			<div class="card my-3">
-				<div class="card-header">
-					<div class="star-rating">
-						<c:set var="starRating" value="${reply.lectureReplyScore }" />
-						<c:forEach var="i" begin="1" end="5">
-							<c:choose>
-								<c:when test="${i <= starRating}">
-									<i class="bi bi-star-fill"></i>
-								</c:when>
-								<c:when test="${i - 0.5 <= starRating && starRating < i}">
-									<i class="bi bi-star-half"></i>
-								</c:when>
-								<c:otherwise>
-									<i class="bi bi-star"></i>
-								</c:otherwise>
-							</c:choose>
-						</c:forEach>
-					</div>
-					<span class="username">${ reply.authorName}</span>
-				</div> <!-- end card header -->
-				<div class="card-body">
-					<div class="">
-						<span class="username">${ reply.lectureReplyContent}</span>
+		<div class="lecture-comment-container"></div>
+
+		<!-- 댓글 입력 창 -->
+		<c:if test="${not empty memberId }">
+			<hr>
+			<div class="input-group border border-dark p-1">
+				<div class="container">
+					<div class="row justify-content-end">
+						<div class="col-lg-12">
+							<div class="review-rating" class="star-rating">
+								평점 : <i class="bi bi-star-fill" data-rating="1"></i> <i
+									class="bi bi-star-fill" data-rating="2"></i> <i
+									class="bi bi-star-fill" data-rating="3"></i> <i
+									class="bi bi-star-fill" data-rating="4"></i> <i
+									class="bi bi-star-fill" data-rating="5"></i> <input
+									id="review-score" type="hidden" name="whatever1"
+									class="rating-value" value="5">
+							</div>
+						</div>
 					</div>
 				</div>
+				<input id="review-content" type="text" class="form-control"
+					placeholder="Type your reply">
+				<div class="input-group-append">
+					<button class="btn btn-primary" type="button"
+						onclick="addReply()">Send</button>
+				</div>
 			</div>
-		</c:forEach>
-		<div class="input-group">
-			<input type="text" class="form-control" placeholder="Type your reply">
-			<div class="input-group-append">
-				<button class="btn btn-primary" type="button">Send</button>
+		</c:if>
+	</div>
+	<!-- modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<input id="lecture-reply-id" type="hidden">
+					<div class="input-group p-1">
+						<div class="container">
+							<div class="row justify-content-end">
+								<div class="col-lg-12">
+									<div class="review-rating">
+										평점 : <i class="bi bi-star-fill" data-rating="1"></i> <i
+											class="bi bi-star-fill" data-rating="2"></i> <i
+											class="bi bi-star-fill" data-rating="3"></i> <i
+											class="bi bi-star-fill" data-rating="4"></i> <i
+											class="bi bi-star-fill" data-rating="5"></i> <input
+											id="review-score" type="hidden" name="whatever1"
+											class="rating-value" value="5">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-body">
+					<form>
+						<div class="mb-3">
+							<label for="message-text" class="col-form-label">수강평:</label>
+							<textarea class="form-control" id="message-text"></textarea>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="modal-close" class="btn btn-secondary"
+						data-bs-dismiss="modal">닫기</button>
+					<button type="button" id="modal-edit" class="btn btn-primary">수정하기</button>
+				</div>
 			</div>
 		</div>
 	</div>
+	<script type="text/javascript">
+		var $star_rating = $('.review-rating .bi');
+		var SetRatingStar = function(starRating) {
+			return $star_rating
+					.each(function() {
+						if (parseInt($(this).siblings('input.rating-value')
+								.val()) >= parseInt($(this).data('rating'))) {
+							return $(this).removeClass('bi-star').addClass(
+									'bi-star-fill');
+						} else {
+							return $(this).removeClass('bi-star-fill')
+									.addClass('bi-star');
+						}
+					});
+		};
 
-
+		$star_rating.on('click', function() {
+			$(this).siblings('input.rating-value').val($(this).data('rating'));
+			return SetRatingStar(this);
+		});
+		SetRatingStar();
+	</script>
+	<script src="<%=request.getContextPath()%>/resources/lecture/detail.js"></script>
 	<!-- footer -->
 	<%@ include file="/WEB-INF/views/component/footer.jsp"%>
 </body>

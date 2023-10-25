@@ -45,7 +45,7 @@ public class LectureReplyServiceImple implements LectureReplyService {
     lectureDAO.updateReplyTotalScore(vo.getLectureId(), amount);
 
     lectureReplyDAO.update(vo);
-    return 0;
+    return 1;
   }
 
   @Transactional(value = "transactionManager")
@@ -55,7 +55,7 @@ public class LectureReplyServiceImple implements LectureReplyService {
     LectureReplyVO vo = lectureReplyDAO.selectByLectureReplyId(lectureReplyId);
     lectureReplyDAO.delete(lectureReplyId);
     lectureDAO.updateReplyTotalScore(vo.getLectureId(), -1 * vo.getLectureReplyScore());
-    return 0;
+    return 1;
   }
 
   @Override
