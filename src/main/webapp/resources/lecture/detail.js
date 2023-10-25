@@ -1,13 +1,13 @@
 function makeReplyDiv(replies){
     $(".lecture-comment-container").empty();
-
+    
     let memberId = $("#memberId").val();
+    let myComment;
 	let hasPrevComment = false;
 
     if(memberId === ""){
         memberId = -1;
     }
-
 
     $.each(replies, function (index, reply) {
         if(reply.memberId == memberId){
@@ -52,13 +52,25 @@ function makeReplyDiv(replies){
         replyCard.append(cardHeader);
         replyCard.append(cardBody);
         replyCard.append(cardFooter);
-        $(".lecture-comment-container").prepend(replyCard);
+
+        //내가 쓴 글이면 나중에 추가하기
+        if(memberId == reply.memberId){
+            myComment = replyCard;
+        }else{
+            $(".lecture-comment-container").prepend(replyCard);
+        }
     }); // end each()
 
-    if(hasPrevComment){
+    // 회원이 없거나 쓴 글이 있는 경우, 입력창을 보여주지 않는다.
+    if(hasPrevComment || memberId == -1){
         $('.lecture-comment-prompt').hide();
     }else{
         $('.lecture-comment-prompt').show();
+    }
+
+    //내가 쓴 글을 맨 위에 올리기
+    if(myComment){
+        $(".lecture-comment-container").prepend(myComment);
     }
 }
 

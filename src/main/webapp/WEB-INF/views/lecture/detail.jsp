@@ -39,6 +39,12 @@
 		console.log("addLike() 호출");
 		const lectureId = $("#lectureId").val();
 		const memberId = $("#memberId").val();
+		
+		if(memberId ===''){
+			alert("로그인을 하셔야 이용하실 수 있습니다.");
+			return;
+		}
+		
 		$.ajax({
 			type : "POST",
 			url : `like/${lectureId}/${memberId}`,
@@ -58,6 +64,11 @@
 		console.log("removeLike() 호출");
 		const lectureId = $("#lectureId").val();
 		const memberId = $("#memberId").val();
+		
+		if(memberId ===''){
+			alert("로그인을 하셔야 이용하실 수 있습니다.");
+			return;
+		}
 		$.ajax({
 			type : "DELETE",
 			url : `like/${lectureId}/${memberId}`,
