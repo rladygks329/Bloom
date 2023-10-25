@@ -8,11 +8,12 @@ function makeReplyDiv(replies){
         memberId = -1;
     }
 
-    console.log("memberId : " + memberId);
 
     $.each(replies, function (index, reply) {
         if(reply.memberId == memberId){
+            hasPrevComment = true;
         }
+
         const starRating = reply.lectureReplyScore;
         const replyCard = $("<div>").addClass("card my-3");
         const cardHeader = $("<div>").addClass("card-header");
@@ -53,6 +54,12 @@ function makeReplyDiv(replies){
         replyCard.append(cardFooter);
         $(".lecture-comment-container").prepend(replyCard);
     }); // end each()
+
+    if(hasPrevComment){
+        $('.lecture-comment-prompt').hide();
+    }else{
+        $('.lecture-comment-prompt').show();
+    }
 }
 
 function getAllReplies(){
@@ -75,6 +82,16 @@ function addReply(){
     const lectureId = $("#lectureId").val();
     const lectureReplyScore = $("#review-score").val();
     const lectureReplyContent = $("#review-content").val();
+
+    if(memberId === ''){
+        alert("로그인한 유저만 이용가능합니다.");
+        return;
+    }
+
+    if(lectureReplyContent === ''){
+        alert("내용을 입력해주세요");
+        return;
+    }
     
     const data = {
         memberId: memberId,
@@ -92,6 +109,10 @@ function addReply(){
         data : JSON.stringify(data),
         success : function(result) {
             getAllReplies();
+            // 기존 값 지우기
+            $("#review-content").val("");
+            $("#review-score").val(5);
+            SetRatingStar();
             console.log("addReplies 성공 result : " + result);
         },
     }); // end ajax
@@ -104,6 +125,16 @@ function updateReply(replyId){
     const lectureId = $("#lectureId").val();
     const lectureReplyScore = $(".modal .review-rating input").val();
     const lectureReplyContent = $(".modal-body textarea").val();
+
+    if(memberId === ''){
+        alert("로그인한 유저만 이용가능합니다.");
+        return;
+    }
+
+    if(lectureReplyContent === ''){
+        alert("내용을 입력해주세요");
+        return;
+    }
     
     const data = {
         lectureReplyId: replyId,
@@ -122,6 +153,11 @@ function updateReply(replyId){
         data : JSON.stringify(data),
         success : function(result) {
             getAllReplies();
+            // 기존 값 지우기
+            $(".modal-body textarea").val("")
+            $(".modal .review-rating input").val(5);
+            SetRatingStar();
+
             $('.modal').modal('hide');
             console.log("updateReplies 성공 result : " + result);
         },
@@ -129,7 +165,14 @@ function updateReply(replyId){
 }
 
 function deleteReply(replyId){
+    const memberId = $("#memberId").val();
     const lectureId = $("#lectureId").val();
+
+    if(memberId === ''){
+        alert("로그인한 유저만 이용가능합니다.");
+        return;
+    }
+    
     $.ajax({
         type : "DELETE",
         url : `/blooming/lecture/${lectureId}/replies/${replyId}`,
@@ -150,8 +193,8 @@ $(function(){
 
     $('#exampleModal').on('show.bs.modal', function (event) {
         //console.log("modal hidden input 값 replyId로 변경")
-        let button = $(event.relatedTarget); 
-        let replyId = button.data('replyid');
+        const button = $(event.relatedTarget);
+        const replyId = button.data('replyid');
         $('#lecture-reply-id').val(replyId);
     })
 

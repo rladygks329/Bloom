@@ -152,7 +152,7 @@
 		<!-- 댓글 입력 창 -->
 		<c:if test="${not empty memberId }">
 			<hr>
-			<div class="input-group border border-dark p-1">
+			<div class="lecture-comment-prompt input-group border border-dark p-1">
 				<div class="container">
 					<div class="row justify-content-end">
 						<div class="col-lg-12">
@@ -171,8 +171,7 @@
 				<input id="review-content" type="text" class="form-control"
 					placeholder="Type your reply">
 				<div class="input-group-append">
-					<button class="btn btn-primary" type="button"
-						onclick="addReply()">Send</button>
+					<button class="btn btn-primary" type="button" onclick="addReply()">Send</button>
 				</div>
 			</div>
 		</c:if>
