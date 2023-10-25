@@ -114,7 +114,7 @@
 			from (
 					select * 
 					from ${lecture}
-					where ${lectureTitle} like #{keyword} 
+					where ${lectureTitle} like #{keyword} or ${lectureDescription} like #{keyword}
 					order by ${lectureId} desc
 				) a
 			) l join ${member} m on l.${memberId} = m.${memberId}
