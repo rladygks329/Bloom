@@ -3,6 +3,7 @@
 "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
 	<properties>
+		<!-- MEMBER -->
 		<property name="member" value="member"/>
 		<property name="memberId" value="member_id"/>
 		<property name="memberEmail" value="member_email"/>
@@ -57,6 +58,27 @@
 		<property name="memberId" value="member_Id"/>
 		<property name="purchasePrice" value="purchase_price"/>
 		<property name="purchaseDateCreated" value="purchase_date_created"/>	
+		
+		<!-- BOARD -->
+		<property name="board" value="board"/>
+		<property name="boardId" value="board_id"/>
+		<property name="memberId" value="member_id"/>		
+		<property name="boardParentId" value="board_parent_id"/>
+		<property name="boardTitle" value="board_title"/>
+		<property name="boardContent" value="board_content"/>		
+		<property name="boardViewCount" value="board_view_count"/>
+		<property name="boardAnswerCount" value="board_answer_count"/>
+		<property name="boardReplyCount" value="board_reply_count"/>
+		<property name="boardLikeCount" value="board_like_count"/>
+		<property name="boardDateCreated" value="board_date_created"/>
+		
+		<!-- BOARD_REPLY -->
+		<property name="board_reply" value="board_reply"/>
+		<property name="boardReplyId" value="board_reply_id"/>
+		<property name="boardId" value="board_id"/>
+		<property name="memberId" value="member_id"/>
+		<property name="boardReplyContent" value="lecture_reply_content"/>
+		<property name="boardReplyDateCreated" value="board_reply_date_created"/>
 
 	</properties>
 	
