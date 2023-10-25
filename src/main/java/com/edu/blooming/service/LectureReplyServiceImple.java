@@ -55,6 +55,7 @@ public class LectureReplyServiceImple implements LectureReplyService {
     LectureReplyVO vo = lectureReplyDAO.selectByLectureReplyId(lectureReplyId);
     lectureReplyDAO.delete(lectureReplyId);
     lectureDAO.updateReplyTotalScore(vo.getLectureId(), -1 * vo.getLectureReplyScore());
+    lectureDAO.updateReplyCount(vo.getLectureId(), -1);
     return 1;
   }
 
