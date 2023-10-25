@@ -58,7 +58,10 @@
 								href="detail?lectureId=${lecture.lectureId}">
 								<div class="card h-100">
 									<!-- Product image-->
-									<img class="card-img-top" src="${lecture.lectureThumbnailUrl }"
+
+									<img class="card-img-top"
+										src="${lecture.lectureThumbnailUrl }" 
+										onerror="this.src='https://dummyimage.com/450x300/dee2e6/6c757d.jpg';"
 										alt="..." />
 									<!-- Product details-->
 									<div class="card-body p-4">
@@ -99,7 +102,7 @@
 															</c:otherwise>
 														</c:choose>
 													</c:forEach>
-													<p class="fs-6">(${lecture.lectureSalesCount})</p>
+													<p class="fs-6">(${lecture.lectureReplyCount})</p>
 												</c:if>
 											</div>
 										</div>
