@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <!-- Bootstrap css -->
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
@@ -16,6 +17,8 @@
 <!-- Bootstrap core JS-->
 <script
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Jquery -->
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style type="text/css">
@@ -24,6 +27,7 @@
 <body>
 	<%@ include file="/WEB-INF/views/component/navigation.jsp"%>
 	<hr>
+	<input type="hidden" name="memberId" value="${memberId }">
 	<div class="container px-4 px-lg-5">
 		<header class="py-2">
 			<div class="d-flex justify-content-between">
@@ -76,7 +80,7 @@
 						</table>
 						<div class="float-right text-right">
 							<h4>총합:</h4>
-							<h1>$99.00</h1>
+							<h1 id="total">0 원</h1>
 						</div>
 					</div>
 				</div>
@@ -91,5 +95,128 @@
 	</div>
 	<!-- footer -->
 	<%@ include file="/WEB-INF/views/component/footer.jsp"%>
+	<script type="text/javascript">
+		function updateView(lectureList) {
+			console.log("updateView 실행")
+			console.log(lectureList);
+			let total = 0;
+			$("table tbody").html("");
+
+			$.each(lectureList, function(index, lecture) {
+								console.log(lecture);
+								let newRow = $("<tr>");
+								let productCell = $("<td>").attr("data-th",
+										"Product");
+								let imageCol = $("<div>").addClass(
+										"col-md-3 text-left");
+								let img = $("<img>")
+										.attr("src",
+												lecture.lectureThumbnailUrl)
+										.attr("alt", "")
+										.addClass(
+												"img-fluid d-none d-md-block rounded mb-2 shadow");
+								imageCol.append(img);
+								let textCol = $("<div>").addClass(
+										"col-md-9 text-left mt-sm-2");
+								let productName = $("<h4>").text(
+										lecture.lectureTitle);
+								let brandName = $("<p>").addClass(
+										"font-weight-light").text("blooming");
+								textCol.append(productName, brandName);
+								productCell.append(imageCol, textCol);
+								let priceCell = $("<td>")
+										.addClass("align-middle")
+										.attr("data-th", "Price")
+										.text(
+												lecture.lecturePrice
+														.toLocaleString('ko-KR'));
+								total += lecture.lecturePrice;
+								let actionsCell = $("<td>").addClass(
+										"actions align-middle").attr("data-th",
+										"");
+								let buttonDiv = $("<div>").addClass(
+										"text-center");
+								let deleteButton = $("<button>").addClass(
+										"btn btn-lg btn-outline-danger");
+								let trashIcon = $("<i>").css("font-size",
+										"1.5em").addClass("bi bi-trash-fill");
+
+								deleteButton.click(function() {
+									const lectureId = lecture.lectureId;
+									const memberId = $("input[name=memberId]")
+											.val();
+									console.log(lectureId);
+									removeCartItem(memberId, lectureId);
+								})
+								deleteButton.append(trashIcon);
+								buttonDiv.append(deleteButton);
+								actionsCell.append(buttonDiv);
+
+								newRow.append(productCell, priceCell,
+										actionsCell);
+								$("table tbody").append(newRow);
+								$("#total").text(
+										total.toLocaleString('ko-KR') + " 원");
+							})
+		}
+
+		function getCartList() {
+			const memberId = $("input[name=memberId]").val();
+			$.ajax({
+				type : "GET",
+				url : `/blooming/cart/item/${memberId}`,
+				headers : {
+					'Content-Type' : 'application/json'
+				},
+				success : function(response) {
+					console.log("getCartList 성공");
+					console.log(response);
+					updateView(response)
+				},
+			});
+		}
+
+		function removeCartItem(memberId, lectureId) {
+			console.log("removeCartItem() 호출");
+			$.ajax({
+				type : "DELETE",
+				url : `/blooming/cart/item/` + memberId + "/" + lectureId,
+				headers : {
+					'Content-Type' : 'application/json'
+				},
+				success : function(response) {
+					console.log("removeCartItem 성공");
+					console.log(response);
+					getCartList();
+				},
+				error : function(xhr, status, error) {
+					console.log(error);
+					// Handle error here
+				}
+			});
+		}
+
+		function purchaseItems(lectureIds) {
+			$.ajax({
+				type : "POST",
+				url : `/blooming/purchase/${memberId}`,
+				headers : {
+					'Content-Type' : 'application/json'
+				},
+				data : JSON.stringify({
+					lectureId : lectureIds
+				}),
+				success : function(response) {
+					console.log("purchaseItems 성공");
+					console.log(response);
+					// move to my page
+				}
+			});
+		}
+
+		$(function() {
+			getCartList();
+		})
+	</script>
 </body>
 </html>

@@ -54,7 +54,7 @@
 			success : function(result) {
 				$("#btn-like i").removeClass("bi-suit-heart").addClass(
 						"bi-suit-heart-fill");
-				$("#btn-like i").text(result);
+				$("#btn-like i").text(" " + result);
 				$("#btn-like").off("click");
 				$("#btn-like").click(removeLike);
 			}
@@ -78,7 +78,7 @@
 			success : function(result) {
 				$("#btn-like i").removeClass("bi-suit-heart-fill").addClass(
 						"bi-suit-heart");
-				$("#btn-like i").text(result);
+				$("#btn-like i").text(" " + result);
 				$("#btn-like").off("click");
 				$("#btn-like").click(addLike);
 			},
