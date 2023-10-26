@@ -3,6 +3,7 @@ package com.edu.blooming.controller;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.edu.blooming.domain.LectureVO;
 import com.edu.blooming.domain.LectureVOBuilder;
 import com.edu.blooming.domain.LessonVO;
+import com.edu.blooming.domain.MemberVO;
 import com.edu.blooming.service.LectureService;
 import com.edu.blooming.service.LessonService;
 import com.edu.blooming.service.PurchaseService;
@@ -43,11 +45,11 @@ public class LectureController {
     logger.info("lectureGET() 호출");
     PageCriteria criteria = new PageCriteria();
 
-    if (page != null) {
+    if (page != null && page > 0) {
       criteria.setPage(page);
     }
 
-    if (numsPerPage != null) {
+    if (numsPerPage != null && numsPerPage > 0) {
       criteria.setNumsPerPage(numsPerPage);
     }
 
@@ -74,6 +76,8 @@ public class LectureController {
     logger.info("lectureDetailGET() 호출 lectureId : lectureId");
 
     LectureVO lecture = lectureService.read(lectureId);
+    List<LessonVO> lessons = lessonService.getByLectureId(lectureId);
+
     // 찾는 강의가 없는 경우
     if (lecture == null) {
       model.addAttribute("msg", "찾으시는 강의가 존재하지 않습니다.");
@@ -81,51 +85,39 @@ public class LectureController {
       return "alert";
     }
 
-    List<LessonVO> lessons = lessonService.getByLectureId(lectureId);
-
-    // TODO: session에서 memberId를 가져오도록 변경
-    int memberId = 1;
-    logger.info("memberId : " + memberId);
-    Boolean isLike = lectureService.checkIsLike(lectureId, lectureId);
-    Boolean isPurchase = purchaseService.checkPurchase(memberId, lectureId);
-    model.addAttribute("like", isLike);
-    model.addAttribute("purchase", isPurchase);
-
-    // HttpSession session = request.getSession();
-    // if (session.getAttribute("") == null) {
-    // model.addAttribute("like", false);
-    // }else {
-    // memberId = (int) session.getAttribute("");
-    // Boolean isLike = lectureService.checkIsLike(lectureId, lectureId);
-    // model.addAttribute("like", isLike);
-    // }
+    if (request.getSession().getAttribute("vo") != null) {
+      HttpSession session = request.getSession();
+      int memberId = ((MemberVO) session.getAttribute("vo")).getMemberId();
+      Boolean isLike = lectureService.checkIsLike(memberId, lectureId);
+      Boolean isPurchase = purchaseService.checkPurchase(memberId, lectureId);
+      model.addAttribute("memberId", memberId);
+      model.addAttribute("like", isLike);
+      model.addAttribute("purchase", isPurchase);
+    } else {
+      model.addAttribute("like", false);
+      model.addAttribute("purchase", false);
+    }
 
     model.addAttribute("lessons", lessons);
-    model.addAttribute("memberId", memberId);
     model.addAttribute("lectureId", lectureId);
     model.addAttribute("lecture", lecture);
     return "/lecture/detail";
   }
 
   @GetMapping("/upload")
-  public String lectureUploadGET(Model model) {
+  public String lectureUploadGET(Model model, HttpServletRequest request) {
     logger.info("lectureUploadGET() 호출");
 
-    // TODO : getMemberId from session;
-    int memberId = 1;
-    model.addAttribute("memberId", memberId);
+    int memberId = (int) request.getAttribute("memberId");
+    String memberLevel = (String) request.getAttribute("memberLevel");
 
-    // HttpSession session = request.getSession();
-    // if (session.getAttribute("") == null) {
-    // model.addAttribute("msg", "강사만이 영상을 업로드 할 수 있습니다.");
-    // model.addAttribute("url", "list");
-    // return "alert";
-    // model.addAttribute("like", false);
-    // }else {
-    // memberId = (int) session.getAttribute("");
-    // Boolean isLike = lectureService.checkIsLike(lectureId, lectureId);
-    // model.addAttribute("like", isLike);
-    // }
+    if (!memberLevel.equals("instructor")) {
+      model.addAttribute("msg", "강사만이 업로드할 수 있습니다.");
+      model.addAttribute("url", "list");
+      return "alert";
+    }
+
+    model.addAttribute("memberId", memberId);
 
     return "/lecture/upload";
   }
