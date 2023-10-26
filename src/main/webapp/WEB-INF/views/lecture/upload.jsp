@@ -1,34 +1,42 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-	<!-- Jquery -->
-	<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-	<!-- Bootstrap css -->
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" 
-		rel="stylesheet" 
-		integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" 
-		crossorigin="anonymous"/>
-	<!-- Bootstrap icons -->
-	<link
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
-      rel="stylesheet"/>
-	 <!-- Bootstrap core JS-->
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-	<meta charset="UTF-8">
-	<title>레슨 : 등록</title>
-	<script>
+<!-- Jquery -->
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<!-- Bootstrap css -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+	crossorigin="anonymous" />
+<!-- Bootstrap icons -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
+	rel="stylesheet" />
+<!-- Bootstrap core JS-->
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<meta charset="UTF-8">
+<title>레슨 : 등록</title>
+<script>
 		function validateInputs(event){
 			const title = $('#lectureTitle').val();
+			const description = $('#lectureDescription').val();
 			const price = $('#lecturePrice').val();
 			const thumbnail = $('#lectureThumbnailUrl').val();
-			const lectureVideos = $('input[name=lectureVideos]');
+			const lectureVideos = $('input[name=lectureVideosURL]');
 			const uploadRate = $('.progress-bar');
-			
+			 
 			if(!title){
 				alert("강좌 제목을 입력해주세요");
 				return false;
+			}
+			
+			if(!description){
+				alert("강좌 설명을 입력해주세요");
+				return false;	
 			}
 			
 			if(!price){
@@ -73,16 +81,17 @@
 			const progressBarWrapper = $(`<div class="progress">`);
 			const progressBar = $(`<div class="progress-bar progress-bar-striped" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">`).text("0%");
 			const button = $(`<button type="button" class="btn btn-primary my-3">전송 시작</button>`);
-			const input = $(`<input name="lectureVideos" type="hidden" required>`);
+			const inputURL = $(`<input name="lectureVideosURL" type="hidden" required>`);
+			const inputTitle = $(`<input name="lectureVideosTitle" type="hidden">`).val(name);
 			
 			progressBarWrapper.append(progressBar)
-			progressBarContainer.append(progressBarWrapper).append(button).append(input);
+			progressBarContainer.append(progressBarWrapper).append(button).append(inputURL).append(inputTitle);
 			
 			button.click(
 				function(){
 					sendVideoChunks(file, progressBar, function(videoUrl){
 						button.remove();
-						input.val(videoUrl);
+						inputURL.val(videoUrl);
 					});
 				}
 			);
@@ -152,6 +161,7 @@
 					contentType: false,
 					processData: false,
 					success : function(data) {
+						console.log("성공 data: " + data); 
 						$("#lectureThumbnailImg").attr("src", "display?fileName=" + data);
 						$("#lectureThumbnailUrl").val("display?fileName=" + data);
 					},
@@ -210,84 +220,112 @@
 	</script>
 </head>
 <body>
-	<%@ include file="/WEB-INF/views/component/navigation.jsp" %>
+	<%@ include file="/WEB-INF/views/component/navigation.jsp"%>
 	<section class="py-2 bg-secondary">
-	  <div class="container">
-	    <div class="row d-flex justify-content-center align-items-center h-100">
-	    <form action="/blooming/lesson" method="post" onsubmit="return validateInputs(event)">
-	      <div class="col-xl-9">
-	      
-	        <h1 class="text-white my-2">강좌 등록</h1>
-	
-	        <div class="card" style="border-radius: 15px;">
-	          <div class="card-body">
-				
-				<!-- Lecture Title -->	          
-	            <div class="row align-items-center pt-4 pb-3">
-	              <div class="col-md-3 ps-5">
-	                <h6 class="mb-0">강좌 제목</h6>
-	              </div>
-	              <div class="col-md-9 pe-5">
-	                <input id="lectureTitle" name="lectureTitle" type="text" class="form-control form-control-lg" placeholder="제목을 입력해주세요 " autofocus required/>
-	              </div>
-	            </div>
-	
-	            <hr class="mx-n3">
-				
-				<!-- Lecture Price -->
-	            <div class="row align-items-center py-3">
-	              <div class="col-md-3 ps-5">
-					
-	                <h6 class="mb-0">가격</h6>
-	              </div>
-	              <div class="col-md-9 pe-5">
-					<div id="lecturePriceLabel" class="small text-muted mt-2" hidden></div>
-	                <input id="lecturePrice" name="lecturePrice" type="number" min="0" step="1000" class="form-control form-control-lg" placeholder="10000" required/>
-	              </div>
-	            </div>
-	
-	            <hr class="mx-n3">
-				
-				<!-- Lecture Thumbnail -->
-	            <div class="row align-items-center py-3">
-	              <div class="col-md-3 ps-5">
-	                <h6 class="mb-0">미리보기 이미지</h6>
-	              </div>
-	              <div class="col-md-9 pe-5">
-	              	<img id="lectureThumbnailImg"src="https://placehold.co/600x200" class="img-fluid file-drop" alt="Responsive image">
-	              	<input id="lectureThumbnailUrl" name="lectureThumbnailUrl" type="hidden" required></div>
-	              	<div class="small text-muted mt-2">파일을 끌어다가 올려주세요</div>
-	              </div>
-	            </div>
-	
-	            <hr class="mx-n3">
-				
-				<!-- Lessons -->	
-	            <div class="row align-items-center py-3">
-	              <div class="col-md-3 ps-5">
-	                <h6 class="mb-0">강의 업로드</h6>
-					
-	              </div>
-	              <div class="col-md-9 pe-5">
-	                <input class="form-control form-control-lg" type="file" onchange="handleVideoUpload(event)" multiple/>
-	                <div class = "uploaded-video"></div>
-	                <div class="small text-muted mt-2">강의에 필요한 영상을 올려주세요</div>
-	                <div class="small text-danger mt-2 ">동영상 이름이 소제목으로 설정되오니 주의해주세요</div>
-	              </div>
-	            </div>
-	            <hr class="mx-n3">
-	            <div class="px-5 py-4">
-	              <button type="submit" class="btn btn-primary btn-lg">강좌 만들기</button>
-	            </div>
-	            
-	          </div> <!-- end card -->
-	        </div>
-	        
-	      </div>
-	      </form>
-	    </div>
-	  </div> <!-- end container -->
+		<div class="container">
+			<div
+				class="row d-flex justify-content-center align-items-center h-100">
+				<form action="/blooming/lecture/upload" method="post"
+					onsubmit="return validateInputs(event)">
+					<input type="hidden" id="memberId" name="memberId" value="${memberId}" />
+					<div class="col-xl-9">
+
+						<h1 class="text-white my-2">강좌 등록</h1>
+
+						<div class="card" style="border-radius: 15px;">
+							<div class="card-body">
+
+								<!-- Lecture Title -->
+								<div class="row align-items-center pt-4 pb-3">
+									<div class="col-md-3 ps-5">
+										<h6 class="mb-0">강좌 제목</h6>
+									</div>
+									<div class="col-md-9 pe-5">
+										<input id="lectureTitle" name="lectureTitle" type="text"
+											class="form-control form-control-lg"
+											placeholder="제목을 입력해주세요 " autofocus />
+									</div>
+								</div>
+
+								<!-- Lecture Description -->
+								<div class="row align-items-center pt-4 pb-3">
+									<div class="col-md-3 ps-5">
+										<h6 class="mb-0">강좌 설명</h6>
+									</div>
+									<div class="col-md-9 pe-5">
+										<textarea id="lectureDescription" name="lectureDescription"
+											type="text" class="form-control" placeholder="강좌 설명을 입력해주세요"
+											cols="20" rows="3"></textarea>
+									</div>
+								</div>
+
+								<hr class="mx-n3">
+
+								<!-- Lecture Price -->
+								<div class="row align-items-center py-3">
+									<div class="col-md-3 ps-5">
+
+										<h6 class="mb-0">가격</h6>
+									</div>
+									<div class="col-md-9 pe-5">
+										<div id="lecturePriceLabel" class="small text-muted mt-2"
+											hidden></div>
+										<input id="lecturePrice" name="lecturePrice" type="number"
+											min="0" step="1000" class="form-control form-control-lg"
+											placeholder="10000" />
+									</div>
+								</div>
+
+								<hr class="mx-n3">
+
+								<!-- Lecture Thumbnail -->
+								<div class="row align-items-center py-3">
+									<div class="col-md-3 ps-5">
+										<h6 class="mb-0">미리보기 이미지</h6>
+									</div>
+									<div class="col-md-9 pe-5">
+										<img id="lectureThumbnailImg"
+											src="https://placehold.co/600x200"
+											class="img-fluid file-drop" alt="Responsive image"> <input
+											id="lectureThumbnailUrl" name="lectureThumbnailUrl"
+											type="hidden" required>
+										<div class="small text-muted mt-2">파일을 끌어다가 올려주세요</div>
+									</div>
+								</div>
+							</div>
+
+							<hr class="mx-n3">
+
+							<!-- Lessons -->
+							<div class="row align-items-center py-3">
+								<div class="col-md-3 ps-5">
+									<h6 class="mb-0">강의 업로드</h6>
+
+								</div>
+								<div class="col-md-9 pe-5">
+									<input class="form-control form-control-lg" type="file"
+										onchange="handleVideoUpload(event)" multiple />
+									<div class="uploaded-video"></div>
+									<div class="small text-muted mt-2">강의에 필요한 영상을 올려주세요</div>
+									<div class="small text-danger mt-2 ">동영상 이름이 소제목으로 설정되오니
+										주의해주세요</div>
+								</div>
+							</div>
+							<hr class="mx-n3">
+							<div class="px-5 py-4">
+								<button type="submit" class="btn btn-primary btn-lg">강좌
+									만들기</button>
+							</div>
+
+						</div>
+						<!-- end card -->
+					</div>
+			</div>
+			</form>
+		</div>
+		</div>
+		<!-- end container -->
 	</section>
-	<%@ include file="/WEB-INF/views/component/footer.jsp" %>
+	<%@ include file="/WEB-INF/views/component/footer.jsp"%>
 </body>
 </html>

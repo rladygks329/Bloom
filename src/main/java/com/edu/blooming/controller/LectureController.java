@@ -1,5 +1,6 @@
 package com.edu.blooming.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -15,8 +16,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.edu.blooming.domain.LectureVO;
+import com.edu.blooming.domain.LectureVOBuilder;
 import com.edu.blooming.domain.LessonVO;
-import com.edu.blooming.service.LectureReplyService;
 import com.edu.blooming.service.LectureService;
 import com.edu.blooming.service.LessonService;
 import com.edu.blooming.service.PurchaseService;
@@ -36,9 +37,6 @@ public class LectureController {
 
   @Autowired
   private PurchaseService purchaseService;
-
-  @Autowired
-  private LectureReplyService lectureReplyService;
 
   @GetMapping("/list")
   public void lectureGET(Model model, Integer page, Integer numsPerPage, String keyword) {
@@ -110,15 +108,54 @@ public class LectureController {
   }
 
   @GetMapping("/upload")
-  public void lectureUploadGET() {
+  public String lectureUploadGET(Model model) {
     logger.info("lectureUploadGET() 호출");
+
+    // TODO : getMemberId from session;
+    int memberId = 1;
+    model.addAttribute("memberId", memberId);
+
+    // HttpSession session = request.getSession();
+    // if (session.getAttribute("") == null) {
+    // model.addAttribute("msg", "강사만이 영상을 업로드 할 수 있습니다.");
+    // model.addAttribute("url", "list");
+    // return "alert";
+    // model.addAttribute("like", false);
+    // }else {
+    // memberId = (int) session.getAttribute("");
+    // Boolean isLike = lectureService.checkIsLike(lectureId, lectureId);
+    // model.addAttribute("like", isLike);
+    // }
+
+    return "/lecture/upload";
   }
 
+  //// @formatter:off
   @PostMapping("/upload")
-  public String lectureUploadPOST() {
+  public String lectureUploadPOST(String lectureTitle, Integer memberId, String lectureDescription, int lecturePrice,
+      String lectureThumbnailUrl, String[] lectureVideosURL, String[] lectureVideosTitle ) {
     logger.info("lectureUploadPOST() 호출");
-    return "redirect:/blooming/lecture/list";
+    
+    List<LessonVO> lessons = new ArrayList<>();
+    for(int i=0; i<lectureVideosURL.length; i++) {
+      lessons.add(new LessonVO(-1, -1, lectureVideosTitle[i], lectureVideosURL[i]));      
+    }
+    
+    LectureVO lecture = new LectureVOBuilder()
+        .memberId(memberId)
+        .lectureTitle(lectureTitle)
+        .lectureDescription(lectureDescription)
+        .lecturePrice(lecturePrice)
+        .lectureThumbnailUrl(lectureThumbnailUrl)
+        .build();
+    
+    logger.info("vo : " + lecture.toString());
+    int result = lectureService.create(lecture, lessons);
+    // if result == 1 :"redirect:/lecture/list"
+    // else return : redirect:/mypage
+    return "redirect:/lecture/list";
   }
+  // @formatter:on
 
   /// @formatter:off
   // TODO: 모든 속성을 select 하지 않도록 dao 수정 하기
