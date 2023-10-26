@@ -38,20 +38,38 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 				<th style="width : 60px">번호</th>
 				<th style="width : 700px">제목</th>
 				<th style="width : 120px">작성자</th>
-				<th style="width : 100px">작성일</th>
+				<th style="width : 60px">조회수</th>
 				<th style="width : 60px">답글수</th>
+				<th style="width : 300px">작성일</th>
 			</tr>
 		</thead>
 		<tbody>
-		
-		
-		
-		
+			<c:forEach var="vo" items="${list }">
+				<tr>
+					<td>${vo.boardId }</td>
+					<td>${vo.boardTitle }</td>
+					<td>${vo.memberId }</td>
+					<td>${vo.boardViewCount }</td>
+					<td>${vo.boardAnswerCount }</td>
+					<fmt:formatDate value="${vo.boardDateCreated }"
+					pattern="yyyy-MM-dd HH:mm:ss" var="boardDateCreated"/>
+					<td>${vo.boardDateCreated }</td>
+				</tr>			
+			</c:forEach>
 		</tbody> 
-	
-	
-	
 	</table>
+	<ul>
+		<c:if test="${pageMaker.hasPrev }">
+			<li><a href="list?page=${pageMaker.startPageNo -1 }">이전</a></li>
+		</c:if>
+		<c:forEach begin="${pageMaker.startPageNo }" end="${pageMaker.endPageNo }" var="num">
+			<li><a href="list?page=${num }">${num }</a></li>
+		</c:forEach>
+		<c:if test="${pageMaker.hasNext }">
+			<li><a href="list?page=${pageMaker.endPageNo + 1}">다음</a></li>
+		</c:if>
+		
+	</ul>
 
 </body>
 </html>
