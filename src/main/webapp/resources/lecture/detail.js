@@ -1,6 +1,7 @@
 function makeReplyDiv(replies){
     $(".lecture-comment-container").empty();
     
+    const authorId = $("#authorId").val();
     let memberId = $("#memberId").val();
     let myComment;
 	let hasPrevComment = false;
@@ -61,8 +62,8 @@ function makeReplyDiv(replies){
         }
     }); // end each()
 
-    // 회원이 없거나 쓴 글이 있는 경우, 입력창을 보여주지 않는다.
-    if(hasPrevComment || memberId == -1){
+    // 회원이 없거나 쓴 글이 있는 경우, 또는 자기 자신인 경우 입력창을 보여주지 않는다.
+    if(hasPrevComment || memberId == -1 || memberId == authorId){
         $('.lecture-comment-prompt').hide();
     }else{
         $('.lecture-comment-prompt').show();

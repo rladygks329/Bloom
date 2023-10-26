@@ -98,9 +98,11 @@
 	<!-- Product section-->
 	<input id="like" type="hidden" value="${like}" />
 	<input id="lectureId" type="hidden" value="${lectureId}" />
-	<input id="auhorId" type="hidden" value="${lecture.memberId }">
+	<input id="authorId" type="hidden" value="${lecture.memberId }">
 	<input id="memberId" type="hidden" value="${memberId}" />
-
+	<input id="purchase" type="hidden" value="${purchase}" />
+	<input id="cart" type="hidden" value="${cart}" />
+	
 	<section class="py-5">
 		<div class="container px-4 px-lg-5 my-5">
 			<div class="row gx-4 gx-lg-5 align-items-center">
