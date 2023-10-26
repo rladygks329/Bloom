@@ -98,6 +98,7 @@
 	<!-- Product section-->
 	<input id="like" type="hidden" value="${like}" />
 	<input id="lectureId" type="hidden" value="${lectureId}" />
+	<input id="auhorId" type="hidden" value="${lecture.memberId }">
 	<input id="memberId" type="hidden" value="${memberId}" />
 
 	<section class="py-5">
@@ -126,14 +127,19 @@
 						</button>
 
 						<button class="btn btn-outline-dark flex-shrink-0" type="button">
-							<!-- 장바구니추가, 장바구니 삭제, 강의 수강 -->
+							<!-- 차례로 원작자, 구매자, 장바구니에 있는 사람, 없는 사람 -->
 							<c:choose>
+								<c:when test="${memberId eq lecture.memberId}">
+									<a class="text-reset link-underline link-underline-opacity-0"
+										href=""> 강의 수정하기 </a>
+								</c:when>
 								<c:when test="${purchase }">
 									<a class="text-reset link-underline link-underline-opacity-0"
-										href="/blooming/lesson/${lectureId }">강의 들으러 가기</a>
+										href="/blooming/videos/${lectureId }">강의 들으러 가기</a>
 								</c:when>
 								<c:when test="${not purchase and cart}">
-									<i class="bi-cart-fill me-1"></i> 장바구니 바로 가기 
+									<a class="text-reset link-underline link-underline-opacity-0"
+										href="/blooming/cart"> 장바구니 바로 가기 </a>
 								</c:when>
 								<c:when test="${not purchase and not cart}">
 									<i class="bi-cart-fill me-1"></i> Add to cart
