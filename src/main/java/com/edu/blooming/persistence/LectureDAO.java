@@ -39,5 +39,4 @@ public interface LectureDAO {
   int insertLike(int memberId, int lectureId);
 
   int deleteLike(int memberId, int lectureId);
-
 }

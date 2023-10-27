@@ -13,6 +13,4 @@ public interface LectureReplyDAO {
   LectureReplyVO selectByLectureReplyId(int lectureReplyId);
 
   List<LectureReplyVO> selectByLectureId(int lectureId);
-
-
 }

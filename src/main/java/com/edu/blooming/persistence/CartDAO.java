@@ -13,5 +13,4 @@ public interface CartDAO {
   List<LectureVO> select(int memberId);
 
   int calcTotal(int memberId);
-
 }

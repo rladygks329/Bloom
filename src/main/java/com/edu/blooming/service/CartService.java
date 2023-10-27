@@ -13,5 +13,4 @@ public interface CartService {
   List<LectureVO> getItems(int memberId);
 
   int calcTotal(int memberId);
-
 }

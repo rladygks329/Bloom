@@ -3,13 +3,15 @@ package com.edu.blooming.persistence;
 import com.edu.blooming.domain.MemberVO;
 
 public interface MemberDAO {
-	public abstract int insert(MemberVO vo);	// 회원가입
-	
-	public MemberVO memberLogin(MemberVO loginVo);	// 로그인
+  public abstract int insert(MemberVO vo); // 회원가입
 
-	public abstract int emailCheck(String memberEmail);	// 이메일 중복체크
-	public abstract MemberVO select(String memberEmail);	// 회원정보조회
-	public abstract int update(String memberEmail, MemberVO vo);	// 회원정보업데이트
-	public abstract int delete(String memberEmail);	// 회원탈퇴
-	// 중복검사 등 제약조건
+  public abstract MemberVO login(MemberVO loginVo); // 로그인
+
+  public abstract int checkEmail(String email); // 이메일 중복체크
+
+  public abstract MemberVO select(String email); // 회원정보조회
+
+  public abstract int update(String email, MemberVO vo); // 회원정보업데이트
+
+  public abstract int delete(String email); // 회원탈퇴
 }

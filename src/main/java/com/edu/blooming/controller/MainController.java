@@ -6,19 +6,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-
 @Controller
-@RequestMapping(value="/main")
+@RequestMapping(value = "/main")
 public class MainController {
-    private static final Logger logger = LoggerFactory.getLogger(MainController.class);
-	
-    @GetMapping
-    public String main() {
-        return "main"; // 
-    }
-    
+  private static final Logger logger = LoggerFactory.getLogger(MainController.class);
 
-    
-    
+  @GetMapping
+  public String main() {
+    return "main";
+  }
 }
- 
