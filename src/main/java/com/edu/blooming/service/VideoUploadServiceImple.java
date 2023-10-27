@@ -28,7 +28,8 @@ public class VideoUploadServiceImple implements ViedoUploadService {
       throws IOException {
     Map<String, String> map = new HashMap<String, String>();
     String dateDir = FileUploadUtil.getUploadPath(uploadPath); // 2021/10/11
-    String uploadDir = uploadPath + '/' + dateDir;
+
+    String uploadDir = uploadPath + File.separator + dateDir;
 
     File dir = new File(uploadDir);
     if (!dir.exists()) {
@@ -45,8 +46,11 @@ public class VideoUploadServiceImple implements ViedoUploadService {
     // 마지막 조각이 전송 됐을 경우
     if (chunkNumber == totalChunks - 1) {
       String[] split = file.getOriginalFilename().split("\\.");
-      String outputFilename =
-          UUID.randomUUID() + file.getOriginalFilename() + "." + split[split.length - 1];
+
+      String orginName = split[0];
+      String extension = split[1];
+
+      String outputFilename = UUID.randomUUID() + "." + extension;
       logger.info(outputFilename);
       Path outputFile = Paths.get(uploadDir, outputFilename);
       Files.createFile(outputFile);
@@ -59,7 +63,7 @@ public class VideoUploadServiceImple implements ViedoUploadService {
         Files.delete(chunkFile);
       }
       logger.info("File uploaded successfully");
-      map.put("outputFileName", outputFilename);
+      map.put("outputFileName", dateDir + File.separator + outputFilename);
       map.put("continue", "y");
     } else {
       map.put("continue", "n");

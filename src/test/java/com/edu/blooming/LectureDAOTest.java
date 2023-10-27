@@ -36,22 +36,26 @@ public class LectureDAOTest {
     // testUpdateTotalScore();
     // testGetLectureCount();
     // testGetLectureCountByMemberId();
+    // testGetLectureCountByKeyword();
     // testSelect();
     // testSelectByMemberId();
     // testSelectIsMemberLikeLecture();
     // testSelectByLectureId();
+    // testSelectByKeyword();
     // testInsertLectureLike();
     // testDeleteLectureLike();
   }
 
   private void testInsert() {
-    LectureVO vo = new LectureVO(0, 1, "강좌 1의 제목", 9000, 0, 0, 0, 0, "테스트 파일 경로", null);
+    LectureVO vo =
+        new LectureVO(0, 1, "개발자", "강좌 1의 제목", "상세한 강의 설명", 9000, 0, 0, 0, 0, "테스트 파일 경로", null);
     int result = dao.insert(vo);
     logger.info("lectureId: " + result);
   } // end testInsert()
 
   private void testUpdate() {
-    LectureVO vo = new LectureVO(1, 0, "강좌 1의 수정된 제목", 8000, 0, 0, 0, 0, "수정된 테스트 파일 경로", null);
+    LectureVO vo = new LectureVO(1, 0, "개발자", "강좌 1의 수정된 제목", "수정된 상세한 강의 설명", 8000, 0, 0, 0, 0,
+        "수정된 테스트 파일 경로", null);
     int result = dao.update(vo);
     logger.info(result + "행 변경");
   } // end testUpdate()
@@ -86,6 +90,11 @@ public class LectureDAOTest {
     logger.info(result + "행 존재");
   } // end testGetLectureCountByMemberId()
 
+  private void testGetLectureCountByKeyword() {
+    int result = dao.getLectureCount("강좌");
+    logger.info(result + "행 존재");
+  }// end testGetLectureCountByKeyword
+
   private void testSelectByLectureId() {
     int lectureId = 1;
     LectureVO vo = dao.select(lectureId);
@@ -99,6 +108,14 @@ public class LectureDAOTest {
       logger.info("vo : " + vo.toString());
     }
   } // end testSelect()
+
+  private void testSelectByKeyword() {
+    PageCriteria criteria = new PageCriteria();
+    List<LectureVO> list = dao.select(criteria, "강좌");
+    for (LectureVO vo : list) {
+      logger.info("vo : " + vo.toString());
+    }
+  } // end testSelectByKeyword();
 
   private void testSelectByMemberId() {
     PageCriteria criteria = new PageCriteria();

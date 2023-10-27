@@ -49,6 +49,20 @@ public class LectureServiceImple implements LectureService {
   }
 
   @Override
+  public List<LectureVO> read(PageCriteria criteria, String keyword) {
+    logger.info("read() 호출 keyword: " + keyword);
+    logger.info("start = " + criteria.getStart());
+    logger.info("end = " + criteria.getEnd());
+    return lectureDAO.select(criteria, keyword);
+  }
+
+  @Override
+  public boolean checkIsLike(int memberId, int lectureId) {
+    logger.info("checkIsLike() 호출");
+    return lectureDAO.selectIsMemberLikeLecture(memberId, lectureId);
+  }
+
+  @Override
   public List<LectureVO> findLectureByAuthorId(PageCriteria criteria, int authorId) {
     logger.info("findLectureByAuthorId() 호출");
     logger.info("start = " + criteria.getStart());
@@ -88,6 +102,12 @@ public class LectureServiceImple implements LectureService {
   public int getTotalCounts(int authorId) {
     logger.info("getTotalCounts() 호출 : memberId : " + authorId);
     return lectureDAO.getLectureCount(authorId);
+  }
+
+  @Override
+  public int getTotalCounts(String keyword) {
+    logger.info("getTotalCounts() 호출 : keyword : " + keyword);
+    return lectureDAO.getLectureCount(keyword);
   }
 
 }

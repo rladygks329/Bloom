@@ -6,7 +6,7 @@ public class PageCriteria {
 
   public PageCriteria() {
     this.page = 1;
-    this.numsPerPage = 3;
+    this.numsPerPage = 10;
   }
 
   public PageCriteria(int page, int numsPerPage) {

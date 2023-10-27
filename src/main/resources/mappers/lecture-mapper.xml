@@ -5,8 +5,8 @@
 	<!-- 강좌 추가 -->
 	<insert id="insert">
 		insert into ${lecture}
-		(${memberId}, ${lectureTitle}, ${lecturePrice}, ${lectureThumbnailUrl})
-		values (#{memberId}, #{lectureTitle}, #{lecturePrice}, #{lectureThumbnailUrl})
+		(${memberId}, ${lectureTitle}, ${lecturePrice}, ${lectureThumbnailUrl}, ${lectureDescription})
+		values (#{memberId}, #{lectureTitle}, #{lecturePrice}, #{lectureThumbnailUrl}, #{lectureDescription})
 		
 		<!-- 입력후 lecture_Id를 리턴함 -->
 		<selectKey keyProperty="lectureId" resultType="Integer" order="AFTER">
@@ -19,7 +19,8 @@
 		update ${lecture}
 		set ${lectureTitle} = #{lectureTitle},
 			${lecturePrice} = #{lecturePrice},
-			${lectureThumbnailUrl} = #{lectureThumbnailUrl}
+			${lectureThumbnailUrl} = #{lectureThumbnailUrl},
+			${lectureDescription} = #{lectureDescription}
 		where ${lectureId} = #{lectureId}
 	</update>
 	
@@ -53,15 +54,27 @@
 	
 	<!-- 강좌 번호로 강좌 조회 -->
 	<select id="select_by_lecture_id" resultType="LectureVO">
-		select *
-		from ${lecture}
+		select 
+			${lectureId}, 
+			l.${memberId},
+			m.${memberName} ${authorName},
+			${lectureTitle}, 
+			${lecturePrice}, 
+			${lectureSalesCount},
+			${lectureTotalScore}, 
+			${lectureReplyCount}, 
+			${lectureLikeCount}, 
+			${lectureThumbnailUrl}, 
+			${lectureDateCreated},
+			${lectureDescription}
+		from ${lecture} l join ${member} m on l.${memberId} = m.${memberId}
 		where ${lectureId} = #{lectureId}	
 	</select>
 		
 	<!-- 특정 강사의 강의 조회 pagenation-->
 	<select id="paging_select_by_member_id" resultType="LectureVO">
 		select 
-			${lectureId}, ${memberId}, ${lectureTitle}, ${lecturePrice}, ${lectureSalesCount},
+			${lectureId}, l.${memberId}, m.${memberName} ${authorName}, ${lectureTitle}, ${lectureDescription}, ${lecturePrice}, ${lectureSalesCount},
 			${lectureTotalScore}, ${lectureReplyCount}, ${lectureLikeCount}, ${lectureThumbnailUrl}, ${lectureDateCreated}
 		from (
 			select rownum rn, a.* 
@@ -71,14 +84,14 @@
 					where ${memberId} = #{memberId}
 					order by ${lectureId} desc
 				) a
-			) 
+			) l join ${member} m on l.${memberId} = m.${memberId}
 		where rn between #{start} and #{end}	
 	</select>
 	
 	<!-- 강좌 조회 PageNation -->
 	<select id="paing_select" resultType="LectureVO">
 		select 
-			${lectureId}, ${memberId}, ${lectureTitle}, ${lecturePrice}, ${lectureSalesCount},
+			${lectureId}, l.${memberId}, m.${memberName} ${authorName}, ${lectureTitle}, ${lectureDescription}, ${lecturePrice}, ${lectureSalesCount},
 			${lectureTotalScore}, ${lectureReplyCount}, ${lectureLikeCount}, ${lectureThumbnailUrl} , ${lectureDateCreated} 
 		from (
 			select rownum rn, a.* 
@@ -87,9 +100,25 @@
 					from ${lecture} 
 					order by ${lectureId} desc
 				) a
-			) 
+			) l join ${member} m on l.${memberId} = m.${memberId}
 		where rn between #{start} and #{end}
+	</select>
 	
+	<!-- 강좌 검색 조회 PageNation -->
+	<select id="select_by_keyword" resultType="LectureVO">
+		select 
+			${lectureId}, l.${memberId}, m.${memberName} ${authorName}, ${lectureTitle}, ${lectureDescription}, ${lecturePrice}, ${lectureSalesCount},
+			${lectureTotalScore}, ${lectureReplyCount}, ${lectureLikeCount}, ${lectureThumbnailUrl} , ${lectureDateCreated} 
+		from (
+			select rownum rn, a.* 
+			from (
+					select * 
+					from ${lecture}
+					where ${lectureTitle} like #{keyword} or ${lectureDescription} like #{keyword}
+					order by ${lectureId} desc
+				) a
+			) l join ${member} m on l.${memberId} = m.${memberId}
+		where rn between #{start} and #{end}
 	</select>
 	
 	<!-- 페이지 네이션을 위한 전체 강의 수 조회 -->
@@ -105,6 +134,13 @@
 		where ${memberId} = #{memberId}
 	</select>
 	 
+	<!-- 검색을 위한 해당 키워드가 들어간 강의 수 조회 -->
+	<select id="keyword_lecture_count" resultType="Integer">
+		select count(${lectureId})
+		from ${lecture}	
+		where ${lectureTitle} like #{keyword} 
+	</select>
+	
 	 <!-- 특정 멤버가 어떤 강의를 좋아요눌렀는지 조회 -->
 	 <select id="select_is_member_like_lecture" resultType="Integer">
 	 	select count(*)

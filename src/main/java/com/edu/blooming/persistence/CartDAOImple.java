@@ -41,6 +41,17 @@ public class CartDAOImple implements CartDAO {
   }
 
   @Override
+  public int selectExist(int memberId, int lectureId) {
+    logger.info("selectExist() 호출 : memberId = " + memberId + " lectureId = " + lectureId);
+
+    Map<String, Integer> args = new HashMap<>();
+    args.put("memberId", memberId);
+    args.put("lectureId", lectureId);
+
+    return sqlSession.selectOne(NAMESPACE + ".select_exist", args);
+  }
+
+  @Override
   public List<LectureVO> select(int memberId) {
     logger.info("select() 호출 : memberId = " + memberId);
 

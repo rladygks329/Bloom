@@ -25,7 +25,9 @@
 		<!-- LECUTRE -->
 		<property name="lecture" value="lecture"/>
 		<property name="memberId" value="member_Id"/>
+		<property name="authorName" value="author_name"/>
 		<property name="lectureTitle" value="lecture_title"/>
+		<property name="lectureDescription" value="lecture_description"/>
 		<property name="lecturePrice" value="lecture_price"/>		
 		<property name="lectureSalesCount" value="lecture_sales_count"/>		
 		<property name="lectureTotalScore" value="lecture_total_score"/>
@@ -41,6 +43,8 @@
 		<property name="memberId" value="member_Id"/>
 		<property name="lectureReplyContent" value="lecture_reply_content"/>
 		<property name="lectureReplyScore" value="lecture_reply_score"/>
+		<property name="authorName" value="author_name"/>
+		<property name="authorProfileUrl" value="author_Profile_Url"/>
 		
 		<!-- LECTURE_LIKE  -->
 		<property name="lecture_like" value="lecture_like"/>

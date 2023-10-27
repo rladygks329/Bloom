@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import com.edu.blooming.service.VideoUploadServiceImple;
+import com.edu.blooming.service.ViedoUploadService;
 
 @Controller
 @RequestMapping(value = "/video")
@@ -22,9 +22,9 @@ public class VideoUploadController {
   private final static Logger logger = LoggerFactory.getLogger(VideoUploadController.class);
 
   @Autowired
-  private VideoUploadServiceImple videoUploadService;
+  private ViedoUploadService videoUploadService;
 
-  @GetMapping()
+  @GetMapping
   public String videoUploadPage() {
     logger.info("videoUploadPage");
     return "video-upload";
@@ -38,7 +38,7 @@ public class VideoUploadController {
   * @return status 206: 조각 업로드 성공, 200: 전체 업로드 성공 
   */
   @ResponseBody
-  @PostMapping()
+  @PostMapping
   public ResponseEntity<String> chunkUpload(
       @RequestParam("chunk") MultipartFile file,
       @RequestParam("chunkNumber") int chunkNumber, 

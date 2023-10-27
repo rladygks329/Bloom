@@ -52,4 +52,16 @@ public class PurchaseServiceImple implements PurchaseService {
     return 1;
   }
 
+  @Override
+  public List<LectureVO> getPurchaseList(int memberId) {
+    logger.info("getPurchaseList() 호출, memberId : " + memberId);
+    return purchaseDAO.select(memberId);
+  }
+
+  @Override
+  public boolean checkPurchase(int memberId, int lectureId) {
+    logger.info("checkPurchase() 호출, memberId : " + memberId + " lectureId : " + lectureId);
+    return purchaseDAO.selectIsMemberBuyLecture(memberId, lectureId);
+  }
+
 }

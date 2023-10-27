@@ -93,6 +93,14 @@ public class LectureDAOImple implements LectureDAO {
   }
 
   @Override
+  public int getLectureCount(String keyword) {
+    logger.info("getLectureCount() 호출 : keyword : " + keyword);
+    HashMap<String, String> args = new HashMap<>();
+    args.put("keyword", "%" + keyword + "%");
+    return sqlSession.selectOne(NAMESPACE + ".keyword_lecture_count", args);
+  }
+
+  @Override
   public List<LectureVO> select(PageCriteria criteria) {
     logger.info("select() 호출 : criteria : " + criteria);
 
@@ -101,6 +109,18 @@ public class LectureDAOImple implements LectureDAO {
     args.put("end", criteria.getEnd());
 
     return sqlSession.selectList(NAMESPACE + ".paing_select", args);
+  }
+
+  @Override
+  public List<LectureVO> select(PageCriteria criteria, String keyword) {
+    logger.info("select() 호출 : criteria : " + criteria.toString() + " keyword : " + keyword);
+
+    HashMap<String, Object> args = new HashMap<>();
+    args.put("start", criteria.getStart());
+    args.put("end", criteria.getEnd());
+    args.put("keyword", "%" + keyword + "%");
+
+    return sqlSession.selectList(NAMESPACE + ".select_by_keyword", args);
   }
 
   @Override

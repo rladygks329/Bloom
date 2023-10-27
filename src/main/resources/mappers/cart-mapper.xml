@@ -29,5 +29,10 @@
 		from ${lecture} l join ${cart} c on l.${lectureId} = c.${lectureId}
 		where c.${memberId} = #{memberId}
 	</select>
-
+	
+	<select id="select_exist" resultType="Integer">
+		select count(*)
+		from ${cart}
+		where ${memberId} = #{memberId} and ${lectureId} = #{lectureId}
+	</select>
 </mapper>
