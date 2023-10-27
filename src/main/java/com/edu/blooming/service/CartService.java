@@ -4,12 +4,14 @@ import java.util.List;
 import com.edu.blooming.domain.LectureVO;
 
 public interface CartService {
-  int addLectureToCart(int memberId, int lectureId);
+  int add(int memberId, int lectureId);
 
-  int removeLectureFromCart(int memberId, int lectureId);
+  int remove(int memberId, int lectureId);
 
-  List<LectureVO> getCartLectures(int memberId);
+  boolean isExist(int memberId, int lectureId);
 
-  int calculateTotalPrice(int memberId);
+  List<LectureVO> getItems(int memberId);
+
+  int calcTotal(int memberId);
 
 }

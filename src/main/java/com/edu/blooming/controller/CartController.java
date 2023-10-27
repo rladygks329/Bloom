@@ -41,7 +41,7 @@ public class CartController {
 
   @GetMapping(value = "/item/{memberId}")
   public ResponseEntity<List<LectureVO>> getCartItems(@PathVariable("memberId") int memberId) {
-    List<LectureVO> list = cartService.getCartLectures(memberId);
+    List<LectureVO> list = cartService.getItems(memberId);
     return new ResponseEntity<List<LectureVO>>(list, HttpStatus.OK);
   }
 
@@ -52,7 +52,7 @@ public class CartController {
       @PathVariable("memberId") int memberId) {
     logger.info("addCart() 추가 memberId: "+ memberId + " lectureId " + lectureId);
     try {
-      cartService.addLectureToCart(memberId, lectureId);
+      cartService.add(memberId, lectureId);
     } catch (Exception e) {
       logger.info("insert 중 문제 발생");
       throw new IllegalStateException("추가 할 수 없습니다.");
@@ -66,7 +66,7 @@ public class CartController {
       @PathVariable("lectureId") int lectureId) {
     logger.info("removeCart() 추가 memberId: "+ memberId + " lectureId " + lectureId);
     try {
-      cartService.removeLectureFromCart(memberId, lectureId);
+      cartService.remove(memberId, lectureId);
     } catch (Exception e) {
       logger.info("delete 중 문제 발생");
       throw new IllegalStateException("삭제할수 없습니다.");
