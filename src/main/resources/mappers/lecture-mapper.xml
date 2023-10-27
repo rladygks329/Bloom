@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.blooming.LectureMapper">
+	
+	<!-- 강좌 추가 -->
+	<insert id="insert">
+		insert into ${lecture}
+		(${memberId}, ${lectureTitle}, ${lecturePrice}, ${lectureThumbnailUrl}, ${lectureDescription})
+		values (#{memberId}, #{lectureTitle}, #{lecturePrice}, #{lectureThumbnailUrl}, #{lectureDescription})
+		
+		<!-- 입력후 lecture_Id를 리턴함 -->
+		<selectKey keyProperty="lectureId" resultType="Integer" order="AFTER">
+			SELECT LECTURE_SEQ.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+
+	<!-- 강좌 정보 수정 -->	
+	<update id="update">
+		update ${lecture}
+		set ${lectureTitle} = #{lectureTitle},
+			${lecturePrice} = #{lecturePrice},
+			${lectureThumbnailUrl} = #{lectureThumbnailUrl},
+			${lectureDescription} = #{lectureDescription}
+		where ${lectureId} = #{lectureId}
+	</update>
+	
+	<!-- 강좌 좋아요 갯수 수정 -->
+	<update id="update_like">
+		update ${lecture}
+		set ${lectureLikeCount} = ${lectureLikeCount} + #{amount}
+		where ${lectureId} = #{lectureId}
+	</update>
+	
+	<!-- 강좌 판매량 갯수 수정 -->
+	<update id="update_sales_count">
+		update ${lecture}
+		set ${lectureSalesCount} = ${lectureSalesCount} + #{amount}
+		where ${lectureId} = #{lectureId}
+	</update>
+	
+	<!-- 강좌 평가 갯수 수정 -->
+	<update id="update_reply_count">
+		update ${lecture}
+		set ${lectureReplyCount} = ${lectureReplyCount} + #{amount}
+		where ${lectureId} = #{lectureId}
+	</update>
+	
+	<!-- 강좌 총점 수정 -->
+	<update id="update_total_score">
+		update ${lecture}
+		set ${lectureTotalScore} = ${lectureTotalScore} + #{amount}
+		where ${lectureId} = #{lectureId}
+	</update>
+	
+	<!-- 강좌 번호로 강좌 조회 -->
+	<select id="select_by_lecture_id" resultType="LectureVO">
+		select 
+			${lectureId}, 
+			l.${memberId},
+			m.${memberName} ${authorName},
+			${lectureTitle}, 
+			${lecturePrice}, 
+			${lectureSalesCount},
+			${lectureTotalScore}, 
+			${lectureReplyCount}, 
+			${lectureLikeCount}, 
+			${lectureThumbnailUrl}, 
+			${lectureDateCreated},
+			${lectureDescription}
+		from ${lecture} l join ${member} m on l.${memberId} = m.${memberId}
+		where ${lectureId} = #{lectureId}	
+	</select>
+		
+	<!-- 특정 강사의 강의 조회 pagenation-->
+	<select id="paging_select_by_member_id" resultType="LectureVO">
+		select 
+			${lectureId}, l.${memberId}, m.${memberName} ${authorName}, ${lectureTitle}, ${lectureDescription}, ${lecturePrice}, ${lectureSalesCount},
+			${lectureTotalScore}, ${lectureReplyCount}, ${lectureLikeCount}, ${lectureThumbnailUrl}, ${lectureDateCreated}
+		from (
+			select rownum rn, a.* 
+			from (
+					select * 
+					from ${lecture} 
+					where ${memberId} = #{memberId}
+					order by ${lectureId} desc
+				) a
+			) l join ${member} m on l.${memberId} = m.${memberId}
+		where rn between #{start} and #{end}	
+	</select>
+	
+	<!-- 강좌 조회 PageNation -->
+	<select id="paing_select" resultType="LectureVO">
+		select 
+			${lectureId}, l.${memberId}, m.${memberName} ${authorName}, ${lectureTitle}, ${lectureDescription}, ${lecturePrice}, ${lectureSalesCount},
+			${lectureTotalScore}, ${lectureReplyCount}, ${lectureLikeCount}, ${lectureThumbnailUrl} , ${lectureDateCreated} 
+		from (
+			select rownum rn, a.* 
+			from (
+					select * 
+					from ${lecture} 
+					order by ${lectureId} desc
+				) a
+			) l join ${member} m on l.${memberId} = m.${memberId}
+		where rn between #{start} and #{end}
+	</select>
+	
+	<!-- 강좌 검색 조회 PageNation -->
+	<select id="select_by_keyword" resultType="LectureVO">
+		select 
+			${lectureId}, l.${memberId}, m.${memberName} ${authorName}, ${lectureTitle}, ${lectureDescription}, ${lecturePrice}, ${lectureSalesCount},
+			${lectureTotalScore}, ${lectureReplyCount}, ${lectureLikeCount}, ${lectureThumbnailUrl} , ${lectureDateCreated} 
+		from (
+			select rownum rn, a.* 
+			from (
+					select * 
+					from ${lecture}
+					where ${lectureTitle} like #{keyword} or ${lectureDescription} like #{keyword}
+					order by ${lectureId} desc
+				) a
+			) l join ${member} m on l.${memberId} = m.${memberId}
+		where rn between #{start} and #{end}
+	</select>
+	
+	<!-- 페이지 네이션을 위한 전체 강의 수 조회 -->
+	<select id="total_count" resultType="Integer">
+		select count(${lectureId})
+		from ${lecture}	
+	</select>
+	
+	<!-- 페이지 네이션을 위한 특정 강사 강의 수 조회 -->
+	<select id="member_lecture_count" resultType="Integer">
+		select count(${lectureId})
+		from ${lecture}	
+		where ${memberId} = #{memberId}
+	</select>
+	 
+	<!-- 검색을 위한 해당 키워드가 들어간 강의 수 조회 -->
+	<select id="keyword_lecture_count" resultType="Integer">
+		select count(${lectureId})
+		from ${lecture}	
+		where ${lectureTitle} like #{keyword} 
+	</select>
+	
+	 <!-- 특정 멤버가 어떤 강의를 좋아요눌렀는지 조회 -->
+	 <select id="select_is_member_like_lecture" resultType="Integer">
+	 	select count(*)
+	 	from ${lecture_like} a join ${lecture} b on a.${lectureId} = b.${lectureId}  
+	 	where a.${lectureId} = #{lectureId} and a.${memberId} = #{memberId}
+	 </select>
+	 
+	 <!-- 강좌 좋아요 -->
+	 <insert id="insert_lecture_like">
+	 	insert into ${lecture_like}
+	 	(${lectureId}, ${memberId})
+	 	values(#{lectureId}, #{memberId})
+	 </insert>
+	 
+	 <!-- 강좌 좋아요 취소 -->
+	 <delete id="delete_lecture_like">
+	 	delete from ${lecture_like}
+	 	where ${lectureId} = #{lectureId} and ${memberId} = #{memberId} 
+	 </delete>
+</mapper>
