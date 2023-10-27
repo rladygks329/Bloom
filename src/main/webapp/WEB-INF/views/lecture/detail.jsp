@@ -84,6 +84,30 @@
 			},
 		}); // end ajax
 	}
+	function addCart(){
+		const lectureId = $("#lectureId").val();
+		const memberId = $("#memberId").val();
+		$.ajax({
+			type : "POST",
+			url : `/blooming/cart/item/${memberId}/${lectureId}`,
+			headers : {
+				'Content-Type' : 'application/json'
+			},
+			success : function(response) {
+				console.log("addCart() 성공");
+				const addBtn = $("#addCartBtn").html("");
+				const link = 
+					$("<a>").addClass("text-reset").addClass("link-underline").addClass("link-underline-opacity-0")
+					.text(" 장바구니 바로 가기")
+					.attr("href", "/blooming/cart");
+
+				addBtn.removeAttr("onclick");
+				addBtn.append(link);
+			},
+		});
+	}
+	
+	// window.onload
 	$(function() {
 		let like = $("#like").val();
 		$("#btn-like").click((like === 'false') ? addLike : removeLike);
@@ -102,7 +126,7 @@
 	<input id="memberId" type="hidden" value="${memberId}" />
 	<input id="purchase" type="hidden" value="${purchase}" />
 	<input id="cart" type="hidden" value="${cart}" />
-	
+
 	<section class="py-5">
 		<div class="container px-4 px-lg-5 my-5">
 			<div class="row gx-4 gx-lg-5 align-items-center">
@@ -128,26 +152,34 @@
 								${lecture.lectureLikeCount } </i>
 						</button>
 
-						<button class="btn btn-outline-dark flex-shrink-0" type="button">
-							<!-- 차례로 원작자, 구매자, 장바구니에 있는 사람, 없는 사람 -->
-							<c:choose>
-								<c:when test="${memberId eq lecture.memberId}">
+
+						<!-- 차례로 원작자, 구매자, 장바구니에 있는 사람, 없는 사람 -->
+						<c:choose>
+							<c:when test="${memberId eq lecture.memberId}">
+								<button class="btn btn-outline-dark flex-shrink-0" type="button">
 									<a class="text-reset link-underline link-underline-opacity-0"
 										href=""> 강의 수정하기 </a>
-								</c:when>
-								<c:when test="${purchase }">
+								</button>
+							</c:when>
+							<c:when test="${purchase }">
+								<button class="btn btn-outline-dark flex-shrink-0" type="button">
 									<a class="text-reset link-underline link-underline-opacity-0"
 										href="/blooming/videos/${lectureId }">강의 들으러 가기</a>
-								</c:when>
-								<c:when test="${not purchase and cart}">
+								</button>
+							</c:when>
+							<c:when test="${not purchase and cart}">
+								<button class="btn btn-outline-dark flex-shrink-0" type="button">
 									<a class="text-reset link-underline link-underline-opacity-0"
 										href="/blooming/cart"> 장바구니 바로 가기 </a>
-								</c:when>
-								<c:when test="${not purchase and not cart}">
+								</button>
+							</c:when>
+							<c:when test="${not purchase and not cart}">
+								<button id="addCartBtn" class="btn btn-outline-dark flex-shrink-0" onclick="addCart()" type="button">
 									<i class="bi-cart-fill me-1"></i> Add to cart
-								</c:when>
-							</c:choose>
-						</button>
+								</button>
+							</c:when>
+						</c:choose>
+
 					</div>
 				</div>
 			</div>
@@ -171,7 +203,8 @@
 		<!-- 댓글 입력 창 -->
 		<c:if test="${not empty memberId }">
 			<hr>
-			<div class="lecture-comment-prompt input-group border border-dark p-1">
+			<div
+				class="lecture-comment-prompt input-group border border-dark p-1">
 				<div class="container">
 					<div class="row justify-content-end">
 						<div class="col-lg-12">

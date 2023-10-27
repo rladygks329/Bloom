@@ -155,9 +155,8 @@
 								newRow.append(productCell, priceCell,
 										actionsCell);
 								$("table tbody").append(newRow);
-								$("#total").text(
-										total.toLocaleString('ko-KR') + " 원");
 							})
+			$("#total").text(total.toLocaleString('ko-KR') + " 원");
 		}
 
 		function getCartList() {

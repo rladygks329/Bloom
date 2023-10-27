@@ -20,6 +20,7 @@ import com.edu.blooming.domain.LectureVO;
 import com.edu.blooming.domain.LectureVOBuilder;
 import com.edu.blooming.domain.LessonVO;
 import com.edu.blooming.domain.MemberVO;
+import com.edu.blooming.service.CartService;
 import com.edu.blooming.service.LectureService;
 import com.edu.blooming.service.LessonService;
 import com.edu.blooming.service.PurchaseService;
@@ -39,6 +40,9 @@ public class LectureController {
 
   @Autowired
   private PurchaseService purchaseService;
+
+  @Autowired
+  private CartService cartService;
 
   @GetMapping("/list")
   public void lectureGET(Model model, Integer page, Integer numsPerPage, String keyword) {
@@ -76,8 +80,6 @@ public class LectureController {
     logger.info("lectureDetailGET() 호출 lectureId : lectureId");
 
     LectureVO lecture = lectureService.read(lectureId);
-    List<LessonVO> lessons = lessonService.getByLectureId(lectureId);
-
     // 찾는 강의가 없는 경우
     if (lecture == null) {
       model.addAttribute("msg", "찾으시는 강의가 존재하지 않습니다.");
@@ -85,22 +87,28 @@ public class LectureController {
       return "alert";
     }
 
+    List<LessonVO> lessons = lessonService.getByLectureId(lectureId);
+    model.addAttribute("like", false);
+    model.addAttribute("cart", false);
+    model.addAttribute("purchase", false);
+    model.addAttribute("lessons", lessons);
+    model.addAttribute("lectureId", lectureId);
+    model.addAttribute("lecture", lecture);
+
     if (request.getSession().getAttribute("vo") != null) {
+      // 로그인한 상태라면 좋아요, 결제 유무, 장바구니에 있는지 검사한 후 정보 넣기
       HttpSession session = request.getSession();
       int memberId = ((MemberVO) session.getAttribute("vo")).getMemberId();
       Boolean isLike = lectureService.checkIsLike(memberId, lectureId);
       Boolean isPurchase = purchaseService.checkPurchase(memberId, lectureId);
+      Boolean isCart = cartService.isExist(memberId, lectureId);
+
       model.addAttribute("memberId", memberId);
       model.addAttribute("like", isLike);
+      model.addAttribute("cart", isCart);
       model.addAttribute("purchase", isPurchase);
-    } else {
-      model.addAttribute("like", false);
-      model.addAttribute("purchase", false);
     }
 
-    model.addAttribute("lessons", lessons);
-    model.addAttribute("lectureId", lectureId);
-    model.addAttribute("lecture", lecture);
     return "/lecture/detail";
   }
 
