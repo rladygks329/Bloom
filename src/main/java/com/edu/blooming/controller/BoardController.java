@@ -50,10 +50,33 @@ public class BoardController {
 		
 	} // end list()
 	
+	@GetMapping("/detail")
+	public void detail(Model model, Integer boardId, Integer page) {
+		logger.info("detail() 호출 : boardId = " + boardId);
+		List<BoardVO> vo = boardService.read(boardId);
+		model.addAttribute("vo", vo);
+		model.addAttribute("page", page);
+	}
 	
 	
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

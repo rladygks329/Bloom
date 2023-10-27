@@ -10,5 +10,6 @@ public interface BoardDAO {
 	int insert(BoardVO vo);
 	List<BoardVO> select(PageCriteria criteria);
 	int getTotalCounts();
+	List<BoardVO> select(int boardId);
 	
 }

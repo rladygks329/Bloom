@@ -42,6 +42,12 @@ public class BoardDAOImple implements BoardDAO {
 		return sqlSession.selectOne(NAMESPACE + ".total_count");
 	}
 
+	@Override
+	public List<BoardVO> select(int boardId) {
+		logger.info("select() 호출: boardId = " + boardId);
+		return sqlSession.selectList(NAMESPACE + ".select_by_board_id", boardId);
+	}
+
 }
 
 

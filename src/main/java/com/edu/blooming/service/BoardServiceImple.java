@@ -38,4 +38,10 @@ public class BoardServiceImple implements BoardService {
 		return boardDAO.getTotalCounts();
 	}
 
+	@Override
+	public List<BoardVO> read(int boardId) {
+		logger.info("read() 호출: boardId = " + boardId);
+		return boardDAO.select(boardId);		
+	}
+
 }
