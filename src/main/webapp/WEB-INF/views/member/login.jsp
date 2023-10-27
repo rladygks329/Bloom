@@ -26,19 +26,5 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 	</form>
 
 	
-	<!-- 
-	<script>
-		$(".login_button").click(function(){
-			// alert("로그인 버튼 작동");
-			
-			/* 로그인 메서드 서버 요청 */
-	        $("#login").attr("action", "/member/login");
-	        $("#login").submit();
-  		});
-		
-	</script>
-	 -->
-	 
-	
 </body>
 </html>

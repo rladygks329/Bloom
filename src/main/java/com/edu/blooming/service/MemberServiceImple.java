@@ -32,13 +32,12 @@ public class MemberServiceImple implements MemberService {
 
 
 	@Override
-	public MemberVO memberLogin(MemberVO vo) throws Exception {
+	public MemberVO memberLogin(MemberVO loginVo) throws Exception {
 		logger.info("memberLogin() 호출");
-		return dao.memberLogin(vo);
+		logger.info("vo값 = " + loginVo.toString());
+		return dao.memberLogin(loginVo);
 		
 	}
-
-
 
 	@Override
 	public void logout(HttpSession session) {
@@ -46,12 +45,6 @@ public class MemberServiceImple implements MemberService {
 		
 	}
 
-
-
-
-
-	
-	
 } // end MemberService
 
 
