@@ -50,8 +50,8 @@ public class BoardController {
   @GetMapping("/detail")
   public void detail(Model model, Integer boardId, Integer page) {
     logger.info("detail() 호출 : boardId = " + boardId);
-    List<BoardVO> vo = boardService.read(boardId);
-    model.addAttribute("vo", vo);
+    List<BoardVO> list = boardService.read(boardId);
+    model.addAttribute("list", list);
     model.addAttribute("page", page);
   }
 

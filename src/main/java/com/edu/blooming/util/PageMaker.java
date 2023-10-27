@@ -10,7 +10,7 @@ public class PageMaker {
   private boolean hasNext;
 
   public PageMaker() {
-    this.numsOfPageLinks = 3;
+    this.numsOfPageLinks = 2;
   }
 
   public PageCriteria getCriteria() {
