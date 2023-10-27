@@ -25,7 +25,7 @@
     
     <%-- 세션에서 로그인 정보 가져오기 --%>
     <%
-        Object loginInfo = session.getAttribute("vo"); // 세션에서 로그인 정보를 가져옴
+        Object loginInfo = session.getAttribute("loginVo"); // 세션에서 로그인 정보를 가져옴
     %>
     
 	<!-- 
@@ -37,6 +37,7 @@
         <c:when test="<%= loginInfo != null %>">
             <%-- 로그인 상태인 경우: 로그아웃 버튼 표시 --%>
             <a href="/blooming/member/logout">로그아웃</a>
+            <a href="/blooming/member/introductor-profile">강사정보</a>
         </c:when>
         <c:otherwise>
             <%-- 로그인 상태가 아닌 경우: 회원가입 및 로그인 버튼 표시 --%>
@@ -44,7 +45,6 @@
             <a href="/blooming/member/login">로그인</a>
         </c:otherwise>
     </c:choose>
-    
     <%@ include file="/WEB-INF/views/component/navigation.jsp" %>
     
 	<header class="bg-dark py-5">
@@ -122,8 +122,6 @@
         </div>
       </div>
     </section>
-    
-    <!-- pagination -->
     
     <%@ include file="/WEB-INF/views/component/footer.jsp" %>
 </body>

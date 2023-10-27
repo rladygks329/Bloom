@@ -33,10 +33,10 @@ public class MemberDAOImple implements MemberDAO {
 	} // end emailCheck()
 	
 	@Override
-	public MemberVO memberLogin(MemberVO vo) {
+	public MemberVO memberLogin(MemberVO loginVo) {
 		logger.info("memberLogin() 호출");
-		logger.info(vo.toString());
-		return sqlSession.selectOne(NAMESPACE + ".login", vo);
+		logger.info(loginVo.toString());
+		return sqlSession.selectOne(NAMESPACE + ".login", loginVo);
 	}
 
 	

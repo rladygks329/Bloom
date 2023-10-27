@@ -1,11 +1,15 @@
 package com.edu.blooming.controller;
 
+import javax.mail.Session;
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,38 +33,35 @@ public class RegisterController {
 	
 	@GetMapping("/register")
 	public void registerGET() {
-		logger.info("registerGET()");
+		logger.info("registerGET() 호출");
 	} // end registerGET()
 	
+	@PostMapping("/register")
+	public String registerPOST(MemberVO vo, HttpSession session) {
+		logger.info("registerPOST() 호출");
+		int result = memberService.create(vo);
+		if(result == 1) {
+			session.setAttribute("loginVo", vo);
+			// 메인 페이지로 리다이렉트
+		    return "main";
+		}
+		    // 회원 가입 실패 시, 회원 가입 페이지로 리다이렉트
+		    return "member/register";
+		
+	} // end registerPOST()	
+
 	@GetMapping("/register-type")
 	public void registerTypeGET() {
 		logger.info("registerTypeGET()");
 	} // end registerTypeGET()
 	
-	@GetMapping("/register-student")
-	public void registerStudentGET() {
-		logger.info("registerStudentGET()");
-	} // end registerStudentGET()
-	
-	@GetMapping("/register-teacher")
-	public void registerteacherGET() {
-		logger.info("registerteacherGET()");
-	} // end registerteacherGET()
-	
-	@PostMapping("/register")
-	public String registerPOST(MemberVO vo, RedirectAttributes reAttr) {
-		// RedirectAttributes : 재요청시 데이터를 전달하기 위한 인터페이스
-		logger.info("registerPOST() 호출");
-		logger.info(vo.toString());
-		int result = memberService.create(vo);
-		logger.info(result + "행 삽입 완료");
-		if(result == 1) {
-			reAttr.addFlashAttribute("insert_result", "success");
-			return "redirect:/main01";	
-		} else {
-			return "redirect:/main02";
-		}				
-	} // end PostMapping()
+	@PostMapping("/register-type")
+	public String registerTypePOST(@RequestParam("memberLevel") String memberLevel, Model model) {
+		logger.info("registerTypePOST() 호출");
+		model.addAttribute("memberLevel", memberLevel);
+		logger.info(memberLevel);
+		return "/member/register";
+	}
 	
 	@PostMapping("/email")
 	@ResponseBody
@@ -71,11 +72,10 @@ public class RegisterController {
 		logger.info("결과값 : " + result);
 		if(result == 0) {
 			return new ResponseEntity<String>("success", HttpStatus.OK);
-		}else {
-			return new ResponseEntity<String>("faile", HttpStatus.METHOD_FAILURE);
 		}
+		return new ResponseEntity<String>("faile", HttpStatus.OK);
+		
 	} // end emailCheckPOST()
-	
 	
 } // end RegisterController
 
