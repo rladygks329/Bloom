@@ -48,11 +48,14 @@ function makeReplyDiv(replies){
                 deleteReply(reply.lectureReplyId);
             })
             cardFooter.append(deleteBtn).append(editBtn);
-            replyCard.append(cardFooter);
+            
         }
         
         replyCard.append(cardHeader);
         replyCard.append(cardBody);
+        if(hasPrevComment){
+        	replyCard.append(cardFooter);
+        }
 
         //내가 쓴 글이면 나중에 추가하기
         if(memberId == reply.memberId){

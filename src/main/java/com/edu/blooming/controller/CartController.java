@@ -33,7 +33,7 @@ public class CartController {
 
     HttpSession session = request.getSession();
 
-    int memberId = ((MemberVO) session.getAttribute("vo")).getMemberId();
+    int memberId = ((MemberVO) session.getAttribute("loginVo")).getMemberId();
     model.addAttribute("memberId", memberId);
     logger.info("memberId : " + memberId);
     return "/cart/list";

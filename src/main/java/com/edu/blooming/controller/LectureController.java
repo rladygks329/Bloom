@@ -95,10 +95,10 @@ public class LectureController {
     model.addAttribute("lectureId", lectureId);
     model.addAttribute("lecture", lecture);
 
-    if (request.getSession().getAttribute("vo") != null) {
+    HttpSession session = request.getSession();
+    if (session.getAttribute("loginVo") != null) {
       // 로그인한 상태라면 좋아요, 결제 유무, 장바구니에 있는지 검사한 후 정보 넣기
-      HttpSession session = request.getSession();
-      int memberId = ((MemberVO) session.getAttribute("vo")).getMemberId();
+      int memberId = ((MemberVO) session.getAttribute("loginVo")).getMemberId();
       Boolean isLike = lectureService.checkIsLike(memberId, lectureId);
       Boolean isPurchase = purchaseService.checkPurchase(memberId, lectureId);
       Boolean isCart = cartService.isExist(memberId, lectureId);
