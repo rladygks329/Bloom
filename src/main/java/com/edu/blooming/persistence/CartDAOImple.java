@@ -30,6 +30,16 @@ public class CartDAOImple implements CartDAO {
   }
 
   @Override
+  public int delete(int memberId) {
+    logger.info("delete() 호출 : memberId = " + memberId);
+
+    Map<String, Integer> args = new HashMap<>();
+    args.put("memberId", memberId);
+
+    return sqlSession.delete(NAMESPACE + ".delete_by_member_id", args);
+  }
+
+  @Override
   public int delete(int memberId, int lectureId) {
     logger.info("delete() 호출 : memberId = " + memberId + " lectureId = " + lectureId);
 
@@ -37,7 +47,7 @@ public class CartDAOImple implements CartDAO {
     args.put("memberId", memberId);
     args.put("lectureId", lectureId);
 
-    return sqlSession.insert(NAMESPACE + ".delete", args);
+    return sqlSession.delete(NAMESPACE + ".delete", args);
   }
 
   @Override

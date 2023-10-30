@@ -6,6 +6,8 @@ import com.edu.blooming.domain.LectureVO;
 public interface CartDAO {
   int insert(int memberId, int lectureId);
 
+  int delete(int memberId);
+
   int delete(int memberId, int lectureId);
 
   int selectExist(int memberId, int lectureId);

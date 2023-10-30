@@ -28,6 +28,7 @@ public class CartDAOTest {
   public void testDAO() {
     testInsert();
     testDelete();
+    testDeleteAll();
     testSelect();
     testCalcTotal();
     testSelectExist();
@@ -40,6 +41,11 @@ public class CartDAOTest {
 
   private void testDelete() {
     int result = dao.delete(1, 1);
+    logger.info(result + "행 삭제");
+  }
+
+  private void testDeleteAll() {
+    int result = dao.delete(1);
     logger.info(result + "행 삭제");
   }
 
