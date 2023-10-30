@@ -95,7 +95,10 @@
 		}
 		
 		async function handleFile(file){
-			const name = file.name;
+			const fileName = file.name;
+			const name = fileName.substring(0, fileName.lastIndexOf("."))
+			const extension = fileName.substring(fileName.lastIndexOf(".") + 1)
+			
 			const progressBarContainer = $('<div class="small text-muted mt-2">').text(name);
 			const progressBarWrapper = $(`<div class="progress">`);
 			const progressBar = $(`<div class="progress-bar progress-bar-striped" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">`).text("0%");
