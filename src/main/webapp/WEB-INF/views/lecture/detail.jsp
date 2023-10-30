@@ -164,7 +164,7 @@
 							<c:when test="${purchase }">
 								<button class="btn btn-outline-dark flex-shrink-0" type="button">
 									<a class="text-reset link-underline link-underline-opacity-0"
-										href="/blooming/videos/${lectureId }">강의 들으러 가기</a>
+										href="/blooming/lecture/${lectureId }/course">강의 들으러 가기</a>
 								</button>
 							</c:when>
 							<c:when test="${not purchase and cart}">
