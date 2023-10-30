@@ -4,22 +4,61 @@
 	
 	<!-- 게시글 리스트 조회 -->
 	<select id="paging" resultType="BoardVO">
-		select ${boardId}, ${boardTitle}, ${boardContent}, ${memberId}, 
-			${boardDateCreated}, ${boardViewCount}, ${boardAnswerCount}, ${boardLikeCount}
-		from(
-			select rownum rn, a.* from(
-				select * from ${board}
-				where board_parent_id = 0
-				order by ${boardId} desc		
-			)a
-		) where rn between #{start} and #{end}		
+		select
+			b.${boardId},
+			b.${boardTitle},
+			b.${boardContent},
+			m.${memberName} ${authorName},
+			b.${boardDateCreated},
+			b.${boardViewCount},
+			b.${boardAnswerCount},
+			b.${boardLikeCount}
+		from (
+			select rownum rn, a.* 
+			from (
+					select * 
+					from ${board}
+					where board_parent_id = 0
+					order by ${boardId} desc
+				 ) a
+			 ) b left join ${member} m on b.${memberId} = m.${memberId}
+		where rn between #{start} and #{end}		
 	</select>
 	
 	<!-- 게시글 조회 -->
 	<select id="select_by_board_id" resultType="BoardVO">
-		select * from ${board} 
-		where ${boardId} = #{boardId} or ${boardParentId} = #{boardId}	
+		select 
+			b.*, 
+			m.${memberName} ${authorName}
+		from ${board} b left join ${member} m on b.${memberId} = m.${memberId}
+		where b.${boardId} = #{boardId} or b.${boardParentId} = #{boardId}
+	</select>	
+	
+	<!-- 게시글 삭제: boardParentId 조회 -->
+	<select id="select_question_parentId">
+		select count(*) 
+		from ${board}
+		where ${boardParentId} = #{boardId}	
 	</select>
+	
+	<!-- 게시글 삭제: 삭제처리 -->
+	<delete id="delete_question">
+		delete 
+		from ${board}
+		where ${boardId} = #{boardId}
+	</delete>
+	
+	<!-- 게시글 삭제: memberId 업데이트 -->
+	<update id="update_question">
+		update ${board}
+		set ${memberId} = -1
+		where ${boardId} = #{boardId}
+	</update>
+
+
+
+	
+	
 	
 	<!-- 게시글 등록 -->
 	<insert id="insert">
@@ -36,7 +75,7 @@
 		where ${boardId} = #{boardId}	
 	</update>
 
-	<!-- 게시글 총 개수 -->
+	<!-- 페이징처리: 게시글 총 개수 -->
 	<select id="total_count" resultType="Integer">
 		select count(*) total_cnt 
 		from ${board}

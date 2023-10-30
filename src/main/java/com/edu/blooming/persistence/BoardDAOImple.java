@@ -44,6 +44,18 @@ public class BoardDAOImple implements BoardDAO {
     return sqlSession.selectList(NAMESPACE + ".select_by_board_id", boardId);
   }
 
+  @Override
+  public boolean checkParentId(int boardId) {
+    logger.info("checkParentId() 호출 : boardId = " + boardId);
+    return sqlSession.selectOne(NAMESPACE + ".select_question_parentId", boardId);
+  }
+
+  @Override
+  public int deleteQuestion(int boardId) {
+    logger.info("delete() 호출: boardId = " + boardId);
+    return sqlSession.selectOne(NAMESPACE + ".delete_question", boardId);
+  }
+
 }
 
 

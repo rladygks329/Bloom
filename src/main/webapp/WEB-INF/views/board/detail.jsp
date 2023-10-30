@@ -22,7 +22,7 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 				<p>${vo.boardTitle }</p>
 			</div>
 			<div>
-				<p>작성자: ${vo.memberId } </p>
+				<p>작성자: ${vo.authorName } </p>
 				<p>작성일: ${vo.boardDateCreated }</p>
 				<p>조회수: ${vo.boardViewCount }</p>
 				<p>좋아요: ${vo.boardLikeCount }</p>
@@ -33,7 +33,10 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 			
 			<a><input type="button" value="글 목록"></a>
 			<a href="update?boardId=${vo.boardId }&page=${page }"><input type="button" value="글 수정"></a>
-			<a><input tpye="button" value="글 삭제"></a>
+			<form action="deleteQuestion" method="POST">
+				<input type="hidden" id="boardId" name="boardId" value="${vo.boardId }">
+				<input type="submit" value="글 삭제"> 
+			</form>
 	
 			<br>
 			<br>
@@ -49,7 +52,7 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 	<c:forEach var="vo" items="${list }">
 		<c:if test="${param.boardId == vo.boardParentId }">
 			<div>
-				<p>작성자: ${vo.memberId } </p>
+				<p>작성자: ${vo.authorName } </p>
 				<p>작성일: ${vo.boardDateCreated }</p>		
 				<p>좋아요: ${vo.boardLikeCount }</p>
 			</div>	

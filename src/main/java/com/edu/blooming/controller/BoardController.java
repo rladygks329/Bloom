@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.edu.blooming.domain.BoardVO;
 import com.edu.blooming.service.BoardService;
@@ -54,6 +55,20 @@ public class BoardController {
     model.addAttribute("list", list);
     model.addAttribute("page", page);
   }
+
+  @PostMapping("/deleteQuestion")
+  public String delete(Integer boardId) {
+    logger.info("delete() 호출 : boardId = " + boardId);
+    boolean shouldDelete = boardService.checkParentId(boardId);
+    if (shouldDelete) {
+      boardService.deleteQuestion(boardId);
+    } else {
+      boardService.updateQuestion(boardId);
+    }
+    return "redirect:/board/list";
+  }
+
+
 
 }
 

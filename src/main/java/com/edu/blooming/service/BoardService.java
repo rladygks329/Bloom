@@ -13,4 +13,10 @@ public interface BoardService {
   int getTotalCounts();
 
   List<BoardVO> read(int boardId);
+
+  boolean checkParentId(int boardId);
+
+  int delete(int boardId);
+
+
 }

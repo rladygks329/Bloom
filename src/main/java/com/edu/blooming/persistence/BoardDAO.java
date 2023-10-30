@@ -13,4 +13,8 @@ public interface BoardDAO {
   List<BoardVO> select(PageCriteria criteria);
 
   int getTotalCounts();
+
+  boolean checkParentId(int boardId);
+
+  int deleteQuestion(int boardId);
 }

@@ -48,12 +48,12 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 				<tr>
 					<td>${vo.boardId }</td>
 					<td><a href="detail?boardId=${vo.boardId }&page=${pageMaker.criteria.page}">${vo.boardTitle }</a></td>
-					<td>${vo.memberId }</td>
+					<td>${vo.authorName }</td>
 					<td>${vo.boardViewCount }</td>
 					<td>${vo.boardAnswerCount }</td>
 					<fmt:formatDate value="${vo.boardDateCreated }"
 					pattern="yyyy-MM-dd HH:mm:ss" var="boardDateCreated"/>
-					<td>${vo.boardDateCreated }</td>
+					<td>${boardDateCreated }</td>
 				</tr>			
 			</c:forEach>
 		</tbody> 

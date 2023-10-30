@@ -6,6 +6,7 @@ public class BoardVO {
 
   private int boardId;
   private int memberId;
+  private String authorName;
   private int boardParentId;
   private String boardTitle;
   private String boardContent;
@@ -17,11 +18,13 @@ public class BoardVO {
 
   public BoardVO() {}
 
-  public BoardVO(int boardId, int memberId, int boardParentId, String boardTitle,
+  public BoardVO(int boardId, int memberId, String authorName, int boardParentId, String boardTitle,
       String boardContent, int boardViewCount, int boardAnswerCount, int boardReplyCount,
       int boardLikeCount, Date boardDateCreated) {
+    super();
     this.boardId = boardId;
     this.memberId = memberId;
+    this.authorName = authorName;
     this.boardParentId = boardParentId;
     this.boardTitle = boardTitle;
     this.boardContent = boardContent;
@@ -46,6 +49,14 @@ public class BoardVO {
 
   public void setMemberId(int memberId) {
     this.memberId = memberId;
+  }
+
+  public String getAuthorName() {
+    return authorName;
+  }
+
+  public void setAuthorName(String authorName) {
+    this.authorName = authorName;
   }
 
   public int getBoardParentId() {
@@ -114,11 +125,11 @@ public class BoardVO {
 
   @Override
   public String toString() {
-    return "BoardVO [boardId=" + boardId + ", memberId=" + memberId + ", boardParentId="
-        + boardParentId + ", boardTitle=" + boardTitle + ", boardContent=" + boardContent
-        + ", boardViewCount=" + boardViewCount + ", boardAnswerCount=" + boardAnswerCount
-        + ", boardReplyCount=" + boardReplyCount + ", boardLikeCount=" + boardLikeCount
-        + ", boardDateCreated=" + boardDateCreated + "]";
+    return "BoardVO [boardId=" + boardId + ", memberId=" + memberId + ", authorName=" + authorName
+        + ", boardParentId=" + boardParentId + ", boardTitle=" + boardTitle + ", boardContent="
+        + boardContent + ", boardViewCount=" + boardViewCount + ", boardAnswerCount="
+        + boardAnswerCount + ", boardReplyCount=" + boardReplyCount + ", boardLikeCount="
+        + boardLikeCount + ", boardDateCreated=" + boardDateCreated + "]";
   }
 
 }
