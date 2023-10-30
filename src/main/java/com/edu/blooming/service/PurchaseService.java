@@ -5,9 +5,7 @@ import com.edu.blooming.domain.LectureVO;
 
 public interface PurchaseService {
 
-  int purchase(int memberId, List<Integer> lectureIds);
-
-  int purchase(int memberId, int lectureId);
+  int purchase(int memberId);
 
   int refund(int memberId, int lectureId);
 

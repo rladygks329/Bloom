@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.edu.blooming.domain.LectureVO;
+import com.edu.blooming.persistence.CartDAO;
 import com.edu.blooming.persistence.LectureDAO;
 import com.edu.blooming.persistence.PurchaseDAO;
 
@@ -20,26 +21,20 @@ public class PurchaseServiceImple implements PurchaseService {
   @Autowired
   private LectureDAO lectureDAO;
 
-  @Transactional(value = "transactionManager")
-  @Override
-  public int purchase(int memberId, int lectureId) {
-    logger.info("purchase() 호출, memberId : " + memberId + " lectureId : " + lectureId);
-    LectureVO vo = lectureDAO.select(lectureId);
-    purchaseDAO.insert(memberId, lectureId, vo.getLecturePrice());
-    lectureDAO.updateSalesCount(lectureId, 1);
-    return 1;
-  }
+  @Autowired
+  private CartDAO cartDAO;
 
   @Transactional(value = "transactionManager")
   @Override
-  public int purchase(int memberId, List<Integer> lectureIds) {
-    logger
-        .info("purchase(List) 호출, memberId : " + memberId + " list.size() : " + lectureIds.size());
-    for (int lectureId : lectureIds) {
-      LectureVO vo = lectureDAO.select(lectureId);
-      purchaseDAO.insert(memberId, lectureId, vo.getLecturePrice());
-      lectureDAO.updateSalesCount(lectureId, 1);
+  public int purchase(int memberId) {
+    logger.info("purchase() 호출, memberId: " + memberId);
+    List<LectureVO> list = cartDAO.select(memberId);
+
+    for (LectureVO vo : list) {
+      purchaseDAO.insert(memberId, vo.getLectureId(), vo.getLecturePrice());
+      lectureDAO.updateSalesCount(vo.getLectureId(), 1);
     }
+    cartDAO.delete(memberId);
     return 1;
   }
 
