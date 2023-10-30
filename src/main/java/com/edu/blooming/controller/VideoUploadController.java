@@ -28,9 +28,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import com.edu.blooming.domain.LessonVO;
-import com.edu.blooming.service.LectureService;
 import com.edu.blooming.service.LessonService;
-import com.edu.blooming.service.ViedoUploadService;
+import com.edu.blooming.service.ViedoService;
 
 @Controller
 @RequestMapping(value = "/video")
@@ -42,10 +41,7 @@ public class VideoUploadController {
   private final static Logger logger = LoggerFactory.getLogger(VideoUploadController.class);
 
   @Autowired
-  private ViedoUploadService videoUploadService;
-
-  @Autowired
-  private LectureService lectureService;
+  private ViedoService videoUploadService;
 
   @Autowired
   private LessonService lessonService;
@@ -74,12 +70,19 @@ public class VideoUploadController {
   public ResponseEntity<String> chunkUpload(
       @RequestParam("chunk") MultipartFile file,
       @RequestParam("chunkNumber") int chunkNumber, 
-      @RequestParam("totalChunks") int totalChunks
+      @RequestParam("totalChunks") int totalChunks,
+      @RequestParam("key") String key
   ) throws IOException {
-    Map<String, String> result = videoUploadService.chunkUpload(file, chunkNumber, totalChunks);
+    Map<String, String> result = videoUploadService.chunkUpload(file, chunkNumber, totalChunks, key);
     boolean isDone = result.get("continue").equals("y");
     return isDone ? ResponseEntity.ok((String)result.get("outputFileName"))
         : ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).build();
+  }
+  
+  @ResponseBody
+  @GetMapping("/chunk/upload/{key}")
+  public ResponseEntity<?> getLastChunkNumber(@PathVariable String key) {
+      return ResponseEntity.ok(videoUploadService.getLastChunkNumber(key));
   }
 
   @ResponseBody

@@ -9,45 +9,40 @@ import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Stream;
 import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import com.edu.blooming.util.FileUploadUtil;
 
 
 @Service
-public class VideoUploadServiceImple implements ViedoUploadService {
-  private final static Logger logger = LoggerFactory.getLogger(VideoUploadServiceImple.class);
+public class VideoServiceImple implements ViedoService {
+  private final static Logger logger = LoggerFactory.getLogger(VideoServiceImple.class);
 
   @Resource(name = "uploadVideoPath")
   private String uploadPath;
 
-  public Map<String, String> chunkUpload(MultipartFile file, int chunkNumber, int totalChunks)
-      throws IOException {
+  public Map<String, String> chunkUpload(MultipartFile file, int chunkNumber, int totalChunks,
+      String key) throws IOException {
+
     Map<String, String> map = new HashMap<String, String>();
-    String dateDir = FileUploadUtil.getUploadPath(uploadPath); // 2021/10/11
+    String tempDir = uploadPath + File.separator + key;
+    String uploadDir = uploadPath;
 
-    String uploadDir = uploadPath + File.separator + dateDir;
-
-    File dir = new File(uploadDir);
+    File dir = new File(tempDir);
     if (!dir.exists()) {
+      logger.info("tempDir 이 없습니다. 생성");
       dir.mkdirs();
     }
 
-    // 임시 저장 파일 이름
     String filename = file.getOriginalFilename() + ".part" + chunkNumber;
-    Path filePath = Paths.get(uploadDir, filename);
-
-    // 임시 저장
+    Path filePath = Paths.get(tempDir, filename);
     Files.write(filePath, file.getBytes());
 
-    // 마지막 조각이 전송 됐을 경우
     if (chunkNumber == totalChunks - 1) {
       String[] split = file.getOriginalFilename().split("\\.");
-
-      String orginName = split[0];
       String extension = split[1];
 
       String outputFilename = UUID.randomUUID() + "." + extension;
@@ -55,15 +50,15 @@ public class VideoUploadServiceImple implements ViedoUploadService {
       Path outputFile = Paths.get(uploadDir, outputFilename);
       Files.createFile(outputFile);
 
-      // 임시 파일들을 하나로 합침
+      // Merge and Delete
       for (int i = 0; i < totalChunks; i++) {
-        Path chunkFile = Paths.get(uploadDir, file.getOriginalFilename() + ".part" + i);
+        Path chunkFile = Paths.get(tempDir, file.getOriginalFilename() + ".part" + i);
         Files.write(outputFile, Files.readAllBytes(chunkFile), StandardOpenOption.APPEND);
-        // 합친 후 삭제
         Files.delete(chunkFile);
       }
+      deleteDirectory(Paths.get(tempDir));
       logger.info("File uploaded successfully");
-      map.put("outputFileName", dateDir + File.separator + outputFilename);
+      map.put("outputFileName", outputFilename);
       map.put("continue", "y");
     } else {
       map.put("continue", "n");
@@ -71,4 +66,21 @@ public class VideoUploadServiceImple implements ViedoUploadService {
 
     return map;
   }
+
+  @Override
+  public int getLastChunkNumber(String key) {
+    logger.info("getLastChunkNumber() 호출 key : " + key);
+    Path temp = Paths.get(uploadPath, key);
+    String[] list = temp.toFile().list();
+    return list == null ? 0 : Math.max(list.length - 2, 0);
+  }
+
+  private void deleteDirectory(Path directory) throws IOException {
+    if (Files.exists(directory)) {
+      try (Stream<Path> walk = Files.walk(directory)) {
+        walk.map(Path::toFile).forEach(File::delete);
+      }
+    }
+  }
+
 }

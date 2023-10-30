@@ -75,7 +75,26 @@
 			return result;
 		} //end validateInputs()
 		
-		function handleFile(file){
+		const getKey = (file) => {
+		    const id = file.name + file.size + file.type;
+		    const encoded_id = new TextEncoder().encode(id);
+
+		    return crypto.subtle.digest('SHA-256', encoded_id)
+		        .then(hash => {
+		            return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+		        })
+		        .catch(error => {
+		            console.error(error);
+		        });
+		}
+
+		const getLastChunkNumber = (key) => {
+    		return fetch("/blooming/video/chunk/upload/" + key, {
+        		method: "GET",
+    		}).then(resp => resp.text()).then(data => data);
+		}
+		
+		async function handleFile(file){
 			const name = file.name;
 			const progressBarContainer = $('<div class="small text-muted mt-2">').text(name);
 			const progressBarWrapper = $(`<div class="progress">`);
@@ -84,11 +103,23 @@
 			const inputURL = $(`<input name="lectureVideosURL" type="hidden" required>`);
 			const inputTitle = $(`<input name="lectureVideosTitle" type="hidden">`).val(name);
 			
+			const chunkSize = 1024 * 1024; // 1MB
+			const totalChunks = Math.ceil(file.size / chunkSize);
+			const key = await getKey(file);
+	        let currentChunk = await getLastChunkNumber(key);
+	        
+	        console.log("currentChunk : " + currentChunk);
+			
+			const progressRate = Math.round(currentChunk / totalChunks * 100) + "%";
+			progressBar.text(progressRate);
+			progressBar.css("width", progressRate);
+			
 			progressBarWrapper.append(progressBar)
 			progressBarContainer.append(progressBarWrapper).append(button).append(inputURL).append(inputTitle);
 			
 			button.click(
 				function(){
+					button.attr("disabled", true);
 					sendVideoChunks(file, progressBar, function(videoUrl){
 						button.remove();
 						inputURL.val(videoUrl);
@@ -98,7 +129,7 @@
 			return progressBarContainer;
 		}
 
-		function handleVideoUpload(event) {
+		async function handleVideoUpload(event) {
 			const files = event.target.files;
 			const length = files.length;
 			
@@ -110,7 +141,7 @@
 			uploadedVideos.empty();
 			
 			for(i = 0; i < length; i++){
-				const view = handleFile(files[i]); 
+				const view = await handleFile(files[i]); 
 				uploadedVideos.append(view);
 			}
 		}
@@ -169,12 +200,15 @@
 			}); //end file drop
 		}); //end on-load
 
-	    const sendVideoChunks = (file, progressBar, onSuccess) => {
+	    const sendVideoChunks = async (file, progressBar, onSuccess) => {
 	        const chunkSize = 1024 * 1024; // 1MB
 
 	  		// total size 계산
 	        const totalChunks = Math.ceil(file.size / chunkSize);
-	        let currentChunk = 0;
+			const key = await getKey(file);
+	        let currentChunk = await getLastChunkNumber(key);
+
+			console.log("currentChunk : " + currentChunk);
 
 	  		// chunk file 전송
 	        const sendNextChunk = () => {
@@ -190,6 +224,7 @@
 	            formData.append("chunk", chunk, file.name);
 	            formData.append("chunkNumber", currentChunk);
 	            formData.append("totalChunks", totalChunks);
+	            formData.append("key", key);
 	            
 				$.ajax({
 					type : 'POST',
