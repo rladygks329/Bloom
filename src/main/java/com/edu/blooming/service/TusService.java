@@ -2,8 +2,6 @@ package com.edu.blooming.service;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.time.LocalDate;
 import java.util.UUID;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +23,7 @@ public class TusService {
   private TusFileUploadService tusFileUploadService;
 
   @Resource(name = "uploadVideoPath")
-  private String savePath;
+  private String uploadPath;
 
   public String tusUpload(HttpServletRequest request, HttpServletResponse response) {
     logger.info("tusFileUploadService : " + tusFileUploadService.toString());
@@ -39,13 +37,16 @@ public class TusService {
       // 완료 된 경우 파일 저장
       if (uploadInfo != null && !uploadInfo.isUploadInProgress()) {
         // 파일 저장
-        createFile(tusFileUploadService.getUploadedBytes(request.getRequestURI()),
-            uploadInfo.getFileName());
+        String originFileName = uploadInfo.getFileName();
+        String savedFileName = getSavedFileName(originFileName);
+
+        File file = new File(uploadPath, savedFileName);
+        FileUtils.copyInputStreamToFile(
+            tusFileUploadService.getUploadedBytes(request.getRequestURI()), file);
 
         // 임시 파일 삭제
         tusFileUploadService.deleteUpload(request.getRequestURI());
-
-        return "success";
+        return savedFileName;
       }
       return null;
     } catch (IOException | TusException e) {
@@ -54,23 +55,11 @@ public class TusService {
     }
   }
 
-  // 파일 업로드 (날짜별 디렉토리 하위에 저장)
-  private void createFile(InputStream is, String filename) throws IOException {
-    LocalDate today = LocalDate.now();
-
-    String uploadedPath = savePath + "/" + today;
-
-    String vodName = getVodName(filename);
-
-    File file = new File(uploadedPath, vodName);
-
-    FileUtils.copyInputStreamToFile(is, file);
-  }
-
-  // 파일 이름은 랜덤 UUID 사용
-  private String getVodName(String filename) {
-    String[] split = filename.split("\\.");
+  private String getSavedFileName(String originFileName) {
+    String[] split = originFileName.split("\\.");
+    String extention = split[split.length - 1];
     String uuid = UUID.randomUUID().toString().replaceAll("-", "");
-    return uuid + "." + split[split.length - 1];
+    String savedFileName = uuid + "." + extention;
+    return savedFileName;
   }
 }
