@@ -18,8 +18,8 @@ public class BoardServiceImple implements BoardService {
 
   @Override
   public int create(BoardVO vo) {
-    // TODO Auto-generated method stub
-    return 0;
+    logger.info("create() 호출 : vo = " + vo.toString());
+    return boardDAO.insert(vo);
   }
 
   @Override
@@ -54,6 +54,18 @@ public class BoardServiceImple implements BoardService {
   public int delete(int boardId) {
     logger.info("delete() 호출: boardId = " + boardId);
     return boardDAO.deleteQuestion(boardId);
+  }
+
+  @Override
+  public int update(BoardVO vo) {
+    logger.info("update() 호출: vo = " + vo.toString());
+    return boardDAO.update(vo);
+  }
+
+  @Override
+  public BoardVO readForUpdate(int boardId) {
+    logger.info("readForUpdate()호출: boardId = " + boardId);
+    return boardDAO.selectForUpdate(boardId);
   }
 
 

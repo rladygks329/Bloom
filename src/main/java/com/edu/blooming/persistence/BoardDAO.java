@@ -17,4 +17,8 @@ public interface BoardDAO {
   boolean checkParentId(int boardId);
 
   int deleteQuestion(int boardId);
+
+  int update(BoardVO vo);
+
+  BoardVO selectForUpdate(int boardId);
 }

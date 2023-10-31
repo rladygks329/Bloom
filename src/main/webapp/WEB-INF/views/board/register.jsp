@@ -16,13 +16,13 @@
 		<div>
 			<p>내용</p>
 			<textarea rows="20" cols="120" name="boardContent" placeholder="내용 입력"></textarea>
+			<input type="hidden" name="boardParentId" value="0">
 		</div>
 		<div>
 			<input type="submit" value="등록">
 		</div>
 	
 	</form>
-
 
 </body>
 </html>

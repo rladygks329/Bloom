@@ -45,6 +45,7 @@
             <a href="/blooming/member/login">로그인</a>
         </c:otherwise>
     </c:choose>
+    <a href="/blooming/board/list">질문 & 답변</a>
     <%@ include file="/WEB-INF/views/component/navigation.jsp" %>
     
 	<header class="bg-dark py-5">
