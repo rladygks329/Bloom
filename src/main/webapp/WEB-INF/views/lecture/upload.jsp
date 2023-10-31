@@ -2,8 +2,12 @@
 	<!DOCTYPE html>
 	<html>
 	<head>
+		
 		<!-- Jquery -->
 		<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+		<!-- Jquery UI -->
+		<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
+		
 		<!-- Bootstrap css -->
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
 			integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
@@ -75,7 +79,7 @@
 				const name = fileName.substring(0, fileName.lastIndexOf("."))
 				const extension = fileName.substring(fileName.lastIndexOf(".") + 1)
 
-				const progressBarContainer = $('<div class="small text-muted mt-2">').text(name);
+				const progressBarContainer = $('<div class="uploaded-div small text-muted mt-2">').text(name);
 				const progressBarWrapper = $(`<div class="progress">`);
 				const progressBar = $(`<div class="progress-bar progress-bar-striped" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">`).text("0%");
 				const button = $(`<button type="button" class="btn btn-primary my-3">전송 시작</button>`);
@@ -162,6 +166,9 @@
 					const view = renderFile(files[i]);
 					uploadedVideos.append(view);
 				}
+				$('.uploaded-video').sortable({
+					items: $('.uploaded-div')
+				});
 			}
 
 			$(function () {
@@ -304,6 +311,7 @@
 												onchange="handleFileChange(event)" multiple />
 											<div class="uploaded-video"></div>
 											<div class="small text-muted mt-2">강의에 필요한 영상을 올려주세요</div>
+											<div class="small text-muted mt-2 ">드래그하여 순서를 변경하세요</div>
 											<div class="small text-danger mt-2 ">동영상 이름이 소제목으로 설정되오니
 												주의해주세요</div>
 										</div>
