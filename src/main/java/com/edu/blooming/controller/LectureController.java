@@ -157,6 +157,20 @@ public class LectureController {
   }
   // @formatter:on
 
+  @GetMapping("/{lectureId}/course")
+  public String getCourse(Model model, @PathVariable("lectureId") int lectureId) {
+    List<LessonVO> list = lessonService.getByLectureId(lectureId);
+
+    if (list.size() == 0) {
+      model.addAttribute("msg", "찾으시는 강의가 존재하지 않습니다.");
+      model.addAttribute("url", "list");
+      return "alert";
+    }
+
+    model.addAttribute("lessons", list);
+    return "/lecture/course";
+  }
+
   /// @formatter:off
   // TODO: 모든 속성을 select 하지 않도록 dao 수정 하기
   @PostMapping("/like/{lectureId}/{memberId}")

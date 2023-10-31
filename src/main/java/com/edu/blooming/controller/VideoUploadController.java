@@ -2,7 +2,6 @@ package com.edu.blooming.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import com.edu.blooming.domain.LessonVO;
 import com.edu.blooming.service.LessonService;
 import com.edu.blooming.service.ViedoService;
 
@@ -89,53 +87,58 @@ public class VideoUploadController {
   @GetMapping(value = "/vod")
   public ResponseEntity<Resource> resource(HttpServletRequest request) throws IOException {
       String filename = request.getParameter("filename");
+      String extension = ".mp4";
       String path = uploadPath + File.separator + filename;
       
       logger.info("resource() 호출 : filename : " + filename);
-      List<LessonVO> list = lessonService.getByLectureId(8);
-      for(LessonVO vo: list) {
-        logger.info(vo.toString());
-      }
-      path = uploadPath + File.separator + list.get(0).getLessonUrl();
-      logger.info("path = " + path);
+      
       Resource resource = new FileSystemResource(path);
       return ResponseEntity.ok()
           .contentType(MediaType.APPLICATION_OCTET_STREAM)
           .contentLength(resource.contentLength())
           .body(resource);
   }
-  
+ 
+  // @formatter:off
   @ResponseBody
-  @GetMapping("/vod/chunk/{filename}")
+  @GetMapping(value = "/vod/chunk/{filename}")
   public ResponseEntity<ResourceRegion> chunkResource(
-          @RequestHeader HttpHeaders headers,
-          @PathVariable String date,
-          @PathVariable String filename
-  ) throws IOException {
-    String path = uploadPath + File.separator + filename;
-      Resource resource = new FileSystemResource(path);
+      @RequestHeader HttpHeaders headers,
+      @PathVariable String filename) throws IOException {
+    logger.info(headers.toString());
+    logger.info("chunkResource() 호출 filename : " + filename);
+    String extension = ".mp4";
+    String path = uploadPath + File.separator + filename + extension;
 
-      long chunkSize = 1024 * 1024;
-      long contentLength = resource.contentLength();
+    Resource resource = new FileSystemResource(path);
 
+    long chunkSize = 1024 * 1024;
+    long contentLength = resource.contentLength();
 
-      HttpRange httpRange = headers.getRange().stream().findFirst()
-              .orElse(HttpRange.createByteRange(0, contentLength - 1));
+    logger.info("contentLength : " + contentLength) ;
+    HttpRange httpRange = headers.getRange().stream().findFirst()
+        .orElse(HttpRange.createByteRange(0, contentLength - 1));
 
-      long rangeLength = calculateRangeLength(httpRange, contentLength, chunkSize);
-      ResourceRegion region = new ResourceRegion(resource, httpRange.getRangeStart(contentLength), rangeLength);
-
-      return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
-              .cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES))
-              .contentType(MediaType.APPLICATION_OCTET_STREAM)
-              .header("Accept-Ranges", "bytes")
-              .eTag(path)
-              .body(region);
+    long rangeLength = calculateRangeLength(httpRange, contentLength, chunkSize);
+    ResourceRegion region =
+        new ResourceRegion(resource, httpRange.getRangeStart(contentLength), rangeLength);
+    
+    logger.info("region : " + region.toString());
+    
+    ResponseEntity<ResourceRegion> result = ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+        .cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES))
+        .contentType(MediaType.parseMediaType("video/mp4"))
+        .header("Content-Range", httpRange.toString()) // Set Content-Range header
+        .eTag(path)
+        .body(region);
+    
+    logger.info("result : " + result.toString());
+    return result; 
   }
 
   private long calculateRangeLength(HttpRange httpRange, long contentLength, long chunkSize) {
-      long start = httpRange.getRangeStart(contentLength);
-      long end = httpRange.getRangeEnd(contentLength);
-      return Long.min(chunkSize, end - start + 1);
+    long start = httpRange.getRangeStart(contentLength);
+    long end = httpRange.getRangeEnd(contentLength);
+    return Long.min(chunkSize, end - start + 1);
   }
 }
