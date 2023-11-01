@@ -85,8 +85,15 @@
 		}); // end ajax
 	}
 	function addCart(){
+		
 		const lectureId = $("#lectureId").val();
 		const memberId = $("#memberId").val();
+		
+		if(memberId ===''){
+			alert("로그인을 하셔야 이용하실 수 있습니다.");
+			return;
+		}
+		
 		$.ajax({
 			type : "POST",
 			url : `/blooming/cart/item/${memberId}/${lectureId}`,
