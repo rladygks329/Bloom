@@ -14,7 +14,7 @@ public class TusConfig {
   @Bean
   public TusFileUploadService tus() {
     return new TusFileUploadService().withStoragePath(tusDataPath).withDownloadFeature()
-        .withUploadExpirationPeriod(1000L * 60 * 60).withThreadLocalCache(true)
+        .withUploadExpirationPeriod(1000L * 60 * 60 * 12).withThreadLocalCache(true)
         .withUploadURI("/blooming/tus/upload");
   }
 }
