@@ -14,6 +14,8 @@ public interface BoardDAO {
 
   int getTotalCounts();
 
+  int updateReplyCount(int boardId, int amount);
+
   boolean checkParentId(int boardId);
 
   int deleteQuestion(int boardId);

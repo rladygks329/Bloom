@@ -7,13 +7,7 @@
 <head>
 <script src="https://code.jquery.com/jquery-3.7.1.js" 
 integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous">
-</script>
-	
-<script>
-
-	
-
-</script>
+</script>	
 
 <meta charset="UTF-8">
 <title>게시글번호나오게</title>
@@ -79,14 +73,109 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 			</div>
 			<a href="update?boardId=${vo.boardId }&page=${page }"><input type="button" value="글 수정"></a>
 			<div>
-				<p>댓글을 작성해 주세요</p>
-				<textarea rows="5" cols="60" name="ReplyContent" placeholder="내용 입력"></textarea>
-				<input type="button" value="저장" id="btnAddReply">
-			</div>
 			
+			<input type="hidden" id="boardId" value="${vo.boardId}">
+			<input type="hidden" id="memberId" value="${sessionScope.loginVo.memberId}">
+			<textarea rows="5" cols="50" id="replyContent"></textarea>
+			<button id="btnAddReply">댓글 달기</button>
+        		
+			</div>
 		</c:if>
 	</c:forEach>
 	
+<script>
+$(document).ready(function(){
+	getAllReplies();
+	
+	$('#btnAddReply').click(function(){
+		var boardId = $('#boardId').val(); 
+		var memberId = $('#memberId').val(); 
+		var replyContent = $('#replyContent').val(); 
+		var obj = {
+				'boardId' : boardId, 
+				'memberId' : memberId,
+				'replyContent' : replyContent
+		};
+		console.log(obj);
+		
+		// $.ajax로 송수신
+		$.ajax({
+			type : 'POST', 
+			url : 'replies',
+			headers : {
+				'Content-Type' : 'application/json'
+			},
+			data : JSON.stringify(obj), // JSON으로 변환
+			success : function(result){
+				console.log(result);
+				if(result == 1) {
+					alert('댓글 입력 성공');
+					getAllReplies();
+				}
+			}
+		}); // end ajax()
+	}); // end btnReplyAdd.click()
+	
+	// 게시판 댓글 전체 가져오기
+	function getAllReplies() {
+		var boardId = $('#boardId').val();
+		console.log(boardId);
+		
+		var url = 'replies/' + boardId;
+		console.log(url);
+		$.getJSON(
+			url, 
+			function(data) {
+				// data : 서버에서 전송받은 list 데이터가 저장되어 있음.
+				// getJSON()에서 json 데이터는
+				// javascript object로 자동 parsing됨.
+				console.log(data);
+			
+				var memberId = $('#memberId').val();
+				var list =''; // 댓글 데이터를 HTML에 표현할 문자열 변수	
+				
+				// $(컬렉션).each() : 컬렉션 데이터를 반복문으로 꺼내는 함수
+				$(data).each(function(){
+					// this : 컬렉션의 각 인덱스 데이터를 의미
+					console.log(this);
+					
+					var replyDateCreated = new Date(this.replyDateCreated);
+					var disabled = 'disabled';
+					var readonly = 'readonly';
+					
+					if(memberId == this.memberId) {
+						disabled = '';
+						readonly = '';
+					}
+					
+					list += '<div class="reply_item">'
+						+ '<pre>'
+						+ '<input type="hidden" id="replyId" value="' + this.replyId +'">'
+						+ this.memberId
+						+ '&nbsp;&nbsp;' // 공백
+						+ '<input type="text" id="replyContent" value="' + this.replyContent + '">'
+						+ '&nbsp;&nbsp;' // 공백
+						+ replyDateCreated
+						+ '&nbsp;&nbsp;' // 공백
+						+ '<button class="btn_update" >수정</button>'
+						+ '<button class="btn_delete" >삭제</button>'
+						+ '</pre>'
+						+ '</div>';
+				}); // end each()
+
+				$('#replies').html(list);
+			}
+		); // end getJSON()
+	} // end getAllReplies()
+		
+		
+	}) // end document
+
+
+</script>
+
+
+
 </body>
 </html>
 

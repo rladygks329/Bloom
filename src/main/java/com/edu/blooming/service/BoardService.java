@@ -14,10 +14,6 @@ public interface BoardService {
 
   List<BoardVO> read(int boardId);
 
-  boolean checkParentId(int boardId);
-
-  int delete(int boardId);
-
   int update(BoardVO vo);
 
   BoardVO readForUpdate(int boardId);

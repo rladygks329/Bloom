@@ -1,5 +1,6 @@
 package com.edu.blooming.persistence;
 
+import java.util.HashMap;
 import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
@@ -66,6 +67,17 @@ public class BoardDAOImple implements BoardDAO {
   public BoardVO selectForUpdate(int boardId) {
     logger.info("readForUpdate()호출: boardId = " + boardId);
     return sqlSession.selectOne(NAMESPACE + ".select_by_board_id_for_update", boardId);
+  }
+
+  @Override
+  public int updateReplyCount(int boardId, int amount) {
+    logger.info("updateReplyCount()호출 : boardId = " + boardId + " amount = " + amount);
+
+    HashMap<String, Integer> args = new HashMap<>();
+    args.put("boardId", boardId);
+    args.put("amount", amount);
+
+    return sqlSession.update(NAMESPACE + ".update_reply_count", args);
   }
 
 }

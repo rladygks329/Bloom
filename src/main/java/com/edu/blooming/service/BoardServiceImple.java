@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import com.edu.blooming.domain.BoardVO;
 import com.edu.blooming.persistence.BoardDAO;
 import com.edu.blooming.util.PageCriteria;
@@ -43,20 +42,6 @@ public class BoardServiceImple implements BoardService {
   }
 
   @Override
-  @Transactional
-  public boolean checkParentId(int boardId) {
-    logger.info("checkQuestion() 호출 : boardId = " + boardId);
-    return boardDAO.checkParentId(boardId);
-  }
-
-  @Override
-  @Transactional
-  public int delete(int boardId) {
-    logger.info("delete() 호출: boardId = " + boardId);
-    return boardDAO.deleteQuestion(boardId);
-  }
-
-  @Override
   public int update(BoardVO vo) {
     logger.info("update() 호출: vo = " + vo.toString());
     return boardDAO.update(vo);
@@ -67,8 +52,6 @@ public class BoardServiceImple implements BoardService {
     logger.info("readForUpdate()호출: boardId = " + boardId);
     return boardDAO.selectForUpdate(boardId);
   }
-
-
 
 }
 

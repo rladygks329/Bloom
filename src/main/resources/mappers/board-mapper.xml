@@ -62,6 +62,14 @@
 		values (#{memberId}, #{boardParentId}, #{boardTitle}, #{boardContent})		
 	</insert>
 	
+	<!-- 게시글 댓글 갯수 수정 -->
+	<update id="update_reply_count">
+		update ${board}
+		set ${boardReplyCount} = ${boardReplyCount} + #{amount}
+		where ${boardId} = #{boardId}	
+	</update>
+	
+	
 	<!-- 우선 기존에 있는 boardId로 조회 and 등록하는 쿼리로 가능한지 해보기-->
 	<!-- 게시글 답글 등록시 답글 불러오기 -->
 	<select id="select_all_asnwer_by_boardParent_id">
