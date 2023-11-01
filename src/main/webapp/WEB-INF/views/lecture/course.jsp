@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>강좌 보기 </title>
 <!-- Jquery -->
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <!-- Bootstrap css -->
@@ -13,22 +13,36 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
 <!-- Bootstrap core JS-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Video.js -->
+<link href="https://vjs.zencdn.net/7.14.3/video-js.css" rel="stylesheet" />
+<script src="https://vjs.zencdn.net/7.14.3/video.min.js"></script>
+
 <script type="text/javascript">
-	$(function(){
-		console.log("onload");
-		const ul = $("#submenu");
-		const video = $("video").get(0);
-		$("#submenu li").click(function(){
+	$(function() {
+		const vPlayer = videojs('my-video', {
+			techOrder : [ "html5", "youtube" ],
+			autoplay : true,
+			sources : [{
+				type : "application/x-mpegURL",
+				src : 'http://localhost:8080/blooming/hls/c/master.m3u8'
+			}]
+		});
+		vPlayer.play();
+		$("#submenu li").click(function() {
 			const url = $(this).find("input").val();
 			console.log("url : " + url);
-			console.log("/blooming/video/chunk/" + url);
-			$("video").attr("src", "/blooming/video/vod?filename=" + url);
-			$("video").get(0).load();
-			$("video").get(0).play();
+			const filename = url.split(".")[0];
+			const extention = url.split(".")[1];
+			
+			const newSrc = {
+					type: "application/x-mpegURL",
+					src: "/blooming/hls/" + filename + "/master.m3u8"
+			}
+			vPlayer.src(newSrc);
+			vPlayer.play();
 		})
 	})
 </script>
-
 <style>
 video {
 	max-width: 100%;
@@ -40,25 +54,20 @@ video {
 <body>
 	<div class="container-fluid">
 		<div class="row flex-nowrap">
-		
 			<div id="trailer" class="col d-flex justify-content-center embed-responsive embed-responsive-16by9 p-0">
-				<video controls autoplay muted >
-				<!--
-				class="embed-responsive-item"
-				<source src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0">
-				Your browser does not support the video tag.  
-				-->
+				<video id="my-video" class="video-js vjs-16-9" controls>
+    				<source src="http://localhost:8080/blooming/hls/s/master.m3u8" type="application/x-mpegURL">
 				</video>
 			</div>
 
 			<div id="wrapper" class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark toggled">
 				<div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
-					<a href="/blooming/main" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none"> 
+					<a href="#" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none"> 
 						<span class="fs-5 d-none d-sm-inline">Menu</span>
 					</a>
 					<ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start text-white" id="menu">
 						<li class="nav-item ">
-							<a href="#" class="nav-link align-middle px-0 text-white text-decoration-none">
+							<a href="/blooming/main" class="nav-link align-middle px-0 text-white text-decoration-none">
 							  <i class="fs-4 bi-house"></i> 
 							  <span class="ms-1 d-none d-sm-inline">홈</span>
 							</a>

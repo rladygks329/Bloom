@@ -2,7 +2,6 @@
 	<!DOCTYPE html>
 	<html>
 	<head>
-		
 		<!-- Jquery -->
 		<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 		<!-- Jquery UI -->
@@ -65,7 +64,7 @@
 				let result = true;
 				$.each(uploadRate, function (index, el) {
 					const proccessRate = $(this).text();
-					if (proccessRate != "100%") {
+					if (proccessRate != "100.00%") {
 						alert("모든 강의 영상을 업로드 완료 해주세요");
 						return false;
 					}

@@ -10,9 +10,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.edu.blooming.service.HlsService;
@@ -25,15 +23,6 @@ public class HlsController {
   private HlsService hlsService;
 
   // @formatter:off
-  @PostMapping("/video/convert/hls/{filename}")
-  public String convertToHls(
-     @PathVariable String filename
-  ) {
-    logger.info("convertToHLS 실행됨 filename : " + filename);
-    hlsService.convertToHls(filename);
-    return "scheduled";
-  }
-
   // master.m3u8 경로
   @ResponseBody
   @RequestMapping("/hls/{key}/{filename}")
@@ -61,11 +50,6 @@ public class HlsController {
     return ResponseEntity.ok()
         .contentType(MediaType.parseMediaType("application/x-mpegURL"))
         .body(resource);
-  }
-  
-  @GetMapping("/hls-test")
-  public String hlsTestGET() {
-    return "hsltest";
   }
 }
 

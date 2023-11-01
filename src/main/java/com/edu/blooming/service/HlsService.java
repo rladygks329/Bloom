@@ -57,7 +57,7 @@ public class HlsService {
   /// @formatter:off
   public void convertToHls(String filename) {
     // 입력 파일 경로 설정
-    Path inputFilePath = Paths.get(savedPath + File.separator + filename + ".mp4");
+    Path inputFilePath = Paths.get(savedPath + File.separator + filename);
 
     // 출력 폴더 경로 설정
     Path outputFolderPath = Paths.get(hlsOutputPath + File.separator + filename.split("\\.")[0]);
@@ -68,14 +68,8 @@ public class HlsService {
     File _720 = new File(prefix, "720");
     File _480 = new File(prefix, "480");
     
-    File file = new File(prefix, filename);
-    
-    file.setReadable(true);
-    file.setExecutable(true);
-    file.setWritable(true);
-
     if (!_1080.exists()) {
-      _1080.mkdirs();      
+      _1080.mkdirs();
     }
 
     if (!_720.exists()) {
@@ -99,6 +93,8 @@ public class HlsService {
         .addExtraArgs("-map", "0:v")
         .addExtraArgs("-map", "0:v")
         .addExtraArgs("-map", "0:v")
+        
+        //.addExtraArgs("-var_stream_map", "v:0,name:480") 
         .addExtraArgs("-var_stream_map", "v:0,name:1080 v:1,name:720 v:2,name:480") // 출력 매핑
         
         // 1080 화질 옵션
