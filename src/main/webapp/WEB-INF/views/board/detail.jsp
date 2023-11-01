@@ -34,7 +34,7 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 				<textarea rows="20" cols="120" readonly>${vo.boardContent }</textarea>
 			</div>
 			
-			<a><input type="button" value="글 목록"></a>
+			<a><input type="button" onclick="goBack()" value="글 목록"></a>
 			<a href="update?boardId=${vo.boardId }&page=${page }"><input type="button" value="글 수정"></a>			
 			<form action="deleteQuestion" method="POST">
 				<input type="hidden" id="boardId" name="boardId" value="${vo.boardId }">
@@ -74,34 +74,39 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 			<a href="update?boardId=${vo.boardId }&page=${page }"><input type="button" value="글 수정"></a>
 			<div>
 			
-			<input type="hidden" id="boardId" value="${vo.boardId}">
+			<input type="hidden" class="boardId" value="${vo.boardId}">
 			<input type="hidden" id="memberId" value="${sessionScope.loginVo.memberId}">
-			<textarea rows="5" cols="50" id="replyContent"></textarea>
-			<button id="btnAddReply">댓글 달기</button>
+			<textarea rows="5" cols="50" id="boardReplyContent"></textarea>
+			<button class="btnAddReply">댓글 달기</button>
         		
 			</div>
 		</c:if>
 	</c:forEach>
 	
 <script>
+	function goBack() {
+	    window.history.back();
+	}
+
+
 $(document).ready(function(){
 	getAllReplies();
 	
-	$('#btnAddReply').click(function(){
-		var boardId = $('#boardId').val(); 
+	$('.btnAddReply').click(function(){
+		var boardId = $('.boardId').val(); 
 		var memberId = $('#memberId').val(); 
-		var replyContent = $('#replyContent').val(); 
+		var boardReplyContent = $('#boardReplyContent').val(); 
 		var obj = {
 				'boardId' : boardId, 
 				'memberId' : memberId,
-				'replyContent' : replyContent
+				'boardReplyContent' : boardReplyContent
 		};
 		console.log(obj);
 		
 		// $.ajax로 송수신
 		$.ajax({
 			type : 'POST', 
-			url : 'replies',
+			url : 'replies/' + boardId,
 			headers : {
 				'Content-Type' : 'application/json'
 			},
@@ -118,7 +123,7 @@ $(document).ready(function(){
 	
 	// 게시판 댓글 전체 가져오기
 	function getAllReplies() {
-		var boardId = $('#boardId').val();
+		var boardId = $('.boardId').val();
 		console.log(boardId);
 		
 		var url = 'replies/' + boardId;
@@ -153,7 +158,7 @@ $(document).ready(function(){
 						+ '<input type="hidden" id="replyId" value="' + this.replyId +'">'
 						+ this.memberId
 						+ '&nbsp;&nbsp;' // 공백
-						+ '<input type="text" id="replyContent" value="' + this.replyContent + '">'
+						+ '<input type="text" id="boardReplyContent" value="' + this.boardReplyContent + '">'
 						+ '&nbsp;&nbsp;' // 공백
 						+ replyDateCreated
 						+ '&nbsp;&nbsp;' // 공백

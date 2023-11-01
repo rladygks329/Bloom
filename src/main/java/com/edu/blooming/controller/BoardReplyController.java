@@ -18,7 +18,7 @@ import com.edu.blooming.domain.BoardReplyVO;
 import com.edu.blooming.service.BoardReplyService;
 
 @RestController
-@RequestMapping(value = "board/replies/{boardId}")
+@RequestMapping(value = "board/replies")
 public class BoardReplyController {
   private final static Logger logger = LoggerFactory.getLogger(BoardReplyController.class);
 
@@ -41,7 +41,7 @@ public class BoardReplyController {
 
 
   // 게시글의 댓글 가져오기
-  @GetMapping
+  @GetMapping(value = "/{boardId}")
   public ResponseEntity<List<BoardReplyVO>> getReplies(@PathVariable("boardId") int boardId) {
     logger.info("getReplies() 호출 : boardId = " + boardId);
     List<BoardReplyVO> list = boardReplyService.getReplies(boardId);
@@ -53,8 +53,8 @@ public class BoardReplyController {
   // 댓글 수정하기
   @PutMapping("/{replyId}")
   public ResponseEntity<Integer> updateReply(@PathVariable("boardId") int boardId,
-      @PathVariable int replyId, @RequestBody String replyContent) {
-    int result = boardReplyService.update(replyId, replyContent);
+      @PathVariable int replyId, @RequestBody String boardReplyContent) {
+    int result = boardReplyService.update(replyId, boardReplyContent);
     return new ResponseEntity<Integer>(result, HttpStatus.OK);
   }
 

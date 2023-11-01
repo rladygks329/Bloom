@@ -27,8 +27,15 @@
 		</div>
 		<div>
 			<input type="submit" value="등록">
+			<button type="button" onclick="goBack()">취소</button>
 		</div>
 	</form>	
+	<script>
+	    function goBack() {
+	        window.history.back();
+	    }	    
+	</script>
+
 
 </body>
 </html>
