@@ -19,12 +19,13 @@
 
 <script type="text/javascript">
 	$(function() {
+		const headURL = $('input[name="head"]').val();
 		const vPlayer = videojs('my-video', {
 			techOrder : [ "html5", "youtube" ],
 			autoplay : true,
 			sources : [{
 				type : "application/x-mpegURL",
-				src : 'http://localhost:8080/blooming/hls/c/master.m3u8'
+				src : 'http://localhost:8080/blooming/hls/'+ headURL + '/master.m3u8'
 			}]
 		});
 		vPlayer.play();
@@ -52,11 +53,12 @@ video {
 </head>
 
 <body>
+	<input type="hidden" name="head" value="${head }">
 	<div class="container-fluid">
 		<div class="row flex-nowrap">
 			<div id="trailer" class="col d-flex justify-content-center embed-responsive embed-responsive-16by9 p-0">
 				<video id="my-video" class="video-js vjs-16-9" controls>
-    				<source src="http://localhost:8080/blooming/hls/s/master.m3u8" type="application/x-mpegURL">
+    				<source src="http://localhost:8080/blooming/hls/${head}/master.m3u8" type="application/x-mpegURL">
 				</video>
 			</div>
 
