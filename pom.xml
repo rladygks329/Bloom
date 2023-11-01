@@ -189,12 +189,20 @@
 			<version>4.2</version>
 		</dependency>
 		
+		<!-- Tus protocol -->
 		<dependency>
   			<groupId>me.desair.tus</groupId>
   			<artifactId>tus-java-server</artifactId>
   			<version>1.0.0-2.0</version>
 		</dependency>
-
+		
+		<!-- FFmpeg (Video Converter) -->
+		<dependency>
+		  <groupId>net.bramp.ffmpeg</groupId>
+		  <artifactId>ffmpeg</artifactId>
+		  <version>0.6.2</version>
+		</dependency>
+		
 	</dependencies>
     <build>
         <plugins>

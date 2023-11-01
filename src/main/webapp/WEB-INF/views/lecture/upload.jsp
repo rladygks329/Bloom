@@ -118,11 +118,9 @@
 						},
 
 						// 업로드 완료 후 콜백
-						onSuccess: (response) => {
+						onSuccess: () => {
 							console.log("onsuccess")
-							console.log(response);
 							button.remove();
-
 						},
 
 						// 업로드 중 응답 콜백
