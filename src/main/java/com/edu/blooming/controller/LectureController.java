@@ -142,7 +142,7 @@ public class LectureController {
     
     List<LessonVO> lessons = new ArrayList<>();
     for(int i=0; i<lectureVideosURL.length; i++) {
-      LessonVO lesson = new LessonVO(-1, -1, lectureVideosTitle[i], lectureVideosURL[i]);
+      LessonVO lesson = new LessonVO(-1, -1, -1, lectureVideosTitle[i], lectureVideosURL[i]);
       lessons.add(lesson);
     }
     

@@ -1,12 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.edu.blooming.LessonMapper">
-
 	<insert id="insert">
 		insert into ${lesson}
 		(${lectureId}, ${lessonName}, ${lessonUrl})
 		values (#{lectureId}, #{lessonName}, #{lessonUrl})
+		
+		<!-- 입력후 lecture_Id를 리턴함 -->
+		<selectKey keyProperty="lessonId" resultType="Integer" order="AFTER">
+			SELECT LESSON_SEQ.CURRVAL FROM DUAL
+		</selectKey>
 	</insert>
+	
+	<update id="update">
+		update ${lesson}
+		set ${lessonName} = #{lessonName},
+			${lessonUrl} = #{lessonUrl},
+			${lessonVideoProcessingLevel} = 0
+		where ${lessonId} = #{lessonId}
+	</update>
+	
+	<update id="update_lesson_name">
+		update ${lesson}
+		set ${lessonName} = #{name}
+		where ${lessonId} = #{lessonId}
+	</update>
+	
+	<update id="update_lesson_url">
+		update ${lesson}
+		set ${lessonUrl} = #{url},
+			${lessonVideoProcessingLevel} = 0
+		where ${lessonId} = #{lessonId}
+	</update>
+	
+	<update id="update_video_processing_level">
+		update ${lesson}
+		set ${lessonVideoProcessingLevel} = #{level}
+		where ${lessonId} = #{lessonId}
+	</update>
+	
+	<delete id="delete">
+		delete from ${lesson}
+		where ${lessonId} = #{lessonId}
+	</delete>
+	
+	<!-- lecture에서 가장 낮은 proccessing level을 가져옴 -->
+	<select id="select_min_video_processing_level" resultType="Integer">
+		select min(${lessonVideoProcessingLevel}) 
+		from ${lesson}
+		where ${lectureId} = #{lectureId}
+	</select>
 	
 	<select id="select_by_lesson_id" resultType="LessonVO">
 		select * from ${lesson}
@@ -18,17 +61,5 @@
 		where ${lectureId} = #{lectureId}
 		order by ${lessonId}
 	</select>
-	
-	<update id="update">
-		update ${lesson}
-		set ${lessonName} = #{lessonName},
-			${lessonUrl} = #{lessonUrl}
-		where ${lessonId} = #{lessonId}
-	</update>
-	
-	<delete id="delete">
-		delete from ${lesson}
-		where ${lessonId} = #{lessonId}
-	</delete>
 	
 </mapper>
