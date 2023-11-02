@@ -85,7 +85,7 @@
 		}); // end ajax
 	}
 	function addCart(){
-		
+		console.log("addCart() 호출됨");
 		const lectureId = $("#lectureId").val();
 		const memberId = $("#memberId").val();
 		
@@ -102,13 +102,9 @@
 			},
 			success : function(response) {
 				console.log("addCart() 성공");
-				const addBtn = $("#addCartBtn").html("");
+				const addBtn = $("#addCartBtn").empty().off("click");
 				const link = 
-					$("<a>").addClass("text-reset").addClass("link-underline").addClass("link-underline-opacity-0")
-					.text(" 장바구니 바로 가기")
-					.attr("href", "/blooming/cart");
-
-				addBtn.removeAttr("onclick");
+					$("<a class='text-reset link-underline link-underline-opacity-0'>").text(" 장바구니 바로 가기").attr("href", "/blooming/cart");
 				addBtn.append(link);
 			},
 		});
@@ -118,6 +114,8 @@
 	$(function() {
 		let like = $("#like").val();
 		$("#btn-like").click((like === 'false') ? addLike : removeLike);
+		$("#addCartBtn").click(addCart);
+				
 	})
 </script>
 <meta charset="UTF-8">
@@ -181,7 +179,7 @@
 								</button>
 							</c:when>
 							<c:when test="${not purchase and not cart}">
-								<button id="addCartBtn" class="btn btn-outline-dark flex-shrink-0" onclick="addCart()" type="button">
+								<button id="addCartBtn" class="btn btn-outline-dark flex-shrink-0" type="button">
 									<i class="bi-cart-fill me-1"></i> Add to cart
 								</button>
 							</c:when>
