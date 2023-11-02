@@ -81,7 +81,7 @@
 		<property name="boardReplyId" value="board_reply_id"/>
 		<property name="boardId" value="board_id"/>
 		<property name="memberId" value="member_id"/>
-		<property name="boardReplyContent" value="lecture_reply_content"/>
+		<property name="boardReplyContent" value="board_reply_content"/>
 		<property name="boardReplyDateCreated" value="board_reply_date_created"/>
 
 	</properties>

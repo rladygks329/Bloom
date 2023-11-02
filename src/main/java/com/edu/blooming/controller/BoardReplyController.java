@@ -26,7 +26,7 @@ public class BoardReplyController {
   private BoardReplyService boardReplyService;
 
   // 댓글 입력하기
-  @PostMapping
+  @PostMapping(value = "/{boardId}")
   public ResponseEntity<Integer> createReply(@PathVariable("boardId") int boardId,
       @RequestBody BoardReplyVO vo) {
 
@@ -52,8 +52,8 @@ public class BoardReplyController {
 
   // 댓글 수정하기
   @PutMapping("/{replyId}")
-  public ResponseEntity<Integer> updateReply(@PathVariable("boardId") int boardId,
-      @PathVariable int replyId, @RequestBody String boardReplyContent) {
+  public ResponseEntity<Integer> updateReply(@PathVariable("replyId") int replyId,
+      @RequestBody String boardReplyContent) {
     int result = boardReplyService.update(replyId, boardReplyContent);
     return new ResponseEntity<Integer>(result, HttpStatus.OK);
   }

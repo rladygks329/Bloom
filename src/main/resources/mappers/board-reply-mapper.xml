@@ -24,7 +24,11 @@
 			r.*, 
 			m.${memberName} authorName			
 		from ${board_reply} r join ${member} m on r.${memberId} = m.${memberId}
-		where ${boardId} = #{boardId}
+		where ${boardId} in (
+			select ${boardId}
+			from ${board}
+			where ${boardParentId} = #{boardId}
+		)			
 		order by ${boardReplyId}
 	</select>
 

@@ -1,10 +1,13 @@
 package com.edu.blooming.domain;
 
+import java.util.Date;
+
 public class BoardReplyVO {
   private int boardReplyId;
   private int memberId;
   private int boardId;
-  private String boardeReplyContent;
+  private String boardReplyContent;
+  private Date boardReplyDateCreated;
   private String authorName;
 
   public BoardReplyVO() {
@@ -12,13 +15,14 @@ public class BoardReplyVO {
     // TODO Auto-generated constructor stub
   }
 
-  public BoardReplyVO(int boardReplyId, int memberId, int boardId, String boardeReplyContent,
-      String authorName) {
+  public BoardReplyVO(int boardReplyId, int memberId, int boardId, String boardReplyContent,
+      Date boardReplyDateCreated, String authorName) {
     super();
     this.boardReplyId = boardReplyId;
     this.memberId = memberId;
     this.boardId = boardId;
-    this.boardeReplyContent = boardeReplyContent;
+    this.boardReplyContent = boardReplyContent;
+    this.boardReplyDateCreated = boardReplyDateCreated;
     this.authorName = authorName;
   }
 
@@ -46,12 +50,20 @@ public class BoardReplyVO {
     this.boardId = boardId;
   }
 
-  public String getBoardeReplyContent() {
-    return boardeReplyContent;
+  public String getBoardReplyContent() {
+    return boardReplyContent;
   }
 
-  public void setBoardeReplyContent(String boardeReplyContent) {
-    this.boardeReplyContent = boardeReplyContent;
+  public void setBoardReplyContent(String boardReplyContent) {
+    this.boardReplyContent = boardReplyContent;
+  }
+
+  public Date getBoardReplyDateCreated() {
+    return boardReplyDateCreated;
+  }
+
+  public void setBoardReplyDateCreated(Date boardReplyDateCreated) {
+    this.boardReplyDateCreated = boardReplyDateCreated;
   }
 
   public String getAuthorName() {
@@ -65,8 +77,8 @@ public class BoardReplyVO {
   @Override
   public String toString() {
     return "BoardReplyVO [boardReplyId=" + boardReplyId + ", memberId=" + memberId + ", boardId="
-        + boardId + ", boardeReplyContent=" + boardeReplyContent + ", authorName=" + authorName
-        + "]";
+        + boardId + ", boardReplyContent=" + boardReplyContent + ", boardReplyDateCreated="
+        + boardReplyDateCreated + ", authorName=" + authorName + "]";
   }
 
 }
