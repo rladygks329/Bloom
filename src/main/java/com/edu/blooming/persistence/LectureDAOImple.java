@@ -77,6 +77,17 @@ public class LectureDAOImple implements LectureDAO {
   }
 
   @Override
+  public int updateVideoProcessingLevel(int lectureId, int level) {
+    logger.info("updateVideoProcessingLevel() 호출 : lectureId = " + lectureId + " level : " + level);
+
+    HashMap<String, Integer> args = new HashMap<>();
+    args.put("lectureId", lectureId);
+    args.put("level", level);
+
+    return sqlSession.update(NAMESPACE + ".update_video_processing_level", args);
+  }
+
+  @Override
   public int getLectureCount() {
     logger.info("getLectureCount() 호출");
     return sqlSession.selectOne(NAMESPACE + ".total_count");
@@ -156,6 +167,16 @@ public class LectureDAOImple implements LectureDAO {
     args.put("lectureId", lectureId);
 
     return sqlSession.selectOne(NAMESPACE + ".select_by_lecture_id", args);
+  }
+
+  @Override
+  public List<LectureVO> selectByAuthor(int memberId) {
+    logger.info("select() 호출 : memberId : " + memberId);
+
+    HashMap<String, Integer> args = new HashMap<>();
+    args.put("memberId", memberId);
+
+    return sqlSession.selectList(NAMESPACE + ".select_by_member_id", args);
   }
 
   @Override

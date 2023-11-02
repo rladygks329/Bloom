@@ -20,6 +20,8 @@ public interface LectureDAO {
 
   int updateReplyTotalScore(int lectureId, int amount);
 
+  int updateVideoProcessingLevel(int lectureId, int level);
+
   int getLectureCount();
 
   int getLectureCount(int memberId);
@@ -33,6 +35,8 @@ public interface LectureDAO {
   List<LectureVO> select(PageCriteria criteria);
 
   List<LectureVO> select(PageCriteria criteria, int memberId);
+
+  List<LectureVO> selectByAuthor(int memberId);
 
   boolean selectIsMemberLikeLecture(int memberId, int lectureId);
 

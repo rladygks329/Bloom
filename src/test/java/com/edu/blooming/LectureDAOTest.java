@@ -48,13 +48,13 @@ public class LectureDAOTest {
 
   private void testInsert() {
     LectureVO vo =
-        new LectureVO(0, 1, "개발자", "강좌 1의 제목", "상세한 강의 설명", 9000, 0, 0, 0, 0, "테스트 파일 경로", null);
+        new LectureVO(0, 1, "개발자", "강좌 1의 제목", "상세한 강의 설명", 9000, 0, 0, 0, 0, 0, "테스트 파일 경로", null);
     int result = dao.insert(vo);
     logger.info("lectureId: " + result);
   } // end testInsert()
 
   private void testUpdate() {
-    LectureVO vo = new LectureVO(1, 0, "개발자", "강좌 1의 수정된 제목", "수정된 상세한 강의 설명", 8000, 0, 0, 0, 0,
+    LectureVO vo = new LectureVO(1, 0, "개발자", "강좌 1의 수정된 제목", "수정된 상세한 강의 설명", 8000, 0, 0, 0, 0, 0,
         "수정된 테스트 파일 경로", null);
     int result = dao.update(vo);
     logger.info(result + "행 변경");
