@@ -21,6 +21,7 @@
 		<property name="lectureId" value="lecture_id"/>
 		<property name="lessonName" value="lesson_name"/>
 		<property name="lessonUrl" value="lesson_url"/>
+		<property name="lesson_video_processing_level" value="lessonVideoProcessingLevel"/>
 		
 		<!-- LECUTRE -->
 		<property name="lecture" value="lecture"/>
@@ -28,13 +29,15 @@
 		<property name="authorName" value="author_name"/>
 		<property name="lectureTitle" value="lecture_title"/>
 		<property name="lectureDescription" value="lecture_description"/>
-		<property name="lecturePrice" value="lecture_price"/>		
+		<property name="lecturePrice" value="lecture_price"/>	
+		<property name="lecture_video_processing_level" value="lectureVideoProcessingLevel"/>
 		<property name="lectureSalesCount" value="lecture_sales_count"/>		
 		<property name="lectureTotalScore" value="lecture_total_score"/>
 		<property name="lectureReplyCount" value="lecture_reply_count"/>
 		<property name="lectureLikeCount" value="lecture_like_count"/>
 		<property name="lectureThumbnailUrl" value="lecture_thumbnail_url"/>
 		<property name="lectureDateCreated" value="lecture_date_created"/>
+		
 		
 		<!-- LECTURE_REPLY -->
 		<property name="lecture_reply" value="lecture_reply"/>
