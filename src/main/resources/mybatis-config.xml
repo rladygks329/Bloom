@@ -30,7 +30,7 @@
 		<property name="lectureTitle" value="lecture_title"/>
 		<property name="lectureDescription" value="lecture_description"/>
 		<property name="lecturePrice" value="lecture_price"/>	
-		<property name="lecture_video_processing_level" value="lectureVideoProcessingLevel"/>
+		<property name="lectureVideoProcessingLevel" value="lecture_video_processing_level"/>
 		<property name="lectureSalesCount" value="lecture_sales_count"/>		
 		<property name="lectureTotalScore" value="lecture_total_score"/>
 		<property name="lectureReplyCount" value="lecture_reply_count"/>

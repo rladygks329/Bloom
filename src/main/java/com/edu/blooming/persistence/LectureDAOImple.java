@@ -131,7 +131,7 @@ public class LectureDAOImple implements LectureDAO {
     args.put("end", criteria.getEnd());
     args.put("keyword", "%" + keyword + "%");
 
-    return sqlSession.selectList(NAMESPACE + ".select_by_keyword", args);
+    return sqlSession.selectList(NAMESPACE + ".paging_select_by_keyword", args);
   }
 
   @Override
@@ -144,19 +144,6 @@ public class LectureDAOImple implements LectureDAO {
     args.put("memberId", memberId);
 
     return sqlSession.selectList(NAMESPACE + ".paging_select_by_member_id", args);
-  }
-
-  @Override
-  public boolean selectIsMemberLikeLecture(int memberId, int lectureId) {
-    logger
-        .info("selectIsMemberLikeLecture() 호출 memberId: " + memberId + " lectureId : " + lectureId);
-
-    HashMap<String, Integer> args = new HashMap<>();
-    args.put("memberId", memberId);
-    args.put("lectureId", lectureId);
-
-    int result = sqlSession.selectOne(NAMESPACE + ".select_is_member_like_lecture", args);
-    return result == 1;
   }
 
   @Override
@@ -179,6 +166,7 @@ public class LectureDAOImple implements LectureDAO {
     return sqlSession.selectList(NAMESPACE + ".select_by_member_id", args);
   }
 
+  // --------- lecture like --------
   @Override
   public int insertLike(int memberId, int lectureId) {
     logger.info("insertLike() 호출 ");
@@ -199,6 +187,19 @@ public class LectureDAOImple implements LectureDAO {
     args.put("lectureId", lectureId);
 
     return sqlSession.delete(NAMESPACE + ".delete_lecture_like", args);
+  }
+
+  @Override
+  public boolean selectIsMemberLikeLecture(int memberId, int lectureId) {
+    logger
+        .info("selectIsMemberLikeLecture() 호출 memberId: " + memberId + " lectureId : " + lectureId);
+
+    HashMap<String, Integer> args = new HashMap<>();
+    args.put("memberId", memberId);
+    args.put("lectureId", lectureId);
+
+    int result = sqlSession.selectOne(NAMESPACE + ".select_is_member_like_lecture", args);
+    return result == 1;
   }
 
 }
