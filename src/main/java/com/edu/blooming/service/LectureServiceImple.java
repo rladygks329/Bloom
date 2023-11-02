@@ -4,10 +4,12 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.edu.blooming.domain.LectureVO;
 import com.edu.blooming.domain.LessonVO;
+import com.edu.blooming.event.VideoUploadedEvent;
 import com.edu.blooming.persistence.LectureDAO;
 import com.edu.blooming.persistence.LessonDAO;
 import com.edu.blooming.util.PageCriteria;
@@ -15,6 +17,9 @@ import com.edu.blooming.util.PageCriteria;
 @Service
 public class LectureServiceImple implements LectureService {
   private static final Logger logger = LoggerFactory.getLogger(LectureServiceImple.class);
+
+  @Autowired
+  ApplicationEventPublisher publisher;
 
   @Autowired
   private LectureDAO lectureDAO;
@@ -30,6 +35,7 @@ public class LectureServiceImple implements LectureService {
     for (LessonVO lesson : lessons) {
       lesson.setLectureId(lectureId);
       lessonDAO.insert(lesson);
+      publisher.publishEvent(new VideoUploadedEvent(this, lesson.getLessonUrl()));
     }
     return 1;
   }

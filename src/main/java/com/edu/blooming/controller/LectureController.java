@@ -21,7 +21,6 @@ import com.edu.blooming.domain.LectureVOBuilder;
 import com.edu.blooming.domain.LessonVO;
 import com.edu.blooming.domain.MemberVO;
 import com.edu.blooming.service.CartService;
-import com.edu.blooming.service.HlsService;
 import com.edu.blooming.service.LectureService;
 import com.edu.blooming.service.LessonService;
 import com.edu.blooming.service.PurchaseService;
@@ -32,9 +31,6 @@ import com.edu.blooming.util.PageMaker;
 @RequestMapping(value = "/lecture")
 public class LectureController {
   private static final Logger logger = LoggerFactory.getLogger(LectureController.class);
-
-  @Autowired
-  private HlsService hlsService;
 
   @Autowired
   private LectureService lectureService;
@@ -147,7 +143,6 @@ public class LectureController {
     List<LessonVO> lessons = new ArrayList<>();
     for(int i=0; i<lectureVideosURL.length; i++) {
       LessonVO lesson = new LessonVO(-1, -1, lectureVideosTitle[i], lectureVideosURL[i]);
-      hlsService.convertToHls(lesson.getLessonUrl());
       lessons.add(lesson);
     }
     

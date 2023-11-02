@@ -27,8 +27,9 @@
 	</annotation-driven>
 	
 	<!-- 스케줄러 -->
-	<task:scheduler id="jobScheduler" pool-size="10" />
-	<task:annotation-driven scheduler="jobScheduler" />
+	<task:scheduler id="JobScheduler" pool-size="10" />
+	<task:executor id="AsyncExecutor" pool-size="10" queue-capacity="50" />
+	<task:annotation-driven executor="AsyncExecutor" scheduler="JobScheduler" />
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
 	<resources mapping="/resources/**" location="/resources/" />
