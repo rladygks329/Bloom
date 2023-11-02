@@ -68,7 +68,7 @@ public class LessonDAOImple implements LessonDAO {
 
   @Override
   public int selectMinVideoProcessingLevel(int lectureId) {
-    logger.info("delete() 호출 : lectureId = " + lectureId);
+    logger.info("selectMinVideoProcessingLevel() 호출 : lectureId = " + lectureId);
     Map<String, Integer> args = new HashMap<>();
     args.put("lectureId", lectureId);
     return sqlSession.selectOne(NAMESPACE + ".select_min_video_processing_level", args);

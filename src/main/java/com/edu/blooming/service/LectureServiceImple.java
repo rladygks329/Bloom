@@ -34,8 +34,9 @@ public class LectureServiceImple implements LectureService {
     int lectureId = lectureDAO.insert(vo);
     for (LessonVO lesson : lessons) {
       lesson.setLectureId(lectureId);
-      lessonDAO.insert(lesson);
-      publisher.publishEvent(new VideoUploadedEvent(this, lesson.getLessonUrl()));
+      int lessonId = lessonDAO.insert(lesson);
+      publisher
+          .publishEvent(new VideoUploadedEvent(this, lesson.getLessonUrl(), lectureId, lessonId));
     }
     return 1;
   }

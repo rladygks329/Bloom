@@ -128,11 +128,10 @@ public class HlsService {
   private void run(FFmpegBuilder builder) {
     FFmpegExecutor executor = new FFmpegExecutor(fFmpeg, fFprobe);
     executor.createJob(builder, progress -> {
-      logger.info("progress ==> {}", progress);
+      //logger.info("progress ==> {}", progress);
       if (progress.status.equals(Progress.Status.END)) {
         logger.info("================================= JOB FINISHED =================================");
       }
     }).run();
   }
-
 }
