@@ -173,7 +173,8 @@ public class LectureController {
     }
 
     model.addAttribute("lessons", list);
-    model.addAttribute("head", list.get(0).getLessonUrl().split("\\.")[0]);
+    model.addAttribute("head", list.get(0));
+    model.addAttribute("headURL", list.get(0).getLessonUrl().split("\\.")[0]);
     return "/lecture/course";
   }
 
