@@ -16,11 +16,19 @@ public interface BoardDAO {
 
   int updateReplyCount(int boardId, int amount);
 
-  boolean checkParentId(int boardId);
-
-  int deleteQuestion(int boardId);
+  // boolean checkParentId(int boardId);
+  //
+  // int deleteQuestion(int boardId);
 
   int update(BoardVO vo);
 
   BoardVO selectForUpdate(int boardId);
+
+  int updateViewCount(int boardId);
+
+  int updateLikeCount(int boardId, int amount);
+
+  int insertLike(int memberId, int boardId);
+
+  int deleteLike(int memberId, int boardId);
 }

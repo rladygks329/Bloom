@@ -76,10 +76,13 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 				<input type="hidden" class="boardId" value="${vo.boardId}">
 				<input type="hidden" id="memberId" value="${sessionScope.loginVo.memberId}">
 				<textarea rows="5" cols="50" id="boardReplyContent"></textarea>
-				<button type="button" class="btnAddReply">댓글 달기</button>        		
+				<!-- <textarea rows="5" cols="50" id="boardReplyContent-${vo.boardId}"></textarea> -->
+				<button type="button" class="btnAddReply">댓글 달기</button>
+				<!-- <button type="button" class="btnAddReply" data-boardid="${vo.boardId}">댓글 달기</button> -->        		
 			</div>
 			<div style="text-align: center;">
 				<div id="replies"></div>
+				<!-- <div id="replies-${vo.boardId}"></div>  -->
 			</div>
 		</c:if>
 	</c:forEach>
@@ -204,7 +207,31 @@ $(document).ready(function(){
 		}); // end ajax()
 	}); // end replies.on()
 	
+	// 삭제 버튼을 클릭하면 선택된 댓글 삭제
+	$('#replies').on('click', '.reply_item .btn_delete', function(){
+		console.log(this);
 	
+		var boardId = $('#boardId').val();
+		var replyId = $(this).prevAll('#replyId').val();
+		console.log("선택된 댓글 번호 : " + replyId);
+		
+		// ajax 요청
+		$.ajax({
+			type : 'DELETE', 
+			url : 'replies/' + replyId, 
+			headers : {
+				'Content-Type' : 'application/json'
+			},
+			data : boardId,
+			success : function(result) {
+				console.log(result);
+				if(result == 1) {
+					alert('댓글 삭제 성공!');
+					getAllReplies();
+				}
+			}
+		}); // end ajax()
+	}); // end replies.on()
 	
 	
 		

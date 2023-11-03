@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.edu.blooming.domain.BoardVO;
 import com.edu.blooming.persistence.BoardDAO;
 import com.edu.blooming.util.PageCriteria;
@@ -51,6 +52,28 @@ public class BoardServiceImple implements BoardService {
   public BoardVO readForUpdate(int boardId) {
     logger.info("readForUpdate()호출: boardId = " + boardId);
     return boardDAO.selectForUpdate(boardId);
+  }
+
+  @Override
+  public int updateViewCount(int boardId) {
+    logger.info("updateViewCount()호출: boardId = " + boardId);
+    return boardDAO.updateViewCount(boardId);
+  }
+
+  @Transactional(value = "transactionManager")
+  @Override
+  public int likeBoard(int boardId, int memberId) {
+    logger.info("likeBoard() 호출, boardId : " + boardId + " memberId : " + memberId);
+    boardDAO.updateLikeCount(boardId, 1);
+    return boardDAO.insertLike(memberId, boardId);
+  }
+
+  @Transactional(value = "transactionManager")
+  @Override
+  public int dislikeBoard(int boardId, int memberId) {
+    logger.info("dislikeBoard() 호출, boardId : " + boardId + " memberId : " + memberId);
+    boardDAO.updateLikeCount(boardId, -1);
+    return boardDAO.deleteLike(memberId, boardId);
   }
 
 }

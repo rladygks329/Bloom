@@ -29,7 +29,7 @@
 			from ${board}
 			where ${boardParentId} = #{boardId}
 		)			
-		order by ${boardReplyId}
+		order by ${boardReplyDateCreated}
 	</select>
 
 </mapper>

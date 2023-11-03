@@ -69,6 +69,45 @@
 		where ${boardId} = #{boardId}	
 	</update>
 	
+	<!-- 게시글 조회수 -->
+	<update id="update_view_count">
+		update ${board}
+		set ${boardViewCount} = ${boardViewCount} + 1
+		where ${boardId} = #{boardId}
+	</update>
+	
+	<!-- 게시글 좋아요 -->
+	<insert id="insert_board_like">
+		insert into ${board_like}
+		(${boardId}, ${memberId})
+		values(#{boardId}, #{memberId})
+	</insert>
+	 
+	<!-- 게시글 좋아요 취소 -->
+	<delete id="delete_board_like">
+		delete from ${board_like}
+		where ${boardId} = #{boardId} and ${memberId} = #{memberId} 
+	</delete>
+	
+	<!-- 게시글 좋아요 갯수 수정 -->
+	<update id="update_like">
+		update ${board}
+		set ${boardLikeCount} = ${boardLikeCount} + #{amount}
+		where ${boardId} = #{boardId}
+	</update>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	<!-- 우선 기존에 있는 boardId로 조회 and 등록하는 쿼리로 가능한지 해보기-->
 	<!-- 게시글 답글 등록시 답글 불러오기 -->

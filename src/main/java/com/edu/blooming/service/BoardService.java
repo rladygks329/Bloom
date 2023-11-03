@@ -18,5 +18,11 @@ public interface BoardService {
 
   BoardVO readForUpdate(int boardId);
 
+  int updateViewCount(int boardId);
+
+  int likeBoard(int boardId, int memberId);
+
+  int dislikeBoard(int boardId, int memberId);
+
 
 }

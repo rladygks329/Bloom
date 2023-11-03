@@ -30,7 +30,7 @@ public class BoardReplyController {
   public ResponseEntity<Integer> createReply(@PathVariable("boardId") int boardId,
       @RequestBody BoardReplyVO vo) {
 
-    logger.info("createReply() 호출 : boardId = " + boardId + "vo = " + vo);
+    logger.info("createReply() 호출 : boardId = " + boardId + " vo = " + vo);
 
     int result = boardReplyService.create(boardId, vo);
     return new ResponseEntity<Integer>(result, HttpStatus.OK);
@@ -39,7 +39,6 @@ public class BoardReplyController {
     // return new ResponseEntity<>(1, status);
   }
 
-
   // 게시글의 댓글 가져오기
   @GetMapping(value = "/{boardId}")
   public ResponseEntity<List<BoardReplyVO>> getReplies(@PathVariable("boardId") int boardId) {
@@ -47,8 +46,6 @@ public class BoardReplyController {
     List<BoardReplyVO> list = boardReplyService.getReplies(boardId);
     return new ResponseEntity<List<BoardReplyVO>>(list, HttpStatus.OK);
   }
-
-
 
   // 댓글 수정하기
   @PutMapping("/{replyId}")
@@ -60,8 +57,8 @@ public class BoardReplyController {
 
   // 댓글 삭제하기
   @DeleteMapping("/{replyId}")
-  public ResponseEntity<Integer> deleteReply(@PathVariable("boardId") int boardId,
-      @PathVariable int replyId) {
+  public ResponseEntity<Integer> deleteReply(@PathVariable("replyId") int replyId,
+      @RequestBody int boardId) {
     logger.info("deleteReply() 호출 boardId: " + boardId + "replyId : " + replyId);
 
     int result = boardReplyService.delete(replyId, boardId);
@@ -70,7 +67,6 @@ public class BoardReplyController {
 
     return new ResponseEntity<>(1, status);
   }
-
 
 }
 

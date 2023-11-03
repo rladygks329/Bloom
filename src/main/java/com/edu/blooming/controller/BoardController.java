@@ -1,14 +1,22 @@
 package com.edu.blooming.controller;
 
 import java.util.List;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.edu.blooming.domain.BoardVO;
 import com.edu.blooming.service.BoardService;
@@ -49,11 +57,36 @@ public class BoardController {
   } // end list()
 
   @GetMapping("/detail")
-  public void detail(Model model, Integer boardId, Integer page) {
-    logger.info("detail() 호출 : boardId = " + boardId);
+  public String detail(Model model, @RequestParam Integer boardId, @RequestParam Integer page,
+      HttpServletRequest request, HttpServletResponse response) {
+    // 게시글 조회 코드
     List<BoardVO> list = boardService.read(boardId);
     model.addAttribute("list", list);
     model.addAttribute("page", page);
+
+    // 쿠키 이름과 현재 게시글 ID 및 페이지를 조합하여 쿠키 이름 생성
+    String cookieName = "viewed_" + boardId + "_page" + page;
+    Cookie[] cookies = request.getCookies();
+    boolean isViewed = false; // 해당 게시글을 조회한 여부
+
+    if (cookies != null) {
+      for (Cookie cookie : cookies) {
+        if (cookie.getName().equals(cookieName)) {
+          isViewed = true;
+          break;
+        }
+      }
+    }
+
+    if (!isViewed) {
+      // 쿠키가 없는 경우: 조회수 증가 및 쿠키 설정
+      boardService.updateViewCount(boardId);
+      Cookie viewedCookie = new Cookie(cookieName, "1");
+      viewedCookie.setMaxAge(3600); // 1시간 (초 단위)
+      viewedCookie.setPath("/"); // 모든 경로에서 쿠키 사용
+      response.addCookie(viewedCookie);
+    }
+    return "board/detail"; // JSP 페이지 경로만 반환
   }
 
   @GetMapping("/register")
@@ -91,10 +124,26 @@ public class BoardController {
     int result = boardService.update(vo);
     logger.info("page : " + page + "result : " + result);
     if (result == 1) {
-      return "redirect:/board/list?page=" + page;
+      return "redirect:/board/detail?boardId=" + vo.getBoardId() + "&page=" + page;
     } else {
       return "redirect:/board/update?boardId=" + vo.getBoardId();
     }
+  }
+
+  @PostMapping("/like/{boardId}/{memberId}")
+  public ResponseEntity<Integer> likeBoard(@PathVariable("boardId") int boardId,
+      @PathVariable("memberId") int memberId) {
+    boardService.likeBoard(boardId, memberId);
+    int result = boardService.readForUpdate(boardId).getBoardLikeCount();
+    return new ResponseEntity<Integer>(result, HttpStatus.OK);
+  }
+
+  @DeleteMapping("/like/{boardId}/{memberId}")
+  public ResponseEntity<Integer> dislikeBoard(@PathVariable("boardId") int boardId,
+      @PathVariable("memberId") int memberId) {
+    boardService.dislikeBoard(boardId, memberId);
+    int result = boardService.readForUpdate(boardId).getBoardLikeCount();
+    return new ResponseEntity<Integer>(result, HttpStatus.OK);
   }
 
 

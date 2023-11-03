@@ -40,6 +40,7 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 				<th style="width : 120px">작성자</th>
 				<th style="width : 60px">조회수</th>
 				<th style="width : 60px">답글수</th>
+				<th style="width : 60px">좋아요</th>
 				<th style="width : 300px">작성일</th>
 			</tr>
 		</thead>
@@ -51,6 +52,7 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 					<td>${vo.authorName }</td>
 					<td>${vo.boardViewCount }</td>
 					<td>${vo.boardAnswerCount }</td>
+					<td>${vo.boardLikeCount }</td>
 					<fmt:formatDate value="${vo.boardDateCreated }"
 					pattern="yyyy-MM-dd HH:mm:ss" var="boardDateCreated"/>
 					<td>${boardDateCreated }</td>
