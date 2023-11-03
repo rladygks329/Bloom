@@ -25,20 +25,43 @@
 <!-- Video.js -->
 <link href="https://vjs.zencdn.net/7.14.3/video-js.css" rel="stylesheet" />
 <script src="https://vjs.zencdn.net/7.14.3/video.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/silvermine-videojs-quality-selector@1.1.2/dist/js/silvermine-videojs-quality-selector.min.js"></script>
+<link 	href="https://cdn.jsdelivr.net/npm/silvermine-videojs-quality-selector@1.1.2/dist/css/quality-selector.min.css" rel="stylesheet" />
+
 <script type="text/javascript">
 	$(function() {
 		const headURL = $('input[name="head"]').val();
+		
+		function addQualitySelector() {
+			const player = this;
+			player.controlBar.addChild('QualitySelector');
+		}
+		
 		const vPlayer = videojs('my-video', {
 			techOrder : [ "html5", "youtube" ],
 			fill : true,
 			autoplay : true,
-			sources : [ {
+			sources : [{
 				type : "application/x-mpegURL",
-				src : 'http://localhost:8080/blooming/hls/' + headURL
-						+ '/master.m3u8'
-			} ]
-		});
-		// vPlayer.play();
+				src : '/blooming/hls/' + headURL + '/480/playlist.m3u8',
+				label: '480p'
+			},{
+				type : "application/x-mpegURL",
+				src : '/blooming/hls/' + headURL + '/720/playlist.m3u8',
+				label: '720p'
+			},{
+				type : "application/x-mpegURL",
+				src : '/blooming/hls/' + headURL + '/1080/playlist.m3u8',
+				label: '1080p'
+			},{
+				type : "application/x-mpegURL",
+				src : '/blooming/hls/' + headURL + '/master.m3u8',
+				label: 'auto',
+				selected: true
+			}]
+		}, addQualitySelector);
+		vPlayer.play();
+		
 		const controlBar = $(".vjs-control-bar");
 		vPlayer.on('mouseout', function() {
 			vPlayer.controlBar.hide();
@@ -54,10 +77,24 @@
 			const filename = url.split(".")[0];
 			const extention = url.split(".")[1];
 
-			const newSrc = {
+			const newSrc = [{
 				type : "application/x-mpegURL",
-				src : "/blooming/hls/" + filename + "/master.m3u8"
-			}
+				src : '/blooming/hls/' + filename + '/480/playlist.m3u8',
+				label: '480p'
+			},{
+				type : "application/x-mpegURL",
+				src : '/blooming/hls/' + filename + '/720/playlist.m3u8',
+				label: '720p'
+			},{
+				type : "application/x-mpegURL",
+				src : '/blooming/hls/' + filename + '/1080/playlist.m3u8',
+				label: '1080p'
+			},{
+				type : "application/x-mpegURL",
+				src : '/blooming/hls/' + filename + '/master.m3u8',
+				label: 'auto',
+				selected: true
+			}]
 			vPlayer.src(newSrc);
 			vPlayer.play();
 		});
@@ -78,11 +115,7 @@
 						<li class="breadcrumb-item active" aria-current="page"><span>${head.lessonName }</span></li>
 					</ol>
 				</nav>
-				<video id="my-video" class="video-js vjs-fill vjs-big-play-centered"
-					controls>
-					<source
-						src="http://localhost:8080/blooming/hls/${headURL}/master.m3u8"
-						type="application/x-mpegURL">
+				<video id="my-video" class="video-js vjs-fill vjs-big-play-centered" controls>
 				</video>
 			</div>
 
