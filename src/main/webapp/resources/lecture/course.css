@@ -68,12 +68,12 @@ nav {
 {
 	background-color: black;
 	position: absolute;
-	top: -11px;
+	top: -12px;
 	width: 0;
 	height: 0;
 	content: "";
-	border-top: 21px solid transparent;
-	border-bottom: 21px solid transparent;
+	border-top: 28px solid transparent;
+	border-bottom: 28px solid transparent;
 }
 
 a:link {
@@ -86,6 +86,4 @@ a:link {
 	color: #6c757d;
 	content: "/";
 }
-
-
 

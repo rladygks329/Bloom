@@ -30,6 +30,7 @@
 
 <script type="text/javascript">
 	$(function() {
+		$("#submenu li a:first").addClass("active");
 		const headURL = $('input[name="head"]').val();
 		
 		function addQualitySelector() {
@@ -72,6 +73,8 @@
 		});
 
 		$("#submenu li").click(function() {
+			const actived = $("#submenu li").find(".active").removeClass("active");
+			$(this).find("a").addClass("active");
 			const url = $(this).find("input").val();
 			console.log("url : " + url);
 			const filename = url.split(".")[0];
@@ -110,9 +113,9 @@
 				class="col d-flex flex-column justify-content-center embed-responsive embed-responsive-16by9 p-0 ">
 				<nav class="text-white bg-black" aria-label="breadcrumb">
 					<ol class="breadcrumb breadcrumb-custom m-0">
-						<li class="breadcrumb-item"><a href="#" data-abc="true">강의
+						<li class="breadcrumb-item"><a class="h4" href="#" data-abc="true">강의
 								대쉬 보드</a></li>
-						<li class="breadcrumb-item active" aria-current="page"><span>${head.lessonName }</span></li>
+						<li class="breadcrumb-item active" aria-current="page"><span class="h4">${head.lessonName }</span></li>
 					</ol>
 				</nav>
 				<video id="my-video" class="video-js vjs-fill vjs-big-play-centered" controls>
@@ -123,31 +126,32 @@
 				class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark toggled">
 				<div
 					class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
-					<a href="#"
-						class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+					<a href="#" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
 						<span class="fs-5 d-none d-sm-inline">Menu</span>
 					</a>
-					<ul
-						class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start text-white"
-						id="menu">
-						<li class="nav-item "><a href="/blooming/main"
-							class="nav-link align-middle px-0 text-white text-decoration-none">
-								<i class="fs-4 bi-house"></i> <span
-								class="ms-1 d-none d-sm-inline">홈</span>
-						</a></li>
-						<li><a href="#submenu1" data-bs-toggle="collapse"
-							class="nav-link px-0 align-middle text-white text-decoration-none">
-								<i class="fs-4 bi-speedometer2"></i> <span
-								class="ms-1 d-none d-sm-inline">강의 목록</span>
-						</a>
-							<ul class="collapse show nav flex-column ms-1" id="submenu"
-								data-bs-parent="#menu">
+					<ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start text-white w-100" id="menu">
+						<li class="nav-item ">
+							<a href="/blooming/main" class="nav-link align-middle px-0 text-white text-decoration-none">
+									<i class="fs-4 bi-house"></i> <span
+									class="ms-1 d-none d-sm-inline">홈</span>
+							</a>
+						</li>
+						<li class="nav-item w-100">
+							<a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle text-white text-decoration-none">
+								<i class="fs-4 bi-speedometer2"></i> 
+								<span class="ms-1 d-none d-sm-inline">강의 목록</span>
+							</a>
+							<ul class="nav flex-column ms-1" id="submenu" data-bs-parent="#menu">
 								<c:forEach var="lesson" items="${lessons}">
-									<li class="w-100"><i
-										class="bi bi-dot px-0 d-none d-sm-inline">${lesson.lessonName }</i>
-										<input type="hidden" value="${lesson.lessonUrl }"></li>
+									<li>
+										<a class="nav-link my-1">
+											<i class="bi bi-dot px-0 d-none d-sm-inline">${lesson.lessonName }</i>
+											<input type="hidden" value="${lesson.lessonUrl }">
+										</a>
+									</li>
 								</c:forEach>
-							</ul></li>
+							</ul>
+						</li>
 					</ul>
 				</div>
 			</div>
