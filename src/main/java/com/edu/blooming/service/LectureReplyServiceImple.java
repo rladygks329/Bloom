@@ -4,9 +4,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.edu.blooming.domain.LectureReplyVO;
+import com.edu.blooming.exception.AlreadyExistException;
 import com.edu.blooming.persistence.LectureDAO;
 import com.edu.blooming.persistence.LectureReplyDAO;
 
@@ -23,13 +25,16 @@ public class LectureReplyServiceImple implements LectureReplyService {
 
   @Transactional(value = "transactionManager")
   @Override
-  public int create(int memberId, LectureReplyVO vo) {
+  public int create(int memberId, LectureReplyVO vo) throws AlreadyExistException {
     logger.info("create() 호출 : memberId :" + memberId + " vo : " + vo.toString());
 
-    lectureReplyDAO.insert(vo);
-    lectureDAO.updateReplyCount(vo.getLectureId(), 1);
-    lectureDAO.updateReplyTotalScore(vo.getLectureId(), vo.getLectureReplyScore());
-
+    try {
+      lectureReplyDAO.insert(vo);
+      lectureDAO.updateReplyCount(vo.getLectureId(), 1);
+      lectureDAO.updateReplyTotalScore(vo.getLectureId(), vo.getLectureReplyScore());
+    } catch (DataIntegrityViolationException e) {
+      throw new AlreadyExistException("댓글은 하나만 작성할 수 있습니다.");
+    }
     return 1;
   }
 

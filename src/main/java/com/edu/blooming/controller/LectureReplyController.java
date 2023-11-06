@@ -1,6 +1,8 @@
 package com.edu.blooming.controller;
 
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +17,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.edu.blooming.domain.LectureReplyVO;
+import com.edu.blooming.domain.MemberVO;
 import com.edu.blooming.service.LectureReplyService;
+import com.edu.blooming.service.PurchaseService;
 
+
+//@formatter:off
 @RestController
 @RequestMapping(value = "/lecture/{lectureId}/replies")
 public class LectureReplyController {
@@ -24,7 +30,10 @@ public class LectureReplyController {
 
   @Autowired
   private LectureReplyService lectureReplyService;
-
+  
+  @Autowired
+  private PurchaseService purchaseService;
+  
   @GetMapping
   public ResponseEntity<List<LectureReplyVO>> getReplies(@PathVariable("lectureId") int lectureId) {
     List<LectureReplyVO> list = lectureReplyService.getReplies(lectureId);
@@ -32,31 +41,38 @@ public class LectureReplyController {
   }
 
   @PostMapping
-  public ResponseEntity<Integer> createReply(@PathVariable("lectureId") int lectureId,
+  public ResponseEntity<Object> createReply(
+      HttpServletRequest request,
+      @PathVariable("lectureId") int lectureId,
       @RequestBody LectureReplyVO vo) {
-
     logger.info("createReply() 호출 lectureId: " + lectureId + " vo :" + vo);
-    // TODO: 사용자가 강의을 구매한지 검사한 후, 아닐경우는 not auther 리턴하기
-    // TODO: 사용자의 진도를 체크하여, 모든 영상을 다 들었으면 수강평을 작성할 수 있도록 변경하기
+    HttpSession session = request.getSession();
+    int memberId = ((MemberVO) session.getAttribute("loginVo")).getMemberId();
+    
+    if(!purchaseService.checkPurchase(memberId, lectureId)) {
+      return new ResponseEntity<>("구매를 한 사람만 댓글을 달 수 있습니다.", HttpStatus.FORBIDDEN);
+    }
+    
     int result = lectureReplyService.create(lectureId, vo);
     HttpStatus status = (result == 1) ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
-
     return new ResponseEntity<>(1, status);
   }
 
   @PutMapping(value = "/{replyId}")
-  public ResponseEntity<Integer> updateReply(@PathVariable("lectureId") int lectureId,
-      @PathVariable int replyId, @RequestBody LectureReplyVO vo) {
+  public ResponseEntity<Integer> updateReply(
+      @PathVariable("lectureId") int lectureId,
+      @PathVariable int replyId, 
+      @RequestBody LectureReplyVO vo) {
     logger
         .info("updateReply() 호출 lectureId: " + lectureId + " replyId : " + replyId + " vo :" + vo);
 
     int result = lectureReplyService.update(vo);
-    // HttpStatus status = (result == 1) ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
     return new ResponseEntity<>(1, HttpStatus.OK);
   }
 
   @DeleteMapping(value = "/{replyId}")
-  public ResponseEntity<Integer> deleteReply(@PathVariable("lectureId") int lectureId,
+  public ResponseEntity<Integer> deleteReply(
+      @PathVariable("lectureId") int lectureId,
       @PathVariable int replyId) {
     logger.info("updateReply() 호출 lectureId: " + lectureId + "replyId : " + replyId);
 
@@ -68,5 +84,4 @@ public class LectureReplyController {
   }
 
 }
-// @formatter:off
 

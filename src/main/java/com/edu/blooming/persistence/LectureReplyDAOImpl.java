@@ -7,6 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 import com.edu.blooming.domain.LectureReplyVO;
 
@@ -20,7 +21,7 @@ public class LectureReplyDAOImpl implements LectureReplyDAO {
   private SqlSession sqlSession;
 
   @Override
-  public int insert(LectureReplyVO vo) {
+  public int insert(LectureReplyVO vo) throws DataIntegrityViolationException {
     logger.info("insert() 호출,  vo : " + vo.toString());
     return sqlSession.insert(NAMESPACE + ".insert", vo);
   }
