@@ -61,7 +61,7 @@ public class LectureReplyController {
   @PutMapping(value = "/{replyId}")
   public ResponseEntity<Integer> updateReply(
       @PathVariable("lectureId") int lectureId,
-      @PathVariable int replyId, 
+      @PathVariable("replyId") int replyId, 
       @RequestBody LectureReplyVO vo) {
     logger
         .info("updateReply() 호출 lectureId: " + lectureId + " replyId : " + replyId + " vo :" + vo);
@@ -73,7 +73,7 @@ public class LectureReplyController {
   @DeleteMapping(value = "/{replyId}")
   public ResponseEntity<Integer> deleteReply(
       @PathVariable("lectureId") int lectureId,
-      @PathVariable int replyId) {
+      @PathVariable("replyId") int replyId) {
     logger.info("updateReply() 호출 lectureId: " + lectureId + "replyId : " + replyId);
 
     int result = lectureReplyService.delete(replyId);
