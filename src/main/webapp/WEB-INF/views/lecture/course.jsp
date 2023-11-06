@@ -75,8 +75,8 @@
 		$("#submenu li").click(function() {
 			const actived = $("#submenu li").find(".active").removeClass("active");
 			$(this).find("a").addClass("active");
+			$("#video-title").text($(this).text());
 			const url = $(this).find("input").val();
-			console.log("url : " + url);
 			const filename = url.split(".")[0];
 			const extention = url.split(".")[1];
 
@@ -115,7 +115,7 @@
 					<ol class="breadcrumb breadcrumb-custom m-0">
 						<li class="breadcrumb-item"><a class="h4" href="#" data-abc="true">강의
 								대쉬 보드</a></li>
-						<li class="breadcrumb-item active" aria-current="page"><span class="h4">${head.lessonName }</span></li>
+						<li class="breadcrumb-item active" aria-current="page"><span id="video-title" class="h4">${head.lessonName }</span></li>
 					</ol>
 				</nav>
 				<video id="my-video" class="video-js vjs-fill vjs-big-play-centered" controls>
@@ -145,7 +145,7 @@
 								<c:forEach var="lesson" items="${lessons}">
 									<li>
 										<a class="nav-link my-1">
-											<i class="bi bi-dot px-0 d-none d-sm-inline">${lesson.lessonName }</i>
+											${lesson.lessonName }
 											<input type="hidden" value="${lesson.lessonUrl }">
 										</a>
 									</li>
