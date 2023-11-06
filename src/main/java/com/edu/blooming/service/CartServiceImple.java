@@ -4,8 +4,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import com.edu.blooming.domain.LectureVO;
+import com.edu.blooming.exception.AlreadyExistException;
 import com.edu.blooming.persistence.CartDAO;
 
 @Service
@@ -16,9 +18,15 @@ public class CartServiceImple implements CartService {
   private CartDAO cartDAO;
 
   @Override
-  public int add(int memberId, int lectureId) {
+  public int add(int memberId, int lectureId) throws AlreadyExistException {
     logger.info("add() 실행 memberId : " + memberId + " lectureId : " + lectureId);
-    return cartDAO.insert(memberId, lectureId);
+    int result = 0;
+    try {
+      result = cartDAO.insert(memberId, lectureId);
+    } catch (DataIntegrityViolationException e) {
+      throw new AlreadyExistException("이미 장바구니에 있는 항목입니다.");
+    }
+    return result;
   }
 
   @Override

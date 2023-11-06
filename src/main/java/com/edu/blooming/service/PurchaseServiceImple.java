@@ -4,9 +4,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.edu.blooming.domain.LectureVO;
+import com.edu.blooming.exception.AlreadyExistException;
 import com.edu.blooming.persistence.CartDAO;
 import com.edu.blooming.persistence.LectureDAO;
 import com.edu.blooming.persistence.PurchaseDAO;
@@ -26,15 +28,22 @@ public class PurchaseServiceImple implements PurchaseService {
 
   @Transactional(value = "transactionManager")
   @Override
-  public int purchase(int memberId) {
+  public int purchase(int memberId) throws AlreadyExistException {
     logger.info("purchase() 호출, memberId: " + memberId);
     List<LectureVO> list = cartDAO.select(memberId);
-
-    for (LectureVO vo : list) {
-      purchaseDAO.insert(memberId, vo.getLectureId(), vo.getLecturePrice());
-      lectureDAO.updateSalesCount(vo.getLectureId(), 1);
+    if (list.size() == 0) {
+      return 0;
     }
-    cartDAO.delete(memberId);
+
+    try {
+      for (LectureVO vo : list) {
+        purchaseDAO.insert(memberId, vo.getLectureId(), vo.getLecturePrice());
+        lectureDAO.updateSalesCount(vo.getLectureId(), 1);
+        cartDAO.delete(memberId);
+      }
+    } catch (DataIntegrityViolationException e) {
+      throw new AlreadyExistException("이미 결제하신 항목입니다.");
+    }
     return 1;
   }
 

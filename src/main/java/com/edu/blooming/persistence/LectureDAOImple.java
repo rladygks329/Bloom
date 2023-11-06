@@ -6,6 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 import com.edu.blooming.domain.LectureVO;
 import com.edu.blooming.util.PageCriteria;
@@ -168,7 +169,7 @@ public class LectureDAOImple implements LectureDAO {
 
   // --------- lecture like --------
   @Override
-  public int insertLike(int memberId, int lectureId) {
+  public int insertLike(int memberId, int lectureId) throws DataIntegrityViolationException {
     logger.info("insertLike() 호출 ");
 
     HashMap<String, Integer> args = new HashMap<>();

@@ -197,5 +197,5 @@ public class LectureController {
     int result = lectureService.read(lectureId).getLectureLikeCount();
     return new ResponseEntity<Integer>(result, HttpStatus.OK);
   }
-
+  
 }

@@ -51,12 +51,7 @@ public class CartController {
       @PathVariable("lectureId") int lectureId,
       @PathVariable("memberId") int memberId) {
     logger.info("addCart() 추가 memberId: "+ memberId + " lectureId " + lectureId);
-    try {
-      cartService.add(memberId, lectureId);
-    } catch (Exception e) {
-      logger.info("insert 중 문제 발생");
-      throw new IllegalStateException("추가 할 수 없습니다.");
-    }
+    cartService.add(memberId, lectureId);
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
@@ -65,13 +60,8 @@ public class CartController {
       @PathVariable("memberId") int memberId,
       @PathVariable("lectureId") int lectureId) {
     logger.info("removeCart() 추가 memberId: "+ memberId + " lectureId " + lectureId);
-    try {
-      cartService.remove(memberId, lectureId);
-    } catch (Exception e) {
-      logger.info("delete 중 문제 발생");
-      throw new IllegalStateException("삭제할수 없습니다.");
-    }
+    cartService.remove(memberId, lectureId);
     return new ResponseEntity<>(HttpStatus.OK);
   }
-
+  
 }

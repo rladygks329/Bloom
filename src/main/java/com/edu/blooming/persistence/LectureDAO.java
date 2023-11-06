@@ -1,6 +1,7 @@
 package com.edu.blooming.persistence;
 
 import java.util.List;
+import org.springframework.dao.DataIntegrityViolationException;
 import com.edu.blooming.domain.LectureVO;
 import com.edu.blooming.util.PageCriteria;
 
@@ -40,7 +41,7 @@ public interface LectureDAO {
 
   boolean selectIsMemberLikeLecture(int memberId, int lectureId);
 
-  int insertLike(int memberId, int lectureId);
+  int insertLike(int memberId, int lectureId) throws DataIntegrityViolationException;
 
   int deleteLike(int memberId, int lectureId);
 }

@@ -5,11 +5,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.edu.blooming.domain.LectureVO;
 import com.edu.blooming.domain.LessonVO;
 import com.edu.blooming.event.VideoUploadedEvent;
+import com.edu.blooming.exception.AlreadyExistException;
 import com.edu.blooming.persistence.LectureDAO;
 import com.edu.blooming.persistence.LessonDAO;
 import com.edu.blooming.util.PageCriteria;
@@ -85,18 +87,29 @@ public class LectureServiceImple implements LectureService {
 
   @Transactional(value = "transactionManager")
   @Override
-  public int likeLecture(int lectureId, int memberId) {
+  public int likeLecture(int lectureId, int memberId) throws AlreadyExistException {
     logger.info("likeLecture() 호출, LectureId : " + lectureId + " memberId : " + memberId);
+    int result = 0;
+
+    try {
+      result = lectureDAO.insertLike(memberId, lectureId);
+    } catch (DataIntegrityViolationException e) {
+      throw new AlreadyExistException("이미 좋아요를 누르셨습니다.");
+    }
     lectureDAO.updateLikeCount(lectureId, 1);
-    return lectureDAO.insertLike(memberId, lectureId);
+    logger.info("result : " + result);
+    return result;
   }
 
   @Transactional(value = "transactionManager")
   @Override
   public int dislikeLecture(int lectureId, int memberId) {
     logger.info("dislikeLecture() 호출, LectureId : " + lectureId + " memberId : " + memberId);
-    lectureDAO.updateLikeCount(lectureId, -1);
-    return lectureDAO.deleteLike(memberId, lectureId);
+    int result = lectureDAO.deleteLike(memberId, lectureId);
+    if (result == 1) {
+      lectureDAO.updateLikeCount(lectureId, -1);
+    }
+    return result;
   }
 
   @Override
