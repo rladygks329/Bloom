@@ -24,7 +24,7 @@ public class PurchaseController {
     int result = purchaseService.purchase(memberId);
     if (result == 0) {
       model.addAttribute("msg", "장바구니가 비어 있어 결제가 이뤄지지 않았습니다.");
-      model.addAttribute("url", "list");
+      model.addAttribute("url", "/blooming/lecture/list");
       return "alert";
     }
     return "redirect:/lecture/list";
