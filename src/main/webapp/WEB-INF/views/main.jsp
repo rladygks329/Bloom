@@ -37,7 +37,7 @@
         <c:when test="<%= loginInfo != null %>">
             <%-- 로그인 상태인 경우: 로그아웃 버튼 표시 --%>
             <a href="/blooming/member/logout">로그아웃</a>
-            <a href="/blooming/member/introductor-profile">강사정보</a>
+            <a href="/blooming/member/member-detail">마이페이지</a>
         </c:when>
         <c:otherwise>
             <%-- 로그인 상태가 아닌 경우: 회원가입 및 로그인 버튼 표시 --%>

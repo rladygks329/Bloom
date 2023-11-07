@@ -31,4 +31,6 @@ public interface BoardDAO {
   int insertLike(int memberId, int boardId);
 
   int deleteLike(int memberId, int boardId);
+
+  boolean selectIsMemberLikeBoard(int memberId, int boardId);
 }

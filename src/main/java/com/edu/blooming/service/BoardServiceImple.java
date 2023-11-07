@@ -76,6 +76,12 @@ public class BoardServiceImple implements BoardService {
     return boardDAO.deleteLike(memberId, boardId);
   }
 
+  @Override
+  public boolean checkIsLike(int memberId, int boardId) {
+    logger.info("checkIsLike() 호출");
+    return boardDAO.selectIsMemberLikeBoard(memberId, boardId);
+  }
+
 }
 
 

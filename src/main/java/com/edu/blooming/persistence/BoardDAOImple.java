@@ -90,7 +90,7 @@ public class BoardDAOImple implements BoardDAO {
     logger.info("updateLikeCount()호출: boardId = " + boardId);
 
     HashMap<String, Integer> args = new HashMap<>();
-    args.put("lectureId", boardId);
+    args.put("boardId", boardId);
     args.put("amount", amount);
 
     return sqlSession.update(NAMESPACE + ".update_like", args);
@@ -116,6 +116,17 @@ public class BoardDAOImple implements BoardDAO {
     args.put("boardId", boardId);
 
     return sqlSession.delete(NAMESPACE + ".delete_board_like", args);
+  }
+
+  @Override
+  public boolean selectIsMemberLikeBoard(int memberId, int boardId) {
+    logger.info("selectIsMemberLikeBoard() 호출: memberId = " + memberId + " boardId = " + boardId);
+    HashMap<String, Integer> args = new HashMap<>();
+    args.put("memberId", memberId);
+    args.put("boardId", boardId);
+
+    int result = sqlSession.selectOne(NAMESPACE + ".select_is_member_like_board", args);
+    return result == 1;
   }
 
 }

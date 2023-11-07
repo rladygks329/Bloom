@@ -24,5 +24,7 @@ public interface BoardService {
 
   int dislikeBoard(int boardId, int memberId);
 
+  boolean checkIsLike(int memberId, int boardId);
+
 
 }

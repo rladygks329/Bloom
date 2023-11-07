@@ -13,5 +13,7 @@ public interface MemberService {
 
   public void logout(HttpSession session); // 로그아웃
 
+  int updatePassword(int memberId, String memberPassword);
+
 } // end MemberService
 

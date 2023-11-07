@@ -76,6 +76,14 @@
 		where ${boardId} = #{boardId}
 	</update>
 	
+	<!-- 특정 멤버의 게시글 좋아요 클릭 확인 -->
+	 <select id="select_is_member_like_board" resultType="Integer">
+	 	select count(*)
+	 	from ${board_like} a join ${board} b on a.${boardId} = b.${boardId}  
+	 	where a.${boardId} = #{boardId} and a.${memberId} = #{memberId}
+	 </select>
+	
+	
 	<!-- 게시글 좋아요 -->
 	<insert id="insert_board_like">
 		insert into ${board_like}

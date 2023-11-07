@@ -5,8 +5,8 @@
 	<!-- 회원 가입 -->
 	<insert id="insert">
 		insert into member
-		(member_id, member_email, member_password, member_name, member_phone, member_address, member_introduce, member_profile_url, member_level)
-		values (seq_bloom_member.nextval, #{memberEmail}, #{memberPassword}, #{memberName}, #{memberPhone},
+		(member_email, member_password, member_name, member_phone, member_address, member_introduce, member_profile_url, member_level)
+		values (#{memberEmail}, #{memberPassword}, #{memberName}, #{memberPhone},
 		 #{memberAddress}, #{memberIntroduce}, #{memberProfileUrl}, #{memberLevel})	
 	</insert>
 	
@@ -16,6 +16,7 @@
 		where member_email = #{memberEmail}	
 	</select>
 	
+	<!-- 로그인 -->
 	<select id="login" parameterType="String" resultType="MemberVO">
 		select member_id, member_email, member_password, member_name, member_phone, 
 			member_address, member_introduce, member_profile_url, member_level 
@@ -23,6 +24,13 @@
 		where member_email = #{memberEmail} and member_password = #{memberPassword} 
 		
 	</select>
+	
+	<!-- 비밀번호 변경 -->
+	<update id="update_password">
+		update ${member}
+		set ${memberPassword} = #{memberPassword}
+		where ${memberId} = #{memberId}	
+	</update>
 	
 	
 	<!--  

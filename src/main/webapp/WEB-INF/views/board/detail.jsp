@@ -34,10 +34,15 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 				<textarea rows="20" cols="120" readonly>${vo.boardContent }</textarea>
 			</div>
 			
+			<input type="hidden" id="boardId" name="boardId" value="${vo.boardId }">
+			<input type="hidden" id="memberId" value="${sessionScope.loginVo.memberId}">
+
 			<a><input type="button" onclick="goBack()" value="글 목록"></a>
-			<a href="update?boardId=${vo.boardId }&page=${page }"><input type="button" value="글 수정"></a>			
+			<a href="update?boardId=${vo.boardId }&page=${page }"><input type="button" value="글 수정"></a>
+					
+			<input type="button" id="boardLike" value="좋아요">		
+			
 			<form action="deleteQuestion" method="POST">
-				<input type="hidden" id="boardId" name="boardId" value="${vo.boardId }">
 				<input type="submit" value="글 삭제"> 
 			</form>
 	
@@ -95,6 +100,54 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 
 $(document).ready(function(){
 	getAllReplies();
+	
+  	var boardId = $('#boardId').val(); 
+  	var memberId = $('#memberId').val(); 
+
+	// Ajax 요청을 통해 초기 "좋아요" 상태를 가져옴
+  	$.ajax({
+        type: 'GET',
+        url: '/blooming/board/getLikeStatus/' + boardId + '/' + memberId,
+        success: function(data) {
+            // "좋아요" 상태를 확인하고 버튼 텍스트를 업데이트
+            if (data) {
+                $('#boardLike').val('좋아요 취소');
+            } else {
+                $('#boardLike').val('좋아요');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+        }
+    });
+	
+    $('#boardLike').click(function() {
+        var likeStatus = false; // 좋아요 상태를 나타내는 변수 (초기값: 좋아요하지 않음)
+        // 버튼 텍스트를 확인하여 좋아요 또는 좋아요 취소 요청 구분
+        if ($('#boardLike').val() === '좋아요') {
+            likeStatus = true; // 좋아요
+        }
+        // Ajax 요청을 통해 서버로 좋아요 또는 좋아요 취소 요청 전송
+        $.ajax({
+            type: likeStatus ? 'POST' : 'DELETE', // 좋아요인 경우 POST, 좋아요 취소인 경우 DELETE 요청
+            url: '/blooming/board/like/' + boardId + '/' + memberId,
+            success: function(data) {
+                // 좋아요 또는 좋아요 취소가 성공적으로 처리된 경우
+                if (likeStatus) {
+                    $('#boardLike').val('좋아요 취소');
+                } else {
+                    $('#boardLike').val('좋아요');
+                }
+            },
+            error: function(xhr, status, error) {
+                // 처리 실패 시 예외 처리
+                console.error(error);
+            }
+        });
+    });
+
+	
+	
 	
 	$('.btnAddReply').click(function(){
 		var boardId = $('.boardId').val(); 
