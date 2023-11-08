@@ -3,14 +3,17 @@ package com.edu.blooming.domain;
 public class LessonVO {
   private int lessonId;
   private int lectureId;
+  private int lessonVideoProcessingLevel;
   private String lessonName;
   private String lessonUrl;
 
   public LessonVO() {}
 
-  public LessonVO(int lessonId, int lectureId, String lessonName, String lessonUrl) {
+  public LessonVO(int lessonId, int lectureId, int lessonVideoProcessingLevel, String lessonName,
+      String lessonUrl) {
     this.lessonId = lessonId;
     this.lectureId = lectureId;
+    this.lessonVideoProcessingLevel = lessonVideoProcessingLevel;
     this.lessonName = lessonName;
     this.lessonUrl = lessonUrl;
   }
@@ -31,6 +34,15 @@ public class LessonVO {
     this.lectureId = lectureId;
   }
 
+  public int getLessonVideoProcessingLevel() {
+    return lessonVideoProcessingLevel;
+  }
+
+  public void setLessonVideoProcessingLevel(int lessonVideoProcessingLevel) {
+    this.lessonVideoProcessingLevel = lessonVideoProcessingLevel;
+  }
+
+
   public String getLessonName() {
     return lessonName;
   }
@@ -49,7 +61,8 @@ public class LessonVO {
 
   @Override
   public String toString() {
-    return "LessonVO [lessonId=" + lessonId + ", lectureId=" + lectureId + ", lessonName="
+    return "LessonVO [lessonId=" + lessonId + ", lectureId=" + lectureId
+        + ", lessonVideoProcessingLevel=" + lessonVideoProcessingLevel + ", lessonName="
         + lessonName + ", lessonUrl=" + lessonUrl + "]";
   }
 

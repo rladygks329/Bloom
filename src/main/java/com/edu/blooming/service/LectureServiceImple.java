@@ -4,10 +4,14 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.edu.blooming.domain.LectureVO;
 import com.edu.blooming.domain.LessonVO;
+import com.edu.blooming.event.VideoUploadedEvent;
+import com.edu.blooming.exception.AlreadyExistException;
 import com.edu.blooming.persistence.LectureDAO;
 import com.edu.blooming.persistence.LessonDAO;
 import com.edu.blooming.util.PageCriteria;
@@ -15,6 +19,9 @@ import com.edu.blooming.util.PageCriteria;
 @Service
 public class LectureServiceImple implements LectureService {
   private static final Logger logger = LoggerFactory.getLogger(LectureServiceImple.class);
+
+  @Autowired
+  ApplicationEventPublisher publisher;
 
   @Autowired
   private LectureDAO lectureDAO;
@@ -29,7 +36,9 @@ public class LectureServiceImple implements LectureService {
     int lectureId = lectureDAO.insert(vo);
     for (LessonVO lesson : lessons) {
       lesson.setLectureId(lectureId);
-      lessonDAO.insert(lesson);
+      int lessonId = lessonDAO.insert(lesson);
+      publisher
+          .publishEvent(new VideoUploadedEvent(this, lesson.getLessonUrl(), lectureId, lessonId));
     }
     return 1;
   }
@@ -78,18 +87,29 @@ public class LectureServiceImple implements LectureService {
 
   @Transactional(value = "transactionManager")
   @Override
-  public int likeLecture(int lectureId, int memberId) {
+  public int likeLecture(int lectureId, int memberId) throws AlreadyExistException {
     logger.info("likeLecture() 호출, LectureId : " + lectureId + " memberId : " + memberId);
+    int result = 0;
+
+    try {
+      result = lectureDAO.insertLike(memberId, lectureId);
+    } catch (DataIntegrityViolationException e) {
+      throw new AlreadyExistException("이미 좋아요를 누르셨습니다.");
+    }
     lectureDAO.updateLikeCount(lectureId, 1);
-    return lectureDAO.insertLike(memberId, lectureId);
+    logger.info("result : " + result);
+    return result;
   }
 
   @Transactional(value = "transactionManager")
   @Override
   public int dislikeLecture(int lectureId, int memberId) {
     logger.info("dislikeLecture() 호출, LectureId : " + lectureId + " memberId : " + memberId);
-    lectureDAO.updateLikeCount(lectureId, -1);
-    return lectureDAO.deleteLike(memberId, lectureId);
+    int result = lectureDAO.deleteLike(memberId, lectureId);
+    if (result == 1) {
+      lectureDAO.updateLikeCount(lectureId, -1);
+    }
+    return result;
   }
 
   @Override
@@ -108,6 +128,18 @@ public class LectureServiceImple implements LectureService {
   public int getTotalCounts(String keyword) {
     logger.info("getTotalCounts() 호출 : keyword : " + keyword);
     return lectureDAO.getLectureCount(keyword);
+  }
+
+  @Override
+  public List<LectureVO> readHotLikeLectures(int month, int rank) {
+    logger.info("readHotLikeLectures() 호출");
+    return lectureDAO.selectHotLikeLecture(month, rank);
+  }
+
+  @Override
+  public List<LectureVO> readHotSaleLectures(int month, int rank) {
+    logger.info("readHotSaleLectures() 호출");
+    return lectureDAO.selectHotSaleLecture(month, rank);
   }
 
 }

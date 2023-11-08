@@ -11,4 +11,6 @@ public interface LessonService {
   List<LessonVO> getByLectureId(int lectureId);
 
   LessonVO getByLessonId(int lessonId);
+
+  void handleLessonUploaded(int lectureId, int lessonId);
 }

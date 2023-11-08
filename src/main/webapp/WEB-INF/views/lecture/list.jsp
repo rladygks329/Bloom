@@ -78,7 +78,7 @@
 											<!-- Product reviews-->
 											<div
 												class="d-flex justify-content-left small text-warning mb-2">
-												<c:if test="${lecture.lectureSalesCount == 0}">
+												<c:if test="${lecture.lectureReplyCount == 0}">
 													<i class="bi bi-star"></i>
 													<i class="bi bi-star"></i>
 													<i class="bi bi-star"></i>
@@ -86,9 +86,9 @@
 													<i class="bi bi-star"></i>
 													<p class="fs-6">(0)</p>
 												</c:if>
-												<c:if test="${lecture.lectureSalesCount != 0}">
+												<c:if test="${lecture.lectureReplyCount != 0}">
 													<c:set var="starRating"
-														value="${lecture.lectureTotalScore / lecture.lectureSalesCount }" />
+														value="${lecture.lectureTotalScore / lecture.lectureReplyCount }" />
 													<c:forEach var="i" begin="1" end="5">
 														<c:choose>
 															<c:when test="${i <= starRating}">

@@ -9,6 +9,7 @@ public class LectureVO {
   private String lectureTitle;
   private String lectureDescription;
   private int lecturePrice;
+  private int lectureVideoProcessingLevel;
   private int lectureSalesCount;
   private int lectureTotalScore;
   private int lectureReplyCount;
@@ -19,9 +20,9 @@ public class LectureVO {
   public LectureVO() {}
 
   public LectureVO(int lectureId, int memberId, String authorName, String lectureTitle,
-      String lectureDescription, int lecturePrice, int lectureSalesCount, int lectureTotalScore,
-      int lectureReplyCount, int lectureLikeCount, String lectureThumbnailUrl,
-      Date lectureDateCreated) {
+      String lectureDescription, int lecturePrice, int lectureVideoProcessingLevel,
+      int lectureSalesCount, int lectureTotalScore, int lectureReplyCount, int lectureLikeCount,
+      String lectureThumbnailUrl, Date lectureDateCreated) {
     super();
     this.lectureId = lectureId;
     this.memberId = memberId;
@@ -29,6 +30,7 @@ public class LectureVO {
     this.lectureTitle = lectureTitle;
     this.lectureDescription = lectureDescription;
     this.lecturePrice = lecturePrice;
+    this.lectureVideoProcessingLevel = lectureVideoProcessingLevel;
     this.lectureSalesCount = lectureSalesCount;
     this.lectureTotalScore = lectureTotalScore;
     this.lectureReplyCount = lectureReplyCount;
@@ -85,6 +87,14 @@ public class LectureVO {
     this.lecturePrice = lecturePrice;
   }
 
+  public int getLectureVideoProcessingLevel() {
+    return lectureVideoProcessingLevel;
+  }
+
+  public void setLectureVideoProcessingLevel(int lectureVideoProcessingLevel) {
+    this.lectureVideoProcessingLevel = lectureVideoProcessingLevel;
+  }
+
   public int getLectureSalesCount() {
     return lectureSalesCount;
   }
@@ -137,10 +147,11 @@ public class LectureVO {
   public String toString() {
     return "LectureVO [lectureId=" + lectureId + ", memberId=" + memberId + ", authorName="
         + authorName + ", lectureTitle=" + lectureTitle + ", lectureDescription="
-        + lectureDescription + ", lecturePrice=" + lecturePrice + ", lectureSalesCount="
-        + lectureSalesCount + ", lectureTotalScore=" + lectureTotalScore + ", lectureReplyCount="
-        + lectureReplyCount + ", lectureLikeCount=" + lectureLikeCount + ", lectureThumbnailUrl="
-        + lectureThumbnailUrl + ", lectureDateCreated=" + lectureDateCreated + "]";
+        + lectureDescription + ", lecturePrice=" + lecturePrice + ", lectureVideoProcessingLevel="
+        + lectureVideoProcessingLevel + ", lectureSalesCount=" + lectureSalesCount
+        + ", lectureTotalScore=" + lectureTotalScore + ", lectureReplyCount=" + lectureReplyCount
+        + ", lectureLikeCount=" + lectureLikeCount + ", lectureThumbnailUrl=" + lectureThumbnailUrl
+        + ", lectureDateCreated=" + lectureDateCreated + "]";
   }
 
 }
