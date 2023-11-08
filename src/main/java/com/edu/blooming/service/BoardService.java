@@ -26,5 +26,7 @@ public interface BoardService {
 
   boolean checkIsLike(int memberId, int boardId);
 
+  int createAnswer(int memberId, BoardVO vo);
+
 
 }

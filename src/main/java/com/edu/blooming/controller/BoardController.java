@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -165,6 +166,20 @@ public class BoardController {
     boardService.dislikeBoard(boardId, memberId);
     int result = boardService.readForUpdate(boardId).getBoardLikeCount();
     return new ResponseEntity<Integer>(result, HttpStatus.OK);
+  }
+
+  // 답글 입력
+  @PostMapping(value = "/{boardId}")
+  public ResponseEntity<Integer> createAnswer(@PathVariable("boardId") int boardId,
+      @RequestBody BoardVO vo) {
+
+    logger.info("createAnswer() 호출 : boardId = " + boardId + " vo = " + vo);
+
+    int result = boardService.createAnswer(boardId, vo);
+    return new ResponseEntity<Integer>(result, HttpStatus.OK);
+    // HttpStatus status = (result == 1) ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
+
+    // return new ResponseEntity<>(1, status);
   }
 
 

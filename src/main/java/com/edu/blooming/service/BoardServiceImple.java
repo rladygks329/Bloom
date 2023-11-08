@@ -82,6 +82,16 @@ public class BoardServiceImple implements BoardService {
     return boardDAO.selectIsMemberLikeBoard(memberId, boardId);
   }
 
+  @Transactional(value = "transactionManager")
+  @Override
+  public int createAnswer(int memberId, BoardVO vo) {
+    logger.info("create()호출 : memberId = " + memberId + "vo = " + vo.toString());
+
+    boardDAO.insertAnswer(vo);
+    boardDAO.updateAnswerCount(vo.getBoardId(), 1);
+    return 1;
+  }
+
 }
 
 

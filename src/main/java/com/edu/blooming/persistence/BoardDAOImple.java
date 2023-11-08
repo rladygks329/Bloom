@@ -129,6 +129,23 @@ public class BoardDAOImple implements BoardDAO {
     return result == 1;
   }
 
+  @Override
+  public int insertAnswer(BoardVO vo) {
+    logger.info("insert() 호출: vo = " + vo.toString());
+    return sqlSession.insert(NAMESPACE + ".insert_answer", vo);
+  }
+
+  @Override
+  public int updateAnswerCount(int boardId, int amount) {
+    logger.info("updateAnswerCount()호출: boardId = " + boardId);
+
+    HashMap<String, Integer> args = new HashMap<>();
+    args.put("boardId", boardId);
+    args.put("amount", amount);
+
+    return sqlSession.update(NAMESPACE + ".update_answer_count", args);
+  }
+
 }
 
 

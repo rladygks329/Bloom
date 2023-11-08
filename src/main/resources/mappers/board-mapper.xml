@@ -32,7 +32,7 @@
 		where board_parent_id = 0	
 	</select>
 	
-	<!-- 게시글 조회 -->
+	<!-- 특정 게시글 조회 -->
 	<select id="select_by_board_id" resultType="BoardVO">
 		select 
 			b.*, 
@@ -104,8 +104,19 @@
 		where ${boardId} = #{boardId}
 	</update>
 	
+	<!-- 답글 등록 -->
+	<insert id="insert_answer">
+		insert into ${board}
+		(${memberId}, ${boardParentId}, ${boardContent})
+		values (#{memberId}, #{boardParentId}, #{boardContent})		
+	</insert>
 	
-	
+	<!-- 게시글 답글 갯수 수정 -->
+	<update id="update_answer_count">
+		update ${board}
+		set ${boardAnswerCount} = ${boardAnswerCount} + #{amount}
+		where ${boardId} = #{boardId}
+	</update>
 	
 	
 	

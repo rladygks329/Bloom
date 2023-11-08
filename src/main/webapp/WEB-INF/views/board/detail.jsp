@@ -39,64 +39,63 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 
 			<a><input type="button" onclick="goBack()" value="글 목록"></a>
 			<a href="update?boardId=${vo.boardId }&page=${page }"><input type="button" value="글 수정"></a>
+			<input type="button" value="글 삭제">
 					
 			<input type="button" id="boardLike" value="좋아요">		
+
+			<br>
+			<br>
+			<br>
+
 			
-			<form action="deleteQuestion" method="POST">
-				<input type="submit" value="글 삭제"> 
-			</form>
+		</c:if>
+	</c:forEach>
+
+	<div>
+		<p>답변 ${vo.boardAnswerCount }개</p>
+	</div>
+			
+	<div>
+		<p>답글을 작성해 주세요</p>
+		<textarea rows="10" cols="120" name="boardContent" id="answerContent" placeholder="내용 입력"></textarea>
+		<input type="button" value="저장" id="saveAnswer">
+	</div>
+	<div id="answers">
+		<c:forEach var="vo" items="${list }">
+			<c:if test="${param.boardId == vo.boardParentId }">
+				<div>
+					<p>제목: ${vo.boardTitle }</p>
+					<p>작성자: ${vo.authorName } </p>
+					<p>작성일: ${boardDateCreated }</p>		
+					<p>좋아요: ${vo.boardLikeCount }</p>
+					<p>게시글번호: ${vo.boardId }</p>
+					<p>게시글부모번호: ${vo.boardParentId }</p>
+				</div>	
+				<div>
+					<textarea rows="20" cols="120" readonly>${vo.boardContent }</textarea>
+				</div>
+				<a href="update?boardId=${vo.boardId }&page=${page }"><input type="button" value="글 수정"></a>
+				<input type="button" value="글 삭제">
+				<div>			
+					<input type="hidden" id="boardId" value="${vo.boardId}"> <!-- class에서 id로 변경1108 -->
+					<input type="hidden" id="memberId" value="${sessionScope.loginVo.memberId}">
+					<textarea rows="5" cols="50" id="boardReplyContent"></textarea>
 	
-			<br>
-			<br>
-			<br>
-
-			<div>
-				<p>답변 ${vo.boardAnswerCount }개</p>
-			</div>
-			
-			<div>
-				<p>답글을 작성해 주세요</p>
-				<textarea rows="10" cols="120" name="boardContent" placeholder="내용 입력"></textarea>
-				<input type="button" value="저장" id="saveAnswer">
-			</div>
-			
-		</c:if>
-	</c:forEach>
-
-	<c:forEach var="vo" items="${list }">
-		<c:if test="${param.boardId == vo.boardParentId }">
-			<div>
-				<p>제목: ${vo.boardTitle }</p>
-				<p>작성자: ${vo.authorName } </p>
-				<p>작성일: ${boardDateCreated }</p>		
-				<p>좋아요: ${vo.boardLikeCount }</p>
-				<p>게시글번호: ${vo.boardId }</p>
-				<p>게시글부모번호: ${vo.boardParentId }</p>
-			</div>	
-			<div>
-				<textarea rows="20" cols="120" readonly>${vo.boardContent }</textarea>
-			</div>
-			<a href="update?boardId=${vo.boardId }&page=${page }"><input type="button" value="글 수정"></a>
-			<div>			
-				<input type="hidden" class="boardId" value="${vo.boardId}">
-				<input type="hidden" id="memberId" value="${sessionScope.loginVo.memberId}">
-				<textarea rows="5" cols="50" id="boardReplyContent"></textarea>
-				<!-- <textarea rows="5" cols="50" id="boardReplyContent-${vo.boardId}"></textarea> -->
-				<button type="button" class="btnAddReply">댓글 달기</button>
-				<!-- <button type="button" class="btnAddReply" data-boardid="${vo.boardId}">댓글 달기</button> -->        		
-			</div>
-			<div style="text-align: center;">
-				<div id="replies"></div>
-				<!-- <div id="replies-${vo.boardId}"></div>  -->
-			</div>
-		</c:if>
-	</c:forEach>
+					<button type="button" class="btnAddReply">댓글 달기</button>
+	       		
+				</div>
+				<div style="text-align: center;">
+					<div id="replies"></div>
+	
+				</div>
+			</c:if>
+		</c:forEach>
+	</div>
 	
 <script>
 	function goBack() {
 	    window.history.back();
 	}
-
 
 $(document).ready(function(){
 	getAllReplies();
@@ -121,12 +120,19 @@ $(document).ready(function(){
         }
     });
 	
+	// 좋아요 onclieck 기능
     $('#boardLike').click(function() {
-        var likeStatus = false; // 좋아요 상태를 나타내는 변수 (초기값: 좋아요하지 않음)
+        // var likeStatus = false; // 좋아요 상태를 나타내는 변수 (초기값: 좋아요하지 않음) 위에 확인 후 삭제
         // 버튼 텍스트를 확인하여 좋아요 또는 좋아요 취소 요청 구분
         if ($('#boardLike').val() === '좋아요') {
             likeStatus = true; // 좋아요
         }
+        
+        if(memberId ===''){
+			alert("로그인을 하셔야 이용하실 수 있습니다.");
+			return;
+		}
+        
         // Ajax 요청을 통해 서버로 좋아요 또는 좋아요 취소 요청 전송
         $.ajax({
             type: likeStatus ? 'POST' : 'DELETE', // 좋아요인 경우 POST, 좋아요 취소인 경우 DELETE 요청
@@ -146,9 +152,7 @@ $(document).ready(function(){
         });
     });
 
-	
-	
-	
+	// 게시판 댓글 onclick 기능
 	$('.btnAddReply').click(function(){
 		var boardId = $('.boardId').val(); 
 		var memberId = $('#memberId').val(); 
@@ -286,9 +290,7 @@ $(document).ready(function(){
 		}); // end ajax()
 	}); // end replies.on()
 	
-	
-		
-	}) // end document
+}) // end document
 
 
 </script>

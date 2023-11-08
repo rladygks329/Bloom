@@ -33,4 +33,8 @@ public interface BoardDAO {
   int deleteLike(int memberId, int boardId);
 
   boolean selectIsMemberLikeBoard(int memberId, int boardId);
+
+  int insertAnswer(BoardVO vo);
+
+  int updateAnswerCount(int boardId, int amount);
 }
