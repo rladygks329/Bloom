@@ -87,10 +87,10 @@
 	    <span class="pn_input_re" style="display: none;"></span>
 	    
 	    <p>주소</p>
-	    <input type="text" id="sample6_postcode" placeholder="우편번호">
-		<input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
-		<input type="text" id="sample6_address" name="address" placeholder="주소"><br>
-		<input type="text" id="sample6_detailAddress" name="detailAddress" placeholder="상세주소: 선택사항">
+	    <input type="text" id="sample6_postcode" placeholder="우편번호" readonly>
+		<input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기" readonly><br>
+		<input type="text" id="sample6_address" name="address" placeholder="주소" readonly><br>
+		<input type="text" id="sample6_detailAddress" name="detailAddress" placeholder="상세주소">
 		<input type="text" id="sample6_extraAddress" placeholder="참고항목: 선택사항">
 		<input type="hidden" id="address_input" name="memberAddress">
 		
@@ -300,11 +300,16 @@
 		    });
 		    
 		    function sumAddress() {
+		    	var postAddress = $('#sample6_postcode').val();
 		    	var basicAddress = $('#sample6_address').val();
 		    	var detailAddress = $('#sample6_detailAddress').val();
 		    	var fullAddress = basicAddress + ' ' + detailAddress;
 		    	console.log(fullAddress);
 		    	$('#address_input').val(fullAddress);
+		    	
+		    	if (postAddress && basicAddress) {
+		            addressFinalCheck = true;
+		        }
 		    	
 		    } // end sumAddress()
 		    		    

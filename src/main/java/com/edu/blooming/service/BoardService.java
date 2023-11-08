@@ -13,4 +13,20 @@ public interface BoardService {
   int getTotalCounts();
 
   List<BoardVO> read(int boardId);
+
+  int update(BoardVO vo);
+
+  BoardVO readForUpdate(int boardId);
+
+  int updateViewCount(int boardId);
+
+  int likeBoard(int boardId, int memberId);
+
+  int dislikeBoard(int boardId, int memberId);
+
+  boolean checkIsLike(int memberId, int boardId);
+
+  int createAnswer(int memberId, BoardVO vo);
+
+
 }

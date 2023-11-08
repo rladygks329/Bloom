@@ -39,6 +39,12 @@ public class MemberServiceImple implements MemberService {
     // TODO Auto-generated method stub
   }
 
+  @Override
+  public int updatePassword(int memberId, String memberPassword) {
+    logger.info("updatePassword 호출");
+    return dao.updatePassword(memberId, memberPassword);
+  }
+
 } // end MemberService
 
 

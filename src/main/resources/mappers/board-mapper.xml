@@ -4,22 +4,56 @@
 	
 	<!-- 게시글 리스트 조회 -->
 	<select id="paging" resultType="BoardVO">
-		select ${boardId}, ${boardTitle}, ${boardContent}, ${memberId}, 
-			${boardDateCreated}, ${boardViewCount}, ${boardAnswerCount}, ${boardLikeCount}
-		from(
-			select rownum rn, a.* from(
-				select * from ${board}
-				where board_parent_id = 0
-				order by ${boardId} desc		
-			)a
-		) where rn between #{start} and #{end}		
+		select
+			b.${boardId},
+			b.${boardTitle},
+			b.${boardContent},
+			m.${memberName} ${authorName},
+			b.${boardDateCreated},
+			b.${boardViewCount},
+			b.${boardAnswerCount},
+			b.${boardLikeCount}
+		from (
+			select rownum rn, a.* 
+			from (
+					select * 
+					from ${board}
+					where board_parent_id = 0
+					order by ${boardId} desc
+				 ) a
+			 ) b left join ${member} m on b.${memberId} = m.${memberId}
+		where rn between #{start} and #{end}		
 	</select>
 	
-	<!-- 게시글 조회 -->
-	<select id="select_by_board_id" resultType="BoardVO">
-		select * from ${board} 
-		where ${boardId} = #{boardId} or ${boardId} = #{boardParentId}	
+	<!-- 페이징처리: 게시글 총 개수 -->
+	<select id="total_count" resultType="Integer">
+		select count(*) total_cnt 
+		from ${board}
+		where board_parent_id = 0	
 	</select>
+	
+	<!-- 특정 게시글 조회 -->
+	<select id="select_by_board_id" resultType="BoardVO">
+		select 
+			b.*, 
+			m.${memberName} ${authorName}
+		from ${board} b left join ${member} m on b.${memberId} = m.${memberId}
+		where b.${boardId} = #{boardId} or b.${boardParentId} = #{boardId}
+	</select>	
+	
+	<!-- 게시글 수정: 불러오기 -->
+	<select id="select_by_board_id_for_update" resultType="BoardVO">
+		select * 
+		from ${board}
+		where ${boardId} = #{boardId} 	
+	</select>
+	
+	<!-- 게시글 수정 -->
+	<update id="update">
+		update ${board}
+	 	set ${boardTitle} = #{boardTitle}, ${boardContent} = #{boardContent} 
+	 	where ${boardId} = #{boardId}	
+	</update>
 	
 	<!-- 게시글 등록 -->
 	<insert id="insert">
@@ -27,26 +61,83 @@
 		(${memberId}, ${boardParentId}, ${boardTitle}, ${boardContent})
 		values (#{memberId}, #{boardParentId}, #{boardTitle}, #{boardContent})		
 	</insert>
-
-	<!-- 게시글 수정 -->
-	<update id="update">
+	
+	<!-- 게시글 댓글 갯수 수정 -->
+	<update id="update_reply_count">
 		update ${board}
-		set ${boardTitle} = #{boardTitle},
-			${boardContent} = #{boardContent}
+		set ${boardReplyCount} = ${boardReplyCount} + #{amount}
 		where ${boardId} = #{boardId}	
 	</update>
-
-	<!-- 게시글 총 개수 -->
-	<select id="total_count" resultType="Integer">
-		select count(*) total_cnt 
-		from ${board}
-		where board_parent_id = 0	
+	
+	<!-- 게시글 조회수 -->
+	<update id="update_view_count">
+		update ${board}
+		set ${boardViewCount} = ${boardViewCount} + 1
+		where ${boardId} = #{boardId}
+	</update>
+	
+	<!-- 특정 멤버의 게시글 좋아요 클릭 확인 -->
+	 <select id="select_is_member_like_board" resultType="Integer">
+	 	select count(*)
+	 	from ${board_like} a join ${board} b on a.${boardId} = b.${boardId}  
+	 	where a.${boardId} = #{boardId} and a.${memberId} = #{memberId}
+	 </select>
+	
+	
+	<!-- 게시글 좋아요 -->
+	<insert id="insert_board_like">
+		insert into ${board_like}
+		(${boardId}, ${memberId})
+		values(#{boardId}, #{memberId})
+	</insert>
+	 
+	<!-- 게시글 좋아요 취소 -->
+	<delete id="delete_board_like">
+		delete from ${board_like}
+		where ${boardId} = #{boardId} and ${memberId} = #{memberId} 
+	</delete>
+	
+	<!-- 게시글 좋아요 갯수 수정 -->
+	<update id="update_like">
+		update ${board}
+		set ${boardLikeCount} = ${boardLikeCount} + #{amount}
+		where ${boardId} = #{boardId}
+	</update>
+	
+	<!-- 답글 등록 -->
+	<insert id="insert_answer">
+		insert into ${board}
+		(${memberId}, ${boardParentId}, ${boardContent})
+		values (#{memberId}, #{boardParentId}, #{boardContent})		
+	</insert>
+	
+	<!-- 게시글 답글 갯수 수정 -->
+	<update id="update_answer_count">
+		update ${board}
+		set ${boardAnswerCount} = ${boardAnswerCount} + #{amount}
+		where ${boardId} = #{boardId}
+	</update>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- 우선 기존에 있는 boardId로 조회 and 등록하는 쿼리로 가능한지 해보기-->
+	<!-- 게시글 답글 등록시 답글 불러오기 -->
+	<select id="select_all_asnwer_by_boardParent_id">
+		select * from ${board}
+		where ${boardParentId} = #{boardId}
+		order by ${boardId}	
 	</select>
 
-	<!--  
-		게시글 수정 시 답글에 제목여부(게시글만 제목있고 답글, 댓글은 제목이 업음)
-		삭제시 아무것도 없으면 글이 삭제, 답글 있을 경우 memberId 정보만 업데이트하네,,
-		답글도 댓글 달린 경우 똑같이 작동할 듯	
-	-->
+
+
+
 
 </mapper>

@@ -23,4 +23,7 @@ public class MainController {
     model.addAttribute("list_hot_sale", lectureService.readHotSaleLectures(1, 5));
     return "main";
   }
+
+
+
 }

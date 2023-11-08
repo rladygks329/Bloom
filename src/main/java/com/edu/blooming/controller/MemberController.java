@@ -5,10 +5,14 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.edu.blooming.domain.MemberVO;
 import com.edu.blooming.service.MemberService;
@@ -16,8 +20,8 @@ import com.edu.blooming.service.MemberService;
 
 @Controller
 @RequestMapping(value = "/member")
-public class LoginController {
-  private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+public class MemberController {
+  private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
 
   @Autowired
   private MemberService memberService;
@@ -58,6 +62,38 @@ public class LoginController {
     session.invalidate();
     return "redirect:/main";
   }
+
+  @PostMapping("/logout")
+  public String logoutPOST(HttpServletRequest request) throws Exception {
+    logger.info("logoutPOST() 호출");
+    HttpSession session = request.getSession();
+    session.invalidate();
+    return "redirect:/main";
+  }
+
+
+  @GetMapping("/member-detail")
+  public void memberDetailGET() {
+    logger.info("memberDetail 호출");
+  }
+
+  @PostMapping("/changePassword")
+  @ResponseBody
+  public ResponseEntity<String> changePasswordPOST(@RequestParam("memberId") Integer memberId,
+      @RequestParam("memberPassword") String memberPassword, HttpSession session,
+      RedirectAttributes redirectAttributes) {
+    logger.info("changePassword 호출 memberId = " + memberId);
+    int result = memberService.updatePassword(memberId, memberPassword);
+
+    logger.info("결과값 : " + result);
+    if (result == 1) {
+      session.invalidate();
+      return new ResponseEntity<String>("success", HttpStatus.OK);
+    }
+    return new ResponseEntity<String>("fail", HttpStatus.OK);
+
+  }
+
 
 } // end LoginController()
 

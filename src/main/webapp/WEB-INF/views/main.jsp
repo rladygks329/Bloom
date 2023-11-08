@@ -79,8 +79,6 @@ $(function(){
 <body>
 	<!-- nav -->
 	<%@ include file="/WEB-INF/views/component/navigation.jsp"%>
-
-	<!-- header -->
 	<header class="bg-dark py-5">
 		<div class="container px-4 px-lg-5 my-5">
 			<div class="text-center text-white">
