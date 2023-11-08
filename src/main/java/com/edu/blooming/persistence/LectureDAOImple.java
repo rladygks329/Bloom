@@ -6,6 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 import com.edu.blooming.domain.LectureVO;
 import com.edu.blooming.util.PageCriteria;
@@ -77,6 +78,17 @@ public class LectureDAOImple implements LectureDAO {
   }
 
   @Override
+  public int updateVideoProcessingLevel(int lectureId, int level) {
+    logger.info("updateVideoProcessingLevel() 호출 : lectureId = " + lectureId + " level : " + level);
+
+    HashMap<String, Integer> args = new HashMap<>();
+    args.put("lectureId", lectureId);
+    args.put("level", level);
+
+    return sqlSession.update(NAMESPACE + ".update_video_processing_level", args);
+  }
+
+  @Override
   public int getLectureCount() {
     logger.info("getLectureCount() 호출");
     return sqlSession.selectOne(NAMESPACE + ".total_count");
@@ -95,9 +107,33 @@ public class LectureDAOImple implements LectureDAO {
   @Override
   public int getLectureCount(String keyword) {
     logger.info("getLectureCount() 호출 : keyword : " + keyword);
+
     HashMap<String, String> args = new HashMap<>();
     args.put("keyword", "%" + keyword + "%");
+
     return sqlSession.selectOne(NAMESPACE + ".keyword_lecture_count", args);
+  }
+
+  @Override
+  public List<LectureVO> selectHotLikeLecture(int month, int rank) {
+    logger.info("selectByHotLikes() 호출");
+
+    HashMap<String, Integer> args = new HashMap<>();
+    args.put("month", month);
+    args.put("rank", rank + 1);
+
+    return sqlSession.selectList(NAMESPACE + ".select_hot_like_lecture", args);
+  }
+
+  @Override
+  public List<LectureVO> selectHotSaleLecture(int month, int rank) {
+    logger.info("selectHotSaleLecture() 호출");
+
+    HashMap<String, Integer> args = new HashMap<>();
+    args.put("month", month);
+    args.put("rank", rank + 1);
+
+    return sqlSession.selectList(NAMESPACE + ".select_top_sale_lecture", args);
   }
 
   @Override
@@ -120,7 +156,7 @@ public class LectureDAOImple implements LectureDAO {
     args.put("end", criteria.getEnd());
     args.put("keyword", "%" + keyword + "%");
 
-    return sqlSession.selectList(NAMESPACE + ".select_by_keyword", args);
+    return sqlSession.selectList(NAMESPACE + ".paging_select_by_keyword", args);
   }
 
   @Override
@@ -136,19 +172,6 @@ public class LectureDAOImple implements LectureDAO {
   }
 
   @Override
-  public boolean selectIsMemberLikeLecture(int memberId, int lectureId) {
-    logger
-        .info("selectIsMemberLikeLecture() 호출 memberId: " + memberId + " lectureId : " + lectureId);
-
-    HashMap<String, Integer> args = new HashMap<>();
-    args.put("memberId", memberId);
-    args.put("lectureId", lectureId);
-
-    int result = sqlSession.selectOne(NAMESPACE + ".select_is_member_like_lecture", args);
-    return result == 1;
-  }
-
-  @Override
   public LectureVO select(int lectureId) {
     logger.info("select() 호출 : lectureId : " + lectureId);
 
@@ -159,7 +182,18 @@ public class LectureDAOImple implements LectureDAO {
   }
 
   @Override
-  public int insertLike(int memberId, int lectureId) {
+  public List<LectureVO> selectByAuthor(int memberId) {
+    logger.info("select() 호출 : memberId : " + memberId);
+
+    HashMap<String, Integer> args = new HashMap<>();
+    args.put("memberId", memberId);
+
+    return sqlSession.selectList(NAMESPACE + ".select_by_member_id", args);
+  }
+
+  // --------- lecture like --------
+  @Override
+  public int insertLike(int memberId, int lectureId) throws DataIntegrityViolationException {
     logger.info("insertLike() 호출 ");
 
     HashMap<String, Integer> args = new HashMap<>();
@@ -178,6 +212,19 @@ public class LectureDAOImple implements LectureDAO {
     args.put("lectureId", lectureId);
 
     return sqlSession.delete(NAMESPACE + ".delete_lecture_like", args);
+  }
+
+  @Override
+  public boolean selectIsMemberLikeLecture(int memberId, int lectureId) {
+    logger
+        .info("selectIsMemberLikeLecture() 호출 memberId: " + memberId + " lectureId : " + lectureId);
+
+    HashMap<String, Integer> args = new HashMap<>();
+    args.put("memberId", memberId);
+    args.put("lectureId", lectureId);
+
+    int result = sqlSession.selectOne(NAMESPACE + ".select_is_member_like_lecture", args);
+    return result == 1;
   }
 
 }

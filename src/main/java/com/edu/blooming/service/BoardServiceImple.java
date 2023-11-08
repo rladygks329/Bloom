@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.edu.blooming.domain.BoardVO;
 import com.edu.blooming.persistence.BoardDAO;
 import com.edu.blooming.util.PageCriteria;
@@ -17,8 +18,8 @@ public class BoardServiceImple implements BoardService {
 
   @Override
   public int create(BoardVO vo) {
-    // TODO Auto-generated method stub
-    return 0;
+    logger.info("create() 호출 : vo = " + vo.toString());
+    return boardDAO.insert(vo);
   }
 
   @Override
@@ -41,4 +42,56 @@ public class BoardServiceImple implements BoardService {
     return boardDAO.select(boardId);
   }
 
+  @Override
+  public int update(BoardVO vo) {
+    logger.info("update() 호출: vo = " + vo.toString());
+    return boardDAO.update(vo);
+  }
+
+  @Override
+  public BoardVO readForUpdate(int boardId) {
+    logger.info("readForUpdate()호출: boardId = " + boardId);
+    return boardDAO.selectForUpdate(boardId);
+  }
+
+  @Override
+  public int updateViewCount(int boardId) {
+    logger.info("updateViewCount()호출: boardId = " + boardId);
+    return boardDAO.updateViewCount(boardId);
+  }
+
+  @Transactional(value = "transactionManager")
+  @Override
+  public int likeBoard(int boardId, int memberId) {
+    logger.info("likeBoard() 호출, boardId : " + boardId + " memberId : " + memberId);
+    boardDAO.updateLikeCount(boardId, 1);
+    return boardDAO.insertLike(memberId, boardId);
+  }
+
+  @Transactional(value = "transactionManager")
+  @Override
+  public int dislikeBoard(int boardId, int memberId) {
+    logger.info("dislikeBoard() 호출, boardId : " + boardId + " memberId : " + memberId);
+    boardDAO.updateLikeCount(boardId, -1);
+    return boardDAO.deleteLike(memberId, boardId);
+  }
+
+  @Override
+  public boolean checkIsLike(int memberId, int boardId) {
+    logger.info("checkIsLike() 호출");
+    return boardDAO.selectIsMemberLikeBoard(memberId, boardId);
+  }
+
+  @Transactional(value = "transactionManager")
+  @Override
+  public int createAnswer(int memberId, BoardVO vo) {
+    logger.info("create()호출 : memberId = " + memberId + "vo = " + vo.toString());
+
+    boardDAO.insertAnswer(vo);
+    boardDAO.updateAnswerCount(vo.getBoardId(), 1);
+    return 1;
+  }
+
 }
+
+

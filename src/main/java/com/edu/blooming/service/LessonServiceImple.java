@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.edu.blooming.domain.LessonVO;
+import com.edu.blooming.persistence.LectureDAO;
 import com.edu.blooming.persistence.LessonDAO;
 
 @Service
@@ -14,6 +15,9 @@ public class LessonServiceImple implements LessonService {
 
   @Autowired
   private LessonDAO lessonDAO;
+
+  @Autowired
+  private LectureDAO lectureDAO;
 
   /*
    * @param : LessonVO -> lectureId를 controller에서 채워져서 와야한다.
@@ -45,4 +49,18 @@ public class LessonServiceImple implements LessonService {
     logger.info("getByLessonId() 호출 lessonId : " + lessonId);
     return lessonDAO.selectByLessonId(lessonId);
   }
+
+  @Override
+  public void handleLessonUploaded(int lectureId, int lessonId) {
+    logger.info("handleLessonUploaded() 호출 lectureId : " + lectureId + " lessonId : " + lessonId);
+
+    int COMPLETE = 1;
+    lessonDAO.updateVideoProcessingLevel(lessonId, COMPLETE);
+
+    int minLevel = lessonDAO.selectMinVideoProcessingLevel(lectureId);
+    if (minLevel == COMPLETE) {
+      lectureDAO.updateVideoProcessingLevel(lectureId, COMPLETE);
+    }
+  }
+
 }

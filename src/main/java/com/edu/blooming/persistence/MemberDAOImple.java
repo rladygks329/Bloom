@@ -1,5 +1,6 @@
 package com.edu.blooming.persistence;
 
+import java.util.HashMap;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +53,16 @@ public class MemberDAOImple implements MemberDAO {
   public int delete(String memberEmail) {
     logger.info("delete() 호출  memberId = " + memberEmail);
     return 0;
+  }
+
+  @Override
+  public int updatePassword(int memberId, String memberPassword) {
+    logger.info("updatePassword 호출");
+    HashMap<String, Object> args = new HashMap<>();
+    args.put("memberId", memberId);
+    args.put("memberPassword", memberPassword);
+
+    return sqlSession.update(NAMESPACE + ".update_password", args);
   }
 
 }
