@@ -15,6 +15,8 @@ public interface LectureService {
 
   List<LectureVO> read(PageCriteria criteria, String keyword);
 
+  List<LectureVO> readHotLikeLectures(int month, int rank);
+
   List<LectureVO> findLectureByAuthorId(PageCriteria criteria, int authorId);
 
   LectureVO read(int lectureId);

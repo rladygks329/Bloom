@@ -107,9 +107,22 @@ public class LectureDAOImple implements LectureDAO {
   @Override
   public int getLectureCount(String keyword) {
     logger.info("getLectureCount() 호출 : keyword : " + keyword);
+
     HashMap<String, String> args = new HashMap<>();
     args.put("keyword", "%" + keyword + "%");
+
     return sqlSession.selectOne(NAMESPACE + ".keyword_lecture_count", args);
+  }
+
+  @Override
+  public List<LectureVO> selectHotLikeLecture(int month, int rank) {
+    logger.info("selectByHotLikes() 호출");
+
+    HashMap<String, Integer> args = new HashMap<>();
+    args.put("month", month);
+    args.put("rank", rank + 1);
+
+    return sqlSession.selectList(NAMESPACE + ".select_hot_like_lecture", args);
   }
 
   @Override

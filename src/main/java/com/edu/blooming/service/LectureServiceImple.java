@@ -130,4 +130,10 @@ public class LectureServiceImple implements LectureService {
     return lectureDAO.getLectureCount(keyword);
   }
 
+  @Override
+  public List<LectureVO> readHotLikeLectures(int month, int rank) {
+    logger.info("readHotLikeLectures() 호출");
+    return lectureDAO.selectHotLikeLecture(month, rank);
+  }
+
 }

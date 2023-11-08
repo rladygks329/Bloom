@@ -122,6 +122,21 @@
 		where rn between #{start} and #{end}
 	</select>
 	
+	<!-- n달 동안 좋아요를 많이 받은 강의 조회  -->
+	<select id="select_hot_like_lecture" resultType="LectureVO">
+		select l.*, m.${memberName} author_name
+		from (
+		    select ${lectureId}, count(*) likes
+		    from ${lecture_like}
+		    where to_char(${lectureLikeDateCreated},'yyyy-mm-dd') > (select to_char(add_months(sysdate, -#{month}),'yyyy-mm-dd') from dual)
+		    group by ${lectureId}
+		    order by likes DESC, ${lectureId} DESC
+		) a join ${lecture} l on a.${lectureId} = l.${lectureId} join ${member} m on l.${memberId} = m.${memberId}
+		where ROWNUM <![CDATA[<]]> #{rank}
+	</select>
+	
+	<!-- 한달동안 많이 판매된 강의 조회 -->
+	
 	<!-- 페이지 네이션을 위한 전체 강의 수 조회 -->
 	<select id="total_count" resultType="Integer">
 		select count(${lectureId})

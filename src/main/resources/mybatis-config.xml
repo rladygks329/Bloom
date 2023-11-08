@@ -53,6 +53,7 @@
 		<property name="lecture_like" value="lecture_like"/>
 		<property name="lectureId" value="lecture_id"/>
 		<property name="memberId" value="member_Id"/>
+		<property name="lectureLikeDateCreated" value="lecture_like_date_created"/>
 		
 		<!-- CART -->
 		<property name="cart" value="cart"/>
