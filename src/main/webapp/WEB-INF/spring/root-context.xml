@@ -13,7 +13,7 @@
 	http://www.springframework.org/schema/tx
 	http://www.springframework.org/schema/tx/spring-tx.xsd">
 	
-	<context:property-placeholder location="classpath:database.properties" />
+	<context:property-placeholder location="classpath:application.properties" />
 	<!-- 트랜잭션 관리를 수행하는 Aspect를 annotation 기반으로 사용 -->
 	<tx:annotation-driven />
 	

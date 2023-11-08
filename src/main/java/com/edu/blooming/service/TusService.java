@@ -3,13 +3,13 @@ package com.edu.blooming.service;
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import me.desair.tus.server.TusFileUploadService;
 import me.desair.tus.server.exception.TusException;
@@ -22,7 +22,7 @@ public class TusService {
   @Autowired
   private TusFileUploadService tusFileUploadService;
 
-  @Resource(name = "uploadVideoPath")
+  @Value("${uploadPath.video}")
   private String uploadPath;
 
   public String tusUpload(HttpServletRequest request, HttpServletResponse response) {

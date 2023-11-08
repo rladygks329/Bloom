@@ -18,7 +18,7 @@ import com.edu.blooming.domain.BoardReplyVO;
 import com.edu.blooming.service.BoardReplyService;
 
 @RestController
-@RequestMapping(value = "board/replies")
+@RequestMapping(value = "/board/replies")
 public class BoardReplyController {
   private final static Logger logger = LoggerFactory.getLogger(BoardReplyController.class);
 
@@ -34,9 +34,6 @@ public class BoardReplyController {
 
     int result = boardReplyService.create(boardId, vo);
     return new ResponseEntity<Integer>(result, HttpStatus.OK);
-    // HttpStatus status = (result == 1) ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
-
-    // return new ResponseEntity<>(1, status);
   }
 
   // 게시글의 댓글 가져오기

@@ -1,8 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
+<%@page import="com.edu.blooming.domain.MemberVO"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
-	Object loginInfo = session.getAttribute("loginVo"); // 세션에서 로그인 정보를 가져옴
+	MemberVO loginInfo = (MemberVO) session.getAttribute("loginVo"); // 세션에서 로그인 정보를 가져옴
 %>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -25,7 +26,7 @@ pageEncoding="UTF-8"%>
           <a class="nav-link" href="/blooming/lecture/list">강의 목록</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/blooming/board">질문게시판</a>
+          <a class="nav-link" href="/blooming/board/list">질문게시판</a>
         </li>
       </ul>
 
@@ -46,10 +47,6 @@ pageEncoding="UTF-8"%>
 		            <li class="nav-item">
 		            	<a class="nav-link" href="/blooming/member/logout">로그아웃</a>
 		            </li>
-		            
-		            <li class="nav-item">
-		            	<a class="nav-link" href="/blooming/member/introductor-profile">강사정보</a>
-		            </li>
 		        </c:when>
 		        <c:otherwise>
 		            <%-- 로그인 상태가 아닌 경우: 회원가입 및 로그인 버튼 표시 --%>
@@ -61,7 +58,6 @@ pageEncoding="UTF-8"%>
 		            </li>
 		        </c:otherwise>
 		   </c:choose>
-
       </ul>
     </div>
   </div>

@@ -22,7 +22,7 @@ public class BoardDAOImple implements BoardDAO {
   public int insert(BoardVO vo) {
     logger.info("insert() 호출");
     return sqlSession.insert(NAMESPACE + ".insert", vo);
-  } // end insert()
+  }
 
   @Override
   public List<BoardVO> select(PageCriteria criteria) {
@@ -30,7 +30,7 @@ public class BoardDAOImple implements BoardDAO {
     logger.info("start = " + criteria.getStart());
     logger.info("end = " + criteria.getEnd());
     return sqlSession.selectList(NAMESPACE + ".paging", criteria);
-  } // end select()
+  }
 
   @Override
   public int getTotalCounts() {
@@ -43,18 +43,6 @@ public class BoardDAOImple implements BoardDAO {
     logger.info("select() 호출: boardId = " + boardId);
     return sqlSession.selectList(NAMESPACE + ".select_by_board_id", boardId);
   }
-
-  // @Override
-  // public boolean checkParentId(int boardId) {
-  // logger.info("checkParentId() 호출 : boardId = " + boardId);
-  // return sqlSession.selectOne(NAMESPACE + ".select_question_parentId", boardId);
-  // }
-  //
-  // @Override
-  // public int deleteQuestion(int boardId) {
-  // logger.info("delete() 호출: boardId = " + boardId);
-  // return sqlSession.selectOne(NAMESPACE + ".delete_question", boardId);
-  // }
 
   @Override
   public int update(BoardVO vo) {
@@ -104,7 +92,7 @@ public class BoardDAOImple implements BoardDAO {
     args.put("memberId", memberId);
     args.put("boardId", boardId);
 
-    return sqlSession.delete(NAMESPACE + ".insert_board_like", args);
+    return sqlSession.insert(NAMESPACE + ".insert_board_like", args);
   }
 
   @Override

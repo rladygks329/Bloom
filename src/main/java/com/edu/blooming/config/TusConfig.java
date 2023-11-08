@@ -1,6 +1,6 @@
 package com.edu.blooming.config;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import me.desair.tus.server.TusFileUploadService;
@@ -8,7 +8,7 @@ import me.desair.tus.server.TusFileUploadService;
 @Configuration
 public class TusConfig {
 
-  @Resource(name = "uploadVideoPath")
+  @Value("${uploadPath.video}")
   private String tusDataPath;
 
   @Bean
