@@ -19,7 +19,8 @@ public class MainController {
 
   @GetMapping
   public String main(Model model) {
-    model.addAttribute("list_hot_like", lectureService.readHotLikeLectures(1, 10));
+    model.addAttribute("list_hot_like", lectureService.readHotLikeLectures(1, 5));
+    model.addAttribute("list_hot_sale", lectureService.readHotSaleLectures(1, 5));
     return "main";
   }
 }

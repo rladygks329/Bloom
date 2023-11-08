@@ -126,6 +126,17 @@ public class LectureDAOImple implements LectureDAO {
   }
 
   @Override
+  public List<LectureVO> selectHotSaleLecture(int month, int rank) {
+    logger.info("selectHotSaleLecture() 호출");
+
+    HashMap<String, Integer> args = new HashMap<>();
+    args.put("month", month);
+    args.put("rank", rank + 1);
+
+    return sqlSession.selectList(NAMESPACE + ".select_top_sale_lecture", args);
+  }
+
+  @Override
   public List<LectureVO> select(PageCriteria criteria) {
     logger.info("select() 호출 : criteria : " + criteria);
 

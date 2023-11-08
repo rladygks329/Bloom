@@ -44,7 +44,8 @@ public class LectureDAOTest {
     // testSelectByLectureId();
     // testSelectByKeyword();
     // testSelectByAuthor();
-    testSelectHotLike();
+    // testSelectHotLike();
+    // testSelectHotSale();
 
     // -- lecture like ---
     // testInsertLectureLike();
@@ -119,7 +120,14 @@ public class LectureDAOTest {
     for (LectureVO vo : list) {
       logger.info("vo : " + vo.toString());
     }
-  } // end testSelectTop5();
+  } // end testSelectHotLike();
+
+  private void testSelectHotSale() {
+    List<LectureVO> list = dao.selectHotSaleLecture(1, 5);
+    for (LectureVO vo : list) {
+      logger.info("vo : " + vo.toString());
+    }
+  } // end testSelectHotSale();
 
   private void testSelectByLectureId() {
     int lectureId = 17;

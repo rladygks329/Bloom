@@ -39,6 +39,14 @@ public interface LectureDAO {
    */
   List<LectureVO> selectHotLikeLecture(int month, int rank);
 
+  /* @formatter:off 
+   * @param: month : n month ago
+   * @param: rank: start with 1
+   * @return : n달 동안 가장 많은 팔린 강의 리턴
+   * @formatter:on
+   */
+  List<LectureVO> selectHotSaleLecture(int month, int rank);
+
   List<LectureVO> select(PageCriteria criteria, String keyword);
 
   List<LectureVO> select(PageCriteria criteria);

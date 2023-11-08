@@ -136,4 +136,10 @@ public class LectureServiceImple implements LectureService {
     return lectureDAO.selectHotLikeLecture(month, rank);
   }
 
+  @Override
+  public List<LectureVO> readHotSaleLectures(int month, int rank) {
+    logger.info("readHotSaleLectures() 호출");
+    return lectureDAO.selectHotSaleLecture(month, rank);
+  }
+
 }
