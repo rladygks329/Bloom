@@ -3,5 +3,4 @@
 .settings/
 .springBeans
 /target/
-src/main/resources/uploadPath.properties
-src/main/resources/database.properties
+src/main/resources/application.properties
