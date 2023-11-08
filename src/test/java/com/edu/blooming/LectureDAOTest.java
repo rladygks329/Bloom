@@ -28,33 +28,40 @@ public class LectureDAOTest {
 
   @Test
   public void testDAO() {
+    // -- lecture --
     // testInsert();
     // testUpdate();
     // testUpdateReplyCount();
     // testUpdateSalesCount();
     // testUpdateLikeCount();
     // testUpdateTotalScore();
+    // testUpdateVideoProcessingLevel();
     // testGetLectureCount();
     // testGetLectureCountByMemberId();
     // testGetLectureCountByKeyword();
     // testSelect();
     // testSelectByMemberId();
-    // testSelectIsMemberLikeLecture();
     // testSelectByLectureId();
     // testSelectByKeyword();
+    // testSelectByAuthor();
+    // testSelectHotLike();
+    // testSelectHotSale();
+
+    // -- lecture like ---
     // testInsertLectureLike();
     // testDeleteLectureLike();
+    // testSelectIsMemberLikeLecture();
   }
 
   private void testInsert() {
     LectureVO vo =
-        new LectureVO(0, 1, "개발자", "강좌 1의 제목", "상세한 강의 설명", 9000, 0, 0, 0, 0, "테스트 파일 경로", null);
+        new LectureVO(0, 1, "개발자", "강좌 1의 제목", "상세한 강의 설명", 9000, 0, 0, 0, 0, 0, "테스트 파일 경로", null);
     int result = dao.insert(vo);
     logger.info("lectureId: " + result);
   } // end testInsert()
 
   private void testUpdate() {
-    LectureVO vo = new LectureVO(1, 0, "개발자", "강좌 1의 수정된 제목", "수정된 상세한 강의 설명", 8000, 0, 0, 0, 0,
+    LectureVO vo = new LectureVO(19, 0, "개발자", "강좌 1의 수정된 제목", "수정된 상세한 강의 설명", 8000, 0, 0, 0, 0, 0,
         "수정된 테스트 파일 경로", null);
     int result = dao.update(vo);
     logger.info(result + "행 변경");
@@ -80,6 +87,11 @@ public class LectureDAOTest {
     logger.info(result + "행 변경");
   }// end testUpdateLikeCount()
 
+  private void testUpdateVideoProcessingLevel() {
+    int result = dao.updateVideoProcessingLevel(19, 1);
+    logger.info(result + "행 변경");
+  }// end testUpdateVideoProcessingLevel()
+
   private void testGetLectureCount() {
     int result = dao.getLectureCount();
     logger.info(result + "행 존재");
@@ -95,12 +107,6 @@ public class LectureDAOTest {
     logger.info(result + "행 존재");
   }// end testGetLectureCountByKeyword
 
-  private void testSelectByLectureId() {
-    int lectureId = 1;
-    LectureVO vo = dao.select(lectureId);
-    logger.info("vo = " + vo);
-  } // end testSelectByLectureId()
-
   private void testSelect() {
     PageCriteria criteria = new PageCriteria();
     List<LectureVO> list = dao.select(criteria);
@@ -108,6 +114,26 @@ public class LectureDAOTest {
       logger.info("vo : " + vo.toString());
     }
   } // end testSelect()
+
+  private void testSelectHotLike() {
+    List<LectureVO> list = dao.selectHotLikeLecture(1, 5);
+    for (LectureVO vo : list) {
+      logger.info("vo : " + vo.toString());
+    }
+  } // end testSelectHotLike();
+
+  private void testSelectHotSale() {
+    List<LectureVO> list = dao.selectHotSaleLecture(1, 5);
+    for (LectureVO vo : list) {
+      logger.info("vo : " + vo.toString());
+    }
+  } // end testSelectHotSale();
+
+  private void testSelectByLectureId() {
+    int lectureId = 17;
+    LectureVO vo = dao.select(lectureId);
+    logger.info("vo = " + vo);
+  } // end testSelectByLectureId()
 
   private void testSelectByKeyword() {
     PageCriteria criteria = new PageCriteria();
@@ -125,12 +151,13 @@ public class LectureDAOTest {
     }
   } // end testSelectByMemberId()
 
-  private void testSelectIsMemberLikeLecture() {
-    int memberId = 1;
-    int lectureId = 1;
-    boolean result = dao.selectIsMemberLikeLecture(memberId, lectureId);
-    logger.info("result = " + result);
-  }// end testSelectIsMemberLikeLecture()
+  private void testSelectByAuthor() {
+    logger.info("testSelectByAuthor() 호출");
+    List<LectureVO> list = dao.selectByAuthor(1);
+    for (LectureVO vo : list) {
+      logger.info("vo : " + vo.toString());
+    }
+  } // end testSelectByAuthor()
 
   private void testInsertLectureLike() {
     int memberId = 1;
@@ -147,5 +174,12 @@ public class LectureDAOTest {
     int result = dao.deleteLike(memberId, lectureId);
     logger.info(result + "행 삭제");
   } // end testDeleteLectureLike()
+
+  private void testSelectIsMemberLikeLecture() {
+    int memberId = 1;
+    int lectureId = 2;
+    boolean result = dao.selectIsMemberLikeLecture(memberId, lectureId);
+    logger.info("result = " + result);
+  }// end testSelectIsMemberLikeLecture()
 
 } // end LectureDAOTest

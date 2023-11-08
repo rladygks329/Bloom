@@ -95,10 +95,10 @@ public class LectureController {
     model.addAttribute("lectureId", lectureId);
     model.addAttribute("lecture", lecture);
 
-    if (request.getSession().getAttribute("vo") != null) {
+    HttpSession session = request.getSession();
+    if (session.getAttribute("loginVo") != null) {
       // 로그인한 상태라면 좋아요, 결제 유무, 장바구니에 있는지 검사한 후 정보 넣기
-      HttpSession session = request.getSession();
-      int memberId = ((MemberVO) session.getAttribute("vo")).getMemberId();
+      int memberId = ((MemberVO) session.getAttribute("loginVo")).getMemberId();
       Boolean isLike = lectureService.checkIsLike(memberId, lectureId);
       Boolean isPurchase = purchaseService.checkPurchase(memberId, lectureId);
       Boolean isCart = cartService.isExist(memberId, lectureId);
@@ -136,9 +136,14 @@ public class LectureController {
       String lectureThumbnailUrl, String[] lectureVideosURL, String[] lectureVideosTitle ) {
     logger.info("lectureUploadPOST() 호출");
     
+    for(String s: lectureVideosURL) {
+      logger.info("lectureVideosURL : " + s);
+    }
+    
     List<LessonVO> lessons = new ArrayList<>();
     for(int i=0; i<lectureVideosURL.length; i++) {
-      lessons.add(new LessonVO(-1, -1, lectureVideosTitle[i], lectureVideosURL[i]));      
+      LessonVO lesson = new LessonVO(-1, -1, -1, lectureVideosTitle[i], lectureVideosURL[i]);
+      lessons.add(lesson);
     }
     
     LectureVO lecture = new LectureVOBuilder()
@@ -156,6 +161,22 @@ public class LectureController {
     return "redirect:/lecture/list";
   }
   // @formatter:on
+
+  @GetMapping("/{lectureId}/course")
+  public String getCourse(Model model, @PathVariable("lectureId") int lectureId) {
+    List<LessonVO> list = lessonService.getByLectureId(lectureId);
+
+    if (list.size() == 0) {
+      model.addAttribute("msg", "찾으시는 강의가 존재하지 않습니다.");
+      model.addAttribute("url", "list");
+      return "alert";
+    }
+
+    model.addAttribute("lessons", list);
+    model.addAttribute("head", list.get(0));
+    model.addAttribute("headURL", list.get(0).getLessonUrl().split("\\.")[0]);
+    return "/lecture/course";
+  }
 
   /// @formatter:off
   // TODO: 모든 속성을 select 하지 않도록 dao 수정 하기
@@ -176,5 +197,5 @@ public class LectureController {
     int result = lectureService.read(lectureId).getLectureLikeCount();
     return new ResponseEntity<Integer>(result, HttpStatus.OK);
   }
-
+  
 }

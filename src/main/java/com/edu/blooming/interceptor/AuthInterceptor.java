@@ -19,14 +19,14 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
     logger.info("===== preHandle 호출");
 
     HttpSession session = request.getSession();
-    if (session.getAttribute("vo") == null) {
+    if (session.getAttribute("loginVo") == null) {
       logger.info("로그아웃 상태");
       String targetURL = saveDestination(request);
       response.sendRedirect("/blooming/member/login?targetURL=" + targetURL);
       return false;
     }
 
-    MemberVO vo = (MemberVO) session.getAttribute("vo");
+    MemberVO vo = (MemberVO) session.getAttribute("loginVo");
     request.setAttribute("memberId", vo.getMemberId());
     request.setAttribute("memberLevel", vo.getMemberLevel());
     return true;

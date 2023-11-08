@@ -7,6 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 import com.edu.blooming.domain.LectureVO;
 
@@ -19,7 +20,7 @@ public class CartDAOImple implements CartDAO {
   private SqlSession sqlSession;
 
   @Override
-  public int insert(int memberId, int lectureId) {
+  public int insert(int memberId, int lectureId) throws DataIntegrityViolationException {
     logger.info("insert() 호출 : memberId = " + memberId + " lectureId = " + lectureId);
 
     Map<String, Integer> args = new HashMap<>();
@@ -30,6 +31,16 @@ public class CartDAOImple implements CartDAO {
   }
 
   @Override
+  public int delete(int memberId) {
+    logger.info("delete() 호출 : memberId = " + memberId);
+
+    Map<String, Integer> args = new HashMap<>();
+    args.put("memberId", memberId);
+
+    return sqlSession.delete(NAMESPACE + ".delete_by_member_id", args);
+  }
+
+  @Override
   public int delete(int memberId, int lectureId) {
     logger.info("delete() 호출 : memberId = " + memberId + " lectureId = " + lectureId);
 
@@ -37,7 +48,7 @@ public class CartDAOImple implements CartDAO {
     args.put("memberId", memberId);
     args.put("lectureId", lectureId);
 
-    return sqlSession.insert(NAMESPACE + ".delete", args);
+    return sqlSession.delete(NAMESPACE + ".delete", args);
   }
 
   @Override

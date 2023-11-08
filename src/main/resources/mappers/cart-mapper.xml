@@ -15,6 +15,12 @@
 		where ${memberId} = #{memberId} and ${lectureId} = #{lectureId} 
 	</delete>
 	
+	<!-- 결제 시 장바구니 전체 삭제 -->
+	<delete id="delete_by_member_id">
+		delete from ${cart}
+		where ${memberId} = #{memberId} 
+	</delete>
+	
 	<!-- 장바구니 조회 -->
 	<select id="select" resultType="LectureVO">
 		select l.${lectureId}, l.${memberId}, ${lectureTitle}, ${lecturePrice}, ${lectureSalesCount},

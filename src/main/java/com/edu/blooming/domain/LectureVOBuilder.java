@@ -9,6 +9,7 @@ public class LectureVOBuilder {
   private String lectureTitle;
   private String lectureDescription;
   private int lecturePrice;
+  private int lectureVideoProcessingLevel;
   private int lectureSalesCount;
   private int lectureTotalScore;
   private int lectureReplyCount;
@@ -46,6 +47,11 @@ public class LectureVOBuilder {
     return this;
   }
 
+  public LectureVOBuilder lectureVideoProcessingLevel(int lectureVideoProcessingLevel) {
+    this.lectureVideoProcessingLevel = lectureVideoProcessingLevel;
+    return this;
+  }
+
   public LectureVOBuilder lectureSalesCount(int lectureSalesCount) {
     this.lectureSalesCount = lectureSalesCount;
     return this;
@@ -78,7 +84,7 @@ public class LectureVOBuilder {
 
   public LectureVO build() {
     return new LectureVO(lectureId, memberId, authorName, lectureTitle, lectureDescription,
-        lecturePrice, lectureSalesCount, lectureTotalScore, lectureReplyCount, lectureLikeCount,
-        lectureThumbnailUrl, lectureDateCreated);
+        lecturePrice, lectureVideoProcessingLevel, lectureSalesCount, lectureTotalScore,
+        lectureReplyCount, lectureLikeCount, lectureThumbnailUrl, lectureDateCreated);
   }
 }

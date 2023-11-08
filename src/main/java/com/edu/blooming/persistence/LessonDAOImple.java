@@ -21,7 +21,8 @@ public class LessonDAOImple implements LessonDAO {
   @Override
   public int insert(LessonVO vo) {
     logger.info("insert() 호출 : vo = " + vo);
-    return sqlSession.insert(NAMESPACE + ".insert", vo);
+    sqlSession.insert(NAMESPACE + ".insert", vo);
+    return vo.getLessonId();
   }
 
   @Override
@@ -31,11 +32,46 @@ public class LessonDAOImple implements LessonDAO {
   }
 
   @Override
+  public int updateLessonName(int lessonId, String name) {
+    logger.info("updateLessonName() 호출 : lessonId = " + lessonId + " name: " + name);
+    Map<String, Object> args = new HashMap<>();
+    args.put("lessonId", lessonId);
+    args.put("name", name);
+    return sqlSession.update(NAMESPACE + ".update_lesson_name", args);
+  }
+
+  @Override
+  public int updateLessonUrl(int lessonId, String url) {
+    logger.info("updateLessonName() 호출 : lessonId = " + lessonId + " url: " + url);
+    Map<String, Object> args = new HashMap<>();
+    args.put("lessonId", lessonId);
+    args.put("url", url);
+    return sqlSession.update(NAMESPACE + ".update_lesson_url", args);
+  }
+
+  @Override
+  public int updateVideoProcessingLevel(int lessonId, int level) {
+    logger.info("updateVideoProcessingLevel() 호출 : lessonId: " + lessonId + " level : " + level);
+    Map<String, Integer> args = new HashMap<>();
+    args.put("lessonId", lessonId);
+    args.put("level", level);
+    return sqlSession.update(NAMESPACE + ".update_video_processing_level", args);
+  }
+
+  @Override
   public int delete(int lessonId) {
     logger.info("delete() 호출 : lessonId = " + lessonId);
     Map<String, Integer> args = new HashMap<>();
     args.put("lessonId", lessonId);
     return sqlSession.delete(NAMESPACE + ".delete", args);
+  }
+
+  @Override
+  public int selectMinVideoProcessingLevel(int lectureId) {
+    logger.info("selectMinVideoProcessingLevel() 호출 : lectureId = " + lectureId);
+    Map<String, Integer> args = new HashMap<>();
+    args.put("lectureId", lectureId);
+    return sqlSession.selectOne(NAMESPACE + ".select_min_video_processing_level", args);
   }
 
   @Override
