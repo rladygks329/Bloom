@@ -10,13 +10,21 @@ public interface BoardService {
 
   List<BoardVO> read(PageCriteria criteria);
 
+  List<BoardVO> read(PageCriteria criteria, String keyword);
+
+  List<BoardVO> read(PageCriteria criteria, int memberId);
+
   int getTotalCounts();
 
-  List<BoardVO> read(int boardId);
+  int getTotalCountsByKeyword();
+
+  int getTotalCountsByMemberId();
+
+  BoardVO read(int boardId);
 
   int update(BoardVO vo);
 
-  BoardVO readForUpdate(int boardId);
+  // BoardVO readForUpdate(int boardId);
 
   int updateViewCount(int boardId);
 
@@ -25,8 +33,5 @@ public interface BoardService {
   int dislikeBoard(int boardId, int memberId);
 
   boolean checkIsLike(int memberId, int boardId);
-
-  int createAnswer(int memberId, BoardVO vo);
-
 
 }

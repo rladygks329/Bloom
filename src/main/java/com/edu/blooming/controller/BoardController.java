@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -62,8 +61,8 @@ public class BoardController {
   public String detail(Model model, @RequestParam Integer boardId, @RequestParam Integer page,
       HttpServletRequest request, HttpServletResponse response) {
     // 게시글 조회 코드
-    List<BoardVO> list = boardService.read(boardId);
-    model.addAttribute("list", list);
+    BoardVO vo = boardService.read(boardId);
+    model.addAttribute("vo", vo);
     model.addAttribute("page", page);
 
     // 좋아요 체크
@@ -103,7 +102,7 @@ public class BoardController {
     return "board/detail"; // JSP 페이지 경로만 반환
   }
 
-  @GetMapping("/getLikeStatus/{boardId}/{memberId}")
+  @GetMapping("/like/{boardId}/{memberId}")
   @ResponseBody
   public boolean getLikeStatus(@PathVariable("boardId") int boardId,
       @PathVariable("memberId") int memberId) {
@@ -131,11 +130,10 @@ public class BoardController {
     }
   } // end registerPOST()
 
-
   @GetMapping("/update")
   public void updateGET(Model model, Integer boardId, Integer page) {
     logger.info("updateGET() 호출 : boardId = " + boardId);
-    BoardVO vo = boardService.readForUpdate(boardId);
+    BoardVO vo = boardService.read(boardId);
     model.addAttribute("vo", vo);
     model.addAttribute("page", page);
   }
@@ -156,7 +154,7 @@ public class BoardController {
   public ResponseEntity<Integer> likeBoard(@PathVariable("boardId") int boardId,
       @PathVariable("memberId") int memberId) {
     boardService.likeBoard(boardId, memberId);
-    int result = boardService.readForUpdate(boardId).getBoardLikeCount();
+    int result = boardService.read(boardId).getBoardLikeCount();
     return new ResponseEntity<Integer>(result, HttpStatus.OK);
   }
 
@@ -164,25 +162,9 @@ public class BoardController {
   public ResponseEntity<Integer> dislikeBoard(@PathVariable("boardId") int boardId,
       @PathVariable("memberId") int memberId) {
     boardService.dislikeBoard(boardId, memberId);
-    int result = boardService.readForUpdate(boardId).getBoardLikeCount();
+    int result = boardService.read(boardId).getBoardLikeCount();
     return new ResponseEntity<Integer>(result, HttpStatus.OK);
   }
-
-  // 답글 입력
-  @PostMapping(value = "/{boardId}")
-  public ResponseEntity<Integer> createAnswer(@PathVariable("boardId") int boardId,
-      @RequestBody BoardVO vo) {
-
-    logger.info("createAnswer() 호출 : boardId = " + boardId + " vo = " + vo);
-
-    int result = boardService.createAnswer(boardId, vo);
-    return new ResponseEntity<Integer>(result, HttpStatus.OK);
-    // HttpStatus status = (result == 1) ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
-
-    // return new ResponseEntity<>(1, status);
-  }
-
-
 
 }
 

@@ -9,6 +9,8 @@ public interface MemberService {
 
   int checkEmail(String email) throws Exception; // 이메일 중복검사
 
+  int checkNickname(String nickname) throws Exception;
+
   public MemberVO login(MemberVO member) throws Exception; // 로그인
 
   public void logout(HttpSession session); // 로그아웃

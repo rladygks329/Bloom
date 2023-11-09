@@ -31,13 +31,29 @@ public class BoardServiceImple implements BoardService {
   }
 
   @Override
+  public List<BoardVO> read(PageCriteria criteria, String keyword) {
+    logger.info("read() 호출 keyword: " + keyword);
+    logger.info("start = " + criteria.getStart());
+    logger.info("end = " + criteria.getEnd());
+    return boardDAO.select(criteria, keyword);
+  }
+
+  @Override
+  public List<BoardVO> read(PageCriteria criteria, int memberId) {
+    logger.info("findLectureByAuthorId() 호출");
+    logger.info("start = " + criteria.getStart());
+    logger.info("end = " + criteria.getEnd());
+    return boardDAO.select(criteria, memberId);
+  }
+
+  @Override
   public int getTotalCounts() {
     logger.info("getTotalCounts() 호출");
     return boardDAO.getTotalCounts();
   }
 
   @Override
-  public List<BoardVO> read(int boardId) {
+  public BoardVO read(int boardId) {
     logger.info("read() 호출: boardId = " + boardId);
     return boardDAO.select(boardId);
   }
@@ -46,12 +62,6 @@ public class BoardServiceImple implements BoardService {
   public int update(BoardVO vo) {
     logger.info("update() 호출: vo = " + vo.toString());
     return boardDAO.update(vo);
-  }
-
-  @Override
-  public BoardVO readForUpdate(int boardId) {
-    logger.info("readForUpdate()호출: boardId = " + boardId);
-    return boardDAO.selectForUpdate(boardId);
   }
 
   @Override
@@ -82,15 +92,19 @@ public class BoardServiceImple implements BoardService {
     return boardDAO.selectIsMemberLikeBoard(memberId, boardId);
   }
 
-  @Transactional(value = "transactionManager")
   @Override
-  public int createAnswer(int memberId, BoardVO vo) {
-    logger.info("create()호출 : memberId = " + memberId + "vo = " + vo.toString());
-
-    boardDAO.insertAnswer(vo);
-    boardDAO.updateAnswerCount(vo.getBoardId(), 1);
-    return 1;
+  public int getTotalCountsByKeyword() {
+    logger.info("getTotalCountsByKeyword() 호출");
+    return boardDAO.getTotalCountsByKeyword();
   }
+
+  @Override
+  public int getTotalCountsByMemberId() {
+    logger.info("getTotalCountsByMemberId() 호출");
+    return boardDAO.getTotalCountsByMemberId();
+  }
+
+
 
 }
 

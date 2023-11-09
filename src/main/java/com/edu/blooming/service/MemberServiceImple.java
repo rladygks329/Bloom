@@ -45,6 +45,12 @@ public class MemberServiceImple implements MemberService {
     return dao.updatePassword(memberId, memberPassword);
   }
 
+  @Override
+  public int checkNickname(String nickname) throws Exception {
+    logger.info("checkNickname() 호출: nickname = " + nickname);
+    return dao.checkEmail(nickname);
+  }
+
 } // end MemberService
 
 

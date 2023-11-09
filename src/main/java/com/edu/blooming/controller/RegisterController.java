@@ -68,7 +68,22 @@ public class RegisterController {
       return new ResponseEntity<String>("success", HttpStatus.OK);
     }
     return new ResponseEntity<String>("faile", HttpStatus.OK);
-
   } // end emailCheckPOST()
 
+  @PostMapping("/nickname")
+  @ResponseBody
+  public ResponseEntity<String> checkNicknamePOST(
+      @RequestParam("memberNickname") String memberNickname) throws Exception {
+    logger.info("checkNickname() 호출");
+    int result = memberService.checkNickname(memberNickname);
+
+    logger.info("결과값 : " + result);
+    if (result == 0) {
+      return new ResponseEntity<String>("success", HttpStatus.OK);
+    }
+    return new ResponseEntity<String>("fail", HttpStatus.OK);
+  } // end checkNicknamePOST()
+
+
 } // end RegisterController
+

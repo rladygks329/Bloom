@@ -31,6 +31,17 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 	<h1>게시판 메인</h1>
 	
 	<a href="register"><input type="button" value="새 글 작성"></a>
+	<a href="list"><input type="button" value="목록으로"></a>
+	
+	<form action="/list" method="get">
+	    <select name="searchType">
+		    <option value="serchWriter">작성자</option>		    
+		    <option value="serchTitleAndContent">제목+내용</option>
+	    </select>      
+	    <input type="text" id="keyword" name="keyword" placeholder="검색어를 입력하세요">
+    	<input type="submit" value="검색">
+    </form>
+	
 	<hr>
 	<table>
 		<thead>
@@ -39,7 +50,7 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 				<th style="width : 700px">제목</th>
 				<th style="width : 120px">작성자</th>
 				<th style="width : 60px">조회수</th>
-				<th style="width : 60px">답글수</th>
+				<th style="width : 60px">댓글수</th>
 				<th style="width : 60px">좋아요</th>
 				<th style="width : 300px">작성일</th>
 			</tr>
@@ -49,9 +60,9 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 				<tr>
 					<td>${vo.boardId }</td>
 					<td><a href="detail?boardId=${vo.boardId }&page=${pageMaker.criteria.page}">${vo.boardTitle }</a></td>
-					<td>${vo.authorName }</td>
+					<td>${vo.authorNickname }</td>
 					<td>${vo.boardViewCount }</td>
-					<td>${vo.boardAnswerCount }</td>
+					<td>${vo.boardReplyCount }</td>
 					<td>${vo.boardLikeCount }</td>
 					<fmt:formatDate value="${vo.boardDateCreated }"
 					pattern="yyyy-MM-dd HH:mm:ss" var="boardDateCreated"/>

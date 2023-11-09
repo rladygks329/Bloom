@@ -65,6 +65,12 @@ public class MemberDAOImple implements MemberDAO {
     return sqlSession.update(NAMESPACE + ".update_password", args);
   }
 
+  @Override
+  public int checkNickname(String nickname) {
+    logger.info("checkNickname() 호출");
+    return sqlSession.selectOne(NAMESPACE + ".check_nickname_duplicated", nickname);
+  }
+
 }
 
 

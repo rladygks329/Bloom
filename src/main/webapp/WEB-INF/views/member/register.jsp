@@ -15,6 +15,7 @@
 		var pwFinalCheck = false;
 		var pwckFinalCheck = false;
 		var nameFinalCheck = false;
+		var nicknameFinalCheck = false;
 		var phoneFinalCheck = false;
 		var addressFinalCheck = false;
 				
@@ -36,6 +37,11 @@
 			
 			if(nameFinalCheck == false) {
 				alert("회원가입 정보를 확인해 주세요 : 이름");
+				return false;
+			}
+			
+			if(nicknameFinalCheck == false) {
+				alert("회원가입 정보를 확인해 주세요 : 닉네임");
 				return false;
 			}
 			
@@ -82,6 +88,12 @@
 	    <input class="name_input" type="text" name="memberName" placeholder="이름 입력">
 	    <span class="name_input_re" style="display: none;"></span>
 	    
+	    <p>닉네임</p>
+	    <input class="nickname_input" type="text" name="memberNickname" placeholder="닉네임 입력">
+		<span class="nickname_input_warning" style="display: none;">닉네임은 한글, 영문, 숫자 2~6자로 입력해 주세요.</span><br>
+	    <span class="nickname_input_re_1" style="display: none;">사용 가능한 닉네임입니다.</span> 
+	    <span class="nickname_input_re_2" style="display: none;">닉네임이 이미 존재합니다.</span>
+	    	    
 	    <p>휴대폰번호</p>
 	    <input class="pn_input" type="text" name="memberPhone" placeholder="번호 입력">
 	    <span class="pn_input_re" style="display: none;"></span>
@@ -143,6 +155,55 @@
 			$('.email_input').on("blur", function () {
 			    checkEmailDuplication($('.email_input').val());
 			});
+			
+			
+			
+			// 닉네임 형식 유효성 검사 
+		    function nicknameFormCheck(nickname){
+		       var form = /^[가-힣a-zA-Z0-9]{2,6}$/;
+		       return form.test(nickname);
+		    }		    
+	    	
+			// 이메일 중복검사 함수
+			function checkNicknameDuplication(nickname) {
+				if($('.nickname_input').val() === "") {
+					$('.nickname_input_warning').hide();
+					
+				// 유효성 검사를 통과한 경우에만 중복 검사 실행
+				} else if (nicknameFormCheck(nickname)) {
+			    	$('.nickname_input_warning').hide();
+			        var data = { memberNickname: nickname };
+			        $.ajax({
+			            type: 'POST',
+			            url: '/blooming/member/nickname',
+			            data: data,
+			            success: function (result) {
+			                if (result === 'success') {
+			                    $('.nickname_input_re_1').show();
+			                    $('.nickname_input_re_2').hide();
+			                    nicknameFinalCheck = true;
+
+			                } else if (result === 'faile') {
+			                    $('.nickname_input_re_1').hide();
+			                    $('.nickname_input_re_2').show();
+			                    
+			                }
+			            }
+			        });
+			    } else {
+			        // 유효성 검사를 통과하지 못한 경우
+			        $('.nickname_input_warning').show();
+			        $('.nickname_input_re_1').hide();
+			        $('.nickname_input_re_2').hide();
+			        	
+			    }
+			} // end checkEmailDuplication()
+
+			// 이메일 입력 필드의 값이 변경될 때 검사 실행
+			$('.nickname_input').on("blur", function () {
+			    checkNicknameDuplication($('.nickname_input').val());
+			});
+			
 
 			// 비밀번호 형식 및 확인 일치 유효성 검사			
 			$('.pw_input').on("change", function(){

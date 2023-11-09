@@ -6,7 +6,7 @@ public class BoardVO {
 
   private int boardId;
   private int memberId;
-  private String authorName;
+  private String authorNickname;
   private int boardParentId;
   private String boardTitle;
   private String boardContent;
@@ -16,15 +16,18 @@ public class BoardVO {
   private int boardLikeCount;
   private Date boardDateCreated;
 
-  public BoardVO() {}
+  public BoardVO() {
+    super();
+    // TODO Auto-generated constructor stub
+  }
 
-  public BoardVO(int boardId, int memberId, String authorName, int boardParentId, String boardTitle,
-      String boardContent, int boardViewCount, int boardAnswerCount, int boardReplyCount,
-      int boardLikeCount, Date boardDateCreated) {
+  public BoardVO(int boardId, int memberId, String authorNickname, int boardParentId,
+      String boardTitle, String boardContent, int boardViewCount, int boardAnswerCount,
+      int boardReplyCount, int boardLikeCount, Date boardDateCreated) {
     super();
     this.boardId = boardId;
     this.memberId = memberId;
-    this.authorName = authorName;
+    this.authorNickname = authorNickname;
     this.boardParentId = boardParentId;
     this.boardTitle = boardTitle;
     this.boardContent = boardContent;
@@ -51,12 +54,12 @@ public class BoardVO {
     this.memberId = memberId;
   }
 
-  public String getAuthorName() {
-    return authorName;
+  public String getAuthorNickname() {
+    return authorNickname;
   }
 
-  public void setAuthorName(String authorName) {
-    this.authorName = authorName;
+  public void setAuthorNickname(String authorNickname) {
+    this.authorNickname = authorNickname;
   }
 
   public int getBoardParentId() {
@@ -125,11 +128,11 @@ public class BoardVO {
 
   @Override
   public String toString() {
-    return "BoardVO [boardId=" + boardId + ", memberId=" + memberId + ", authorName=" + authorName
-        + ", boardParentId=" + boardParentId + ", boardTitle=" + boardTitle + ", boardContent="
-        + boardContent + ", boardViewCount=" + boardViewCount + ", boardAnswerCount="
-        + boardAnswerCount + ", boardReplyCount=" + boardReplyCount + ", boardLikeCount="
-        + boardLikeCount + ", boardDateCreated=" + boardDateCreated + "]";
+    return "BoardVO [boardId=" + boardId + ", memberId=" + memberId + ", authorNickname="
+        + authorNickname + ", boardParentId=" + boardParentId + ", boardTitle=" + boardTitle
+        + ", boardContent=" + boardContent + ", boardViewCount=" + boardViewCount
+        + ", boardAnswerCount=" + boardAnswerCount + ", boardReplyCount=" + boardReplyCount
+        + ", boardLikeCount=" + boardLikeCount + ", boardDateCreated=" + boardDateCreated + "]";
   }
 
 }

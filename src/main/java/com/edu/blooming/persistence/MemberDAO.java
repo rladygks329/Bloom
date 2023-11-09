@@ -9,6 +9,8 @@ public interface MemberDAO {
 
   int checkEmail(String email); // 이메일 중복체크
 
+  int checkNickname(String nickname);
+
   MemberVO select(String email); // 회원정보조회
 
   int update(String email, MemberVO vo); // 회원정보업데이트

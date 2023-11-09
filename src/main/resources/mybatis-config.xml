@@ -9,6 +9,7 @@
 		<property name="memberEmail" value="member_email"/>
 		<property name="memberPassword" value="member_password"/>
 		<property name="memberName" value="member_name"/>
+		<property name="memberNickname" value="member_nickname"/>
 		<property name="memberPhone" value="member_phone"/>
 		<property name="memberAddress" value="member_address"/>
 		<property name="memberIntroduce" value="member_introduce"/>
@@ -70,13 +71,12 @@
 		<!-- BOARD -->
 		<property name="board" value="board"/>
 		<property name="boardId" value="board_id"/>
-		<property name="memberId" value="member_id"/>		
-		<property name="boardParentId" value="board_parent_id"/>
+		<property name="memberId" value="member_id"/>
+		<property name="authorNickname" value="author_nickname"/>				
 		<property name="boardTitle" value="board_title"/>
 		<property name="boardContent" value="board_content"/>		
 		<property name="boardViewCount" value="board_view_count"/>
-		<property name="boardAnswerCount" value="board_answer_count"/>
-		<property name="boardReplyCount" value="board_reply_count"/>
+		<property name="boardReplyCount" value="board_reply_count"/>		
 		<property name="boardLikeCount" value="board_like_count"/>
 		<property name="boardDateCreated" value="board_date_created"/>
 		

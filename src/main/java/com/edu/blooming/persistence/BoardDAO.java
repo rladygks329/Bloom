@@ -8,21 +8,25 @@ public interface BoardDAO {
 
   int insert(BoardVO vo);
 
-  List<BoardVO> select(int boardId);
+  BoardVO select(int boardId);
 
   List<BoardVO> select(PageCriteria criteria);
 
+  List<BoardVO> select(PageCriteria criteria, String keyword);
+
+  List<BoardVO> select(PageCriteria criteria, int memberId);
+
   int getTotalCounts();
+
+  int getTotalCountsByKeyword();
+
+  int getTotalCountsByMemberId();
 
   int updateReplyCount(int boardId, int amount);
 
-  // boolean checkParentId(int boardId);
-  //
-  // int deleteQuestion(int boardId);
-
   int update(BoardVO vo);
 
-  BoardVO selectForUpdate(int boardId);
+  // BoardVO selectForUpdate(int boardId);
 
   int updateViewCount(int boardId);
 
@@ -34,7 +38,4 @@ public interface BoardDAO {
 
   boolean selectIsMemberLikeBoard(int memberId, int boardId);
 
-  int insertAnswer(BoardVO vo);
-
-  int updateAnswerCount(int boardId, int amount);
 }

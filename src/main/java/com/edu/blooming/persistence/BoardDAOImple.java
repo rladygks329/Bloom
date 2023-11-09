@@ -39,21 +39,15 @@ public class BoardDAOImple implements BoardDAO {
   }
 
   @Override
-  public List<BoardVO> select(int boardId) {
+  public BoardVO select(int boardId) {
     logger.info("select() 호출: boardId = " + boardId);
-    return sqlSession.selectList(NAMESPACE + ".select_by_board_id", boardId);
+    return sqlSession.selectOne(NAMESPACE + ".select_by_board_id", boardId);
   }
 
   @Override
   public int update(BoardVO vo) {
     logger.info("update() 호출: vo = " + vo.toString());
     return sqlSession.update(NAMESPACE + ".update", vo);
-  }
-
-  @Override
-  public BoardVO selectForUpdate(int boardId) {
-    logger.info("readForUpdate()호출: boardId = " + boardId);
-    return sqlSession.selectOne(NAMESPACE + ".select_by_board_id_for_update", boardId);
   }
 
   @Override
@@ -118,20 +112,39 @@ public class BoardDAOImple implements BoardDAO {
   }
 
   @Override
-  public int insertAnswer(BoardVO vo) {
-    logger.info("insert() 호출: vo = " + vo.toString());
-    return sqlSession.insert(NAMESPACE + ".insert_answer", vo);
+  public List<BoardVO> select(PageCriteria criteria, String keyword) {
+    logger.info("select() 호출 : criteria : " + criteria.toString() + " keyword : " + keyword);
+
+    HashMap<String, Object> args = new HashMap<>();
+    args.put("start", criteria.getStart());
+    args.put("end", criteria.getEnd());
+    args.put("keyword", "%" + keyword + "%");
+
+    return sqlSession.selectList(NAMESPACE + ".paging_select_by_keyword", args);
   }
 
   @Override
-  public int updateAnswerCount(int boardId, int amount) {
-    logger.info("updateAnswerCount()호출: boardId = " + boardId);
+  public List<BoardVO> select(PageCriteria criteria, int memberId) {
+    logger.info("select() 호출 : criteria : " + criteria + " memberId = " + memberId);
 
     HashMap<String, Integer> args = new HashMap<>();
-    args.put("boardId", boardId);
-    args.put("amount", amount);
+    args.put("start", criteria.getStart());
+    args.put("end", criteria.getEnd());
+    args.put("memberId", memberId);
 
-    return sqlSession.update(NAMESPACE + ".update_answer_count", args);
+    return sqlSession.selectList(NAMESPACE + ".paging_select_by_member_id", args);
+  }
+
+  @Override
+  public int getTotalCountsByKeyword() {
+    logger.info("getTotalCountsByKeyword()호출");
+    return sqlSession.selectOne(NAMESPACE + ".total_count_by_keyword");
+  }
+
+  @Override
+  public int getTotalCountsByMemberId() {
+    logger.info("getTotalCountsByMemberId()호출");
+    return sqlSession.selectOne(NAMESPACE + ".total_count_by_member_id");
   }
 
 }

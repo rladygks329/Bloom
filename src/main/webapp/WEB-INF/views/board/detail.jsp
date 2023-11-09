@@ -13,83 +13,42 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 <title>게시글번호나오게</title>
 </head>
 <body>
-	<c:forEach var="vo" items="${list }">
-		<c:if test="${vo.boardParentId == 0 }">
-			<h2>글내용 보기</h2>
-			<div>
-				<p>글 번호: ${vo.boardId }</p>
-			</div>
-			<div>
-				<p>제목: ${vo.boardTitle }</p>
-			</div>
-			<div>
-				<p>작성자: ${vo.authorName } </p>
-				<fmt:formatDate value="${vo.boardDateCreated }"
-					pattern="yyyy-MM-dd HH:mm:ss" var="boardDateCreated"/>
-				<p>작성일: ${boardDateCreated }</p>
-				<p>조회수: ${vo.boardViewCount }</p>
-				<p>좋아요: ${vo.boardLikeCount }</p>
-			</div>
-			<div>
-				<textarea rows="20" cols="120" readonly>${vo.boardContent }</textarea>
-			</div>
-			
-			<input type="hidden" id="boardId" name="boardId" value="${vo.boardId }">
-			<input type="hidden" id="memberId" value="${sessionScope.loginVo.memberId}">
 
-			<a><input type="button" onclick="goBack()" value="글 목록"></a>
-			<a href="update?boardId=${vo.boardId }&page=${page }"><input type="button" value="글 수정"></a>
-			<input type="button" value="글 삭제">
-					
-			<input type="button" id="boardLike" value="좋아요">		
-
-			<br>
-			<br>
-			<br>
-
-			
-		</c:if>
-	</c:forEach>
-
+	<h2>글내용 보기</h2>
 	<div>
-		<p>답변 ${vo.boardAnswerCount }개</p>
+		<p>글 번호: ${vo.boardId }</p>
 	</div>
+	<div>
+		<p>제목: ${vo.boardTitle }</p>
+	</div>
+	<div>
+		<p>작성자: ${vo.authorNickname } </p>
+		<fmt:formatDate value="${vo.boardDateCreated }"
+			pattern="yyyy-MM-dd HH:mm:ss" var="boardDateCreated"/>
+		<p>작성일: ${boardDateCreated }</p>
+		<p>조회수: ${vo.boardViewCount }</p>
+		<p>좋아요: ${vo.boardLikeCount }</p>
+	</div>
+	<div>
+		<textarea rows="20" cols="120" readonly>${vo.boardContent }</textarea>
+	</div>
+	
+	<input type="hidden" id="boardId" name="boardId" value="${vo.boardId }">
+	<input type="hidden" id="memberId" value="${sessionScope.loginVo.memberId}">
+	<a><input type="button" onclick="goBack()" value="글 목록"></a>
+	<a href="update?boardId=${vo.boardId }&page=${page }"><input type="button" value="글 수정"></a>
+	<input type="button" value="글 삭제">
+					
+	<input type="button" id="boardLike" value="좋아요">		
+
+	<br>
+	<br>
+	<br>
 			
 	<div>
 		<p>답글을 작성해 주세요</p>
 		<textarea rows="10" cols="120" name="boardContent" id="answerContent" placeholder="내용 입력"></textarea>
 		<input type="button" value="저장" id="saveAnswer">
-	</div>
-	<div id="answers">
-		<c:forEach var="vo" items="${list }">
-			<c:if test="${param.boardId == vo.boardParentId }">
-				<div>
-					<p>제목: ${vo.boardTitle }</p>
-					<p>작성자: ${vo.authorName } </p>
-					<p>작성일: ${boardDateCreated }</p>		
-					<p>좋아요: ${vo.boardLikeCount }</p>
-					<p>게시글번호: ${vo.boardId }</p>
-					<p>게시글부모번호: ${vo.boardParentId }</p>
-				</div>	
-				<div>
-					<textarea rows="20" cols="120" readonly>${vo.boardContent }</textarea>
-				</div>
-				<a href="update?boardId=${vo.boardId }&page=${page }"><input type="button" value="글 수정"></a>
-				<input type="button" value="글 삭제">
-				<div>			
-					<input type="hidden" id="boardId" value="${vo.boardId}"> <!-- class에서 id로 변경1108 -->
-					<input type="hidden" id="memberId" value="${sessionScope.loginVo.memberId}">
-					<textarea rows="5" cols="50" id="boardReplyContent"></textarea>
-	
-					<button type="button" class="btnAddReply">댓글 달기</button>
-	       		
-				</div>
-				<div style="text-align: center;">
-					<div id="replies"></div>
-	
-				</div>
-			</c:if>
-		</c:forEach>
 	</div>
 	
 <script>
@@ -106,7 +65,7 @@ $(document).ready(function(){
 	// Ajax 요청을 통해 초기 "좋아요" 상태를 가져옴
   	$.ajax({
         type: 'GET',
-        url: '/blooming/board/getLikeStatus/' + boardId + '/' + memberId,
+        url: '/blooming/board/like/' + boardId + '/' + memberId,
         success: function(data) {
             // "좋아요" 상태를 확인하고 버튼 텍스트를 업데이트
             if (data) {
@@ -122,7 +81,7 @@ $(document).ready(function(){
 	
 	// 좋아요 onclieck 기능
     $('#boardLike').click(function() {
-        // var likeStatus = false; // 좋아요 상태를 나타내는 변수 (초기값: 좋아요하지 않음) 위에 확인 후 삭제
+        var likeStatus = false; // 좋아요 상태를 나타내는 변수 (초기값: 좋아요하지 않음) 위에 확인 후 삭제
         // 버튼 텍스트를 확인하여 좋아요 또는 좋아요 취소 요청 구분
         if ($('#boardLike').val() === '좋아요') {
             likeStatus = true; // 좋아요
@@ -217,8 +176,8 @@ $(document).ready(function(){
 					list += '<div class="reply_item">'
 						+ '<pre>'
 						+ '<input type="hidden" id="replyId" value="' + this.boardReplyId +'">'
-						+ '<input type="hidden" id="authorName" value="' + this.authorName +'">'
-						+ this.authorName
+						+ '<input type="hidden" id="authorNickname" value="' + this.authorNickname +'">'
+						+ this.authorNickname
 						+ '&nbsp;&nbsp;' // 공백
 						+ '<input type="text" id="boardReplyContent" value="' + this.boardReplyContent + '">'
 						+ '&nbsp;&nbsp;' // 공백
