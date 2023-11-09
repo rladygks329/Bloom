@@ -31,19 +31,19 @@ public class BoardServiceImple implements BoardService {
   }
 
   @Override
-  public List<BoardVO> read(PageCriteria criteria, String keyword) {
+  public List<BoardVO> readByNickname(PageCriteria criteria, String keyword) {
     logger.info("read() 호출 keyword: " + keyword);
     logger.info("start = " + criteria.getStart());
     logger.info("end = " + criteria.getEnd());
-    return boardDAO.select(criteria, keyword);
+    return boardDAO.selectByNickname(criteria, keyword);
   }
 
   @Override
-  public List<BoardVO> read(PageCriteria criteria, int memberId) {
+  public List<BoardVO> readByTitleOrContent(PageCriteria criteria, String keyword) {
     logger.info("findLectureByAuthorId() 호출");
     logger.info("start = " + criteria.getStart());
     logger.info("end = " + criteria.getEnd());
-    return boardDAO.select(criteria, memberId);
+    return boardDAO.selectByTitleOrContent(criteria, keyword);
   }
 
   @Override
@@ -93,15 +93,15 @@ public class BoardServiceImple implements BoardService {
   }
 
   @Override
-  public int getTotalCountsByKeyword() {
+  public int getTotalCountsByTitleOrContent(String keyword) {
     logger.info("getTotalCountsByKeyword() 호출");
-    return boardDAO.getTotalCountsByKeyword();
+    return boardDAO.getTotalCountsByTitleOrContent(keyword);
   }
 
   @Override
-  public int getTotalCountsByMemberId() {
+  public int getTotalCountsByNickname(String keyword) {
     logger.info("getTotalCountsByMemberId() 호출");
-    return boardDAO.getTotalCountsByMemberId();
+    return boardDAO.getTotalCountsByNickname(keyword);
   }
 
 

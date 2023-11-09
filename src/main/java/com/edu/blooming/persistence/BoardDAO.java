@@ -12,15 +12,15 @@ public interface BoardDAO {
 
   List<BoardVO> select(PageCriteria criteria);
 
-  List<BoardVO> select(PageCriteria criteria, String keyword);
+  List<BoardVO> selectByNickname(PageCriteria criteria, String keyword);
 
-  List<BoardVO> select(PageCriteria criteria, int memberId);
+  List<BoardVO> selectByTitleOrContent(PageCriteria criteria, String keyword);
 
   int getTotalCounts();
 
-  int getTotalCountsByKeyword();
+  int getTotalCountsByTitleOrContent(String keyword);
 
-  int getTotalCountsByMemberId();
+  int getTotalCountsByNickname(String keyword);
 
   int updateReplyCount(int boardId, int amount);
 

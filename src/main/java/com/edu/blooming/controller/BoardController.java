@@ -33,10 +33,10 @@ public class BoardController {
   private BoardService boardService;
 
   @GetMapping("/list")
-  public void list(Model model, Integer page, Integer numsPerPage) {
+  public void list(Model model, Integer page, Integer numsPerPage, String option, String keyword) {
     logger.info("list() 호출");
     logger.info("page = " + page + ", numsPerPage = " + numsPerPage);
-
+    List<BoardVO> list = null;
     // Paging 처리
     PageCriteria criteria = new PageCriteria();
     if (page != null) {
@@ -47,12 +47,27 @@ public class BoardController {
       criteria.setNumsPerPage(numsPerPage);
     }
 
-    List<BoardVO> list = boardService.read(criteria);
-    model.addAttribute("list", list);
-
     PageMaker pageMaker = new PageMaker();
+    if (option != null) {
+      if (option.equals("searchNickname")) {
+        logger.info("searchNickname");
+        list = boardService.readByNickname(criteria, keyword);
+        pageMaker.setTotalCount(boardService.getTotalCountsByNickname(keyword));
+      } else if (option.equals("searchTitleOrContent")) {
+        logger.info("searchTitleOrContent");
+        list = boardService.readByTitleOrContent(criteria, keyword);
+        pageMaker.setTotalCount(boardService.getTotalCountsByTitleOrContent(keyword));
+      }
+    } else {
+      logger.info("totalCount = " + pageMaker.getTotalCount());
+      list = boardService.read(criteria);
+      pageMaker.setTotalCount(boardService.getTotalCounts());
+    }
+    model.addAttribute("list", list);
+    model.addAttribute("option", option);
+    model.addAttribute("keyword", keyword);
+
     pageMaker.setCriteria(criteria);
-    pageMaker.setTotalCount(boardService.getTotalCounts());
     pageMaker.setPageData();
     model.addAttribute("pageMaker", pageMaker);
   } // end list()

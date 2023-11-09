@@ -112,7 +112,7 @@ public class BoardDAOImple implements BoardDAO {
   }
 
   @Override
-  public List<BoardVO> select(PageCriteria criteria, String keyword) {
+  public List<BoardVO> selectByTitleOrContent(PageCriteria criteria, String keyword) {
     logger.info("select() 호출 : criteria : " + criteria.toString() + " keyword : " + keyword);
 
     HashMap<String, Object> args = new HashMap<>();
@@ -124,27 +124,27 @@ public class BoardDAOImple implements BoardDAO {
   }
 
   @Override
-  public List<BoardVO> select(PageCriteria criteria, int memberId) {
-    logger.info("select() 호출 : criteria : " + criteria + " memberId = " + memberId);
+  public List<BoardVO> selectByNickname(PageCriteria criteria, String keyword) {
+    logger.info("select() 호출 : criteria : " + criteria + " keyword = " + keyword);
 
-    HashMap<String, Integer> args = new HashMap<>();
+    HashMap<String, Object> args = new HashMap<>();
     args.put("start", criteria.getStart());
     args.put("end", criteria.getEnd());
-    args.put("memberId", memberId);
+    args.put("keyword", "%" + keyword + "%");
 
     return sqlSession.selectList(NAMESPACE + ".paging_select_by_member_id", args);
   }
 
   @Override
-  public int getTotalCountsByKeyword() {
+  public int getTotalCountsByTitleOrContent(String keyword) {
     logger.info("getTotalCountsByKeyword()호출");
-    return sqlSession.selectOne(NAMESPACE + ".total_count_by_keyword");
+    return sqlSession.selectOne(NAMESPACE + ".total_count_by_title_content", "%" + keyword + "%");
   }
 
   @Override
-  public int getTotalCountsByMemberId() {
+  public int getTotalCountsByNickname(String keyword) {
     logger.info("getTotalCountsByMemberId()호출");
-    return sqlSession.selectOne(NAMESPACE + ".total_count_by_member_id");
+    return sqlSession.selectOne(NAMESPACE + ".total_count_by_nickname", "%" + keyword + "%");
   }
 
 }

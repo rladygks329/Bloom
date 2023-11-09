@@ -33,12 +33,12 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 	<a href="register"><input type="button" value="새 글 작성"></a>
 	<a href="list"><input type="button" value="목록으로"></a>
 	
-	<form action="/list" method="get">
-	    <select name="searchType">
-		    <option value="serchWriter">작성자</option>		    
-		    <option value="serchTitleAndContent">제목+내용</option>
+	<form action="list" method="GET">
+	    <select id="option" name="option">
+		    <option value="serchNickname">작성자</option>		    
+		    <option value="serchTitleOrContent">제목&내용</option>
 	    </select>      
-	    <input type="text" id="keyword" name="keyword" placeholder="검색어를 입력하세요">
+	    <input type="text" id="keyword" name="keyword" value="${keyword}" placeholder="검색어를 입력하세요">
     	<input type="submit" value="검색">
     </form>
 	
