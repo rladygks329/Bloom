@@ -71,10 +71,21 @@ public class MemberController {
     return "redirect:/main";
   }
 
-
   @GetMapping("/member-detail")
   public void memberDetailGET() {
     logger.info("memberDetail 호출");
+  }
+
+  @GetMapping("/mypage")
+  public String myPageGET(HttpServletRequest request) {
+    logger.info("myPageGET() 호출");
+    HttpSession session = request.getSession();
+    MemberVO user = (MemberVO) session.getAttribute("loginVo");
+
+    if (user.getMemberLevel().equals("instructor")) {
+      return "/member/mypage-instructor";
+    }
+    return "/member/member-detail";
   }
 
   @PostMapping("/changePassword")
