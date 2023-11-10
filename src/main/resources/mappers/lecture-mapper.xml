@@ -86,7 +86,14 @@
 					select * 
 					from ${lecture} 
 					where  ${lectureVideoProcessingLevel} > 0
-					order by ${lectureId} desc
+					<choose>
+						<when test="orderType == 1"> order by ${lecturePrice} desc </when>
+					    <when test="orderType == 2"> order by ${lecturePrice} asc </when>
+					    <when test="orderType == 3"> order by ${lectureLikeCount} desc</when>
+					    <when test="orderType == 4"> order by ${lectureSalesCount} desc</when>
+					    <when test="orderType == 5"> order by ${lectureReplyCount} desc</when>
+						<otherwise> order by ${lectureId} desc </otherwise>
+					</choose>
 				) a
 			) l join ${member} m on l.${memberId} = m.${memberId}
 		where rn between #{start} and #{end}
@@ -116,7 +123,14 @@
 					select * 
 					from ${lecture}
 					where  ${lectureVideoProcessingLevel} > 0 and  (${lectureTitle} like #{keyword} or ${lectureDescription} like #{keyword})
-					order by ${lectureId} desc
+					<choose>
+						<when test="orderType == 1"> order by ${lecturePrice} desc </when>
+					    <when test="orderType == 2"> order by ${lecturePrice} asc </when>
+					    <when test="orderType == 3"> order by ${lectureLikeCount} desc</when>
+					    <when test="orderType == 4"> order by ${lectureSalesCount} desc</when>
+					    <when test="orderType == 5"> order by ${lectureReplyCount} desc</when>
+						<otherwise> order by ${lectureId} desc </otherwise>
+					</choose>
 				) a
 			) l join ${member} m on l.${memberId} = m.${memberId}
 		where rn between #{start} and #{end}

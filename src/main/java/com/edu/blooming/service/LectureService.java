@@ -11,9 +11,9 @@ public interface LectureService {
 
   int update(LectureVO vo);
 
-  List<LectureVO> read(PageCriteria criteria);
+  List<LectureVO> read(PageCriteria criteria, int orderType);
 
-  List<LectureVO> read(PageCriteria criteria, String keyword);
+  List<LectureVO> read(PageCriteria criteria, String keyword, int orderType);
 
   List<LectureVO> readHotLikeLectures(int month, int rank);
 

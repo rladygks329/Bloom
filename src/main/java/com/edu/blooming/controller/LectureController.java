@@ -45,8 +45,10 @@ public class LectureController {
   private CartService cartService;
 
   @GetMapping("/list")
-  public void lectureGET(Model model, Integer page, Integer numsPerPage, String keyword) {
-    logger.info("lectureGET() 호출");
+  public void lectureGET(Model model, Integer page, Integer numsPerPage, String keyword,
+      String order) {
+    logger.info("lectureGET() 호출 page : " + page + " numsPerPage: " + numsPerPage + " keyword: "
+        + keyword + " order: " + order);
     PageCriteria criteria = new PageCriteria();
 
     if (page != null && page > 0) {
@@ -56,23 +58,43 @@ public class LectureController {
     if (numsPerPage != null && numsPerPage > 0) {
       criteria.setNumsPerPage(numsPerPage);
     }
+    int orderType = getOrderType(order);
 
     List<LectureVO> list;
     PageMaker pageMaker = new PageMaker();
     pageMaker.setCriteria(criteria);
 
     if (keyword != null) {
-      list = lectureService.read(criteria, keyword);
+      list = lectureService.read(criteria, keyword, orderType);
       pageMaker.setTotalCount(lectureService.getTotalCounts(keyword));
       model.addAttribute("keyword", keyword);
     } else {
-      list = lectureService.read(criteria);
+      list = lectureService.read(criteria, orderType);
       pageMaker.setTotalCount(lectureService.getTotalCounts());
     }
     pageMaker.setPageData();
 
+    model.addAttribute("order", order);
     model.addAttribute("lectureList", list);
     model.addAttribute("pageMaker", pageMaker);
+  }
+
+  private int getOrderType(String order) {
+    if (order == null) {
+      return LectureVO.ORDER_TYPE_DEFAULT;
+    }
+
+    switch (order) {
+      case "price-desc":
+        return LectureVO.ORDER_TYPE_PRICE_DESC;
+      case "price-asc":
+        return LectureVO.ORDER_TYPE_PRICE_ASC;
+      case "famous":
+        return LectureVO.ORDER_TYPE_LIKE_COUNT_DESC;
+      case "sales":
+        return LectureVO.ORDER_TYPE_SALES_COUNT_DESC;
+    }
+    return LectureVO.ORDER_TYPE_DEFAULT;
   }
 
   @GetMapping("/detail")

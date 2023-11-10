@@ -50,19 +50,19 @@ public class LectureServiceImple implements LectureService {
   }
 
   @Override
-  public List<LectureVO> read(PageCriteria criteria) {
+  public List<LectureVO> read(PageCriteria criteria, int orderType) {
     logger.info("read() 호출");
     logger.info("start = " + criteria.getStart());
     logger.info("end = " + criteria.getEnd());
-    return lectureDAO.select(criteria);
+    return lectureDAO.select(criteria, orderType);
   }
 
   @Override
-  public List<LectureVO> read(PageCriteria criteria, String keyword) {
+  public List<LectureVO> read(PageCriteria criteria, String keyword, int orderType) {
     logger.info("read() 호출 keyword: " + keyword);
     logger.info("start = " + criteria.getStart());
     logger.info("end = " + criteria.getEnd());
-    return lectureDAO.select(criteria, keyword);
+    return lectureDAO.select(criteria, keyword, orderType);
   }
 
   @Override
