@@ -1,7 +1,10 @@
 package com.edu.blooming.controller;
 
+import static com.edu.blooming.util.Utils.parseInt;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
@@ -20,10 +23,8 @@ import com.edu.blooming.domain.LectureVO;
 import com.edu.blooming.domain.LectureVOBuilder;
 import com.edu.blooming.domain.LessonVO;
 import com.edu.blooming.domain.MemberVO;
-import com.edu.blooming.service.CartService;
 import com.edu.blooming.service.LectureService;
 import com.edu.blooming.service.LessonService;
-import com.edu.blooming.service.PurchaseService;
 import com.edu.blooming.util.PageCriteria;
 import com.edu.blooming.util.PageMaker;
 
@@ -31,6 +32,13 @@ import com.edu.blooming.util.PageMaker;
 @RequestMapping(value = "/lecture")
 public class LectureController {
   private static final Logger logger = LoggerFactory.getLogger(LectureController.class);
+  private static final Map<String, Integer> ORDER_TYPE_MAP = new HashMap<>();
+  static {
+    ORDER_TYPE_MAP.put("price-desc", LectureVO.ORDER_TYPE_PRICE_DESC);
+    ORDER_TYPE_MAP.put("price-asc", LectureVO.ORDER_TYPE_PRICE_ASC);
+    ORDER_TYPE_MAP.put("famous", LectureVO.ORDER_TYPE_LIKE_COUNT_DESC);
+    ORDER_TYPE_MAP.put("sales", LectureVO.ORDER_TYPE_SALES_COUNT_DESC);
+  }
 
   @Autowired
   private LectureService lectureService;
@@ -38,27 +46,13 @@ public class LectureController {
   @Autowired
   private LessonService lessonService;
 
-  @Autowired
-  private PurchaseService purchaseService;
-
-  @Autowired
-  private CartService cartService;
-
   @GetMapping("/list")
-  public void lectureGET(Model model, Integer page, Integer numsPerPage, String keyword,
+  public void lectureGET(Model model, String page, String numsPerPage, String keyword,
       String order) {
-    logger.info("lectureGET() 호출 page : " + page + " numsPerPage: " + numsPerPage + " keyword: "
-        + keyword + " order: " + order);
-    PageCriteria criteria = new PageCriteria();
+    logger.info("lectureGET() 호출");
 
-    if (page != null && page > 0) {
-      criteria.setPage(page);
-    }
-
-    if (numsPerPage != null && numsPerPage > 0) {
-      criteria.setNumsPerPage(numsPerPage);
-    }
-    int orderType = getOrderType(order);
+    int orderType = ORDER_TYPE_MAP.getOrDefault(order, LectureVO.ORDER_TYPE_DEFAULT);
+    PageCriteria criteria = new PageCriteria(parseInt(page, 1), parseInt(numsPerPage, 3));
 
     List<LectureVO> list;
     PageMaker pageMaker = new PageMaker();
@@ -77,24 +71,6 @@ public class LectureController {
     model.addAttribute("order", order);
     model.addAttribute("lectureList", list);
     model.addAttribute("pageMaker", pageMaker);
-  }
-
-  private int getOrderType(String order) {
-    if (order == null) {
-      return LectureVO.ORDER_TYPE_DEFAULT;
-    }
-
-    switch (order) {
-      case "price-desc":
-        return LectureVO.ORDER_TYPE_PRICE_DESC;
-      case "price-asc":
-        return LectureVO.ORDER_TYPE_PRICE_ASC;
-      case "famous":
-        return LectureVO.ORDER_TYPE_LIKE_COUNT_DESC;
-      case "sales":
-        return LectureVO.ORDER_TYPE_SALES_COUNT_DESC;
-    }
-    return LectureVO.ORDER_TYPE_DEFAULT;
   }
 
   @GetMapping("/detail")
@@ -121,14 +97,12 @@ public class LectureController {
     if (session.getAttribute("loginVo") != null) {
       // 로그인한 상태라면 좋아요, 결제 유무, 장바구니에 있는지 검사한 후 정보 넣기
       int memberId = ((MemberVO) session.getAttribute("loginVo")).getMemberId();
-      Boolean isLike = lectureService.checkIsLike(memberId, lectureId);
-      Boolean isPurchase = purchaseService.checkPurchase(memberId, lectureId);
-      Boolean isCart = cartService.isExist(memberId, lectureId);
+      Map<String, Object> status = lectureService.getUserStatus(memberId, lectureId);
 
       model.addAttribute("memberId", memberId);
-      model.addAttribute("like", isLike);
-      model.addAttribute("cart", isCart);
-      model.addAttribute("purchase", isPurchase);
+      model.addAttribute("like", status.get("isLike"));
+      model.addAttribute("cart", status.get("isCart"));
+      model.addAttribute("purchase", status.get("isPurchase"));
     }
 
     return "/lecture/detail";
@@ -178,8 +152,6 @@ public class LectureController {
     
     logger.info("vo : " + lecture.toString());
     int result = lectureService.create(lecture, lessons);
-    // if result == 1 :"redirect:/lecture/list"
-    // else return : redirect:/mypage
     return "redirect:/lecture/list";
   }
   // @formatter:on
@@ -206,7 +178,7 @@ public class LectureController {
   public ResponseEntity<Integer> likeLecture(
       @PathVariable("lectureId") int lectureId,
       @PathVariable("memberId") int memberId) {
-    lectureService.likeLecture(lectureId, memberId);
+    lectureService.likeLecture(memberId, lectureId);
     int result = lectureService.read(lectureId).getLectureLikeCount();
     return new ResponseEntity<Integer>(result, HttpStatus.OK);
   }
@@ -215,7 +187,7 @@ public class LectureController {
   public ResponseEntity<Integer> dislikeLecture(
       @PathVariable("lectureId") int lectureId,
       @PathVariable("memberId") int memberId) {
-    lectureService.dislikeLecture(lectureId, memberId);
+    lectureService.dislikeLecture(memberId,lectureId);
     int result = lectureService.read(lectureId).getLectureLikeCount();
     return new ResponseEntity<Integer>(result, HttpStatus.OK);
   }

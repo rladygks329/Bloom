@@ -1,6 +1,8 @@
 package com.edu.blooming.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +14,10 @@ import com.edu.blooming.domain.LectureVO;
 import com.edu.blooming.domain.LessonVO;
 import com.edu.blooming.event.VideoUploadedEvent;
 import com.edu.blooming.exception.AlreadyExistException;
+import com.edu.blooming.persistence.CartDAO;
 import com.edu.blooming.persistence.LectureDAO;
 import com.edu.blooming.persistence.LessonDAO;
+import com.edu.blooming.persistence.PurchaseDAO;
 import com.edu.blooming.util.PageCriteria;
 
 @Service
@@ -28,6 +32,12 @@ public class LectureServiceImple implements LectureService {
 
   @Autowired
   private LessonDAO lessonDAO;
+
+  @Autowired
+  private CartDAO cartDAO;
+
+  @Autowired
+  private PurchaseDAO purchaseDAO;
 
   @Transactional(value = "transactionManager")
   @Override
@@ -85,9 +95,20 @@ public class LectureServiceImple implements LectureService {
     return lectureDAO.select(lectureId);
   }
 
+  @Override
+  public Map<String, Object> getUserStatus(int memberId, int lectureId) {
+    Map<String, Object> result = new HashMap<>();
+
+    result.put("isLike", lectureDAO.selectIsMemberLikeLecture(memberId, lectureId));
+    result.put("isPurchase", purchaseDAO.selectIsMemberBuyLecture(memberId, lectureId));
+    result.put("isCart", cartDAO.selectExist(memberId, lectureId) == 1);
+
+    return result;
+  }
+
   @Transactional(value = "transactionManager")
   @Override
-  public int likeLecture(int lectureId, int memberId) throws AlreadyExistException {
+  public int likeLecture(int memberId, int lectureId) throws AlreadyExistException {
     logger.info("likeLecture() 호출, LectureId : " + lectureId + " memberId : " + memberId);
     int result = 0;
 
@@ -103,7 +124,7 @@ public class LectureServiceImple implements LectureService {
 
   @Transactional(value = "transactionManager")
   @Override
-  public int dislikeLecture(int lectureId, int memberId) {
+  public int dislikeLecture(int memberId, int lectureId) {
     logger.info("dislikeLecture() 호출, LectureId : " + lectureId + " memberId : " + memberId);
     int result = lectureDAO.deleteLike(memberId, lectureId);
     if (result == 1) {

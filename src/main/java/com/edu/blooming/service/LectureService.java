@@ -1,6 +1,7 @@
 package com.edu.blooming.service;
 
 import java.util.List;
+import java.util.Map;
 import com.edu.blooming.domain.LectureVO;
 import com.edu.blooming.domain.LessonVO;
 import com.edu.blooming.exception.AlreadyExistException;
@@ -23,11 +24,16 @@ public interface LectureService {
 
   LectureVO read(int lectureId);
 
+  /*
+   * @key: isPurchase, isLike, isCart
+   */
+  Map<String, Object> getUserStatus(int memberId, int lectureId);
+
   boolean checkIsLike(int memberId, int lectureId);
 
-  int likeLecture(int lectureId, int memberId) throws AlreadyExistException;
+  int likeLecture(int memberId, int lectureId) throws AlreadyExistException;
 
-  int dislikeLecture(int lectureId, int memberId);
+  int dislikeLecture(int memberId, int lectureId);
 
   int getTotalCounts();
 
