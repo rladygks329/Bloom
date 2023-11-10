@@ -32,7 +32,7 @@ public class BoardServiceImple implements BoardService {
 
   @Override
   public List<BoardVO> readByNickname(PageCriteria criteria, String keyword) {
-    logger.info("read() 호출 keyword: " + keyword);
+    logger.info("readByNickname() 호출 keyword: " + keyword);
     logger.info("start = " + criteria.getStart());
     logger.info("end = " + criteria.getEnd());
     return boardDAO.selectByNickname(criteria, keyword);
@@ -40,7 +40,7 @@ public class BoardServiceImple implements BoardService {
 
   @Override
   public List<BoardVO> readByTitleOrContent(PageCriteria criteria, String keyword) {
-    logger.info("findLectureByAuthorId() 호출");
+    logger.info("readByTitleOrContent() 호출");
     logger.info("start = " + criteria.getStart());
     logger.info("end = " + criteria.getEnd());
     return boardDAO.selectByTitleOrContent(criteria, keyword);
@@ -94,7 +94,7 @@ public class BoardServiceImple implements BoardService {
 
   @Override
   public int getTotalCountsByTitleOrContent(String keyword) {
-    logger.info("getTotalCountsByKeyword() 호출");
+    logger.info("getTotalCountsByTitleOrContent() 호출");
     return boardDAO.getTotalCountsByTitleOrContent(keyword);
   }
 

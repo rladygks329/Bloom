@@ -50,11 +50,7 @@ public class BoardReplyDAOImple implements BoardReplyDAO {
   @Override
   public List<BoardReplyVO> selectByBoardId(int boardId) {
     logger.info("selectByBoardId() 호출 : boardId = " + boardId);
-
-    Map<String, Integer> args = new HashMap<>();
-    args.put("boardId", boardId);
-
-    return sqlSession.selectList(NAMESPACE + ".select_by_board_id", args);
+    return sqlSession.selectList(NAMESPACE + ".select_by_board_id", boardId);
   }
 
 }

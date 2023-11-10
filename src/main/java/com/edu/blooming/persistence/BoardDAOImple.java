@@ -26,7 +26,7 @@ public class BoardDAOImple implements BoardDAO {
 
   @Override
   public List<BoardVO> select(PageCriteria criteria) {
-    logger.info("select() 호출");
+    logger.info("select() 호출: criteria = " + criteria.toString());
     logger.info("start = " + criteria.getStart());
     logger.info("end = " + criteria.getEnd());
     return sqlSession.selectList(NAMESPACE + ".paging", criteria);
@@ -120,7 +120,7 @@ public class BoardDAOImple implements BoardDAO {
     args.put("end", criteria.getEnd());
     args.put("keyword", "%" + keyword + "%");
 
-    return sqlSession.selectList(NAMESPACE + ".paging_select_by_keyword", args);
+    return sqlSession.selectList(NAMESPACE + ".paging_select_by_title_content", args);
   }
 
   @Override
@@ -132,12 +132,12 @@ public class BoardDAOImple implements BoardDAO {
     args.put("end", criteria.getEnd());
     args.put("keyword", "%" + keyword + "%");
 
-    return sqlSession.selectList(NAMESPACE + ".paging_select_by_member_id", args);
+    return sqlSession.selectList(NAMESPACE + ".paging_select_by_nickname", args);
   }
 
   @Override
   public int getTotalCountsByTitleOrContent(String keyword) {
-    logger.info("getTotalCountsByKeyword()호출");
+    logger.info("getTotalCountsByTitleOrContent()호출");
     return sqlSession.selectOne(NAMESPACE + ".total_count_by_title_content", "%" + keyword + "%");
   }
 

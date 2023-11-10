@@ -33,8 +33,7 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 		<textarea rows="20" cols="120" readonly>${vo.boardContent }</textarea>
 	</div>
 	
-	<input type="hidden" id="boardId" name="boardId" value="${vo.boardId }">
-	<input type="hidden" id="memberId" value="${sessionScope.loginVo.memberId}">
+
 	<a><input type="button" onclick="goBack()" value="글 목록"></a>
 	<a href="update?boardId=${vo.boardId }&page=${page }"><input type="button" value="글 수정"></a>
 	<input type="button" value="글 삭제">
@@ -46,9 +45,14 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 	<br>
 			
 	<div>
-		<p>답글을 작성해 주세요</p>
-		<textarea rows="10" cols="120" name="boardContent" id="answerContent" placeholder="내용 입력"></textarea>
-		<input type="button" value="저장" id="saveAnswer">
+		<p>댓글을 작성해 주세요</p>
+		<input type="hidden" id="boardId" name="boardId" value="${vo.boardId }">
+		<input type="hidden" id="memberId" name="memberId" value="${sessionScope.loginVo.memberId}">
+		<textarea rows="10" cols="120" id="boardReplyContent" name="boardReplyContent" placeholder="내용 입력"></textarea>
+		<input type="button" id="btnAddReply" value="댓글등록" >
+	</div>
+	<div>
+		<div id="replies"></div>
 	</div>
 	
 <script>
@@ -80,7 +84,7 @@ $(document).ready(function(){
     });
 	
 	// 좋아요 onclieck 기능
-    $('#boardLike').click(function() {
+    $('#boardLike').click(function() {    	
         var likeStatus = false; // 좋아요 상태를 나타내는 변수 (초기값: 좋아요하지 않음) 위에 확인 후 삭제
         // 버튼 텍스트를 확인하여 좋아요 또는 좋아요 취소 요청 구분
         if ($('#boardLike').val() === '좋아요') {
@@ -112,8 +116,9 @@ $(document).ready(function(){
     });
 
 	// 게시판 댓글 onclick 기능
-	$('.btnAddReply').click(function(){
-		var boardId = $('.boardId').val(); 
+	$('#btnAddReply').click(function(){
+		console.log("댓글입력");
+		var boardId = $('#boardId').val(); 
 		var memberId = $('#memberId').val(); 
 		var boardReplyContent = $('#boardReplyContent').val(); 
 		var obj = {
@@ -165,6 +170,7 @@ $(document).ready(function(){
 					console.log(this);
 					
 					var boardReplyDateCreated = new Date(this.boardReplyDateCreated);
+					
 					var disabled = 'disabled';
 					var readonly = 'readonly';
 					
@@ -173,18 +179,27 @@ $(document).ready(function(){
 						readonly = '';
 					}
 					
+	                // 포맷팅된 날짜 문자열 생성
+	                var formattedDate = boardReplyDateCreated.getFullYear() + '-' +
+	                                    ('0' + (boardReplyDateCreated.getMonth() + 1)).slice(-2) + '-' +
+	                                    ('0' + boardReplyDateCreated.getDate()).slice(-2) + ' ' +
+	                                    ('0' + boardReplyDateCreated.getHours()).slice(-2) + ':' +
+	                                    ('0' + boardReplyDateCreated.getMinutes()).slice(-2) + ':' +
+	                                    ('0' + boardReplyDateCreated.getSeconds()).slice(-2);
+					
 					list += '<div class="reply_item">'
 						+ '<pre>'
 						+ '<input type="hidden" id="replyId" value="' + this.boardReplyId +'">'
 						+ '<input type="hidden" id="authorNickname" value="' + this.authorNickname +'">'
 						+ this.authorNickname
 						+ '&nbsp;&nbsp;' // 공백
-						+ '<input type="text" id="boardReplyContent" value="' + this.boardReplyContent + '">'
+						+ '<textarea rows="5" cols="50" id="boardReplyContent">' + this.boardReplyContent + '</textarea>'
 						+ '&nbsp;&nbsp;' // 공백
-						+ boardReplyDateCreated
+						+ formattedDate
 						+ '&nbsp;&nbsp;' // 공백
 						+ '<button class="btn_update" >수정</button>'
 						+ '<button class="btn_delete" >삭제</button>'
+						+ '<button class="btnReply">답글</button>'
 						+ '</pre>'
 						+ '</div>';
 				}); // end each()

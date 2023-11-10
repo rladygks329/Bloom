@@ -35,8 +35,8 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 	
 	<form action="list" method="GET">
 	    <select id="option" name="option">
-		    <option value="serchNickname">작성자</option>		    
-		    <option value="serchTitleOrContent">제목&내용</option>
+		    <option value="searchNickname">작성자</option>		    
+		    <option value="searchTitleOrContent">제목&내용</option>
 	    </select>      
 	    <input type="text" id="keyword" name="keyword" value="${keyword}" placeholder="검색어를 입력하세요">
     	<input type="submit" value="검색">

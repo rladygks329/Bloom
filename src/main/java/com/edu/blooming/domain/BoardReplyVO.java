@@ -8,7 +8,7 @@ public class BoardReplyVO {
   private int boardId;
   private String boardReplyContent;
   private Date boardReplyDateCreated;
-  private String authorName;
+  private String authorNickname;
 
   public BoardReplyVO() {
     super();
@@ -16,14 +16,14 @@ public class BoardReplyVO {
   }
 
   public BoardReplyVO(int boardReplyId, int memberId, int boardId, String boardReplyContent,
-      Date boardReplyDateCreated, String authorName) {
+      Date boardReplyDateCreated, String authorNickname) {
     super();
     this.boardReplyId = boardReplyId;
     this.memberId = memberId;
     this.boardId = boardId;
     this.boardReplyContent = boardReplyContent;
     this.boardReplyDateCreated = boardReplyDateCreated;
-    this.authorName = authorName;
+    this.authorNickname = authorNickname;
   }
 
   public int getBoardReplyId() {
@@ -66,19 +66,20 @@ public class BoardReplyVO {
     this.boardReplyDateCreated = boardReplyDateCreated;
   }
 
-  public String getAuthorName() {
-    return authorName;
+  public String getAuthorNickname() {
+    return authorNickname;
   }
 
-  public void setAuthorName(String authorName) {
-    this.authorName = authorName;
+  public void setAuthorNickname(String authorNickname) {
+    this.authorNickname = authorNickname;
   }
 
   @Override
   public String toString() {
     return "BoardReplyVO [boardReplyId=" + boardReplyId + ", memberId=" + memberId + ", boardId="
         + boardId + ", boardReplyContent=" + boardReplyContent + ", boardReplyDateCreated="
-        + boardReplyDateCreated + ", authorName=" + authorName + "]";
+        + boardReplyDateCreated + ", authorNickname=" + authorNickname + "]";
   }
+
 
 }

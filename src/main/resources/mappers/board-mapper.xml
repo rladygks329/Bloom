@@ -107,7 +107,7 @@
 		3. 여기에 조인으로 member테이블에 memberid 로 붙여서 member테이블까지 가져오고
 		4. 여기서 b만 다시 쏙 뺴고 + member테이블 붙인거에서 nickname만 가져오기 -->
 	<!-- 게시글 검색 PageNation: 제목, 내용 -->
-	<select id="paging_select_by_keyword" resultType="BoardVO">
+	<select id="paging_select_by_title_content" resultType="BoardVO">
 		select b.*, m.${memberNickname} ${authorNickname}
 		from (
 			select rownum rn, a.* 
@@ -128,15 +128,17 @@
 		where ${boardTitle} like #{keyword} or ${boardContent} like #{keyword}		
 	</select>
 	
-	<!-- 게시글 검색 PageNation: 멤버 -->
+	<!-- 게시글 검색 PageNation: 닉네임 -->
 	<select id="paging_select_by_nickname" resultType="boardVO">
-		select c.*, m.${memberNickname} ${authorNickname}
+		select c.${boardId}, c.${memberId}, c.${boardTitle}, c.${boardContent},
+			 c.${boardViewCount}, c.${boardReplyCount}, c.${boardLikeCount}, 
+			 c.${boardDateCreated}, c.${memberNickname} ${authorNickname}
 		from (
 			select rownum rn, a.* 
 			from (
 					select b.*, m.${memberNickname}
 					from ${board} b
-					join ${member} m on b.{memberId} = m.${memberId}
+					join ${member} m on b.${memberId} = m.${memberId}
 					where ${memberNickname} like #{keyword} 
 					order by ${boardId} desc
 				) a
@@ -144,19 +146,18 @@
 		where rn between #{start} and #{end}
 	</select>
 	
-	<!-- 게시글 개수 페이징처리: 멤버 -->
+	<!-- 게시글 개수 페이징처리: 닉네임 -->
 	<select id="total_count_by_nickname" resultType="Integer">
 		select count(*) total_cnt 
 		from (
 				select b.*, m.${memberNickname}
 				from ${board} b
-				join ${member} m on b.{memberId} = m.${memberId}
+				join ${member} m on b.${memberId} = m.${memberId}
 				where ${memberNickname} like #{keyword}
 			)
 	</select>	
 	
-	<!-- 게시글 삭제 -->
-	<!-- 추가하기 -->
-
+	<!-- 게시글 삭제 추가하기-->
+	
 </mapper>
 
