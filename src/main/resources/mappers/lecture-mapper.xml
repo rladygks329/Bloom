@@ -142,7 +142,7 @@
 		from (
 		    select ${lectureId}, count(*) likes
 		    from ${lecture_like}
-		    where to_char(${lectureLikeDateCreated},'yyyy-mm-dd') > (select to_char(add_months(sysdate, -#{month}),'yyyy-mm-dd') from dual)
+		    where to_char(${lectureLikeDateCreated},'yyyy-mm-dd') > to_char(add_months(sysdate, -#{month}),'yyyy-mm-dd')
 		    group by ${lectureId}
 		    order by likes DESC, ${lectureId} DESC
 		) a join ${lecture} l on a.${lectureId} = l.${lectureId} join ${member} m on l.${memberId} = m.${memberId}
@@ -155,7 +155,7 @@
 		from (
 		    select ${lectureId}, count(*) sales
 		    from ${purchase}
-		    where to_char(${purchaseDateCreated},'yyyy-mm-dd') > (select to_char(add_months(sysdate, -#{month}),'yyyy-mm-dd') from dual)
+		    where to_char(${purchaseDateCreated},'yyyy-mm-dd') > to_char(add_months(sysdate, -#{month}),'yyyy-mm-dd')
 		    group by ${lectureId}
 		    order by sales DESC, ${lectureId} DESC
 		) a join ${lecture} l on a.${lectureId} = l.${lectureId} join ${member} m on l.${memberId} = m.${memberId}
