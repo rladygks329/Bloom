@@ -80,18 +80,6 @@ public class BoardController {
     model.addAttribute("vo", vo);
     model.addAttribute("page", page);
 
-    // 좋아요 체크
-    // model.addAttribute("like", false);
-    //
-    // if (request.getSession().getAttribute("vo") != null) {
-    // HttpSession session = request.getSession();
-    // int memberId = ((MemberVO) session.getAttribute("vo")).getMemberId();
-    // Boolean isLike = boardService.checkIsLike(memberId, boardId);
-    //
-    // model.addAttribute("memberId", memberId);
-    // model.addAttribute("like", isLike);
-    // }
-
     // 쿠키 이름과 현재 게시글 ID 및 페이지를 조합하여 쿠키 이름 생성
     String cookieName = "viewed_" + boardId + "_page" + page;
     Cookie[] cookies = request.getCookies();
@@ -180,6 +168,23 @@ public class BoardController {
     int result = boardService.read(boardId).getBoardLikeCount();
     return new ResponseEntity<Integer>(result, HttpStatus.OK);
   }
+
+  @GetMapping("/deleteOrUpdate")
+  public void deleteOrUpdateGET() {
+    logger.info("deleteOrUpdateGET()");
+  }
+
+  @PostMapping("/deletOrUpdate")
+  public String deleteOrUpdatePOST(BoardVO vo) {
+    logger.info("deleteOrUpdatePOST()호출: vo = " + vo.toString());
+    int result = boardService.deleteOrUpdate(vo);
+    if (result == 1) {
+      return "redirect:/board/list";
+    } else {
+      return "redirect:/board/detail?boardId=" + vo.getBoardId();
+    }
+  }
+
 
 }
 

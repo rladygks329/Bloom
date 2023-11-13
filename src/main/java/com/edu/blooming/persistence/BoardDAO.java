@@ -38,4 +38,8 @@ public interface BoardDAO {
 
   boolean selectIsMemberLikeBoard(int memberId, int boardId);
 
+  int updateForDelete(BoardVO vo);
+
+  int delete(int boardId);
+
 }

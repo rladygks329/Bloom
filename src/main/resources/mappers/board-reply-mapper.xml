@@ -24,7 +24,14 @@
 		from ${board_reply} r join ${member} m on r.${memberId} = m.${memberId}
 		where ${boardId} = #{boardId}
 		order by ${boardReplyId}	
-	</select>			
+	</select>		
+	
+	<!-- 댓글 코멘트 갯수 수정 -->
+	<update id="update_comment_count">
+		update ${reply}
+		set ${boardReplyCommentCount} = ${boardReplyCommentCount} + #{amount}
+		where ${replyId} = #{replyId}	
+	</update>	
 
 </mapper>
 

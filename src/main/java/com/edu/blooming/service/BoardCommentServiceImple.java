@@ -5,9 +5,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.edu.blooming.domain.BoardCommentVO;
 import com.edu.blooming.persistence.BoardCommentDAO;
-import com.edu.blooming.persistence.BoardDAO;
+import com.edu.blooming.persistence.BoardReplyDAO;
 
 @Service
 public class BoardCommentServiceImple implements BoardCommentService {
@@ -17,12 +18,15 @@ public class BoardCommentServiceImple implements BoardCommentService {
   private BoardCommentDAO boardCommentDAO;
 
   @Autowired
-  private BoardDAO boardDAO;
+  private BoardReplyDAO boardReplyDAO;
 
+  @Transactional(value = "transactionalManager")
   @Override
   public int create(int memberId, BoardCommentVO vo) {
     logger.info("create()호출 : memberId = " + memberId + " vo = " + vo.toString());
+
     boardCommentDAO.insert(vo);
+    boardReplyDAO.updateCommentCount(vo.getBoardReplyId(), 1);
     return 1;
   }
 
@@ -33,10 +37,13 @@ public class BoardCommentServiceImple implements BoardCommentService {
     return boardCommentDAO.update(boardCommentId, boardCommentContent);
   }
 
+  @Transactional(value = "transactionalManager")
   @Override
-  public int delete(int boardCommentId, int replyId) {
-    logger.info("update()호출: boardCommentId = " + boardCommentId);
-    return boardCommentDAO.delete(boardCommentId);
+  public int delete(int boardCommentId, int boardReplyId) {
+    logger.info("delete()호출: boardCommentId = " + boardCommentId);
+    boardCommentDAO.delete(boardCommentId);
+    boardReplyDAO.updateCommentCount(boardReplyId, -1);
+    return 1;
   }
 
   @Override

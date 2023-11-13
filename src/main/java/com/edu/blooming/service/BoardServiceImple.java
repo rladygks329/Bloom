@@ -104,6 +104,18 @@ public class BoardServiceImple implements BoardService {
     return boardDAO.getTotalCountsByNickname(keyword);
   }
 
+  @Override
+  public int deleteOrUpdate(BoardVO vo) {
+    logger.info("deleteOrUpdate() 호출 : boardId = " + vo.getBoardId() + " boardReplyCount = "
+        + vo.getBoardReplyCount());
+    if (vo.getBoardReplyCount() == 0) {
+      boardDAO.delete(vo.getBoardId());
+    }
+    boardDAO.updateForDelete(vo);
+
+    return 1;
+  }
+
 
 
 }

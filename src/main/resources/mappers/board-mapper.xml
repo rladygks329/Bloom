@@ -39,14 +39,6 @@
 		where b.${boardId} = #{boardId}
 	</select>	
 	
-	<!-- 게시글 수정: 불러오기 부분이었는데 위쪽걸로 써도 되는지 확인 
-	<select id="select_by_board_id_for_update" resultType="BoardVO">
-		select * 
-		from ${board}
-		where ${boardId} = #{boardId} 	
-	</select>
-	-->
-	
 	<!-- 게시글 수정 -->
 	<update id="update">
 		update ${board}
@@ -157,7 +149,19 @@
 			)
 	</select>	
 	
-	<!-- 게시글 삭제 추가하기-->
+	<!-- 게시글 삭제관련: 내용 및 멤버 수정 -->
+	<update id="update_for_delete">
+		update ${board}
+	 	set ${boardTitle} = '삭제된 게시글입니다', ${boardContent} = '삭제된 게시글입니다', ${memberId} = 999999 
+	 	where ${boardId} = #{boardId}
+	</update>
+	
+	<!-- 게시글 삭제관련: 삭제처리 -->
+	<delete id="delete">
+		delete from ${board}
+		where ${boardId} = #{boardId}
+	</delete>
+	
 	
 </mapper>
 

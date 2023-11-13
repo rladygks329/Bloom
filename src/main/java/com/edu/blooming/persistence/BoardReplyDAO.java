@@ -11,4 +11,6 @@ public interface BoardReplyDAO {
   int delete(int boardReplyId);
 
   List<BoardReplyVO> selectByBoardId(int boardId);
+
+  int updateCommentCount(int boardReplyId, int amount);
 }

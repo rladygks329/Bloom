@@ -36,7 +36,14 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 
 	<a><input type="button" onclick="goBack()" value="글 목록"></a>
 	<a href="update?boardId=${vo.boardId }&page=${page }"><input type="button" value="글 수정"></a>
-	<input type="button" value="글 삭제">
+	
+	<form action="deleteOrUpdate" method="post">
+	    <input type="hidden" name="boardId" value="${vo.boardId}">
+	    <input type="hidden" name="memberId" value="${vo.memberId}">
+	    <input type="hidden" name="boardTitle" value="${vo.boardTitle}">
+	    <input type="hidden" name="boardContent" value="${vo.boardContent}">
+		<input type="submit" value="글 삭제">	    
+	</form>
 					
 	<input type="button" id="boardLike" value="좋아요">		
 

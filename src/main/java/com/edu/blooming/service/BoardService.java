@@ -24,8 +24,6 @@ public interface BoardService {
 
   int update(BoardVO vo);
 
-  // BoardVO readForUpdate(int boardId);
-
   int updateViewCount(int boardId);
 
   int likeBoard(int boardId, int memberId);
@@ -33,5 +31,7 @@ public interface BoardService {
   int dislikeBoard(int boardId, int memberId);
 
   boolean checkIsLike(int memberId, int boardId);
+
+  int deleteOrUpdate(BoardVO vo);
 
 }

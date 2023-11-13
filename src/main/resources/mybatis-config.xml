@@ -87,6 +87,17 @@
 		<property name="memberId" value="member_id"/>
 		<property name="boardReplyContent" value="board_reply_content"/>
 		<property name="boardReplyDateCreated" value="board_reply_date_created"/>
+		<property name="boardReplyCommentCount" value="board_reply_comment_count"/>
+		<property name="authorNickname" value="author_Nickname"/>
+		
+		<!-- BOARD_COMMENT -->
+		<property name="board_comment" value="board_comment"/>
+		<property name="boardCommentId" value="board_comment_id"/>
+		<property name="boardReplyId" value="board_reply_id"/>
+		<property name="memberId" value="member_id"/>
+		<property name="boardCommentContent" value="board_comment_content"/>
+		<property name="boardCommentDateCreated" value="board_comment_date_created"/>
+		<property name="authorNickname" value="author_Nickname"/>
 		
 		<!-- BOARD_LIKE -->
 		<property name="board_like" value="board_like"/>

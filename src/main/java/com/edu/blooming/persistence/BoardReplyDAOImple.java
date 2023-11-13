@@ -53,6 +53,15 @@ public class BoardReplyDAOImple implements BoardReplyDAO {
     return sqlSession.selectList(NAMESPACE + ".select_by_board_id", boardId);
   }
 
+  @Override
+  public int updateCommentCount(int boardReplyId, int amount) {
+    logger.info("updateCommentCount() 호출 : boardReplyId = " + boardReplyId);
+    Map<String, Integer> args = new HashMap<>();
+    args.put("boardReplyId", boardReplyId);
+    args.put("amount", amount);
+    return sqlSession.update(NAMESPACE + ".update_comment_count", args);
+  }
+
 }
 
 

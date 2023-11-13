@@ -8,8 +8,8 @@ public interface BoardCommentService {
 
   int update(int boardCommentId, String boardCommentContent);
 
-  int delete(int boardCommentId, int replyId);
+  int delete(int boardCommentId, int boardReplyId);
 
-  List<BoardCommentVO> getComments(int replyId);
+  List<BoardCommentVO> getComments(int boardReplyId);
 
 }

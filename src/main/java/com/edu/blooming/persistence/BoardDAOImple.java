@@ -147,6 +147,18 @@ public class BoardDAOImple implements BoardDAO {
     return sqlSession.selectOne(NAMESPACE + ".total_count_by_nickname", "%" + keyword + "%");
   }
 
+  @Override
+  public int updateForDelete(BoardVO vo) {
+    logger.info("updateForDelete 호출: vo = " + vo);
+    return sqlSession.update(NAMESPACE + ".update_for_delete", vo);
+  }
+
+  @Override
+  public int delete(int boardId) {
+    logger.info("delete 호출 : boardId = " + boardId);
+    return sqlSession.delete(NAMESPACE + ".delete", boardId);
+  }
+
 }
 
 
