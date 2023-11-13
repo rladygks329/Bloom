@@ -14,6 +14,7 @@
 		<property name="memberIntroduce" value="member_introduce"/>
     	<property name="memberProfileUrl" value="member_profile_url"/>
 		<property name="memberLevel" value="member_level"/>
+		<property name="memberNickName" value="member_nickname"/>
 		
 		<!-- LESSON -->
 		<property name="lesson" value="lesson"/>
@@ -47,6 +48,7 @@
 		<property name="lectureReplyContent" value="lecture_reply_content"/>
 		<property name="lectureReplyScore" value="lecture_reply_score"/>
 		<property name="authorName" value="author_name"/>
+		<property name="authorNickName" value="author_nick_name"/>
 		<property name="authorProfileUrl" value="author_Profile_Url"/>
 		
 		<!-- LECTURE_LIKE  -->

@@ -62,4 +62,14 @@ public class LectureReplyDAOImpl implements LectureReplyDAO {
     return sqlSession.selectList(NAMESPACE + ".select_by_lecture_id", args);
   }
 
+  @Override
+  public List<LectureReplyVO> selectByInstructorId(int memberId) {
+    logger.info("selectByInstructorId() 호출,  memberId : " + memberId);
+
+    Map<String, Integer> args = new HashMap<>();
+    args.put("memberId", memberId);
+
+    return sqlSession.selectList(NAMESPACE + ".select_by_instructor_id", args);
+  }
+
 }

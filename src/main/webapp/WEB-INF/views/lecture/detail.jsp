@@ -275,8 +275,7 @@
 											class="bi bi-star-fill" data-rating="3"></i> <i
 											class="bi bi-star-fill" data-rating="4"></i> <i
 											class="bi bi-star-fill" data-rating="5"></i> <input
-											id="review-score" type="hidden" name="whatever1"
-											class="rating-value" value="5">
+											id="review-score" type="hidden"class="rating-value" value="5">
 									</div>
 								</div>
 							</div>
@@ -359,7 +358,7 @@
 		        }
 		  
 		        cardHeader.append(starRatingDiv);
-		        cardHeader.append($("<span>").text(reply.authorName));
+		        cardHeader.append($("<span>").text(reply.authorNickName));
 		        cardBody.append($("<div>").text(reply.lectureReplyContent));
 		        cardFooter.append($(`<input type="hidden" value=${reply.lectureReplyId}>`))
 	
