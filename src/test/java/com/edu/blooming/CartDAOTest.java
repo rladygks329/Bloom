@@ -20,7 +20,7 @@ import com.edu.blooming.persistence.LectureDAO;
 @RunWith(SpringJUnit4ClassRunner.class)
 
 @ContextConfiguration(locations = {"file:src/main/webapp/WEB-INF/spring/**/*.xml"})
-@TestPropertySource("classpath:database.properties")
+@TestPropertySource("classpath:application.properties")
 @WebAppConfiguration
 
 @Transactional
@@ -36,7 +36,7 @@ public class CartDAOTest {
   @Test
   public void testInsert() {
     int result = cartDAO.insert(1, 1);
-    assertEquals(result, 1);
+    assertEquals(1, result);
   }
 
   @Test(expected = DuplicateKeyException.class)
@@ -49,7 +49,7 @@ public class CartDAOTest {
   public void testDelete() {
     cartDAO.insert(1, 1);
     int result = cartDAO.delete(1, 1);
-    assertEquals(result, 1);
+    assertEquals(1, result);
   }
 
   @Test
@@ -57,18 +57,18 @@ public class CartDAOTest {
     cartDAO.insert(1, 1);
     cartDAO.insert(1, 2);
     int result = cartDAO.delete(1);
-    assertEquals(result, 2);
+    assertEquals(2, result);
   }
 
   @Test
   public void testSelectExist() {
     cartDAO.insert(1, 1);
     int result = cartDAO.selectExist(1, 1);
-    assertEquals(result, 1);
+    assertEquals(1, result);
 
     cartDAO.delete(1, 1);
     result = cartDAO.selectExist(1, 1);
-    assertEquals(result, 0);
+    assertEquals(0, result);
   }
 
   @Test
@@ -90,7 +90,7 @@ public class CartDAOTest {
     }
 
     List<LectureVO> list = cartDAO.select(1);
-    assertEquals(list.size(), size);
+    assertEquals(size, list.size());
   }
 
   @Test
@@ -113,7 +113,7 @@ public class CartDAOTest {
     }
 
     int total = cartDAO.calcTotal(1);
-    assertEquals(total, price * size);
+    assertEquals(price * size, total);
   }
 
 }
