@@ -206,7 +206,7 @@ $(document).ready(function(){
 						+ '&nbsp;&nbsp;' // 공백
 						+ '<button class="btn_update" >수정</button>'
 						+ '<button class="btn_delete" >삭제</button>'
-						+ '<button class="btnReply">답글</button>'
+						+ '<button class="btnComment">답글</button>'
 						+ '</pre>'
 						+ '</div>';
 				}); // end each()
@@ -271,6 +271,164 @@ $(document).ready(function(){
 		}); // end ajax()
 	}); // end replies.on()
 	
+    // 답글 불러오기
+	$('#replies').on('click','.reply_item .btnComment', function(){ 
+		var boardReplyId = $(this).closest('.reply_item').find('.boardReplyId');
+		getAllComments(boardReplyId);
+    }) // end btnComment.click()     
+     
+	// 게시판 답글 전체 가져오기
+	function getAllComments(boardReplyId) {
+		$('.comments').html('');
+		
+		// ?
+		var reply_item = boardReplyId.closest('.reply_item');
+		var url = 'comments/' + replyId;
+		$.getJSON(
+				url, 
+				function(data) {
+					// data : 서버에서 전송받은 list 데이터가 저장되어 있음.
+					// getJSON()에서 json 데이터는
+					// javascript object로 자동 parsing됨.
+					console.log(data);
+				
+					var memberId = $('#memberId').val();
+					var list =''; // 댓글 데이터를 HTML에 표현할 문자열 변수	
+									
+					// $(컬렉션).each() : 컬렉션 데이터를 반복문으로 꺼내는 함수
+					$(data).each(function(){
+						// this : 컬렉션의 각 인덱스 데이터를 의미
+						console.log(this);
+						
+						var boardCommentDateCreated = new Date(this.boardCommentDateCreated);
+						
+						var disabled = 'disabled';
+						var readonly = 'readonly';
+						
+						if(memberId == this.memberId) {
+							disabled = '';
+							readonly = '';
+						}
+						
+		                // 포맷팅된 날짜 문자열 생성
+		                var formattedDate = boardCommentDateCreated.getFullYear() + '-' +
+		                                    ('0' + (boardCommentDateCreated.getMonth() + 1)).slice(-2) + '-' +
+		                                    ('0' + boardCommentDateCreated.getDate()).slice(-2) + ' ' +
+		                                    ('0' + boardCommentDateCreated.getHours()).slice(-2) + ':' +
+		                                    ('0' + boardCommentDateCreated.getMinutes()).slice(-2) + ':' +
+		                                    ('0' + boardCommentDateCreated.getSeconds()).slice(-2);
+						
+						list += '<div class="comment_item">'
+							+ '<pre>'
+							+ '<input type="hidden" id="commentId" value="' + this.boardCommentId +'">'
+							+ '<input type="hidden" id="authorNickname" value="' + this.authorNickname +'">'
+							+ this.authorNickname
+							+ '&nbsp;&nbsp;' // 공백
+							+ '<textarea rows="2" cols="50" id="boardCommentContent">' + this.boardCommentContent + '</textarea>'
+							+ '&nbsp;&nbsp;' // 공백
+							+ formattedDate
+							+ '&nbsp;&nbsp;' // 공백
+							+ '<button class="btnUpdateComment" >수정</button>'
+							+ '<button class="btnDeleteComment" >삭제</button>'
+							+ '</pre>'
+							+ '</div>';
+					}); // end each()
+					
+					// 답글을 모두 불러온 뒤에 새로운 답글을 작성할 수 있는 input 추가
+		            list += '<div class="comment_item">'
+		                + '<pre>'
+						+ '<input type="hidden" id="authorNickname" value="' + this.authorNickname +'">'
+						+ this.authorNickname
+		                + '&nbsp;&nbsp;' // 공백
+		                + '<textarea rows="2" cols="50" id="boardCommentContent" placeholder="답글을 입력하세요"></textarea>'
+		                + '&nbsp;&nbsp;' // 공백
+		                + '<button class="btnAddComment" >답글 추가</button>'
+		                + '</pre>'
+		                + '</div>';					
+					// $('#replies').html(list);
+		            reply_item.append('<div id="comments">' + list + '</div>');
+				}
+			); // end getJSON()
+		// ) ?					
+	} // end getAllComments
+	
+	// 대댓글 입력
+    $(document).on('click', '.btnAddComment', function(){  	
+   		var replyItem = $(this).closest('.reply_item');
+		var memberId = $('#memberId').val(); 
+		var boardReplyIdVal = $(this).closest('.reply_item').find('.boardReplyId').val();
+	    var boardCommentContent = $(this).prevAll('.boardCommentContent').val(); 	    
+	    var obj = {
+				'memberId' : memberId,
+				'boardReplyId' : boardReplyId, 
+				'boardCommentContent' : boardCommentContent
+		};
+		console.log(obj);		
+
+		$.ajax({
+			type : 'POST',
+			url : 'comments',
+			headers : {
+				'Content-Type' : 'application/json'
+			},
+			data : JSON.stringify(obj),
+			success : function(result){
+				console.log(result);
+				if(result == 1){
+					alert('답글 입력 성공');
+					getAllComments(boardReplyId);
+				} 
+			} // end success
+		}) // end ajax
+    }) // end document()
+      
+    $(document).on('click', '.btnUpdateComment', function(){   	 
+   		var replyItem = $(this).closest('.reply_item');
+		var boardReplyId = $(this).closest('.reply_item').find('.boardReplyId');
+		var boardCommentId = $(this).prevAll('.boardCommentId').val();
+		var boardCommentContent = $(this).prevAll('.boardCommentContent').val();   	 
+   	 
+   	 $.ajax({
+   		 type : 'PUT',
+   		 url : 'replies/' + boardCommentId,
+   		 headers : {
+   			 'Content-Type' : 'application/json'
+   		 },
+   		 data : boardCommentContent,
+   		 success : function(result){
+   			 console.log(result);
+   			 if(result == 1){
+   				 alert('답글 수정 성공!');
+   				 getAllComments(boardReplyId);
+   			 }
+   		 } // end success
+   	 }) // end ajax
+    }) // end document(*)
+    
+    $(document).on('click', '.btnDeleteComment', function(){
+   	 console.log(this);
+		var replyItem = $(this).closest('.reply_item');
+		var boardReplyId = $(this).closest('.reply_item').find('.boardReplyId');
+		var boardCommentId = $(this).prevAll('.boardCommentId').val();
+		 
+		$.ajax({
+			type : 'DELETE',
+			url : 'replies/' + boardCommentId,
+			headers : {
+				'Content-Type' : 'application/json'
+			},
+			data : boardReplyId,
+			success : function(result) {
+				console.log(result);
+				if(result == 1){
+					alert('답글 삭제 성공!');
+					getAllComments(boardReplyId);
+				}
+			} // end success
+		}) // end ajax
+    }); // end document()
+
+
 }) // end document
 
 
