@@ -29,7 +29,7 @@ public class LectureReplyDAOImpl implements LectureReplyDAO {
   @Override
   public int update(LectureReplyVO vo) {
     logger.info("update() 호출,  vo : " + vo.toString());
-    return sqlSession.insert(NAMESPACE + ".update", vo);
+    return sqlSession.update(NAMESPACE + ".update", vo);
   }
 
   @Override
@@ -39,7 +39,7 @@ public class LectureReplyDAOImpl implements LectureReplyDAO {
     Map<String, Integer> args = new HashMap<>();
     args.put("lectureReplyId", lectureReplyId);
 
-    return sqlSession.insert(NAMESPACE + ".delete", args);
+    return sqlSession.delete(NAMESPACE + ".delete", args);
   }
 
   @Override

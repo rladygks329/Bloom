@@ -73,11 +73,11 @@
 				<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
 					<h1 class="h2">강좌별 판매량</h1>
 				</div>
-				<canvas class="my-4 w-100 chartjs-render-monitor my-3" id="myChart" width="842" height="355" style="display: block; width: 842px; height: 355px;"></canvas>
+				<canvas class="my-4 w-100 chartjs-render-monitor my-3" id="myChart" style="display: block; width: 842px; height: 355px;"></canvas>
 				<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
 					<h1 class="h2">월 수익</h1>
 				</div>
-				<canvas class="my-4 w-100 chartjs-render-monitor mb-3" id="myChart2" width="842" height="355" style="display: block; width: 842px; height: 355px;"></canvas>
+				<canvas class="my-4 w-100 chartjs-render-monitor mb-3" id="myChart2" style="display: block; width: 842px; height: 355px;"></canvas>
 				<h2>수강평</h2>
 				<div class="table-responsive mb-3">
 					<table class="table table-striped table-sm">

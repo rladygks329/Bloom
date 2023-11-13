@@ -173,7 +173,6 @@ public class LectureController {
   }
 
   /// @formatter:off
-  // TODO: 모든 속성을 select 하지 않도록 dao 수정 하기
   @PostMapping("/like/{lectureId}/{memberId}")
   public ResponseEntity<Integer> likeLecture(
       @PathVariable("lectureId") int lectureId,
