@@ -90,4 +90,12 @@ public class LessonDAOImple implements LessonDAO {
     return sqlSession.selectOne(NAMESPACE + ".select_by_lesson_id", args);
   }
 
+  @Override
+  public List<Map<String, Object>> selectLessonStatus(int memberId) {
+    logger.info("selectLessonStatus() 호출 : memberId : " + memberId);
+    Map<String, Integer> args = new HashMap<>();
+    args.put("memberId", memberId);
+    return sqlSession.selectList(NAMESPACE + ".select_lesson_status", args);
+  }
+
 }

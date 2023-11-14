@@ -1,6 +1,7 @@
 package com.edu.blooming.persistence;
 
 import java.util.List;
+import java.util.Map;
 import com.edu.blooming.domain.LessonVO;
 
 public interface LessonDAO {
@@ -24,4 +25,9 @@ public interface LessonDAO {
   List<LessonVO> selectByLectureId(int lectureId);
 
   LessonVO selectByLessonId(int lessonId);
+
+  /*
+   * key: proccess_rate, lecture_title
+   */
+  List<Map<String, Object>> selectLessonStatus(int memberId);
 }
