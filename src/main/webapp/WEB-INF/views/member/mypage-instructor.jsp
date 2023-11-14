@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,32 +15,61 @@
 	$(function() {
 		const barCtx = document.getElementById('myChart');
 		const lineCtx = document.getElementById('myChart2');
-		new Chart(barCtx, {
+		
+		const barLabel = new Array();
+		const barData = new Array();
+		
+		const lineLabel = new Array();
+		const lineData = new Array();
+		
+		<c:forEach items="${month_sales}" var="sales">
+			lineLabel.push("${sales.MONTH}월");
+			lineData.push("${sales.TOTAL_INCOME}");
+		</c:forEach>
+		
+		<c:forEach items="${lecture_sales}" var="lecture">
+			barLabel.push("${lecture.LECTURE_TITLE}");
+			barData.push("${lecture.SALES}");
+		</c:forEach>
+		
+		const barChart = new Chart(barCtx, {
 			type : 'bar',
 			data : {
-				labels : [ '1', '2', '3', '4', '5', '6', "7", "8", "9", "10", "11", "12" ],
+				labels : barLabel,
 				datasets : [ {
-					label : '# of Votes',
-					data : [ 12, 19, 3, 5, 2, 3, 1, 2, 3, 4, 11, 12 ],
+					label : '판매량',
+					data : barData,
 					borderWidth : 1
 				} ]
 			},
 			options : {
 				responsive : false,
 				scales : {
+					x: {
+						ticks: {
+							callback: function(index){
+								const title = barLabel[index];
+								if(title.length > 5) {
+									return title.substr(0, 5) + "..";
+								}
+								return title;
+							}
+						}
+					},
 					y : {
 						beginAtZero : true
 					}
 				}
 			}
 		});
-		new Chart(lineCtx, {
+		
+		const lineChart = new Chart(lineCtx, {
 			type : 'line',
 			data : {
-				labels : [ '1', '2', '3', '4', '5', '6', "7", "8", "9", "10", "11", "12" ],
+				labels : lineLabel,
 				datasets : [ {
-					label : '# of Votes',
-					data : [ 12, 19, 3, 5, 2, 3, 1, 2, 3, 4, 11, 12 ],
+					label : '수익',
+					data : lineData,
 					borderWidth : 1
 				} ]
 			},
@@ -120,12 +150,16 @@
 										<c:when test="${row.PROCCESS_RATE == 1}">
 											<td class="text-center align-middle"><span class="fs-5 badge bg-success"> 이상 없음 </span></td>
 											<td class="text-center">
-												<button class="btn btn-primary">수정</button>
-												<button class="btn btn-primary">보기</button>
+												<a class="text-reset link-underline link-underline-opacity-0" href="/blooming/lecture/update/${row.LECTURE_ID }">
+													<button class="btn btn-primary">수정</button>
+												</a>
+												<a class="text-reset link-underline link-underline-opacity-0" href="/blooming/lecture/${row.LECTURE_ID }/course">
+													<button class="btn btn-primary">보기</button>
+												</a>
 											</td>
 										</c:when>
 										<c:otherwise>
-											<td class="text-center align-middle"><span class="fs-5 badge bg-warning text-dark">영상 처리 중 ${row.PROCCESS_RATE * 100} %</span></td>
+											<td class="text-center align-middle"><span class="fs-5 badge bg-warning text-dark">영상 처리 중 ${row.PROCCESS_RATE * 100} % </span></td>
 											<td class="text-center">
 												<button class="btn btn-primary disabled">수정</button>
 												<button class="btn btn-primary disabled">보기</button>
@@ -145,7 +179,6 @@
 			</main>
 		</div>
 	</div>
-
 	<%@ include file="/WEB-INF/views/component/footer.jsp"%>
 </body>
 </html>

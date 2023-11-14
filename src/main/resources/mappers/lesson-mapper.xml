@@ -64,7 +64,7 @@
 	
 	<!-- 강좌 처리 상태를 가져옴 -->
 	<select id="select_lesson_status" resultType="map">	
-		select status.*, l.${lectureTitle} 
+		select status.*, l.${lectureTitle}, l.${lectureId}
 		from (
 			select trunc(avg(lesson_video_processing_level), 2) proccess_rate, ${lectureId}
 			from ${lesson} 

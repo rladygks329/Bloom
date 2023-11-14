@@ -29,4 +29,26 @@
 		where ${memberId} = #{memberId} and ${lectureId} = #{lectureId}
 	</select>
 	
+	<select id="select_sales_count" resultType="map">
+		select l.${lectureTitle}, s.sales
+		from
+		(   
+		    select  count(*) sales, ${lectureId} 
+		    from ${purchase}
+		    where to_char(${purchaseDateCreated},'yyyy-mm-dd') <![CDATA[<]]> to_char(sysdate - #{day},'yyyy-mm-dd')
+		    group by ${lectureId}
+		) s join ${lecture} l on s.${lectureId} = l.${lectureId}
+		where l.${memberId} = #{memberId}
+	</select>
+	
+	<select id="select_monthly_income" resultType="map">
+		SELECT TO_CHAR(p.${purchaseDateCreated}, 'MM') AS month, SUM(l.${lecturePrice}) AS total_income
+		FROM ${purchase} p
+		JOIN ${lecture} l ON p.${lectureId} = l.${lectureId}
+		WHERE l.${memberId} = #{memberId}
+		  AND TO_CHAR(p.${purchaseDateCreated}, 'YYYY') = TO_CHAR(sysdate, 'YYYY')
+		  AND TO_CHAR(p.${purchaseDateCreated}, 'YYYY-MM-DD') <![CDATA[<]]> TO_CHAR(sysdate - #{day}, 'YYYY-MM-DD')
+		GROUP BY TO_CHAR(p.${purchaseDateCreated}, 'MM')
+		ORDER BY month
+	</select>
 </mapper>

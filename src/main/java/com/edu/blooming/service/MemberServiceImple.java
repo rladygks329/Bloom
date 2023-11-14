@@ -13,6 +13,8 @@ import com.edu.blooming.domain.MemberVO;
 import com.edu.blooming.persistence.LectureReplyDAO;
 import com.edu.blooming.persistence.LessonDAO;
 import com.edu.blooming.persistence.MemberDAO;
+import com.edu.blooming.persistence.PurchaseDAO;
+import com.edu.blooming.util.Constants;
 
 @Service
 public class MemberServiceImple implements MemberService {
@@ -26,6 +28,9 @@ public class MemberServiceImple implements MemberService {
 
   @Autowired
   private LectureReplyDAO lectureReplyDAO;
+
+  @Autowired
+  private PurchaseDAO purchaseDAO;
 
   @Override
   public int create(MemberVO vo) {
@@ -63,7 +68,13 @@ public class MemberServiceImple implements MemberService {
     Map<String, Object> result = new HashMap<>();
     List<LectureReplyVO> replies = lectureReplyDAO.selectByInstructorId(memberId);
     List<Map<String, Object>> status = lessonDAO.selectLessonStatus(memberId);
+    List<Map<String, Object>> month_sales =
+        purchaseDAO.getMonthlySales(memberId, Constants.MAX_REFUND_LIMIT);
+    List<Map<String, Object>> lecture_sales =
+        purchaseDAO.getSalesByLecture(memberId, Constants.MAX_REFUND_LIMIT);
 
+    result.put("month_sales", month_sales);
+    result.put("lecture_sales", lecture_sales);
     result.put("replies", replies);
     result.put("status", status);
     return result;
