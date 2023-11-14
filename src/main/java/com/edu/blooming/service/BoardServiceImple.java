@@ -110,9 +110,11 @@ public class BoardServiceImple implements BoardService {
         + vo.getBoardReplyCount());
     if (vo.getBoardReplyCount() == 0) {
       boardDAO.delete(vo.getBoardId());
+      logger.info("delete() 호출");
+    } else {
+      boardDAO.updateForDelete(vo);
+      logger.info("updateForDelete() 호출");
     }
-    boardDAO.updateForDelete(vo);
-
     return 1;
   }
 

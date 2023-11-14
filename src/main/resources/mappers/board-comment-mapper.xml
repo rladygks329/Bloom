@@ -22,7 +22,7 @@
 	<select id="select_by_reply_id" resultType="BoardCommentVO">
 		select c.*, m.${memberNickname} ${authorNickname} 
 		from ${board_comment} c join ${member} m on c.${memberId} = m.${memberId}
-		where ${boardId} = #{boardId}
+		where ${boardReplyId} = #{boardReplyId}
 		order by ${boardCommentId}	
 	</select>			
 

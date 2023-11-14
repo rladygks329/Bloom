@@ -44,7 +44,7 @@ public class BoardCommentDAOImple implements BoardCommentDAO {
   @Override
   public List<BoardCommentVO> selectByReplyId(int replyId) {
     logger.info("selectByReplyId() 호출 : boardId = " + replyId);
-    return sqlSession.selectList(NAMESPACE + ".select_by_board_id", replyId);
+    return sqlSession.selectList(NAMESPACE + ".select_by_reply_id", replyId);
   }
 
 }

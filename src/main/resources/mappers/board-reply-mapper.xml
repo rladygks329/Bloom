@@ -14,11 +14,19 @@
 		where ${boardReplyId} = #{boardReplyId}
 	</update>
 	
+	<!-- 댓글 삭제관련: 내용 및 멤버 수정 -->
+	<update id="update_for_delete">
+		update ${board_reply}
+	 	set ${boardReplyContent} = '삭제된 댓글입니다', ${memberId} = 999999 
+	 	where ${boardReplyId} = #{boardReplyId}
+	</update>
+	
+	<!-- 댓글 삭제관련: 삭제처리 -->
 	<delete id="delete">
 		delete from ${board_reply}
-		where ${boardReplyId} = #{boardReplyId}	
+		where ${replyId} = #{replyId}
 	</delete>	
-	
+			
 	<select id="select_by_board_id" resultType="BoardReplyVO">
 		select r.*, m.${memberNickname} ${authorNickname} 
 		from ${board_reply} r join ${member} m on r.${memberId} = m.${memberId}

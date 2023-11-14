@@ -27,6 +27,7 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 			pattern="yyyy-MM-dd HH:mm:ss" var="boardDateCreated"/>
 		<p>작성일: ${boardDateCreated }</p>
 		<p>조회수: ${vo.boardViewCount }</p>
+		<p>댓글수: ${vo.boardReplyCount }</p>
 		<p>좋아요: ${vo.boardLikeCount }</p>
 	</div>
 	<div>
@@ -42,6 +43,7 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 	    <input type="hidden" name="memberId" value="${vo.memberId}">
 	    <input type="hidden" name="boardTitle" value="${vo.boardTitle}">
 	    <input type="hidden" name="boardContent" value="${vo.boardContent}">
+	    <input type="hidden" id="boardReplyCount" name="boardReplyCount" value="${vo.boardReplyCount}">
 		<input type="submit" value="글 삭제">	    
 	</form>
 					
@@ -157,6 +159,8 @@ $(document).ready(function(){
 	function getAllReplies() {
 		var boardId = $('#boardId').val();
 		console.log(boardId);
+		var boardReplyCount = $('#boardReplyCount').val();
+		console.log(boardReplyCount);
 		
 		var url = 'replies/' + boardId;
 		console.log(url);
@@ -185,7 +189,6 @@ $(document).ready(function(){
 						disabled = '';
 						readonly = '';
 					}
-					
 	                // 포맷팅된 날짜 문자열 생성
 	                var formattedDate = boardReplyDateCreated.getFullYear() + '-' +
 	                                    ('0' + (boardReplyDateCreated.getMonth() + 1)).slice(-2) + '-' +
@@ -206,7 +209,8 @@ $(document).ready(function(){
 						+ '&nbsp;&nbsp;' // 공백
 						+ '<button class="btn_update" >수정</button>'
 						+ '<button class="btn_delete" >삭제</button>'
-						+ '<button class="btnComment">답글</button>'
+						+ '<button class="btnComment">답글</button>'		
+						+ '<div id="comments"></div>'
 						+ '</pre>'
 						+ '</div>';
 				}); // end each()
@@ -245,14 +249,17 @@ $(document).ready(function(){
 		}); // end ajax()
 	}); // end replies.on()
 	
-	// 삭제 버튼을 클릭하면 선택된 댓글 삭제
+	// 삭제 버튼을 클릭하면 선택된 댓글 삭제 혹은 업데이트
 	$('#replies').on('click', '.reply_item .btn_delete', function(){
 		console.log(this);
-	
+		
+		var boardReplyCommentCount = $(this).prevAll('#boardReplyCommentCount').val();
+		var boardReplyContent = $(this).prevAll('#boardReplyContent').val();
 		var boardId = $('#boardId').val();
 		var replyId = $(this).prevAll('#replyId').val();
 		console.log("선택된 댓글 번호 : " + replyId);
-		
+		console.log("댓글의 답글 수 : " + boardReplyCommentCount);
+			
 		// ajax 요청
 		$.ajax({
 			type : 'DELETE', 
@@ -269,21 +276,21 @@ $(document).ready(function(){
 				}
 			}
 		}); // end ajax()
+
 	}); // end replies.on()
 	
     // 답글 불러오기
-	$('#replies').on('click','.reply_item .btnComment', function(){ 
-		var boardReplyId = $(this).closest('.reply_item').find('.boardReplyId');
-		getAllComments(boardReplyId);
+	$('#replies').on('click','.reply_item .btnComment', function(){ 		
+		var replyId = $(this).closest('.reply_item').find('#replyId').val();
+		console.log("답글버튼클릭 replyId = " + replyId);
+		getAllComments(replyId);
     }) // end btnComment.click()     
      
 	// 게시판 답글 전체 가져오기
-	function getAllComments(boardReplyId) {
-		$('.comments').html('');
-		
-		// ?
-		var reply_item = boardReplyId.closest('.reply_item');
-		var url = 'comments/' + replyId;
+	function getAllComments(replyId) {
+        console.log("getAllComments() 호출: replyId = " + replyId);
+        var url = 'comments/' + replyId;
+        
 		$.getJSON(
 				url, 
 				function(data) {
@@ -291,9 +298,9 @@ $(document).ready(function(){
 					// getJSON()에서 json 데이터는
 					// javascript object로 자동 parsing됨.
 					console.log(data);
-				
+			        var reply_item = $(this).closest('.reply_item');
 					var memberId = $('#memberId').val();
-					var list =''; // 댓글 데이터를 HTML에 표현할 문자열 변수	
+					var list =''; // 댓글 데이터를 HTML에 표현할 문자열 변수
 									
 					// $(컬렉션).each() : 컬렉션 데이터를 반복문으로 꺼내는 함수
 					$(data).each(function(){
@@ -309,7 +316,7 @@ $(document).ready(function(){
 							disabled = '';
 							readonly = '';
 						}
-						
+
 		                // 포맷팅된 날짜 문자열 생성
 		                var formattedDate = boardCommentDateCreated.getFullYear() + '-' +
 		                                    ('0' + (boardCommentDateCreated.getMonth() + 1)).slice(-2) + '-' +
@@ -333,30 +340,29 @@ $(document).ready(function(){
 							+ '</pre>'
 							+ '</div>';
 					}); // end each()
-					
+
 					// 답글을 모두 불러온 뒤에 새로운 답글을 작성할 수 있는 input 추가
-		            list += '<div class="comment_item">'
+		            list += '<div class="comment_regist_item">'
 		                + '<pre>'
 						+ '<input type="hidden" id="authorNickname" value="' + this.authorNickname +'">'
-						+ this.authorNickname
 		                + '&nbsp;&nbsp;' // 공백
 		                + '<textarea rows="2" cols="50" id="boardCommentContent" placeholder="답글을 입력하세요"></textarea>'
 		                + '&nbsp;&nbsp;' // 공백
 		                + '<button class="btnAddComment" >답글 추가</button>'
 		                + '</pre>'
-		                + '</div>';					
-					// $('#replies').html(list);
-		            reply_item.append('<div id="comments">' + list + '</div>');
+		                + '</div>';
+					// reply_item.append(list);
+		            reply_item.closest('#comments').append(list);
+
 				}
 			); // end getJSON()
-		// ) ?					
 	} // end getAllComments
 	
 	// 대댓글 입력
     $(document).on('click', '.btnAddComment', function(){  	
    		var replyItem = $(this).closest('.reply_item');
 		var memberId = $('#memberId').val(); 
-		var boardReplyIdVal = $(this).closest('.reply_item').find('.boardReplyId').val();
+		var boardReplyId = $(this).closest('.reply_item').find('.boardReplyId').val();
 	    var boardCommentContent = $(this).prevAll('.boardCommentContent').val(); 	    
 	    var obj = {
 				'memberId' : memberId,

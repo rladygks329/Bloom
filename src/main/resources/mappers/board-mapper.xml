@@ -160,8 +160,7 @@
 	<delete id="delete">
 		delete from ${board}
 		where ${boardId} = #{boardId}
-	</delete>
-	
+	</delete>	
 	
 </mapper>
 

@@ -39,11 +39,7 @@ public class BoardReplyDAOImple implements BoardReplyDAO {
 
   @Override
   public int delete(int boardReplyId) {
-    logger.info("delete() 호출: boardReplyId = " + boardReplyId);
-
-    Map<String, Integer> args = new HashMap<>();
-    args.put("boardReplyId", boardReplyId);
-
+    logger.info("delete 호출 : boardReplyId = " + boardReplyId);
     return sqlSession.delete(NAMESPACE + ".delete", boardReplyId);
   }
 
@@ -60,6 +56,12 @@ public class BoardReplyDAOImple implements BoardReplyDAO {
     args.put("boardReplyId", boardReplyId);
     args.put("amount", amount);
     return sqlSession.update(NAMESPACE + ".update_comment_count", args);
+  }
+
+  @Override
+  public int updateForDelete(int boardReplyId) {
+    logger.info("updateForDelete 호출: boardReplyId = " + boardReplyId);
+    return sqlSession.update(NAMESPACE + ".update_for_delete", boardReplyId);
   }
 
 }

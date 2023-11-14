@@ -174,7 +174,7 @@ public class BoardController {
     logger.info("deleteOrUpdateGET()");
   }
 
-  @PostMapping("/deletOrUpdate")
+  @PostMapping("/deleteOrUpdate")
   public String deleteOrUpdatePOST(BoardVO vo) {
     logger.info("deleteOrUpdatePOST()호출: vo = " + vo.toString());
     int result = boardService.deleteOrUpdate(vo);
