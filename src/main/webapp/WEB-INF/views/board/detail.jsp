@@ -288,17 +288,18 @@ $(document).ready(function(){
      
 	// 게시판 답글 전체 가져오기
 	function getAllComments(replyId) {
+		$('.comments').html('');
         console.log("getAllComments() 호출: replyId = " + replyId);
         var url = 'comments/' + replyId;
-        
-		$.getJSON(
+        var reply_item = $(this).closest('.reply_item');
+		
+        $.getJSON(
 				url, 
 				function(data) {
 					// data : 서버에서 전송받은 list 데이터가 저장되어 있음.
 					// getJSON()에서 json 데이터는
 					// javascript object로 자동 parsing됨.
 					console.log(data);
-			        var reply_item = $(this).closest('.reply_item');
 					var memberId = $('#memberId').val();
 					var list =''; // 댓글 데이터를 HTML에 표현할 문자열 변수
 									
@@ -351,8 +352,7 @@ $(document).ready(function(){
 		                + '<button class="btnAddComment" >답글 추가</button>'
 		                + '</pre>'
 		                + '</div>';
-					// reply_item.append(list);
-		            reply_item.closest('#comments').append(list);
+		            reply_item.append('<div class="comments">' + list + '</div>');
 
 				}
 			); // end getJSON()
