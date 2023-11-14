@@ -83,28 +83,21 @@
 					<table class="table table-striped table-sm">
 						<thead>
 							<tr>
-								<th scope="col">강좌 이름</th>
+								<th scope="col">강좌 번호</th>
 								<th scope="col">작성자 닉네임</th>
 								<th scope="col">강의 평</th>
 								<th scope="col">평점</th>
-								<th scope="col">작성일</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td>1,011</td>
-								<td>information</td>
-								<td>placeholder</td>
-								<td>illustrative</td>
-								<td>data</td>
-							</tr>
-							<tr>
-								<td>1,012</td>
-								<td>text</td>
-								<td>placeholder</td>
-								<td>layout</td>
-								<td>dashboard</td>
-							</tr>
+							<c:forEach var="reply" items="${replies }">
+								<tr>
+									<td>${reply.lectureId }</td>
+									<td>${reply.authorNickName }</td>
+									<td>${reply.lectureReplyContent }</td>
+									<td>${reply.lectureReplyScore }</td>
+								</tr>
+							</c:forEach>
 						</tbody>
 					</table>
 				</div>
@@ -120,21 +113,27 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td>1,011</td>
-								<td class="text-center align-middle"><span class="fs-5 badge bg-success"> 이상 없음 </span></td>
-								<td class="text-center">
-									<button class="btn btn-primary">수정</button>
-									<button class="btn btn-primary">보기</button>
-								</td>
-							</tr>
-							<tr>
-								<td>1,012</td>
-								<td class="text-center align-middle"><span class="fs-5 badge bg-warning text-dark">영상 처리 중 4/5</span></td>
-								<td class="text-center"><button class="btn btn-primary disabled">수정</button>
-									<button class="btn btn-primary disabled">보기</button>
-								</td>
-							</tr>
+							<c:forEach var="row" items="${status }">
+								<tr>
+									<td>${row.LECTURE_TITLE }</td>
+									<c:choose>
+										<c:when test="${row.PROCCESS_RATE == 1}">
+											<td class="text-center align-middle"><span class="fs-5 badge bg-success"> 이상 없음 </span></td>
+											<td class="text-center">
+												<button class="btn btn-primary">수정</button>
+												<button class="btn btn-primary">보기</button>
+											</td>
+										</c:when>
+										<c:otherwise>
+											<td class="text-center align-middle"><span class="fs-5 badge bg-warning text-dark">영상 처리 중 ${row.PROCCESS_RATE * 100} %</span></td>
+											<td class="text-center">
+												<button class="btn btn-primary disabled">수정</button>
+												<button class="btn btn-primary disabled">보기</button>
+											</td>
+										</c:otherwise>
+									</c:choose>
+								</tr>
+							</c:forEach>
 						</tbody>
 					</table>
 				</div>

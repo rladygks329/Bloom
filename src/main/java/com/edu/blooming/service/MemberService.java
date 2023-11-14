@@ -1,5 +1,6 @@
 package com.edu.blooming.service;
 
+import java.util.Map;
 import javax.servlet.http.HttpSession;
 import com.edu.blooming.domain.MemberVO;
 
@@ -14,6 +15,8 @@ public interface MemberService {
   public void logout(HttpSession session); // 로그아웃
 
   int updatePassword(int memberId, String memberPassword);
+
+  Map<String, Object> getInstuctorStatus(int memberId);
 
 } // end MemberService
 

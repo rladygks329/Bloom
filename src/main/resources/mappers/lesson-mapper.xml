@@ -63,10 +63,13 @@
 	</select>
 	
 	<!-- 강좌 처리 상태를 가져옴 -->
-	<select id="select_lesson_status" resultType="map">
-		select avg(lesson_video_processing_level) proccess_rate, le.${lectureId}, lt.${lectureTitle}
-		from ${lesson} le join ${lecture} lt on le.${lectureId} = lt.${lectureId}
-		group by ${lessonVideoProcessingLevel}, le.${lectureId}, lt.${lectureTitle}
+	<select id="select_lesson_status" resultType="map">	
+		select status.*, l.${lectureTitle} 
+		from (
+			select trunc(avg(lesson_video_processing_level), 2) proccess_rate, ${lectureId}
+			from ${lesson} 
+			group by ${lectureId}
+		) status join ${lecture} l on status.${lectureId} = l.${lectureId} 
 	</select>
 	
 </mapper>
