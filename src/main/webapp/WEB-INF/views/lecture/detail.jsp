@@ -231,8 +231,11 @@
 		<div class="lecture-comment-container"></div>
 
 		<!-- 댓글 입력 창 -->
+		<hr>
+		<c:if test="${ empty memberId }">
+			<p class="text-secondary">강의를 구매하셔야 수강평을 남길 수 있습니다.</p>
+		</c:if> 
 		<c:if test="${(not empty memberId) and purchase}">
-			<hr>
 			<div
 				class="lecture-comment-prompt input-group border border-dark p-1">
 				<div class="container">
@@ -299,17 +302,14 @@
 		</div>
 	</div>
 	<script type="text/javascript">
-		var $star_rating = $('.review-rating .bi');
-		var SetRatingStar = function(starRating) {
-			return $star_rating
-					.each(function() {
-						if (parseInt($(this).siblings('input.rating-value')
-								.val()) >= parseInt($(this).data('rating'))) {
-							return $(this).removeClass('bi-star').addClass(
-									'bi-star-fill');
+		const $star_rating = $('.review-rating .bi');
+		const SetRatingStar = function(starRating) {
+			return $star_rating.each(function() {
+						if (parseInt($(this).siblings('input.rating-value').val()) >= parseInt($(this).data('rating'))) 
+						{
+							return $(this).removeClass('bi-star').addClass('bi-star-fill');
 						} else {
-							return $(this).removeClass('bi-star-fill')
-									.addClass('bi-star');
+							return $(this).removeClass('bi-star-fill').addClass('bi-star');
 						}
 					});
 		};
@@ -330,6 +330,11 @@
 	
 		    if(memberId === ""){
 		        memberId = -1;
+		    }
+		    
+		    if(replies.length == 0){
+			    const info = $('<p>').addClass("text-secondary").text("수강평이 없습니다.");
+		    	$(".lecture-comment-container").append(info);
 		    }
 	
 		    $.each(replies, function (index, reply) {
