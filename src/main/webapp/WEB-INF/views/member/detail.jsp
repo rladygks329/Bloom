@@ -17,13 +17,10 @@
     %>
     
 	<h2>마이페이지</h2>
-	
-	<!-- 프로필 사진 표시 -->
-	<img src="<%= vo.getMemberProfileUrl() %>" alt="프로필 사진">
-	
 	<br>
 	<br>
-	
+	<hr>
+		
 	
 	<form id="passwordChangeForm">
 		<input type="hidden" id="memberId" name="memberId" value="${loginVo.memberId}" />

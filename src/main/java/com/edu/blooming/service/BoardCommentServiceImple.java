@@ -48,7 +48,7 @@ public class BoardCommentServiceImple implements BoardCommentService {
 
   @Override
   public List<BoardCommentVO> getComments(int replyId) {
-    logger.info("getReplies() 호출 : boardId: " + replyId);
+    logger.info("getComments() 호출 : replyId: " + replyId);
     return boardCommentDAO.selectByReplyId(replyId);
   }
 

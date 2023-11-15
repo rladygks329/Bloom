@@ -59,8 +59,14 @@ public class BoardReplyDAOImple implements BoardReplyDAO {
   }
 
   @Override
+  public BoardReplyVO selectByReplyId(int boardReplyId) {
+    logger.info("selectByReplyId() 호출 : boardReplyId = " + boardReplyId);
+    return sqlSession.selectOne(NAMESPACE + ".select_by_reply_id", boardReplyId);
+  }
+
+  @Override
   public int updateForDelete(int boardReplyId) {
-    logger.info("updateForDelete 호출: boardReplyId = " + boardReplyId);
+    logger.info("updateForDelete() 호출 : boardReplyId = " + boardReplyId);
     return sqlSession.update(NAMESPACE + ".update_for_delete", boardReplyId);
   }
 

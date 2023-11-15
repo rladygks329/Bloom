@@ -26,19 +26,20 @@ public class BoardCommentController {
   private BoardCommentService boardCommentService;
 
   // 코멘트 입력
-  @PostMapping(value = "/{replyId}")
-  public ResponseEntity<Integer> createComment(@PathVariable("replyId") int replyId,
+  @PostMapping(value = "/{boardReplyId}")
+  public ResponseEntity<Integer> createComment(@PathVariable("boardReplyId") int boardReplyId,
       @RequestBody BoardCommentVO vo) {
-    logger.info("createComment() 호출: replyId = " + replyId + " vo = " + vo.toString());
-    int result = boardCommentService.create(replyId, vo);
+    logger.info("createComment() 호출: replyId = " + boardReplyId + " vo = " + vo.toString());
+    int result = boardCommentService.create(boardReplyId, vo);
     return new ResponseEntity<Integer>(result, HttpStatus.OK);
   }
 
   // 댓글의 코멘트 가져오기
-  @GetMapping(value = "/{replyId}")
-  public ResponseEntity<List<BoardCommentVO>> getReplies(@PathVariable("replyId") int replyId) {
-    logger.info("getComments() 호출 : replyId = " + replyId);
-    List<BoardCommentVO> list = boardCommentService.getComments(replyId);
+  @GetMapping(value = "/{boardReplyId}")
+  public ResponseEntity<List<BoardCommentVO>> getReplies(
+      @PathVariable("boardReplyId") int boardReplyId) {
+    logger.info("getComments() 호출 : boardReplyId = " + boardReplyId);
+    List<BoardCommentVO> list = boardCommentService.getComments(boardReplyId);
     return new ResponseEntity<List<BoardCommentVO>>(list, HttpStatus.OK);
   }
 

@@ -56,7 +56,7 @@ public class BoardReplyController {
   @DeleteMapping("/{replyId}")
   public ResponseEntity<Integer> deleteReply(@PathVariable("replyId") int replyId,
       @RequestBody int boardId) {
-    logger.info("deleteReply() 호출 boardId: " + boardId + "replyId : " + replyId);
+    logger.info("deleteReply() 호출 boardId: " + boardId + "boardReplyId : " + replyId);
 
     int result = boardReplyService.delete(replyId, boardId);
     logger.info("result : " + result);

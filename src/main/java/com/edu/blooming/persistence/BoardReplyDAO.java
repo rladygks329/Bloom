@@ -12,6 +12,8 @@ public interface BoardReplyDAO {
 
   int updateForDelete(int boardReplyId);
 
+  BoardReplyVO selectByReplyId(int boardReplyId);
+
   List<BoardReplyVO> selectByBoardId(int boardId);
 
   int updateCommentCount(int boardReplyId, int amount);

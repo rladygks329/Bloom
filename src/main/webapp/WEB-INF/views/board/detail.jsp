@@ -210,7 +210,7 @@ $(document).ready(function(){
 						+ '<button class="btn_update" >수정</button>'
 						+ '<button class="btn_delete" >삭제</button>'
 						+ '<button class="btnComment">답글</button>'		
-						+ '<div id="comments"></div>'
+						+ '<div class="comments"></div>'
 						+ '</pre>'
 						+ '</div>';
 				}); // end each()
@@ -253,12 +253,9 @@ $(document).ready(function(){
 	$('#replies').on('click', '.reply_item .btn_delete', function(){
 		console.log(this);
 		
-		var boardReplyCommentCount = $(this).prevAll('#boardReplyCommentCount').val();
-		var boardReplyContent = $(this).prevAll('#boardReplyContent').val();
 		var boardId = $('#boardId').val();
 		var replyId = $(this).prevAll('#replyId').val();
 		console.log("선택된 댓글 번호 : " + replyId);
-		console.log("댓글의 답글 수 : " + boardReplyCommentCount);
 			
 		// ajax 요청
 		$.ajax({
@@ -281,35 +278,31 @@ $(document).ready(function(){
 	
     // 답글 불러오기
 	$('#replies').on('click','.reply_item .btnComment', function(){ 		
-		var replyId = $(this).closest('.reply_item').find('#replyId').val();
-		console.log("답글버튼클릭 replyId = " + replyId);
-		getAllComments(replyId);
+		var boardReplyId = $(this).closest('.reply_item').find('#replyId').val();
+		console.log("답글버튼클릭 boardReplyId = " + boardReplyId);
+		getAllComments(boardReplyId, this);
     }) // end btnComment.click()     
      
 	// 게시판 답글 전체 가져오기
-	function getAllComments(replyId) {
-		$('.comments').html('');
-        console.log("getAllComments() 호출: replyId = " + replyId);
-        var url = 'comments/' + replyId;
+	function getAllComments(boardReplyId, context) {
+		var commentContainer = $(context).closest('.reply_item').find('.comments');
+		commentContainer.html('');
+        console.log("getAllComments() 호출: boardReplyId = " + boardReplyId);
+        console.log(this);
+        var url = 'comments/' + boardReplyId;
         var reply_item = $(this).closest('.reply_item');
 		
         $.getJSON(
 				url, 
 				function(data) {
-					// data : 서버에서 전송받은 list 데이터가 저장되어 있음.
-					// getJSON()에서 json 데이터는
-					// javascript object로 자동 parsing됨.
 					console.log(data);
 					var memberId = $('#memberId').val();
-					var list =''; // 댓글 데이터를 HTML에 표현할 문자열 변수
+					var list =''; 
 									
-					// $(컬렉션).each() : 컬렉션 데이터를 반복문으로 꺼내는 함수
 					$(data).each(function(){
-						// this : 컬렉션의 각 인덱스 데이터를 의미
 						console.log(this);
 						
-						var boardCommentDateCreated = new Date(this.boardCommentDateCreated);
-						
+						var boardCommentDateCreated = new Date(this.boardCommentDateCreated);						
 						var disabled = 'disabled';
 						var readonly = 'readonly';
 						
@@ -352,8 +345,7 @@ $(document).ready(function(){
 		                + '<button class="btnAddComment" >답글 추가</button>'
 		                + '</pre>'
 		                + '</div>';
-		            reply_item.append('<div class="comments">' + list + '</div>');
-
+		            commentContainer.append(list);
 				}
 			); // end getJSON()
 	} // end getAllComments
@@ -373,7 +365,7 @@ $(document).ready(function(){
 
 		$.ajax({
 			type : 'POST',
-			url : 'comments',
+			url : 'comments/' + boardReplyId,
 			headers : {
 				'Content-Type' : 'application/json'
 			},

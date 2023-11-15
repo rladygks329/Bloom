@@ -71,8 +71,7 @@ public class MemberController {
     return "redirect:/main";
   }
 
-
-  @GetMapping("/member-detail")
+  @GetMapping("/detail")
   public void memberDetailGET() {
     logger.info("memberDetail 호출");
   }

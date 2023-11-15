@@ -26,8 +26,6 @@ public interface BoardDAO {
 
   int update(BoardVO vo);
 
-  // BoardVO selectForUpdate(int boardId);
-
   int updateViewCount(int boardId);
 
   int updateLikeCount(int boardId, int amount);

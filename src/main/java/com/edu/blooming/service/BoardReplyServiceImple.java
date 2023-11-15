@@ -37,39 +37,24 @@ public class BoardReplyServiceImple implements BoardReplyService {
     return boardReplyDAO.update(boardReplyId, boardReplyContent);
   }
 
+  @Transactional(value = "transactionManager")
   @Override
   public int delete(int boardReplyId, int boardId) {
     logger.info("delete() 호출 : boardReplyId = " + boardReplyId);
+    BoardReplyVO vo = boardReplyDAO.selectByReplyId(boardReplyId);
+    logger.info("대댓글 수 = " + vo.getBoardReplyCommentCount());
 
-    // 댓글 정보 가져오기
-    BoardReplyVO vo = boardReplyDAO.getBoardReply(boardReplyId);
-
-    if (boardReply != null) {
-      // 댓글의 boardReplyCommentCount 값이 0일 때
-      if (boardReply.getBoardReplyCommentCount() == 0) {
-        int resultDelete = boardReplyDAO.delete(boardReplyId);
-        logger.info(resultDelete + "행 삭제 성공");
-        int result = boardDAO.updateReplyCount(-1, boardId);
-        logger.info(result + "행 수정 성공");
-      } else {
-        // 댓글의 boardReplyCommentCount 값이 0이 아닐 때
-        int resultUpdate = boardReplyDAO.updateForDelete(boardReplyId);
-        logger.info(resultUpdate + "행 업데이트 성공");
-      }
-
-      return 1; // 성공 여부에 따라 적절한 값을 반환
+    if (vo.getBoardReplyCommentCount() == 0) {
+      int resultDelete = boardReplyDAO.delete(boardReplyId);
+      logger.info(resultDelete + "행 삭제 성공");
+      int result = boardDAO.updateReplyCount(boardId, -1);
+      logger.info(result + "행 수정 성공");
     } else {
-      // 댓글이 존재하지 않는 경우 처리
-      logger.error("해당 댓글이 존재하지 않습니다.");
-      return 0; // 실패 여부에 따라 적절한 값을 반환
+      int resultDelete = boardReplyDAO.updateForDelete(boardReplyId);
+      logger.info(resultDelete + "행 삭제 성공");
+      int result = boardDAO.updateReplyCount(boardId, -1);
+      logger.info(result + "행 수정 성공");
     }
-
-
-
-    int resultDelete = boardReplyDAO.delete(boardReplyId);
-    logger.info(resultDelete + "행 삭제 성공");
-    int result = boardDAO.updateReplyCount(-1, boardId);
-    logger.info(result + "행 수정 성공");
     return 1;
   }
 
