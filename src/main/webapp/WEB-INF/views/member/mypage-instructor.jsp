@@ -12,6 +12,15 @@
 <!-- Bootstrap core JS-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+	function debounce(func, timeout = 300) {
+		let timer;
+		return (...args) => {
+		  clearTimeout(timer);
+		  timer = setTimeout(() => {
+		    func.apply(this, args);
+		  }, timeout);
+		};
+	}
 	$(function() {
 		const barCtx = document.getElementById('myChart');
 		const lineCtx = document.getElementById('myChart2');
@@ -82,6 +91,15 @@
 				}
 			}
 		});
+		
+		// debounce를 통해 이벤트를 한번만 호출하기
+		$(window).resize(
+			debounce(()=>{
+				console.log("resize");
+			 	barChart.resize();
+				lineChart.resize();
+			})
+		 );
 	})
 </script>
 <meta charset="UTF-8">
