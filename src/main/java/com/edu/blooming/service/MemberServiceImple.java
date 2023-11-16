@@ -48,7 +48,19 @@ public class MemberServiceImple implements MemberService {
   @Override
   public int checkNickname(String nickname) throws Exception {
     logger.info("checkNickname() 호출: nickname = " + nickname);
-    return dao.checkEmail(nickname);
+    return dao.checkNickname(nickname);
+  }
+
+  @Override
+  public int updateNickname(int memberId, String memberNickname) {
+    logger.info("updateNickname 호출");
+    return dao.updateNickname(memberId, memberNickname);
+  }
+
+  @Override
+  public int updateIntroduce(int memberId, String memberIntroduce) {
+    logger.info("updateIntroduce 호출");
+    return dao.updateIntroduce(memberId, memberIntroduce);
   }
 
 } // end MemberService

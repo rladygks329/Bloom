@@ -374,7 +374,7 @@ $(document).ready(function(){
 				console.log(result);
 				if(result == 1){
 					alert('답글 입력 성공');
-					getAllComments(boardReplyId, this);
+					getAllComments(boardReplyId, replyItem);
 				} 
 			} // end success
 		}) // end ajax

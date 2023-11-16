@@ -40,7 +40,7 @@ pageEncoding="UTF-8"%>
 		        <c:when test="<%= loginInfo != null %>">
 		            <%-- 로그인 상태인 경우: 로그아웃 버튼 표시 --%>
 		            <li class="nav-item">
-		            	<a class="nav-link" href="/blooming/mapage">
+		            	<a class="nav-link" href="/blooming/member/mapage">
 		            		<i class="bi-person-fill me-1"></i> 마이페이지
           				</a>
 		            </li>

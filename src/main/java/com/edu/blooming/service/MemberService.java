@@ -17,5 +17,9 @@ public interface MemberService {
 
   int updatePassword(int memberId, String memberPassword);
 
+  int updateNickname(int memberId, String memberNickname);
+
+  int updateIntroduce(int memberId, String memberIntroduce);
+
 } // end MemberService
 

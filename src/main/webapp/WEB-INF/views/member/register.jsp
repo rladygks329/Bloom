@@ -164,7 +164,7 @@
 		       return form.test(nickname);
 		    }		    
 	    	
-			// 이메일 중복검사 함수
+			// 닉네임 중복검사 함수
 			function checkNicknameDuplication(nickname) {
 				if($('.nickname_input').val() === "") {
 					$('.nickname_input_warning').hide();

@@ -81,7 +81,7 @@ public class RegisterController {
     if (result == 0) {
       return new ResponseEntity<String>("success", HttpStatus.OK);
     }
-    return new ResponseEntity<String>("fail", HttpStatus.OK);
+    return new ResponseEntity<String>("faile", HttpStatus.OK);
   } // end checkNicknamePOST()
 
 

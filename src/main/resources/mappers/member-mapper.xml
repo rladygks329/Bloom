@@ -37,6 +37,21 @@
 		where ${memberId} = #{memberId}	
 	</update>
 	
+	<!-- 닉네임 변경 -->
+	<update id="update_nickname">
+		update ${member}
+		set ${memberNickname} = #{memberNickname}
+		where ${memberId} = #{memberId}	
+	</update>
+	
+	<!-- 자기소개 변경 -->
+	<update id="update_introduce">
+		update ${member}
+		set ${memberIntroduce} = #{memberIntroduce}
+		where ${memberId} = #{memberId}	
+	</update>
+	
+	
 
 </mapper>
 

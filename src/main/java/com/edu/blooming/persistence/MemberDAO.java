@@ -18,4 +18,8 @@ public interface MemberDAO {
   int delete(String email); // 회원탈퇴
 
   int updatePassword(int memberId, String memberPassword);
+
+  int updateNickname(int memberId, String memberNickname);
+
+  int updateIntroduce(int memberId, String memberIntroduce);
 }
