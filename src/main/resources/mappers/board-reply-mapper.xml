@@ -43,9 +43,9 @@
 	
 	<!-- 댓글 코멘트 갯수 수정 -->
 	<update id="update_comment_count">
-		update ${reply}
+		update ${board_reply}
 		set ${boardReplyCommentCount} = ${boardReplyCommentCount} + #{amount}
-		where ${replyId} = #{replyId}	
+		where ${boardReplyId} = #{boardReplyId}	
 	</update>	
 
 </mapper>

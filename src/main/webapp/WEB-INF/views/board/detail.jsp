@@ -350,12 +350,12 @@ $(document).ready(function(){
 			); // end getJSON()
 	} // end getAllComments
 	
-	// 대댓글 입력
-    $(document).on('click', '.btnAddComment', function(){  	
-   		var replyItem = $(this).closest('.reply_item');
-		var memberId = $('#memberId').val(); 
-		var boardReplyId = $(this).closest('.reply_item').find('.boardReplyId').val();
-	    var boardCommentContent = $(this).prevAll('.boardCommentContent').val(); 	    
+	// 답글 입력
+    $(document).on('click', '.btnAddComment', function(){    	
+   		var replyItem = $(this).closest('.reply_item');   		
+   		var memberId = $('#memberId').val(); 
+		var boardReplyId = $(this).closest('.reply_item').find('#replyId').val();
+	    var boardCommentContent = $(this).prevAll('#boardCommentContent').val(); 	    
 	    var obj = {
 				'memberId' : memberId,
 				'boardReplyId' : boardReplyId, 
@@ -374,21 +374,23 @@ $(document).ready(function(){
 				console.log(result);
 				if(result == 1){
 					alert('답글 입력 성공');
-					getAllComments(boardReplyId);
+					getAllComments(boardReplyId, this);
 				} 
 			} // end success
 		}) // end ajax
     }) // end document()
-      
+    
+	// 대댓글 수정
     $(document).on('click', '.btnUpdateComment', function(){   	 
    		var replyItem = $(this).closest('.reply_item');
-		var boardReplyId = $(this).closest('.reply_item').find('.boardReplyId');
-		var boardCommentId = $(this).prevAll('.boardCommentId').val();
-		var boardCommentContent = $(this).prevAll('.boardCommentContent').val();   	 
+   		var boardReplyId = $(this).closest('.reply_item').find('#replyId').val();
+		var boardCommentId = $(this).prevAll('#commentId').val();
+	    var boardCommentContent = $(this).prevAll('#boardCommentContent').val(); 	  
+	    console.log("boardCommentId = " + boardCommentId + " boardCommentContent = " + boardCommentContent);
    	 
    	 $.ajax({
    		 type : 'PUT',
-   		 url : 'replies/' + boardCommentId,
+   		 url : 'comments/' + boardCommentId,
    		 headers : {
    			 'Content-Type' : 'application/json'
    		 },
@@ -397,7 +399,8 @@ $(document).ready(function(){
    			 console.log(result);
    			 if(result == 1){
    				 alert('답글 수정 성공!');
-   				 getAllComments(boardReplyId);
+   				 getAllComments(boardReplyId, replyItem);
+   				 console.log("수정 ajax 에서 this = " + this);
    			 }
    		 } // end success
    	 }) // end ajax
@@ -406,12 +409,12 @@ $(document).ready(function(){
     $(document).on('click', '.btnDeleteComment', function(){
    	 console.log(this);
 		var replyItem = $(this).closest('.reply_item');
-		var boardReplyId = $(this).closest('.reply_item').find('.boardReplyId');
-		var boardCommentId = $(this).prevAll('.boardCommentId').val();
+   		var boardReplyId = $(this).closest('.reply_item').find('#replyId').val();
+		var boardCommentId = $(this).prevAll('#commentId').val();
 		 
 		$.ajax({
 			type : 'DELETE',
-			url : 'replies/' + boardCommentId,
+			url : 'comments/' + boardCommentId,
 			headers : {
 				'Content-Type' : 'application/json'
 			},
@@ -420,7 +423,7 @@ $(document).ready(function(){
 				console.log(result);
 				if(result == 1){
 					alert('답글 삭제 성공!');
-					getAllComments(boardReplyId);
+					getAllComments(boardReplyId, replyItem);
 				}
 			} // end success
 		}) // end ajax

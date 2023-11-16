@@ -4,8 +4,8 @@
 
 	<insert id="insert">
 		insert into ${board_comment}
-		(${memberId}, ${ReplyId}, ${boardCommentContent})
-		values (#{memberId}, #{ReplyId}, #{boardCommentContent})
+		(${memberId}, ${boardReplyId}, ${boardCommentContent})
+		values (#{memberId}, #{boardReplyId}, #{boardCommentContent})
 	</insert>
 	
 	<update id="update">

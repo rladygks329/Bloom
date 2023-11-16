@@ -29,7 +29,7 @@ public class BoardCommentController {
   @PostMapping(value = "/{boardReplyId}")
   public ResponseEntity<Integer> createComment(@PathVariable("boardReplyId") int boardReplyId,
       @RequestBody BoardCommentVO vo) {
-    logger.info("createComment() 호출: replyId = " + boardReplyId + " vo = " + vo.toString());
+    logger.info("createComment() 호출: boardReplyId = " + boardReplyId + " vo = " + vo.toString());
     int result = boardCommentService.create(boardReplyId, vo);
     return new ResponseEntity<Integer>(result, HttpStatus.OK);
   }
@@ -44,20 +44,20 @@ public class BoardCommentController {
   }
 
   // 코멘트 수정하기
-  @PutMapping("/{commentId}")
-  public ResponseEntity<Integer> updateComment(@PathVariable("commentId") int commentId,
+  @PutMapping("/{boardCommentId}")
+  public ResponseEntity<Integer> updateComment(@PathVariable("boardCommentId") int boardCommentId,
       @RequestBody String boardCommentContent) {
-    int result = boardCommentService.update(commentId, boardCommentContent);
+    int result = boardCommentService.update(boardCommentId, boardCommentContent);
     return new ResponseEntity<Integer>(result, HttpStatus.OK);
   }
 
   // 코멘트 삭제하기
-  @DeleteMapping("/{commentId}")
-  public ResponseEntity<Integer> deleteComment(@PathVariable("commentId") int commentId,
+  @DeleteMapping("/{boardCommentId}")
+  public ResponseEntity<Integer> deleteComment(@PathVariable("boardCommentId") int boardCommentId,
       @RequestBody int replyId) {
-    logger.info("deleteReply() 호출 replyId: " + replyId + "commentId : " + commentId);
+    logger.info("deleteReply() 호출 replyId: " + replyId + "commentId : " + boardCommentId);
 
-    int result = boardCommentService.delete(commentId, replyId);
+    int result = boardCommentService.delete(boardCommentId, replyId);
     logger.info("result : " + result);
     HttpStatus status = (result == 1) ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
 

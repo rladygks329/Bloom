@@ -27,6 +27,7 @@ public class BoardCommentServiceImple implements BoardCommentService {
 
     boardCommentDAO.insert(vo);
     boardReplyDAO.updateCommentCount(vo.getBoardReplyId(), 1);
+    logger.info("updateCommenCount() 호출 boardReplyId = " + vo.getBoardReplyId());
     return 1;
   }
 

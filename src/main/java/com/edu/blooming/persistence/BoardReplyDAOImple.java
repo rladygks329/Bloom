@@ -51,7 +51,7 @@ public class BoardReplyDAOImple implements BoardReplyDAO {
 
   @Override
   public int updateCommentCount(int boardReplyId, int amount) {
-    logger.info("updateCommentCount() 호출 : boardReplyId = " + boardReplyId);
+    logger.info("updateCommentCount() 호출 : boardReplyId = " + boardReplyId + " amount = " + amount);
     Map<String, Integer> args = new HashMap<>();
     args.put("boardReplyId", boardReplyId);
     args.put("amount", amount);
