@@ -3,6 +3,7 @@ package com.edu.blooming.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,17 +57,29 @@ public class LectureServiceImple implements LectureService {
   @Override
   public int update(LectureVO lecture, List<LessonVO> lessons) {
     logger.info("update() 호출 : lecture = " + lecture.toString());
+    int lectureId = lecture.getLectureId();
 
     for (LessonVO lesson : lessons) {
       if (lesson.getLessonId() == 0) {
-        lectureDAO.updateVideoProcessingLevel(lecture.getLectureId(), 0);
+        lectureDAO.updateVideoProcessingLevel(lectureId, 0);
         lessonDAO.insert(lesson);
+
         publisher.publishEvent(new VideoUploadedEvent(this, lesson.getLessonUrl(),
             lesson.getLectureId(), lesson.getLessonId()));
       } else {
         lessonDAO.update(lesson);
       }
     }
+
+    List<Integer> oldLessonIds = lessonDAO.selectByLectureId(lectureId).stream()
+        .map(LessonVO::getLessonId).collect(Collectors.toList());
+    List<Integer> newLessonIds =
+        lessons.stream().map(LessonVO::getLessonId).collect(Collectors.toList());
+    oldLessonIds.removeAll(newLessonIds);
+    for (int lessonId : oldLessonIds) {
+      lessonDAO.delete(lessonId);
+    }
+
     return lectureDAO.update(lecture);
   }
 
