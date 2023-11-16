@@ -6,15 +6,20 @@ import com.edu.blooming.domain.LessonVO;
 
 public interface LessonDAO {
   /*
+   * @param : vo.lessonIndex 반영
+   * 
    * @return : 입력된 lesson_id
    */
   int insert(LessonVO vo);
 
+  /*
+   * @param : vo.lessonIndex 미반영, 최댓값을 넣어줌
+   * 
+   * @return : 입력된 lesson_id
+   */
+  int append(LessonVO vo);
+
   int update(LessonVO vo);
-
-  int updateLessonName(int lessonId, String name);
-
-  int updateLessonUrl(int lessonId, String url);
 
   int updateVideoProcessingLevel(int lessonId, int level);
 

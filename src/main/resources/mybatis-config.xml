@@ -22,6 +22,7 @@
 		<property name="lectureId" value="lecture_id"/>
 		<property name="lessonName" value="lesson_name"/>
 		<property name="lessonUrl" value="lesson_url"/>
+		<property name="lessonIndex" value="lesson_index"/>
 		<property name="lessonVideoProcessingLevel" value="lesson_video_processing_level"/>
 		
 		<!-- LECUTRE -->

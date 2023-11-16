@@ -40,6 +40,13 @@ public class LessonDAOTest {
   }
 
   @Test
+  public void testAppend() {
+    LessonVO vo = new LessonVO(0, 1, -1, -1, "강좌 1의 첫번째 소제목", "강좌 1-1 영상의 영상 경로");
+    int lessonId = lessonDAO.append(vo);
+    assertNotEquals(0, lessonId);
+  }
+
+  @Test
   public void testUpdate() {
     // given
     LessonVO vo = new LessonVO(0, 1, -1, -1, "강좌 1의 첫번째 소제목", "강좌 1-1 영상의 영상 경로");
@@ -57,41 +64,6 @@ public class LessonDAOTest {
     assertEquals(0, vo.getLessonVideoProcessingLevel());
     assertEquals(1, result);
   } // end testUpdate();
-
-  @Test
-  public void testUpdateName() {
-    // given
-    LessonVO vo = new LessonVO(0, 1, -1, -1, "강좌 1의 첫번째 소제목", "강좌 1-1 영상의 영상 경로");
-    int lessonId = lessonDAO.insert(vo);
-    lessonDAO.updateVideoProcessingLevel(lessonId, 1);
-
-    // when
-    int result = lessonDAO.updateLessonName(lessonId, "수정된 제목");
-
-    // expected
-    vo = lessonDAO.selectByLessonId(lessonId);
-    assertEquals("수정된 제목", vo.getLessonName());
-    assertEquals("강좌 1-1 영상의 영상 경로", vo.getLessonUrl());
-    assertEquals(1, vo.getLessonVideoProcessingLevel());
-    assertEquals(1, result);
-  } // end testUpdateName();
-
-  @Test
-  public void testUpdateUrl() {
-    // given
-    LessonVO vo = new LessonVO(0, 1, -1, -1, "강좌 1의 첫번째 소제목", "강좌 1-1 영상의 영상 경로");
-    int lessonId = lessonDAO.insert(vo);
-
-    // when
-    int result = lessonDAO.updateLessonUrl(lessonId, "수정된 url");
-
-    // expected
-    vo = lessonDAO.selectByLessonId(lessonId);
-    assertEquals("강좌 1의 첫번째 소제목", vo.getLessonName());
-    assertEquals("수정된 url", vo.getLessonUrl());
-    assertEquals(0, vo.getLessonVideoProcessingLevel());
-    assertEquals(1, result);
-  } // end testUpdateUrl();
 
   @Test
   public void testUpdateVideoProcessingLevel() {
