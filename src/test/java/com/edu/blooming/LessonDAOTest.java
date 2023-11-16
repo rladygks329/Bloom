@@ -34,7 +34,7 @@ public class LessonDAOTest {
 
   @Test
   public void testInsert() {
-    LessonVO vo = new LessonVO(0, 1, -1, "강좌 1의 첫번째 소제목", "강좌 1-1 영상의 영상 경로");
+    LessonVO vo = new LessonVO(0, 1, -1, -1, "강좌 1의 첫번째 소제목", "강좌 1-1 영상의 영상 경로");
     int lessonId = lessonDAO.insert(vo);
     assertNotEquals(0, lessonId);
   }
@@ -42,7 +42,7 @@ public class LessonDAOTest {
   @Test
   public void testUpdate() {
     // given
-    LessonVO vo = new LessonVO(0, 1, -1, "강좌 1의 첫번째 소제목", "강좌 1-1 영상의 영상 경로");
+    LessonVO vo = new LessonVO(0, 1, -1, -1, "강좌 1의 첫번째 소제목", "강좌 1-1 영상의 영상 경로");
     int lessonId = lessonDAO.insert(vo);
 
     // when
@@ -61,7 +61,7 @@ public class LessonDAOTest {
   @Test
   public void testUpdateName() {
     // given
-    LessonVO vo = new LessonVO(0, 1, -1, "강좌 1의 첫번째 소제목", "강좌 1-1 영상의 영상 경로");
+    LessonVO vo = new LessonVO(0, 1, -1, -1, "강좌 1의 첫번째 소제목", "강좌 1-1 영상의 영상 경로");
     int lessonId = lessonDAO.insert(vo);
     lessonDAO.updateVideoProcessingLevel(lessonId, 1);
 
@@ -79,7 +79,7 @@ public class LessonDAOTest {
   @Test
   public void testUpdateUrl() {
     // given
-    LessonVO vo = new LessonVO(0, 1, -1, "강좌 1의 첫번째 소제목", "강좌 1-1 영상의 영상 경로");
+    LessonVO vo = new LessonVO(0, 1, -1, -1, "강좌 1의 첫번째 소제목", "강좌 1-1 영상의 영상 경로");
     int lessonId = lessonDAO.insert(vo);
 
     // when
@@ -96,7 +96,7 @@ public class LessonDAOTest {
   @Test
   public void testUpdateVideoProcessingLevel() {
     // given
-    LessonVO vo = new LessonVO(0, 1, -1, "강좌 1의 첫번째 소제목", "강좌 1-1 영상의 영상 경로");
+    LessonVO vo = new LessonVO(0, 1, -1, -1, "강좌 1의 첫번째 소제목", "강좌 1-1 영상의 영상 경로");
     int lessonId = lessonDAO.insert(vo);
 
     // when
@@ -113,7 +113,7 @@ public class LessonDAOTest {
 
     // given
     for (int i = 0; i < size; i++) {
-      LessonVO vo = new LessonVO(0, 1, -1, "강좌1-" + (i + 1), "강좌 1-" + (i + 1) + "의 url");
+      LessonVO vo = new LessonVO(0, 1, -1, -1, "강좌1-" + (i + 1), "강좌 1-" + (i + 1) + "의 url");
       lessonDAO.insert(vo);
     }
 
@@ -128,7 +128,7 @@ public class LessonDAOTest {
   @Test
   public void testSelectByLessonId() {
     // given
-    LessonVO vo = new LessonVO(0, 1, -1, "강좌 1의 첫번째 소제목", "강좌 1-1 영상의 영상 경로");
+    LessonVO vo = new LessonVO(0, 1, -1, -1, "강좌 1의 첫번째 소제목", "강좌 1-1 영상의 영상 경로");
     int lessonId = lessonDAO.insert(vo);
 
     // when
@@ -145,7 +145,7 @@ public class LessonDAOTest {
 
     // given
     for (int i = 0; i < size; i++) {
-      LessonVO vo = new LessonVO(0, 1, -1, "강좌1-" + (i + 1), "강좌 1-" + (i + 1) + "의 url");
+      LessonVO vo = new LessonVO(0, 1, -1, -1, "강좌1-" + (i + 1), "강좌 1-" + (i + 1) + "의 url");
       lessonId = lessonDAO.insert(vo);
       lessonDAO.updateVideoProcessingLevel(lessonId, 1);
     }
@@ -171,7 +171,7 @@ public class LessonDAOTest {
   @Test
   public void testDelete() {
     // given
-    LessonVO vo = new LessonVO(0, 1, -1, "강좌 1의 첫번째 소제목", "강좌 1-1 영상의 영상 경로");
+    LessonVO vo = new LessonVO(0, 1, -1, -1, "강좌 1의 첫번째 소제목", "강좌 1-1 영상의 영상 경로");
     int lessonId = lessonDAO.insert(vo);
 
     // when
