@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+	<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 	<!DOCTYPE html>
 	<html>
 	<head>
@@ -66,22 +66,28 @@
 					const proccessRate = $(this).text();
 					if (proccessRate != "100.00%") {
 						alert("모든 강의 영상을 업로드 완료 해주세요");
-						return false;
+						result = false;
 					}
 				});
 				
-				// diabled한 input은 넘어가지 않으므로 풀어준다.
-				$("input[name='lessonName']").each(function(i) {
-			        $(this).removeAttr('disabled');
-				});
-				return true;
+				if(result){
+					// diabled한 input은 넘어가지 않으므로 풀어준다.
+					$("input[name='lessonName']").each(function(i) {
+				        $(this).removeAttr('disabled');
+					});
+				}
+				
+				return result;
 			} //end validateInputs()
 
 			function renderFile(file) {
 				const fileName = file.name;
 				const name = fileName.substring(0, fileName.lastIndexOf("."));
 				const extension = fileName.substring(fileName.lastIndexOf(".") + 1);
-				const index = Number($('input[name="lessonIndex"]').last().val());
+				let index = Number($('input[name="lessonIndex"]').last().val());
+				if(Number.isNaN(index)){
+					index = 0;
+				}
 				
 				if(extension != "mp4"){
 					alert("mp4 파일을 올려주세요");
@@ -92,7 +98,7 @@
 				const inputGroup = $('<div class="input-group my-1 py-1">');
 				const moveIcon = $('<span class="input-group-text">').append('<i class="bi bi-arrows-move">');
 				const inputName = $('<input class="form-control" name="lessonName" value="'+ name +'" disabled="disabled" required />');
-				const inputURL = $('<input name="lesssonUrl" type="hidden">');
+				const inputURL = $('<input name="lessonUrl" type="hidden">');
 				const inputId = $('<input name="lessonId" type="hidden">').val(0);
 				const inputIndex = $('<input name="lessonIndex" type="hidden">').val(index + 1024);
 				const editBtn = $('<button type="button" class="btn btn-primary btn-edit">').text("수정");
@@ -211,7 +217,7 @@
 			}
 			
 			function handleEdit(btnEdit){
-				const input = $(btnEdit).siblings("input");
+				const input = $(btnEdit).siblings('input[name="lessonName"]');
 				const condition = input.prop("disabled");
 				$(btnEdit).text(condition ? "완료" : "수정");
 				input.prop("disabled", !condition);
@@ -262,9 +268,7 @@
 
 					// 드래그한 파일 정보를 갖고 있는 객체
 					var files = event.originalEvent.dataTransfer.files;
-
-					var i = 0;
-					for (i = 0; i < files.length; i++) {
+					for (let i = 0; i < files.length; i++) {
 						console.log(files[i]);
 						formData.append("files", files[i]);
 					}
@@ -293,6 +297,7 @@
 				<div class="container">
 					<div class="row d-flex justify-content-center align-items-center h-100">
 						<form action="/blooming/lecture/modify" method="post" onsubmit="return validateInputs(event)">
+							<input type="hidden" name="lectureId" value="${lecture.lectureId }"/>
 							<div class="col">
 								<h1 class="text-white my-2">강좌 등록</h1>
 								<div class="card" style="border-radius: 15px;">

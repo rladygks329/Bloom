@@ -190,20 +190,16 @@ public class LectureController {
   }
 
   @PostMapping("/modify")
-  public String postModify(String lectureTitle, String lectureDescription, int lecturePrice,
-      String lectureThumbnailUrl, String[] lessonName, String[] lessonUrl, int[] lessonId) {
+  public String postModify(LectureVO lecture, String[] lessonName, String[] lessonUrl,
+      int[] lessonId, int[] lessonIndex) {
     logger.info("modify post 실행");
-    logger.info("lectureTitle: " + lectureTitle + "lectureDesc: " + lectureDescription + " price: "
-        + lecturePrice);
-    logger.info("lectureThumbnailUrl: " + lectureThumbnailUrl);
     List<LessonVO> lessons = new ArrayList<>();
-
     for (int i = 0; i < lessonName.length; i++) {
-      LessonVO lesson = new LessonVO(lessonId[i], -1, -1, -1, lessonName[i], lessonUrl[i]);
-      logger.info(lesson.toString());
+      LessonVO lesson = new LessonVO(lessonId[i], lecture.getLectureId(), -1, lessonIndex[i],
+          lessonName[i], lessonUrl[i]);
       lessons.add(lesson);
     }
-
+    lectureService.update(lecture, lessons);
     return "redirect:/member/mypage";
   }
 

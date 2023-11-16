@@ -10,7 +10,7 @@ import com.edu.blooming.util.PageCriteria;
 public interface LectureService {
   int create(LectureVO vo, List<LessonVO> lessons);
 
-  int update(LectureVO vo);
+  int update(LectureVO vo, List<LessonVO> lessons);
 
   List<LectureVO> read(PageCriteria criteria, int orderType);
 

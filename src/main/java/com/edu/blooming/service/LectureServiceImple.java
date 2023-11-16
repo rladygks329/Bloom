@@ -46,7 +46,7 @@ public class LectureServiceImple implements LectureService {
     int lectureId = lectureDAO.insert(vo);
     for (LessonVO lesson : lessons) {
       lesson.setLectureId(lectureId);
-      int lessonId = lessonDAO.insert(lesson);
+      int lessonId = lessonDAO.append(lesson);
       publisher
           .publishEvent(new VideoUploadedEvent(this, lesson.getLessonUrl(), lectureId, lessonId));
     }
@@ -54,9 +54,20 @@ public class LectureServiceImple implements LectureService {
   }
 
   @Override
-  public int update(LectureVO vo) {
-    logger.info("update() 호출 : vo = " + vo.toString());
-    return lectureDAO.update(vo);
+  public int update(LectureVO lecture, List<LessonVO> lessons) {
+    logger.info("update() 호출 : lecture = " + lecture.toString());
+
+    for (LessonVO lesson : lessons) {
+      if (lesson.getLessonId() == 0) {
+        lectureDAO.updateVideoProcessingLevel(lecture.getLectureId(), 0);
+        lessonDAO.insert(lesson);
+        publisher.publishEvent(new VideoUploadedEvent(this, lesson.getLessonUrl(),
+            lesson.getLectureId(), lesson.getLessonId()));
+      } else {
+        lessonDAO.update(lesson);
+      }
+    }
+    return lectureDAO.update(lecture);
   }
 
   @Override

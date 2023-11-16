@@ -168,19 +168,19 @@
 										<c:when test="${row.PROCCESS_RATE == 1}">
 											<td class="text-center align-middle"><span class="fs-5 badge bg-success"> 이상 없음 </span></td>
 											<td class="text-center">
-												<a class="text-reset link-underline link-underline-opacity-0" href="/blooming/lecture/update/${row.LECTURE_ID }">
-													<button class="btn btn-primary">수정</button>
+												<a class="text-reset link-underline link-underline-opacity-0" href="/blooming/lecture/modify?target=${row.LECTURE_ID }">
+													<button class="btn btn-primary m-1">수정</button>
 												</a>
 												<a class="text-reset link-underline link-underline-opacity-0" href="/blooming/lecture/${row.LECTURE_ID }/course">
-													<button class="btn btn-primary">보기</button>
+													<button class="btn btn-primary m-1">보기</button>
 												</a>
 											</td>
 										</c:when>
 										<c:otherwise>
 											<td class="text-center align-middle"><span class="fs-5 badge bg-warning text-dark">영상 처리 중 ${row.PROCCESS_RATE * 100} % </span></td>
 											<td class="text-center">
-												<button class="btn btn-primary disabled">수정</button>
-												<button class="btn btn-primary disabled">보기</button>
+												<button class="btn btn-primary disabled m-1">수정</button>
+												<button class="btn btn-primary disabled m-1">보기</button>
 											</td>
 										</c:otherwise>
 									</c:choose>
