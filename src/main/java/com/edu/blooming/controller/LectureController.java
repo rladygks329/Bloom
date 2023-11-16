@@ -126,7 +126,7 @@ public class LectureController {
     return "/lecture/upload";
   }
 
-  //// @formatter:off
+  // @formatter:off
   @PostMapping("/upload")
   public String lectureUploadPOST(String lectureTitle, Integer memberId, String lectureDescription, int lecturePrice,
       String lectureThumbnailUrl, String[] lectureVideosURL, String[] lectureVideosTitle ) {
@@ -155,6 +155,57 @@ public class LectureController {
     return "redirect:/lecture/list";
   }
   // @formatter:on
+
+  @GetMapping("/modify")
+  public String getModify(HttpServletRequest request, Model model, String target) {
+    HttpSession session = request.getSession();
+    int memberId = ((MemberVO) session.getAttribute("loginVo")).getMemberId();
+    int lectureId = 0;
+
+    try {
+      lectureId = Integer.parseInt(target);
+    } catch (NumberFormatException e) {
+      model.addAttribute("msg", "잘못된 요청입니다.");
+      model.addAttribute("url", "list");
+      return "alert";
+    }
+
+    LectureVO vo = lectureService.read(lectureId);
+    if (vo == null) {
+      model.addAttribute("msg", "해당하는 강의가 없습니다.");
+      model.addAttribute("url", "list");
+      return "alert";
+    }
+
+    if (vo.getMemberId() != memberId) {
+      model.addAttribute("msg", "자신이 만든 강의만 수정 가능 합니다.");
+      model.addAttribute("url", "list");
+      return "alert";
+    }
+
+    List<LessonVO> list = lessonService.getByLectureId(lectureId);
+    model.addAttribute("lecture", vo);
+    model.addAttribute("lessons", list);
+    return "/lecture/modify";
+  }
+
+  @PostMapping("/modify")
+  public String postModify(String lectureTitle, String lectureDescription, int lecturePrice,
+      String lectureThumbnailUrl, String[] lessonName, String[] lessonUrl, int[] lessonId) {
+    logger.info("modify post 실행");
+    logger.info("lectureTitle: " + lectureTitle + "lectureDesc: " + lectureDescription + " price: "
+        + lecturePrice);
+    logger.info("lectureThumbnailUrl: " + lectureThumbnailUrl);
+    List<LessonVO> lessons = new ArrayList<>();
+
+    for (int i = 0; i < lessonName.length; i++) {
+      LessonVO lesson = new LessonVO(lessonId[i], -1, -1, lessonName[i], lessonUrl[i]);
+      logger.info(lesson.toString());
+      lessons.add(lesson);
+    }
+
+    return "redirect:/member/mypage";
+  }
 
   @GetMapping("/{lectureId}/course")
   public String getCourse(Model model, @PathVariable("lectureId") int lectureId) {
