@@ -81,6 +81,7 @@
 				const fileName = file.name;
 				const name = fileName.substring(0, fileName.lastIndexOf("."));
 				const extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+				const index = Number($('input[name="lessonIndex"]').last().val());
 				
 				if(extension != "mp4"){
 					alert("mp4 파일을 올려주세요");
@@ -93,6 +94,7 @@
 				const inputName = $('<input class="form-control" name="lessonName" value="'+ name +'" disabled="disabled" required />');
 				const inputURL = $('<input name="lesssonUrl" type="hidden">');
 				const inputId = $('<input name="lessonId" type="hidden">').val(0);
+				const inputIndex = $('<input name="lessonIndex" type="hidden">').val(index + 1024);
 				const editBtn = $('<button type="button" class="btn btn-primary btn-edit">').text("수정");
 				const deleteBtn = $('<button type="button" class="btn btn-danger btn-delete">').text("삭제");
 				
@@ -104,6 +106,7 @@
 					.append(inputName)
 					.append(inputURL)
 					.append(inputId)
+					.append(inputIndex)
 					.append(editBtn)
 					.append(deleteBtn);
 				
@@ -176,13 +179,35 @@
 				return wrapper;
 			}
 
+			function draggable(){
+				$('.uploaded-video').sortable({
+					items: $('.uploaded-div'),
+					update: function( event, ui ) {
+						const item = ui.item;
+						const index = $(item).index();
+						const length = $(item).parent().children().length;
+						const input = $(item).find('input[name="lessonIndex"]');
+						
+						let value = 0;
+						if(index == 0){
+							value = Number($(item).siblings('.uploaded-div:first').find('input[name=lessonIndex]').val())/2;
+						}else if(index == length - 1){
+							value = Number($(item).siblings('.uploaded-div:last').find('input[name=lessonIndex]').val()) + 1024;
+						}else{
+							const prev = Number($(item).prev().find('input[name=lessonIndex]').val())
+							const next = Number($(item).next().find('input[name=lessonIndex]').val())
+							value = (prev + next)/2
+						}
+						input.val(value);
+					}
+				});
+			} //end draggable
+			
 			function handleFileChange(event) {
 				const container = $(".uploaded-video");
 				// 파일들을 순회하면서 뷰 추가하기
 				[...event.target.files].forEach(file => container.append(renderFile(file)));
-				container.sortable({
-					items: $('.uploaded-div')
-				});
+				draggable();
 			}
 			
 			function handleEdit(btnEdit){
@@ -197,10 +222,7 @@
 			}
 			
 			$(function () {
-				$('.uploaded-video').sortable({
-					items: $('.uploaded-div'),
-				});
-				
+				draggable();	
 				$(".uploaded-video").click(function(event){
 					const target = event.target;
 					if($(target).hasClass("btn-edit")){
@@ -348,6 +370,7 @@
 															<input class="form-control" name="lessonName" value="${lesson.lessonName }" disabled="disabled" required/>
 															<input name="lessonUrl" type="hidden" value="${lesson.lessonUrl}"/>
 															<input name="lessonId" type="hidden" value="${lesson.lessonId}">
+															<input name="lessonIndex" type="hidden" value="${lesson.lessonIndex}">
 															<button type="button" class="btn btn-primary btn-edit"> 수정 </button>
 															<button type="button" class="btn btn-danger btn-delete"> 삭제 </button>
 														</div>
