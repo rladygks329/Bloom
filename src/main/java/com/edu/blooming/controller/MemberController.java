@@ -73,15 +73,9 @@ public class MemberController {
     session.invalidate();
     return "redirect:/main";
   }
-  
-  @GetMapping("/member-detail")
-  public void memberDetailGET() {
-    logger.info("memberDetail 호출");
-  }
 
-  @GetMapping("/mypage")
-  public String myPageGET(HttpServletRequest request, Model model) {
-    logger.info("myPageGET() 호출");
+  @GetMapping("/instructor-page")
+  public String instructorPageGet(HttpServletRequest request, Model model) {
     HttpSession session = request.getSession();
     MemberVO user = (MemberVO) session.getAttribute("loginVo");
 
@@ -90,9 +84,16 @@ public class MemberController {
       model.addAllAttributes(result);
       return "/member/mypage-instructor";
     }
-    return "/member/member-detail";
+    return "/member/mypage";
+
   }
-  
+
+  @GetMapping("/mypage")
+  public String myPageGET(HttpServletRequest request, Model model) {
+    logger.info("myPageGET() 호출");
+    return "/member/mypage";
+  }
+
   @PutMapping("/password")
   @ResponseBody
   public ResponseEntity<Void> changePasswordPOST(@RequestBody String memberPassword,

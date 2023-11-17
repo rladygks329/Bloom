@@ -63,9 +63,7 @@ public class LectureReplyController {
       @PathVariable("lectureId") int lectureId,
       @PathVariable("replyId") int replyId, 
       @RequestBody LectureReplyVO vo) {
-    logger
-        .info("updateReply() 호출 lectureId: " + lectureId + " replyId : " + replyId + " vo :" + vo);
-
+    logger.info("updateReply() 호출 lectureId: " + lectureId + " replyId : " + replyId + " vo :" + vo);
     int result = lectureReplyService.update(vo);
     return new ResponseEntity<>(1, HttpStatus.OK);
   }
@@ -75,11 +73,9 @@ public class LectureReplyController {
       @PathVariable("lectureId") int lectureId,
       @PathVariable("replyId") int replyId) {
     logger.info("updateReply() 호출 lectureId: " + lectureId + "replyId : " + replyId);
-
     int result = lectureReplyService.delete(replyId);
     logger.info("result : " + result);
     HttpStatus status = (result == 1) ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
-
     return new ResponseEntity<>(1, status);
   }
 

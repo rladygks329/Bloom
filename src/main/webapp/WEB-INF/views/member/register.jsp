@@ -22,37 +22,37 @@
 		var addressFinalCheck = false;
 				
 		function validateInputs(event){
-			if(emailFinalCheck == false) {
+			if(!emailFinalCheck) {
 				alert("회원가입 정보를 확인해 주세요 : 이메일");
 				return false;	
 			}
 			
-			if(pwFinalCheck == false) {
+			if(!pwFinalCheck) {
 				alert("회원가입 정보를 확인해 주세요 : 비밀번호");
 				return false;	
 			}
 			
-			if(pwckFinalCheck == false) {
+			if(!pwckFinalCheck) {
 				alert("회원가입 정보를 확인해 주세요 : 비밀번호확인");
 				return false;	
 			}
 			
-			if(nameFinalCheck == false) {
+			if(!nameFinalCheck) {
 				alert("회원가입 정보를 확인해 주세요 : 이름");
 				return false;
 			}
 			
-			if(nicknameFinalCheck == false) {
+			if(!nicknameFinalCheck) {
 				alert("회원가입 정보를 확인해 주세요 : 닉네임");
 				return false;
 			}
 			
-			if(phoneFinalCheck == false) {
+			if(!phoneFinalCheck) {
 				alert("회원가입 정보를 확인해 주세요 : 휴대폰번호");
 				return false;
 			}
 			
-			if(addressFinalCheck == false) {
+			if(!addressFinalCheck) {
 				alert("회원가입 정보를 확인해 주세요 : 주소");
 				return false;
 			}
@@ -63,19 +63,12 @@
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/component/navigation.jsp"%>
-	<%
-	String memberLevel = (String) request.getAttribute("memberLevel");
-	out.println("Member Level: " + memberLevel);
-	%>
-
 	<h2>회원 가입하기</h2>
   	<form action="register" method="post" onsubmit="return validateInputs(event)">
     	
     	<p>이메일</p>
 	    <input class="email_input" type="text" name="memberEmail">
-	    <span class="email_input_warning" style="display: none;">유효한 이메일 형식이 아닙니다.</span><br>
-	    <span class="email_input_re_1" style="display: none;">사용 가능한 이메일입니다.</span> 
-	    <span class="email_input_re_2" style="display: none;">이메일이 이미 존재합니다.</span>	    
+		<span class="email-label"></span>	    
 	    	    
 	    <p>비밀번호</p>
 	    <input class="pw_input" type="password" name="memberPassword" placeholder="비밀번호 입력">
@@ -109,47 +102,39 @@
 		<input type="hidden" id="address_input" name="memberAddress">
 		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 		<script>
-			// 입력 이메일 형식 유효성 검사 
-			function mailFormCheck(email) {
-				var form = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
-				return form.test(email);
-			}
-
 			// 이메일 중복검사 함수
 			function checkEmailDuplication(email) {
-				if ($('.email_input').val() === "") {
-					$('.email_input_warning').hide();
-
-					// 유효성 검사를 통과한 경우에만 중복 검사 실행
-				} else if (mailFormCheck(email)) {
-					$('.email_input_warning').hide();
-					var data = {
-						memberEmail : email
-					};
-					$.ajax({
-						type : 'POST',
-						url : '/blooming/member/email',
-						data : data,
-						success : function(result) {
-							if (result === 'success') {
-								$('.email_input_re_1').show();
-								$('.email_input_re_2').hide();
-								emailFinalCheck = true;
-
-							} else if (result === 'faile') {
-								$('.email_input_re_1').hide();
-								$('.email_input_re_2').show();
-
-							}
-						}
-					});
-				} else {
-					// 유효성 검사를 통과하지 못한 경우
-					$('.email_input_warning').show();
-					$('.email_input_re_1').hide();
-					$('.email_input_re_2').hide();
-
+				var emailRegex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+				
+				if ($('.email_input').val() === "") {	
+					$(".email-label").text("");
+					return;
 				}
+				
+				// 유효성 검사를 통과하지 못한 경우
+				if (!emailRegex.test(email)){
+					$(".email-label").text("이메일 형식을 확인해주세요");
+					return;
+				}
+				
+				$('.email_input_warning').hide();
+				var data = {
+					memberEmail : email
+				};
+				$.ajax({
+					type : 'POST',
+					url : '/blooming/member/email',
+					data : data,
+					success : function(result) {
+						if (result === 'success') {
+							$(".email-label").text("사용가능한 이메일입니다.");
+							emailFinalCheck = true;
+						} else if (result === 'faile') {
+							$(".email-label").text("중복된 이메일입니다.");
+						}
+					}
+				});
+				return
 			} // end checkEmailDuplication()
 
 			// 이메일 입력 필드의 값이 변경될 때 검사 실행
@@ -205,7 +190,6 @@
 			    checkNicknameDuplication($('.nickname_input').val());
 			});
 			
-
 			// 비밀번호 형식 및 확인 일치 유효성 검사			
 			$('.pw_input').on("change", function() {
 				checkPasswordValid();

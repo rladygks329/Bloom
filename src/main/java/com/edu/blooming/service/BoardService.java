@@ -8,30 +8,21 @@ public interface BoardService {
 
   int create(BoardVO vo);
 
-  List<BoardVO> read(PageCriteria criteria);
-
-  List<BoardVO> readByNickname(PageCriteria criteria, String keyword);
-
-  List<BoardVO> readByTitleOrContent(PageCriteria criteria, String keyword);
-
-  int getTotalCounts();
-
-  int getTotalCountsByTitleOrContent(String keyword);
-
-  int getTotalCountsByNickname(String keyword);
+  List<BoardVO> read(PageCriteria criteria, String option, String keyword);
 
   BoardVO read(int boardId);
+
+  int getTotalCounts(String option, String keyword);
 
   int update(BoardVO vo);
 
   int updateViewCount(int boardId);
+
+  int delete(BoardVO vo);
 
   int likeBoard(int boardId, int memberId);
 
   int dislikeBoard(int boardId, int memberId);
 
   boolean checkIsLike(int memberId, int boardId);
-
-  int deleteOrUpdate(BoardVO vo);
-
 }

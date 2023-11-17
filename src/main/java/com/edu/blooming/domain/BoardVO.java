@@ -14,10 +14,7 @@ public class BoardVO {
   private int boardLikeCount;
   private Date boardDateCreated;
 
-  public BoardVO() {
-    super();
-    // TODO Auto-generated constructor stub
-  }
+  public BoardVO() {}
 
   public BoardVO(int boardId, int memberId, String authorNickname, String boardTitle,
       String boardContent, int boardViewCount, int boardReplyCount, int boardLikeCount,

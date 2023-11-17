@@ -11,10 +11,7 @@ public class BoardReplyVO {
   private int boardReplyCommentCount;
   private String authorNickname;
 
-  public BoardReplyVO() {
-    super();
-    // TODO Auto-generated constructor stub
-  }
+  public BoardReplyVO() {}
 
   public BoardReplyVO(int boardReplyId, int memberId, int boardId, String boardReplyContent,
       Date boardReplyDateCreated, int boardReplyCommentCount, String authorNickname) {
@@ -91,6 +88,5 @@ public class BoardReplyVO {
         + boardReplyDateCreated + ", boardReplyCommentCount=" + boardReplyCommentCount
         + ", authorNickname=" + authorNickname + "]";
   }
-
 
 }

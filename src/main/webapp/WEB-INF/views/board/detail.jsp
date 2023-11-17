@@ -10,10 +10,9 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 </script>	
 
 <meta charset="UTF-8">
-<title>게시글번호나오게</title>
+<title>게시글 상세보기</title>
 </head>
 <body>
-
 	<h2>글내용 보기</h2>
 	<div>
 		<p>글 번호: ${vo.boardId }</p>
@@ -34,8 +33,7 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 		<textarea rows="20" cols="120" readonly>${vo.boardContent }</textarea>
 	</div>
 	
-
-	<a><input type="button" onclick="goBack()" value="글 목록"></a>
+	<input type="button" onclick="goBack()" value="글 목록">
 	<a href="update?boardId=${vo.boardId }&page=${page }"><input type="button" value="글 수정"></a>
 	
 	<form action="deleteOrUpdate" method="post">
@@ -94,11 +92,8 @@ $(document).ready(function(){
 	
 	// 좋아요 onclieck 기능
     $('#boardLike').click(function() {    	
-        var likeStatus = false; // 좋아요 상태를 나타내는 변수 (초기값: 좋아요하지 않음) 위에 확인 후 삭제
+        var likeStatus = $('#boardLike').val() === '좋아요'; 
         // 버튼 텍스트를 확인하여 좋아요 또는 좋아요 취소 요청 구분
-        if ($('#boardLike').val() === '좋아요') {
-            likeStatus = true; // 좋아요
-        }
         
         if(memberId ===''){
 			alert("로그인을 하셔야 이용하실 수 있습니다.");
@@ -232,7 +227,6 @@ $(document).ready(function(){
 		
 		// ajax 요청
 		$.ajax({
-			
 			type : 'PUT', 
 			url : 'replies/' + replyId, 
 			headers : {

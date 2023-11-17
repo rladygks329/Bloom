@@ -36,7 +36,7 @@ public class BoardController {
   public void list(Model model, Integer page, Integer numsPerPage, String option, String keyword) {
     logger.info("list() 호출");
     logger.info("page = " + page + ", numsPerPage = " + numsPerPage);
-    List<BoardVO> list = null;
+
     // Paging 처리
     PageCriteria criteria = new PageCriteria();
     if (page != null) {
@@ -47,28 +47,16 @@ public class BoardController {
       criteria.setNumsPerPage(numsPerPage);
     }
 
+    List<BoardVO> list = boardService.read(criteria, option, keyword);
+
     PageMaker pageMaker = new PageMaker();
-    if (option != null) {
-      if (option.equals("searchNickname")) {
-        logger.info("searchNickname");
-        list = boardService.readByNickname(criteria, keyword);
-        pageMaker.setTotalCount(boardService.getTotalCountsByNickname(keyword));
-      } else if (option.equals("searchTitleOrContent")) {
-        logger.info("searchTitleOrContent");
-        list = boardService.readByTitleOrContent(criteria, keyword);
-        pageMaker.setTotalCount(boardService.getTotalCountsByTitleOrContent(keyword));
-      }
-    } else {
-      logger.info("totalCount = " + pageMaker.getTotalCount());
-      list = boardService.read(criteria);
-      pageMaker.setTotalCount(boardService.getTotalCounts());
-    }
+    pageMaker.setTotalCount(boardService.getTotalCounts(option, keyword));
+    pageMaker.setCriteria(criteria);
+    pageMaker.setPageData();
+
     model.addAttribute("list", list);
     model.addAttribute("option", option);
     model.addAttribute("keyword", keyword);
-
-    pageMaker.setCriteria(criteria);
-    pageMaker.setPageData();
     model.addAttribute("pageMaker", pageMaker);
   } // end list()
 
@@ -121,17 +109,14 @@ public class BoardController {
   @PostMapping("/register")
   public String registerPOST(BoardVO vo, RedirectAttributes reAttr) {
     // RedirectAttributes - 리다이렉트 시 데이터를 전달하기 위한 인터페이스
-    logger.info("registerPOST() 호출");
-    logger.info(vo.toString());
+    logger.info("registerPOST() 호출 vo : " + vo.toString());
     int result = boardService.create(vo);
-    logger.info(result + "행 삽입");
     if (result == 1) {
       reAttr.addFlashAttribute("insert_result", "success");
       return "redirect:/board/list";
-    } else {
-      return "redirect:/board/register";
     }
-  } // end registerPOST()
+    return "redirect:/board/register";
+  }
 
   @GetMapping("/update")
   public void updateGET(Model model, Integer boardId, Integer page) {
@@ -148,9 +133,8 @@ public class BoardController {
     logger.info("page : " + page + "result : " + result);
     if (result == 1) {
       return "redirect:/board/detail?boardId=" + vo.getBoardId() + "&page=" + page;
-    } else {
-      return "redirect:/board/update?boardId=" + vo.getBoardId();
     }
+    return "redirect:/board/update?boardId=" + vo.getBoardId();
   }
 
   @PostMapping("/like/{boardId}/{memberId}")
@@ -177,14 +161,12 @@ public class BoardController {
   @PostMapping("/deleteOrUpdate")
   public String deleteOrUpdatePOST(BoardVO vo) {
     logger.info("deleteOrUpdatePOST()호출: vo = " + vo.toString());
-    int result = boardService.deleteOrUpdate(vo);
+    int result = boardService.delete(vo);
     if (result == 1) {
       return "redirect:/board/list";
-    } else {
-      return "redirect:/board/detail?boardId=" + vo.getBoardId();
     }
+    return "redirect:/board/detail?boardId=" + vo.getBoardId();
   }
-
 
 }
 

@@ -33,7 +33,7 @@ public class RegisterController {
   @PostMapping("/register")
   public String registerPOST(MemberVO vo, HttpSession session) {
     logger.info("registerPOST() 호출");
-    int result = memberService.create(vo);
+    int result = memberService.register(vo);
     if (result == 1) {
       session.setAttribute("loginVo", vo);
       // 메인 페이지로 리다이렉트

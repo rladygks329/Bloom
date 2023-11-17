@@ -10,10 +10,7 @@ public class BoardCommentVO {
   private Date boardCommentDateCreated;
   private String authorNickname;
 
-  public BoardCommentVO() {
-    super();
-    // TODO Auto-generated constructor stub
-  }
+  public BoardCommentVO() {}
 
   public BoardCommentVO(int boardCommentId, int memberId, int boardReplyId,
       String boardCommentContent, Date boardCommentDateCreated, String authorNickname) {

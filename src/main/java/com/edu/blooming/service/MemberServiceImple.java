@@ -3,7 +3,6 @@ package com.edu.blooming.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,27 +32,22 @@ public class MemberServiceImple implements MemberService {
   private PurchaseDAO purchaseDAO;
 
   @Override
-  public int create(MemberVO vo) {
+  public int register(MemberVO vo) {
     logger.info("create()호출: vo = " + vo.toString());
     return memberDAO.insert(vo);
   }
 
   @Override
-  public int checkEmail(String email) throws Exception {
+  public int checkEmail(String email) {
     logger.info("emailCheck() 호출: email = " + email);
     return memberDAO.checkEmail(email);
   }
 
   @Override
-  public MemberVO login(MemberVO member) throws Exception {
+  public MemberVO login(MemberVO member) {
     logger.info("memberLogin() 호출");
     logger.info("vo값 = " + member.toString());
     return memberDAO.login(member);
-  }
-
-  @Override
-  public void logout(HttpSession session) {
-    // TODO Auto-generated method stub
   }
 
   @Override
@@ -81,21 +75,21 @@ public class MemberServiceImple implements MemberService {
   }
 
   @Override
-  public int checkNickname(String nickname) throws Exception {
+  public int checkNickname(String nickname) {
     logger.info("checkNickname() 호출: nickname = " + nickname);
-    return dao.checkNickname(nickname);
+    return memberDAO.checkNickname(nickname);
   }
 
   @Override
   public int updateNickname(int memberId, String memberNickname) {
     logger.info("updateNickname 호출");
-    return dao.updateNickname(memberId, memberNickname);
+    return memberDAO.updateNickname(memberId, memberNickname);
   }
 
   @Override
   public int updateIntroduce(int memberId, String memberIntroduce) {
     logger.info("updateIntroduce 호출");
-    return dao.updateIntroduce(memberId, memberIntroduce);
+    return memberDAO.updateIntroduce(memberId, memberIntroduce);
   }
 
 } // end MemberService

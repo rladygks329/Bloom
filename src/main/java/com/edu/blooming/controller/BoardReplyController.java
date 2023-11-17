@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.edu.blooming.domain.BoardReplyVO;
 import com.edu.blooming.service.BoardReplyService;
 
+// @formatter:off
 @RestController
 @RequestMapping(value = "/board/replies")
 public class BoardReplyController {
@@ -25,47 +26,45 @@ public class BoardReplyController {
   @Autowired
   private BoardReplyService boardReplyService;
 
-  // 댓글 입력하기
   @PostMapping(value = "/{boardId}")
-  public ResponseEntity<Integer> createReply(@PathVariable("boardId") int boardId,
+  public ResponseEntity<Integer> createReply(
+      @PathVariable("boardId") int boardId,
       @RequestBody BoardReplyVO vo) {
-
     logger.info("createReply() 호출 : boardId = " + boardId + " vo = " + vo);
 
     int result = boardReplyService.create(boardId, vo);
     return new ResponseEntity<Integer>(result, HttpStatus.OK);
   }
 
-  // 게시글의 댓글 가져오기
   @GetMapping(value = "/{boardId}")
   public ResponseEntity<List<BoardReplyVO>> getReplies(@PathVariable("boardId") int boardId) {
     logger.info("getReplies() 호출 : boardId = " + boardId);
+    
     List<BoardReplyVO> list = boardReplyService.getReplies(boardId);
     return new ResponseEntity<List<BoardReplyVO>>(list, HttpStatus.OK);
   }
 
-  // 댓글 수정하기
   @PutMapping("/{replyId}")
-  public ResponseEntity<Integer> updateReply(@PathVariable("replyId") int replyId,
+  public ResponseEntity<Integer> updateReply(
+      @PathVariable("replyId") int replyId,
       @RequestBody String boardReplyContent) {
+    logger.info("updateReply() 호출 : replyId = " + replyId + " boardReplyContent" + boardReplyContent);
     int result = boardReplyService.update(replyId, boardReplyContent);
     return new ResponseEntity<Integer>(result, HttpStatus.OK);
   }
 
-  // 댓글 삭제하기
   @DeleteMapping("/{replyId}")
-  public ResponseEntity<Integer> deleteReply(@PathVariable("replyId") int replyId,
+  public ResponseEntity<Integer> deleteReply(
+      @PathVariable("replyId") int replyId,
       @RequestBody int boardId) {
     logger.info("deleteReply() 호출 boardId: " + boardId + "boardReplyId : " + replyId);
 
     int result = boardReplyService.delete(replyId, boardId);
     logger.info("result : " + result);
     HttpStatus status = (result == 1) ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
-
     return new ResponseEntity<>(1, status);
   }
 
-
 }
-
+//@formatter:on
 

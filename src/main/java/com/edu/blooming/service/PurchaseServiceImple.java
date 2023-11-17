@@ -31,7 +31,7 @@ public class PurchaseServiceImple implements PurchaseService {
   public int purchase(int memberId) throws AlreadyExistException {
     logger.info("purchase() 호출, memberId: " + memberId);
     List<LectureVO> list = cartDAO.select(memberId);
-    if (list.size() == 0) {
+    if (list.isEmpty()) {
       return 0;
     }
 

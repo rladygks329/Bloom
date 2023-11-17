@@ -16,6 +16,8 @@ public class BoardServiceImple implements BoardService {
   @Autowired
   private BoardDAO boardDAO;
 
+  public static final String OPTION_NICKNAME = "searchNickname";
+
   @Override
   public int create(BoardVO vo) {
     logger.info("create() 호출 : vo = " + vo.toString());
@@ -23,33 +25,34 @@ public class BoardServiceImple implements BoardService {
   }
 
   @Override
-  public List<BoardVO> read(PageCriteria criteria) {
-    logger.info("read() 호출");
+  public List<BoardVO> read(PageCriteria criteria, String option, String keyword) {
+    logger.info("read() 호출 option : " + option + "keyword : " + keyword);
     logger.info("start = " + criteria.getStart());
     logger.info("end = " + criteria.getEnd());
-    return boardDAO.select(criteria);
-  }
 
-  @Override
-  public List<BoardVO> readByNickname(PageCriteria criteria, String keyword) {
-    logger.info("readByNickname() 호출 keyword: " + keyword);
-    logger.info("start = " + criteria.getStart());
-    logger.info("end = " + criteria.getEnd());
-    return boardDAO.selectByNickname(criteria, keyword);
-  }
+    if (option == null) {
+      return boardDAO.select(criteria);
+    }
 
-  @Override
-  public List<BoardVO> readByTitleOrContent(PageCriteria criteria, String keyword) {
-    logger.info("readByTitleOrContent() 호출");
-    logger.info("start = " + criteria.getStart());
-    logger.info("end = " + criteria.getEnd());
+    if (option.equals(OPTION_NICKNAME)) {
+      boardDAO.selectByNickname(criteria, keyword);
+    }
+
     return boardDAO.selectByTitleOrContent(criteria, keyword);
   }
 
   @Override
-  public int getTotalCounts() {
-    logger.info("getTotalCounts() 호출");
-    return boardDAO.getTotalCounts();
+  public int getTotalCounts(String option, String keyword) {
+    logger.info("getTotalCounts() 호출" + option + "keyword : " + keyword);
+    if (option == null) {
+      return boardDAO.getTotalCounts();
+    }
+
+    if (option.equals(OPTION_NICKNAME)) {
+      return boardDAO.getTotalCountsByNickname(keyword);
+    }
+
+    return boardDAO.getTotalCountsByTitleOrContent(keyword);
   }
 
   @Override
@@ -93,32 +96,16 @@ public class BoardServiceImple implements BoardService {
   }
 
   @Override
-  public int getTotalCountsByTitleOrContent(String keyword) {
-    logger.info("getTotalCountsByTitleOrContent() 호출");
-    return boardDAO.getTotalCountsByTitleOrContent(keyword);
-  }
-
-  @Override
-  public int getTotalCountsByNickname(String keyword) {
-    logger.info("getTotalCountsByMemberId() 호출");
-    return boardDAO.getTotalCountsByNickname(keyword);
-  }
-
-  @Override
-  public int deleteOrUpdate(BoardVO vo) {
+  public int delete(BoardVO vo) {
     logger.info("deleteOrUpdate() 호출 : boardId = " + vo.getBoardId() + " boardReplyCount = "
         + vo.getBoardReplyCount());
-    if (vo.getBoardReplyCount() == 0) {
-      boardDAO.delete(vo.getBoardId());
-      logger.info("delete() 호출");
-    } else {
-      boardDAO.updateForDelete(vo);
+    if (vo.getBoardReplyCount() != 0) {
       logger.info("updateForDelete() 호출");
+      return boardDAO.updateForDelete(vo);
     }
-    return 1;
+    logger.info("delete() 호출");
+    return boardDAO.delete(vo.getBoardId());
   }
-
-
 
 }
 

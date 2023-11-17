@@ -32,14 +32,14 @@ if (loginInfo != null) {
 						
 						<c:if test="<%=isInstructor%>">
 							<li class="nav-item">
-								<a class="nav-link" href="/blooming/member/mypage"> 
+								<a class="nav-link" href="/blooming/member/instructor-page"> 
 									<i class="bi-person-fill me-1"></i> 강사 정보
 								</a>
 							</li>
 						</c:if>
 						
 						<li class="nav-item">
-							<a class="nav-link" href="/blooming/member/member-detail"> 
+							<a class="nav-link" href="/blooming/member/mypage"> 
 								<i class="bi-person-fill me-1"></i> 마이페이지
 							</a>
 						</li>

@@ -14,7 +14,6 @@ public class LectureReplyVO {
 
   public LectureReplyVO(int lectureReplyId, int memberId, int lectureId, String lectureReplyContent,
       String authorName, String authorNickName, String authorProfileUrl, int lectureReplyScore) {
-    super();
     this.lectureReplyId = lectureReplyId;
     this.memberId = memberId;
     this.lectureId = lectureId;

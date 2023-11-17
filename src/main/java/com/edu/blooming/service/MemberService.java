@@ -1,20 +1,18 @@
 package com.edu.blooming.service;
 
 import java.util.Map;
-import javax.servlet.http.HttpSession;
 import com.edu.blooming.domain.MemberVO;
 
 public interface MemberService {
 
-  int create(MemberVO vo); // 회원가입
+  int register(MemberVO vo);
 
-  int checkEmail(String email) throws Exception; // 이메일 중복검사
+  // 이메일 중복검사
+  int checkEmail(String email);
 
-  int checkNickname(String nickname) throws Exception;
+  int checkNickname(String nickname);
 
-  public MemberVO login(MemberVO member) throws Exception; // 로그인
-
-  public void logout(HttpSession session); // 로그아웃
+  public MemberVO login(MemberVO member);
 
   int updatePassword(int memberId, String memberPassword);
 
@@ -24,5 +22,5 @@ public interface MemberService {
 
   Map<String, Object> getInstuctorStatus(int memberId);
 
-} // end MemberService
+}
 
