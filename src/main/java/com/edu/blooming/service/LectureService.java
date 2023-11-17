@@ -12,8 +12,6 @@ public interface LectureService {
 
   int update(LectureVO vo, List<LessonVO> lessons);
 
-  List<LectureVO> read(PageCriteria criteria, int orderType);
-
   List<LectureVO> read(PageCriteria criteria, String keyword, int orderType);
 
   List<LectureVO> readHotLikeLectures(int month, int rank);
@@ -25,7 +23,7 @@ public interface LectureService {
   LectureVO read(int lectureId);
 
   /*
-   * @key: isPurchase, isLike, isCart
+   * @key: likeStatus, cartStatus, purchaseStatus
    */
   Map<String, Object> getUserStatus(int memberId, int lectureId);
 
@@ -34,8 +32,6 @@ public interface LectureService {
   int likeLecture(int memberId, int lectureId) throws AlreadyExistException;
 
   int dislikeLecture(int memberId, int lectureId);
-
-  int getTotalCounts();
 
   int getTotalCounts(int authorId);
 

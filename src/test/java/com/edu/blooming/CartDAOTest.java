@@ -63,12 +63,12 @@ public class CartDAOTest {
   @Test
   public void testSelectExist() {
     cartDAO.insert(1, 1);
-    int result = cartDAO.selectExist(1, 1);
-    assertEquals(1, result);
+    boolean result = cartDAO.selectExist(1, 1);
+    assertEquals(true, result);
 
     cartDAO.delete(1, 1);
     result = cartDAO.selectExist(1, 1);
-    assertEquals(0, result);
+    assertEquals(false, result);
   }
 
   @Test

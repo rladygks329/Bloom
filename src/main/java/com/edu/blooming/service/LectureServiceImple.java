@@ -84,18 +84,14 @@ public class LectureServiceImple implements LectureService {
   }
 
   @Override
-  public List<LectureVO> read(PageCriteria criteria, int orderType) {
-    logger.info("read() 호출");
-    logger.info("start = " + criteria.getStart());
-    logger.info("end = " + criteria.getEnd());
-    return lectureDAO.select(criteria, orderType);
-  }
-
-  @Override
   public List<LectureVO> read(PageCriteria criteria, String keyword, int orderType) {
     logger.info("read() 호출 keyword: " + keyword);
     logger.info("start = " + criteria.getStart());
     logger.info("end = " + criteria.getEnd());
+
+    if (keyword == null || keyword.isBlank()) {
+      return lectureDAO.select(criteria, orderType);
+    }
     return lectureDAO.select(criteria, keyword, orderType);
   }
 
@@ -123,9 +119,9 @@ public class LectureServiceImple implements LectureService {
   public Map<String, Object> getUserStatus(int memberId, int lectureId) {
     Map<String, Object> result = new HashMap<>();
 
-    result.put("isLike", lectureDAO.selectIsMemberLikeLecture(memberId, lectureId));
-    result.put("isPurchase", purchaseDAO.selectIsMemberBuyLecture(memberId, lectureId));
-    result.put("isCart", cartDAO.selectExist(memberId, lectureId) == 1);
+    result.put("likeStatus", lectureDAO.selectIsMemberLikeLecture(memberId, lectureId));
+    result.put("purchaseStatus", purchaseDAO.selectIsMemberBuyLecture(memberId, lectureId));
+    result.put("cartStatus", cartDAO.selectExist(memberId, lectureId));
 
     return result;
   }
@@ -158,12 +154,6 @@ public class LectureServiceImple implements LectureService {
   }
 
   @Override
-  public int getTotalCounts() {
-    logger.info("getTotalCounts() 호출");
-    return lectureDAO.getLectureCount();
-  }
-
-  @Override
   public int getTotalCounts(int authorId) {
     logger.info("getTotalCounts() 호출 : memberId : " + authorId);
     return lectureDAO.getLectureCount(authorId);
@@ -172,6 +162,9 @@ public class LectureServiceImple implements LectureService {
   @Override
   public int getTotalCounts(String keyword) {
     logger.info("getTotalCounts() 호출 : keyword : " + keyword);
+    if (keyword == null || keyword.isBlank()) {
+      return lectureDAO.getLectureCount();
+    }
     return lectureDAO.getLectureCount(keyword);
   }
 

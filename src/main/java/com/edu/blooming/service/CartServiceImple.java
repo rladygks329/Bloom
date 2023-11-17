@@ -38,8 +38,7 @@ public class CartServiceImple implements CartService {
   @Override
   public boolean isExist(int memberId, int lectureId) {
     logger.info("isExist() 실행 memberId : " + memberId + " lectureId : " + lectureId);
-    int result = cartDAO.selectExist(memberId, lectureId);
-    return result == 1;
+    return cartDAO.selectExist(memberId, lectureId);
   }
 
   @Override
