@@ -17,7 +17,7 @@ import com.edu.blooming.util.PageCriteria;
 @RunWith(SpringJUnit4ClassRunner.class)
 
 @ContextConfiguration(locations = {"file:src/main/webapp/WEB-INF/spring/**/*.xml"})
-@TestPropertySource("classpath:database.properties")
+@TestPropertySource("classpath:application.properties")
 @WebAppConfiguration
 public class LectureDAOTest {
 
@@ -109,9 +109,11 @@ public class LectureDAOTest {
 
   private void testSelect() {
     PageCriteria criteria = new PageCriteria();
-    List<LectureVO> list = dao.select(criteria);
-    for (LectureVO vo : list) {
-      logger.info("vo : " + vo.toString());
+    for (int i = 0; i < 6; i++) {
+      List<LectureVO> list = dao.select(criteria, i);
+      for (LectureVO vo : list) {
+        logger.info("vo : " + vo.toString());
+      }
     }
   } // end testSelect()
 
@@ -137,9 +139,11 @@ public class LectureDAOTest {
 
   private void testSelectByKeyword() {
     PageCriteria criteria = new PageCriteria();
-    List<LectureVO> list = dao.select(criteria, "강좌");
-    for (LectureVO vo : list) {
-      logger.info("vo : " + vo.toString());
+    for (int i = 0; i < 6; i++) {
+      List<LectureVO> list = dao.select(criteria, "강좌", i);
+      for (LectureVO vo : list) {
+        logger.info("vo : " + vo.toString());
+      }
     }
   } // end testSelectByKeyword();
 

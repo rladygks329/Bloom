@@ -11,7 +11,7 @@ public interface CartDAO {
 
   int delete(int memberId, int lectureId);
 
-  int selectExist(int memberId, int lectureId);
+  boolean selectExist(int memberId, int lectureId);
 
   List<LectureVO> select(int memberId);
 

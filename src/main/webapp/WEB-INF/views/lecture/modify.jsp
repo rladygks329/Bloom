@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+	<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 	<!DOCTYPE html>
 	<html>
 	<head>
@@ -15,20 +15,21 @@
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
 		<!-- Bootstrap core JS-->
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-		<meta charset="UTF-8">
-		<title>레슨 : 등록</title>
-
+		
+		<!-- Tus protocol -->
 		<script src="https://cdn.jsdelivr.net/npm/tus-js-client@latest/dist/tus.min.js"></script>
-		<script type="text/javascript">
-		</script>
+		
+		<meta charset="UTF-8">
+		<title>강좌 변경</title>
 		<script>
 			function validateInputs(event) {
 				const title = $('#lectureTitle').val();
 				const description = $('#lectureDescription').val();
 				const price = $('#lecturePrice').val();
 				const thumbnail = $('#lectureThumbnailUrl').val();
-				const lectureVideos = $('input[name=lectureVideosURL]');
+				const lectureVideos = $('.uploaded-div');
 				const uploadRate = $('.progress-bar');
+				
 
 				if (!title) {
 					alert("강좌 제목을 입력해주세요");
@@ -59,34 +60,70 @@
 					alert("강의 영상을 하나라도 업로드 해주세요");
 					return false;
 				}
-
-
+				
 				let result = true;
 				$.each(uploadRate, function (index, el) {
 					const proccessRate = $(this).text();
 					if (proccessRate != "100.00%") {
 						alert("모든 강의 영상을 업로드 완료 해주세요");
-						return false;
+						result = false;
 					}
 				});
-
-				return true;
+				
+				if(result){
+					// diabled한 input은 넘어가지 않으므로 풀어준다.
+					$("input[name='lessonName']").each(function(i) {
+				        $(this).removeAttr('disabled');
+					});
+				}
+				
+				return result;
 			} //end validateInputs()
 
 			function renderFile(file) {
 				const fileName = file.name;
-				const name = fileName.substring(0, fileName.lastIndexOf("."))
-				const extension = fileName.substring(fileName.lastIndexOf(".") + 1)
-
-				const progressBarContainer = $('<div class="uploaded-div small text-muted mt-2">').text(name);
+				const name = fileName.substring(0, fileName.lastIndexOf("."));
+				const extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+				let index = Number($('input[name="lessonIndex"]').last().val());
+				if(Number.isNaN(index)){
+					index = 0;
+				}
+				
+				if(extension != "mp4"){
+					alert("mp4 파일을 올려주세요");
+					return;
+				}
+				const wrapper = $('<div class="uploaded-div small text-muted mt-2">');
+				
+				const inputGroup = $('<div class="input-group my-1 py-1">');
+				const moveIcon = $('<span class="input-group-text">').append('<i class="bi bi-arrows-move">');
+				const inputName = $('<input class="form-control" name="lessonName" value="'+ name +'" disabled="disabled" required />');
+				const inputURL = $('<input name="lessonUrl" type="hidden">');
+				const inputId = $('<input name="lessonId" type="hidden">').val(0);
+				const inputIndex = $('<input name="lessonIndex" type="hidden">').val(index + 1024);
+				const editBtn = $('<button type="button" class="btn btn-primary btn-edit">').text("수정");
+				const deleteBtn = $('<button type="button" class="btn btn-danger btn-delete">').text("삭제");
+				
 				const progressBarWrapper = $(`<div class="progress">`);
 				const progressBar = $(`<div class="progress-bar progress-bar-striped" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">`).text("0%");
 				const button = $(`<button type="button" class="btn btn-primary my-3">전송 시작</button>`);
-				const inputURL = $(`<input name="lectureVideosURL" type="hidden" required>`);
-				const inputTitle = $(`<input name="lectureVideosTitle" type="hidden">`).val(name);
-
-				progressBarWrapper.append(progressBar)
-				progressBarContainer.append(progressBarWrapper).append(button).append(inputURL).append(inputTitle);
+				
+				inputGroup.append(moveIcon)
+					.append(inputName)
+					.append(inputURL)
+					.append(inputId)
+					.append(inputIndex)
+					.append(editBtn)
+					.append(deleteBtn);
+				
+				progressBarWrapper
+					.append(progressBar);
+					
+				wrapper
+					.append(inputGroup)
+					.append(progressBarWrapper)
+					.append(button)
+					
 
 				button.click(function () {
 					const chunkSize = 1024 * 1024 * 5; // 5MB
@@ -145,30 +182,62 @@
 				});
 				// 업로드 일시 중지
 				// upload.abort();
-				return progressBarContainer;
+				return wrapper;
 			}
 
-			function handleFileChange(event) {
-				const files = event.target.files;
-				const length = files.length;
-
-				let result = "";
-				let i;
-
-				// 초기화
-				const uploadedVideos = $(".uploaded-video");
-				uploadedVideos.empty();
-
-				for (i = 0; i < length; i++) {
-					const view = renderFile(files[i]);
-					uploadedVideos.append(view);
-				}
+			function draggable(){
 				$('.uploaded-video').sortable({
-					items: $('.uploaded-div')
+					items: $('.uploaded-div'),
+					update: function( event, ui ) {
+						const item = ui.item;
+						const index = $(item).index();
+						const length = $(item).parent().children().length;
+						const input = $(item).find('input[name="lessonIndex"]');
+						
+						let value = 0;
+						if(index == 0){
+							value = Number($(item).siblings('.uploaded-div:first').find('input[name=lessonIndex]').val())/2;
+						}else if(index == length - 1){
+							value = Number($(item).siblings('.uploaded-div:last').find('input[name=lessonIndex]').val()) + 1024;
+						}else{
+							const prev = Number($(item).prev().find('input[name=lessonIndex]').val())
+							const next = Number($(item).next().find('input[name=lessonIndex]').val())
+							value = (prev + next)/2
+						}
+						input.val(value);
+					}
 				});
+			} //end draggable
+			
+			function handleFileChange(event) {
+				const container = $(".uploaded-video");
+				// 파일들을 순회하면서 뷰 추가하기
+				[...event.target.files].forEach(file => container.append(renderFile(file)));
+				draggable();
 			}
-
+			
+			function handleEdit(btnEdit){
+				const input = $(btnEdit).siblings('input[name="lessonName"]');
+				const condition = input.prop("disabled");
+				$(btnEdit).text(condition ? "완료" : "수정");
+				input.prop("disabled", !condition);
+			}
+			
+			function handleDelete(btnDelete){
+				const row = $(btnDelete).closest(".uploaded-div").remove();
+			}
+			
 			$(function () {
+				draggable();	
+				$(".uploaded-video").click(function(event){
+					const target = event.target;
+					if($(target).hasClass("btn-edit")){
+						handleEdit(target);
+					}else if($(target).hasClass("btn-delete")){
+						handleDelete(target);
+					}
+				})
+				
 				// 가격 에러 메세지
 				$('#lecturePrice').blur(function (event) {
 					const label = $("#lecturePriceLabel");
@@ -199,9 +268,7 @@
 
 					// 드래그한 파일 정보를 갖고 있는 객체
 					var files = event.originalEvent.dataTransfer.files;
-
-					var i = 0;
-					for (i = 0; i < files.length; i++) {
+					for (let i = 0; i < files.length; i++) {
 						console.log(files[i]);
 						formData.append("files", files[i]);
 					}
@@ -229,15 +296,15 @@
 			<section class="py-2 bg-secondary">
 				<div class="container">
 					<div class="row d-flex justify-content-center align-items-center h-100">
-						<form action="/blooming/lecture/upload" method="post" onsubmit="return validateInputs(event)">
-							<input type="hidden" id="memberId" name="memberId" value="${memberId}" />
-							<div class="col-xl-9">
-
+						<form action="${postURL}" method="post" onsubmit="return validateInputs(event)">
+							<input type="hidden" name="memberId" value="${memberId}"/>
+							<c:if test="${not empty lecture }">
+								<input type="hidden" name="lectureId" value="${lecture.lectureId }"/>
+							</c:if>
+							<div class="col">
 								<h1 class="text-white my-2">강좌 등록</h1>
-
 								<div class="card" style="border-radius: 15px;">
 									<div class="card-body">
-
 										<!-- Lecture Title -->
 										<div class="row align-items-center pt-4 pb-3">
 											<div class="col-md-3 ps-5">
@@ -245,8 +312,7 @@
 											</div>
 											<div class="col-md-9 pe-5">
 												<input id="lectureTitle" name="lectureTitle" type="text"
-													class="form-control form-control-lg" placeholder="제목을 입력해주세요 "
-													autofocus />
+													class="form-control form-control-lg" placeholder="제목을 입력해주세요 " value="${lecture.lectureTitle }" autofocus />
 											</div>
 										</div>
 
@@ -256,9 +322,8 @@
 												<h6 class="mb-0">강좌 설명</h6>
 											</div>
 											<div class="col-md-9 pe-5">
-												<textarea id="lectureDescription" name="lectureDescription" type="text"
-													class="form-control" placeholder="강좌 설명을 입력해주세요" cols="20"
-													rows="3"></textarea>
+												<textarea id="lectureDescription" name="lectureDescription" type="text" class="form-control" 
+												placeholder="강좌 설명을 입력해주세요" cols="20" rows="3">${lecture.lectureDescription }</textarea>
 											</div>
 										</div>
 
@@ -274,7 +339,7 @@
 												<div id="lecturePriceLabel" class="small text-muted mt-2" hidden></div>
 												<input id="lecturePrice" name="lecturePrice" type="number" min="0"
 													step="1000" class="form-control form-control-lg"
-													placeholder="10000" />
+													placeholder="10000" value="${lecture.lecturePrice }"/>
 											</div>
 										</div>
 
@@ -286,10 +351,9 @@
 												<h6 class="mb-0">미리보기 이미지</h6>
 											</div>
 											<div class="col-md-9 pe-5">
-												<img id="lectureThumbnailImg" src="https://placehold.co/600x200"
-													class="img-fluid file-drop" alt="Responsive image"> <input
-													id="lectureThumbnailUrl" name="lectureThumbnailUrl" type="hidden"
-													required>
+												<img id="lectureThumbnailImg" src="${lecture.lectureThumbnailUrl }"
+													class="img-fluid file-drop" alt="Responsive image"> 
+													<input id="lectureThumbnailUrl" name="lectureThumbnailUrl" type="hidden" value="${lecture.lectureThumbnailUrl }" required>
 												<div class="small text-muted mt-2">파일을 끌어다가 올려주세요</div>
 											</div>
 										</div>
@@ -300,31 +364,45 @@
 									<!-- Lessons -->
 									<div class="row align-items-center py-3">
 										<div class="col-md-3 ps-5">
-											<h6 class="mb-0">강의 업로드</h6>
-
+											<h6 class="mb-0">강의 추가</h6>
 										</div>
 										<div class="col-md-9 pe-5">
-											<input class="form-control form-control-lg" type="file"
-												onchange="handleFileChange(event)" multiple />
-											<div class="uploaded-video"></div>
+											<input class="form-control form-control-lg" type="file" placeholder="파일 추가하기"
+												onchange="handleFileChange(event)" multiple="multiple" />
+											<hr>
+											<div class="uploaded-video">
+												<c:forEach var="lesson" items="${lessons }">
+													<div class="uploaded-div small text-muted mt-2">
+														<div class="input-group my-1 p-1">
+															<span class="input-group-text"> <i class="bi bi-arrows-move"></i></span>
+															<input class="form-control" name="lessonName" value="${lesson.lessonName }" disabled="disabled" required/>
+															<input name="lessonUrl" type="hidden" value="${lesson.lessonUrl}"/>
+															<input name="lessonId" type="hidden" value="${lesson.lessonId}">
+															<input name="lessonIndex" type="hidden" value="${lesson.lessonIndex}">
+															<button type="button" class="btn btn-primary btn-edit"> 수정 </button>
+															<button type="button" class="btn btn-danger btn-delete"> 삭제 </button>
+														</div>
+														<div class="progress">
+															<div class="progress-bar progress-bar-striped" role="progressbar" style="width: 100%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">100.00%</div>
+														</div>
+													</div>
+												</c:forEach>
+											</div>
 											<div class="small text-muted mt-2">강의에 필요한 영상을 올려주세요</div>
 											<div class="small text-muted mt-2 ">드래그하여 순서를 변경하세요</div>
-											<div class="small text-danger mt-2 ">동영상 이름이 소제목으로 설정되오니
-												주의해주세요</div>
+											<div class="small text-danger mt-2 ">동영상 이름이 소제목으로 설정되오니 주의해주세요</div>
 										</div>
 									</div>
 									<hr class="mx-n3">
 									<div class="px-5 py-4">
-										<button type="submit" class="btn btn-primary btn-lg">강좌
-											만들기</button>
+										<button type="submit" class="btn btn-primary btn-lg">강좌 수정하기</button>
 									</div>
-
 								</div>
 								<!-- end card -->
 							</div>
+							</div>
+						</form>
 					</div>
-					</form>
-				</div>
 				</div>
 				<!-- end container -->
 			</section>

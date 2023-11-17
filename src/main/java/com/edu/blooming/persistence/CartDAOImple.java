@@ -52,14 +52,15 @@ public class CartDAOImple implements CartDAO {
   }
 
   @Override
-  public int selectExist(int memberId, int lectureId) {
+  public boolean selectExist(int memberId, int lectureId) {
     logger.info("selectExist() 호출 : memberId = " + memberId + " lectureId = " + lectureId);
 
     Map<String, Integer> args = new HashMap<>();
     args.put("memberId", memberId);
     args.put("lectureId", lectureId);
 
-    return sqlSession.selectOne(NAMESPACE + ".select_exist", args);
+    int result = sqlSession.selectOne(NAMESPACE + ".select_exist", args);
+    return (result == 1);
   }
 
   @Override

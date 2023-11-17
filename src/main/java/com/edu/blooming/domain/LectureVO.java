@@ -3,6 +3,13 @@ package com.edu.blooming.domain;
 import java.util.Date;
 
 public class LectureVO {
+  public static final int ORDER_TYPE_DEFAULT = 0;
+  public static final int ORDER_TYPE_PRICE_DESC = 1;
+  public static final int ORDER_TYPE_PRICE_ASC = 2;
+  public static final int ORDER_TYPE_LIKE_COUNT_DESC = 3;
+  public static final int ORDER_TYPE_SALES_COUNT_DESC = 4;
+  public static final int ORDER_TYPE_REPLY_COUNT_DESC = 5;
+
   private int lectureId;
   private int memberId;
   private String authorName;
@@ -38,6 +45,20 @@ public class LectureVO {
     this.lectureThumbnailUrl = lectureThumbnailUrl;
     this.lectureDateCreated = lectureDateCreated;
   }
+
+  /*
+   * @formatter:off
+   * @param: number
+   * @return: LectureVO order type (0 <= x <= 8)
+   * @formatter:on
+   */
+  public static final int getOrderType(int n) {
+    if (ORDER_TYPE_DEFAULT <= n && n <= ORDER_TYPE_REPLY_COUNT_DESC) {
+      return n;
+    }
+    return ORDER_TYPE_DEFAULT;
+  }
+
 
   public int getLectureId() {
     return lectureId;

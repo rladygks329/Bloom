@@ -4,16 +4,18 @@ public class LessonVO {
   private int lessonId;
   private int lectureId;
   private int lessonVideoProcessingLevel;
+  private int lessonIndex;
   private String lessonName;
   private String lessonUrl;
 
   public LessonVO() {}
 
-  public LessonVO(int lessonId, int lectureId, int lessonVideoProcessingLevel, String lessonName,
-      String lessonUrl) {
+  public LessonVO(int lessonId, int lectureId, int lessonVideoProcessingLevel, int lessonIndex,
+      String lessonName, String lessonUrl) {
     this.lessonId = lessonId;
     this.lectureId = lectureId;
     this.lessonVideoProcessingLevel = lessonVideoProcessingLevel;
+    this.lessonIndex = lessonIndex;
     this.lessonName = lessonName;
     this.lessonUrl = lessonUrl;
   }
@@ -42,6 +44,13 @@ public class LessonVO {
     this.lessonVideoProcessingLevel = lessonVideoProcessingLevel;
   }
 
+  public int getLessonIndex() {
+    return lessonIndex;
+  }
+
+  public void setLessonIndex(int lessonIndex) {
+    this.lessonIndex = lessonIndex;
+  }
 
   public String getLessonName() {
     return lessonName;
@@ -62,8 +71,8 @@ public class LessonVO {
   @Override
   public String toString() {
     return "LessonVO [lessonId=" + lessonId + ", lectureId=" + lectureId
-        + ", lessonVideoProcessingLevel=" + lessonVideoProcessingLevel + ", lessonName="
-        + lessonName + ", lessonUrl=" + lessonUrl + "]";
+        + ", lessonVideoProcessingLevel=" + lessonVideoProcessingLevel + ", lessonIndex="
+        + lessonIndex + ", lessonName=" + lessonName + ", lessonUrl=" + lessonUrl + "]";
   }
 
 }

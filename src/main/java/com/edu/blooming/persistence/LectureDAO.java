@@ -47,11 +47,11 @@ public interface LectureDAO {
    */
   List<LectureVO> selectHotSaleLecture(int month, int rank);
 
-  List<LectureVO> select(PageCriteria criteria, String keyword);
+  List<LectureVO> select(PageCriteria criteria, String keyword, int orderType);
 
-  List<LectureVO> select(PageCriteria criteria);
+  List<LectureVO> select(PageCriteria criteria, int orderType);
 
-  List<LectureVO> select(PageCriteria criteria, int memberId);
+  // List<LectureVO> select(PageCriteria criteria, int memberId, int orderType);
 
   List<LectureVO> selectByAuthor(int memberId);
 

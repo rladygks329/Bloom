@@ -137,39 +137,41 @@ public class LectureDAOImple implements LectureDAO {
   }
 
   @Override
-  public List<LectureVO> select(PageCriteria criteria) {
+  public List<LectureVO> select(PageCriteria criteria, int orderType) {
     logger.info("select() 호출 : criteria : " + criteria);
 
     HashMap<String, Integer> args = new HashMap<>();
     args.put("start", criteria.getStart());
     args.put("end", criteria.getEnd());
+    args.put("orderType", LectureVO.getOrderType(orderType));
 
     return sqlSession.selectList(NAMESPACE + ".paing_select", args);
   }
 
   @Override
-  public List<LectureVO> select(PageCriteria criteria, String keyword) {
+  public List<LectureVO> select(PageCriteria criteria, String keyword, int orderType) {
     logger.info("select() 호출 : criteria : " + criteria.toString() + " keyword : " + keyword);
 
     HashMap<String, Object> args = new HashMap<>();
     args.put("start", criteria.getStart());
     args.put("end", criteria.getEnd());
     args.put("keyword", "%" + keyword + "%");
+    args.put("orderType", LectureVO.getOrderType(orderType));
 
     return sqlSession.selectList(NAMESPACE + ".paging_select_by_keyword", args);
   }
 
-  @Override
-  public List<LectureVO> select(PageCriteria criteria, int memberId) {
-    logger.info("select() 호출 : criteria : " + criteria + " memberId = " + memberId);
-
-    HashMap<String, Integer> args = new HashMap<>();
-    args.put("start", criteria.getStart());
-    args.put("end", criteria.getEnd());
-    args.put("memberId", memberId);
-
-    return sqlSession.selectList(NAMESPACE + ".paging_select_by_member_id", args);
-  }
+  // @Override
+  // public List<LectureVO> select(PageCriteria criteria, int memberId) {
+  // logger.info("select() 호출 : criteria : " + criteria + " memberId = " + memberId);
+  //
+  // HashMap<String, Integer> args = new HashMap<>();
+  // args.put("start", criteria.getStart());
+  // args.put("end", criteria.getEnd());
+  // args.put("memberId", memberId);
+  //
+  // return sqlSession.selectList(NAMESPACE + ".paging_select_by_member_id", args);
+  // }
 
   @Override
   public LectureVO select(int lectureId) {

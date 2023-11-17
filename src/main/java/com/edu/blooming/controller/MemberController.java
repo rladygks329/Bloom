@@ -1,5 +1,6 @@
 package com.edu.blooming.controller;
 
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -71,10 +73,23 @@ public class MemberController {
     return "redirect:/main";
   }
 
-
   @GetMapping("/member-detail")
   public void memberDetailGET() {
     logger.info("memberDetail 호출");
+  }
+
+  @GetMapping("/mypage")
+  public String myPageGET(HttpServletRequest request, Model model) {
+    logger.info("myPageGET() 호출");
+    HttpSession session = request.getSession();
+    MemberVO user = (MemberVO) session.getAttribute("loginVo");
+
+    if (user.getMemberLevel().equals("instructor")) {
+      Map<String, Object> result = memberService.getInstuctorStatus(user.getMemberId());
+      model.addAllAttributes(result);
+      return "/member/mypage-instructor";
+    }
+    return "/member/member-detail";
   }
 
   @PostMapping("/changePassword")

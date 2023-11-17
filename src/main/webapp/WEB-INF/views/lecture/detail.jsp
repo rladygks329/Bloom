@@ -150,12 +150,12 @@
 	<%@ include file="/WEB-INF/views/component/navigation.jsp"%>
 	<hr>
 	<!-- Product section-->
-	<input id="like" type="hidden" value="${like}" />
+	<input id="like" type="hidden" value="${likeStatus}" />
 	<input id="lectureId" type="hidden" value="${lectureId}" />
 	<input id="authorId" type="hidden" value="${lecture.memberId }">
 	<input id="memberId" type="hidden" value="${memberId}" />
-	<input id="purchase" type="hidden" value="${purchase}" />
-	<input id="cart" type="hidden" value="${cart}" />
+	<input id="purchase" type="hidden" value="${purchaseStatus}" />
+	<input id="cart" type="hidden" value="${cartStatus}" />
 
 	<section class="py-5">
 		<div class="container px-4 px-lg-5 my-5">
@@ -178,7 +178,7 @@
 					<div class="d-flex">
 						<button id="btn-like"
 							class="btn btn-outline-dark flex-shrink-0 me-1" type="button">
-							<i class="bi bi-suit-heart${like ? "-fill" : ""} p-1" >
+							<i class="bi bi-suit-heart${likeStatus ? "-fill" : ""} p-1" >
 								${lecture.lectureLikeCount } </i>
 						</button>
 
@@ -191,19 +191,19 @@
 										href="/blooming/lecture/${lectureId }/course"> 강의 들으러 가기 </a>
 								</button>
 							</c:when>
-							<c:when test="${purchase }">
+							<c:when test="${purchaseStatus }">
 								<button class="btn btn-outline-dark flex-shrink-0" type="button">
 									<a class="text-reset link-underline link-underline-opacity-0"
 										href="/blooming/lecture/${lectureId }/course">강의 들으러 가기</a>
 								</button>
 							</c:when>
-							<c:when test="${not purchase and cart}">
+							<c:when test="${not purchaseStatus and cartStatus}">
 								<button class="btn btn-outline-dark flex-shrink-0" type="button">
 									<a class="text-reset link-underline link-underline-opacity-0"
 										href="/blooming/cart"> 장바구니 바로 가기 </a>
 								</button>
 							</c:when>
-							<c:when test="${not purchase and not cart}">
+							<c:when test="${not purchaseStatus and not cartStatus}">
 								<button id="addCartBtn" class="btn btn-outline-dark flex-shrink-0" type="button">
 									<i class="bi-cart-fill me-1"></i> 장바구니 담기
 								</button>
@@ -231,8 +231,11 @@
 		<div class="lecture-comment-container"></div>
 
 		<!-- 댓글 입력 창 -->
-		<c:if test="${(not empty memberId) and purchase}">
-			<hr>
+		<hr>
+		<c:if test="${ empty memberId }">
+			<p class="text-secondary">강의를 구매하셔야 수강평을 남길 수 있습니다.</p>
+		</c:if> 
+		<c:if test="${(not empty memberId) and purchaseStatus}">
 			<div
 				class="lecture-comment-prompt input-group border border-dark p-1">
 				<div class="container">
@@ -275,8 +278,7 @@
 											class="bi bi-star-fill" data-rating="3"></i> <i
 											class="bi bi-star-fill" data-rating="4"></i> <i
 											class="bi bi-star-fill" data-rating="5"></i> <input
-											id="review-score" type="hidden" name="whatever1"
-											class="rating-value" value="5">
+											id="review-score" type="hidden"class="rating-value" value="5">
 									</div>
 								</div>
 							</div>
@@ -300,17 +302,14 @@
 		</div>
 	</div>
 	<script type="text/javascript">
-		var $star_rating = $('.review-rating .bi');
-		var SetRatingStar = function(starRating) {
-			return $star_rating
-					.each(function() {
-						if (parseInt($(this).siblings('input.rating-value')
-								.val()) >= parseInt($(this).data('rating'))) {
-							return $(this).removeClass('bi-star').addClass(
-									'bi-star-fill');
+		const $star_rating = $('.review-rating .bi');
+		const SetRatingStar = function(starRating) {
+			return $star_rating.each(function() {
+						if (parseInt($(this).siblings('input.rating-value').val()) >= parseInt($(this).data('rating'))) 
+						{
+							return $(this).removeClass('bi-star').addClass('bi-star-fill');
 						} else {
-							return $(this).removeClass('bi-star-fill')
-									.addClass('bi-star');
+							return $(this).removeClass('bi-star-fill').addClass('bi-star');
 						}
 					});
 		};
@@ -331,6 +330,11 @@
 	
 		    if(memberId === ""){
 		        memberId = -1;
+		    }
+		    
+		    if(replies.length == 0){
+			    const info = $('<p>').addClass("text-secondary").text("수강평이 없습니다.");
+		    	$(".lecture-comment-container").append(info);
 		    }
 	
 		    $.each(replies, function (index, reply) {
@@ -359,7 +363,7 @@
 		        }
 		  
 		        cardHeader.append(starRatingDiv);
-		        cardHeader.append($("<span>").text(reply.authorName));
+		        cardHeader.append($("<span>").text(reply.authorNickName));
 		        cardBody.append($("<div>").text(reply.lectureReplyContent));
 		        cardFooter.append($(`<input type="hidden" value=${reply.lectureReplyId}>`))
 	
