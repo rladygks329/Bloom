@@ -296,8 +296,11 @@
 			<section class="py-2 bg-secondary">
 				<div class="container">
 					<div class="row d-flex justify-content-center align-items-center h-100">
-						<form action="/blooming/lecture/modify" method="post" onsubmit="return validateInputs(event)">
-							<input type="hidden" name="lectureId" value="${lecture.lectureId }"/>
+						<form action="${postURL}" method="post" onsubmit="return validateInputs(event)">
+							<input type="hidden" name="memberId" value="${memberId}"/>
+							<c:if test="${not empty lecture }">
+								<input type="hidden" name="lectureId" value="${lecture.lectureId }"/>
+							</c:if>
 							<div class="col">
 								<h1 class="text-white my-2">강좌 등록</h1>
 								<div class="card" style="border-radius: 15px;">

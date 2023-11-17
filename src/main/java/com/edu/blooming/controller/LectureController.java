@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.edu.blooming.domain.LectureVO;
-import com.edu.blooming.domain.LectureVOBuilder;
 import com.edu.blooming.domain.LessonVO;
 import com.edu.blooming.domain.MemberVO;
 import com.edu.blooming.service.LectureService;
@@ -61,13 +60,12 @@ public class LectureController {
     if (keyword != null) {
       list = lectureService.read(criteria, keyword, orderType);
       pageMaker.setTotalCount(lectureService.getTotalCounts(keyword));
-      model.addAttribute("keyword", keyword);
     } else {
       list = lectureService.read(criteria, orderType);
       pageMaker.setTotalCount(lectureService.getTotalCounts());
     }
     pageMaker.setPageData();
-
+    model.addAttribute("keyword", keyword);
     model.addAttribute("order", order);
     model.addAttribute("lectureList", list);
     model.addAttribute("pageMaker", pageMaker);
@@ -122,34 +120,19 @@ public class LectureController {
     }
 
     model.addAttribute("memberId", memberId);
-
-    return "/lecture/upload";
+    model.addAttribute("postURL", "/blooming/lecture/upload");
+    return "/lecture/modify";
   }
 
   // @formatter:off
   @PostMapping("/upload")
-  public String lectureUploadPOST(String lectureTitle, Integer memberId, String lectureDescription, int lecturePrice,
-      String lectureThumbnailUrl, String[] lectureVideosURL, String[] lectureVideosTitle ) {
+  public String lectureUploadPOST(LectureVO lecture, String[] lessonName, String[] lessonUrl, int[] lessonId, int[] lessonIndex) {
     logger.info("lectureUploadPOST() 호출");
-    
-    for(String s: lectureVideosURL) {
-      logger.info("lectureVideosURL : " + s);
-    }
-    
     List<LessonVO> lessons = new ArrayList<>();
-    for(int i=0; i<lectureVideosURL.length; i++) {
-      LessonVO lesson = new LessonVO(-1, -1, -1, -1, lectureVideosTitle[i], lectureVideosURL[i]);
+    for (int i = 0; i < lessonName.length; i++) {
+      LessonVO lesson = new LessonVO(lessonId[i], -1, -1, -1, lessonName[i], lessonUrl[i]);
       lessons.add(lesson);
     }
-    
-    LectureVO lecture = new LectureVOBuilder()
-        .memberId(memberId)
-        .lectureTitle(lectureTitle)
-        .lectureDescription(lectureDescription)
-        .lecturePrice(lecturePrice)
-        .lectureThumbnailUrl(lectureThumbnailUrl)
-        .build();
-    
     logger.info("vo : " + lecture.toString());
     int result = lectureService.create(lecture, lessons);
     return "redirect:/lecture/list";
@@ -184,8 +167,10 @@ public class LectureController {
     }
 
     List<LessonVO> list = lessonService.getByLectureId(lectureId);
+    model.addAttribute("memberId", memberId);
     model.addAttribute("lecture", vo);
     model.addAttribute("lessons", list);
+    model.addAttribute("postURL", "/blooming/lecture/modify");
     return "/lecture/modify";
   }
 
