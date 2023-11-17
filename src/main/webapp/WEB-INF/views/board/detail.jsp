@@ -13,83 +13,55 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 <title>게시글번호나오게</title>
 </head>
 <body>
-	<c:forEach var="vo" items="${list }">
-		<c:if test="${vo.boardParentId == 0 }">
-			<h2>글내용 보기</h2>
-			<div>
-				<p>글 번호: ${vo.boardId }</p>
-			</div>
-			<div>
-				<p>제목: ${vo.boardTitle }</p>
-			</div>
-			<div>
-				<p>작성자: ${vo.authorName } </p>
-				<fmt:formatDate value="${vo.boardDateCreated }"
-					pattern="yyyy-MM-dd HH:mm:ss" var="boardDateCreated"/>
-				<p>작성일: ${boardDateCreated }</p>
-				<p>조회수: ${vo.boardViewCount }</p>
-				<p>좋아요: ${vo.boardLikeCount }</p>
-			</div>
-			<div>
-				<textarea rows="20" cols="120" readonly>${vo.boardContent }</textarea>
-			</div>
-			
-			<input type="hidden" id="boardId" name="boardId" value="${vo.boardId }">
-			<input type="hidden" id="memberId" value="${sessionScope.loginVo.memberId}">
 
-			<a><input type="button" onclick="goBack()" value="글 목록"></a>
-			<a href="update?boardId=${vo.boardId }&page=${page }"><input type="button" value="글 수정"></a>
-			<input type="button" value="글 삭제">
+	<h2>글내용 보기</h2>
+	<div>
+		<p>글 번호: ${vo.boardId }</p>
+	</div>
+	<div>
+		<p>제목: ${vo.boardTitle }</p>
+	</div>
+	<div>
+		<p>작성자: ${vo.authorNickname } </p>
+		<fmt:formatDate value="${vo.boardDateCreated }"
+			pattern="yyyy-MM-dd HH:mm:ss" var="boardDateCreated"/>
+		<p>작성일: ${boardDateCreated }</p>
+		<p>조회수: ${vo.boardViewCount }</p>
+		<p>댓글수: ${vo.boardReplyCount }</p>
+		<p>좋아요: ${vo.boardLikeCount }</p>
+	</div>
+	<div>
+		<textarea rows="20" cols="120" readonly>${vo.boardContent }</textarea>
+	</div>
+	
+
+	<a><input type="button" onclick="goBack()" value="글 목록"></a>
+	<a href="update?boardId=${vo.boardId }&page=${page }"><input type="button" value="글 수정"></a>
+	
+	<form action="deleteOrUpdate" method="post">
+	    <input type="hidden" name="boardId" value="${vo.boardId}">
+	    <input type="hidden" name="memberId" value="${vo.memberId}">
+	    <input type="hidden" name="boardTitle" value="${vo.boardTitle}">
+	    <input type="hidden" name="boardContent" value="${vo.boardContent}">
+	    <input type="hidden" id="boardReplyCount" name="boardReplyCount" value="${vo.boardReplyCount}">
+		<input type="submit" value="글 삭제">	    
+	</form>
 					
-			<input type="button" id="boardLike" value="좋아요">		
+	<input type="button" id="boardLike" value="좋아요">		
 
-			<br>
-			<br>
-			<br>
-
-			
-		</c:if>
-	</c:forEach>
-
-	<div>
-		<p>답변 ${vo.boardAnswerCount }개</p>
-	</div>
+	<br>
+	<br>
+	<br>
 			
 	<div>
-		<p>답글을 작성해 주세요</p>
-		<textarea rows="10" cols="120" name="boardContent" id="answerContent" placeholder="내용 입력"></textarea>
-		<input type="button" value="저장" id="saveAnswer">
+		<p>댓글을 작성해 주세요</p>
+		<input type="hidden" id="boardId" name="boardId" value="${vo.boardId }">
+		<input type="hidden" id="memberId" name="memberId" value="${sessionScope.loginVo.memberId}">
+		<textarea rows="10" cols="120" id="boardReplyContent" name="boardReplyContent" placeholder="내용 입력"></textarea>
+		<input type="button" id="btnAddReply" value="댓글등록" >
 	</div>
-	<div id="answers">
-		<c:forEach var="vo" items="${list }">
-			<c:if test="${param.boardId == vo.boardParentId }">
-				<div>
-					<p>제목: ${vo.boardTitle }</p>
-					<p>작성자: ${vo.authorName } </p>
-					<p>작성일: ${boardDateCreated }</p>		
-					<p>좋아요: ${vo.boardLikeCount }</p>
-					<p>게시글번호: ${vo.boardId }</p>
-					<p>게시글부모번호: ${vo.boardParentId }</p>
-				</div>	
-				<div>
-					<textarea rows="20" cols="120" readonly>${vo.boardContent }</textarea>
-				</div>
-				<a href="update?boardId=${vo.boardId }&page=${page }"><input type="button" value="글 수정"></a>
-				<input type="button" value="글 삭제">
-				<div>			
-					<input type="hidden" id="boardId" value="${vo.boardId}"> <!-- class에서 id로 변경1108 -->
-					<input type="hidden" id="memberId" value="${sessionScope.loginVo.memberId}">
-					<textarea rows="5" cols="50" id="boardReplyContent"></textarea>
-	
-					<button type="button" class="btnAddReply">댓글 달기</button>
-	       		
-				</div>
-				<div style="text-align: center;">
-					<div id="replies"></div>
-	
-				</div>
-			</c:if>
-		</c:forEach>
+	<div>
+		<div id="replies"></div>
 	</div>
 	
 <script>
@@ -106,7 +78,7 @@ $(document).ready(function(){
 	// Ajax 요청을 통해 초기 "좋아요" 상태를 가져옴
   	$.ajax({
         type: 'GET',
-        url: '/blooming/board/getLikeStatus/' + boardId + '/' + memberId,
+        url: '/blooming/board/like/' + boardId + '/' + memberId,
         success: function(data) {
             // "좋아요" 상태를 확인하고 버튼 텍스트를 업데이트
             if (data) {
@@ -121,8 +93,8 @@ $(document).ready(function(){
     });
 	
 	// 좋아요 onclieck 기능
-    $('#boardLike').click(function() {
-        // var likeStatus = false; // 좋아요 상태를 나타내는 변수 (초기값: 좋아요하지 않음) 위에 확인 후 삭제
+    $('#boardLike').click(function() {    	
+        var likeStatus = false; // 좋아요 상태를 나타내는 변수 (초기값: 좋아요하지 않음) 위에 확인 후 삭제
         // 버튼 텍스트를 확인하여 좋아요 또는 좋아요 취소 요청 구분
         if ($('#boardLike').val() === '좋아요') {
             likeStatus = true; // 좋아요
@@ -153,8 +125,9 @@ $(document).ready(function(){
     });
 
 	// 게시판 댓글 onclick 기능
-	$('.btnAddReply').click(function(){
-		var boardId = $('.boardId').val(); 
+	$('#btnAddReply').click(function(){
+		console.log("댓글입력");
+		var boardId = $('#boardId').val(); 
 		var memberId = $('#memberId').val(); 
 		var boardReplyContent = $('#boardReplyContent').val(); 
 		var obj = {
@@ -186,6 +159,8 @@ $(document).ready(function(){
 	function getAllReplies() {
 		var boardId = $('#boardId').val();
 		console.log(boardId);
+		var boardReplyCount = $('#boardReplyCount').val();
+		console.log(boardReplyCount);
 		
 		var url = 'replies/' + boardId;
 		console.log(url);
@@ -206,6 +181,7 @@ $(document).ready(function(){
 					console.log(this);
 					
 					var boardReplyDateCreated = new Date(this.boardReplyDateCreated);
+					
 					var disabled = 'disabled';
 					var readonly = 'readonly';
 					
@@ -213,19 +189,28 @@ $(document).ready(function(){
 						disabled = '';
 						readonly = '';
 					}
+	                // 포맷팅된 날짜 문자열 생성
+	                var formattedDate = boardReplyDateCreated.getFullYear() + '-' +
+	                                    ('0' + (boardReplyDateCreated.getMonth() + 1)).slice(-2) + '-' +
+	                                    ('0' + boardReplyDateCreated.getDate()).slice(-2) + ' ' +
+	                                    ('0' + boardReplyDateCreated.getHours()).slice(-2) + ':' +
+	                                    ('0' + boardReplyDateCreated.getMinutes()).slice(-2) + ':' +
+	                                    ('0' + boardReplyDateCreated.getSeconds()).slice(-2);
 					
 					list += '<div class="reply_item">'
 						+ '<pre>'
 						+ '<input type="hidden" id="replyId" value="' + this.boardReplyId +'">'
-						+ '<input type="hidden" id="authorName" value="' + this.authorName +'">'
-						+ this.authorName
+						+ '<input type="hidden" id="authorNickname" value="' + this.authorNickname +'">'
+						+ this.authorNickname
 						+ '&nbsp;&nbsp;' // 공백
-						+ '<input type="text" id="boardReplyContent" value="' + this.boardReplyContent + '">'
+						+ '<textarea rows="5" cols="50" id="boardReplyContent">' + this.boardReplyContent + '</textarea>'
 						+ '&nbsp;&nbsp;' // 공백
-						+ boardReplyDateCreated
+						+ formattedDate
 						+ '&nbsp;&nbsp;' // 공백
 						+ '<button class="btn_update" >수정</button>'
 						+ '<button class="btn_delete" >삭제</button>'
+						+ '<button class="btnComment">답글</button>'		
+						+ '<div class="comments"></div>'
 						+ '</pre>'
 						+ '</div>';
 				}); // end each()
@@ -264,14 +249,14 @@ $(document).ready(function(){
 		}); // end ajax()
 	}); // end replies.on()
 	
-	// 삭제 버튼을 클릭하면 선택된 댓글 삭제
+	// 삭제 버튼을 클릭하면 선택된 댓글 삭제 혹은 업데이트
 	$('#replies').on('click', '.reply_item .btn_delete', function(){
 		console.log(this);
-	
+		
 		var boardId = $('#boardId').val();
 		var replyId = $(this).prevAll('#replyId').val();
 		console.log("선택된 댓글 번호 : " + replyId);
-		
+			
 		// ajax 요청
 		$.ajax({
 			type : 'DELETE', 
@@ -288,8 +273,163 @@ $(document).ready(function(){
 				}
 			}
 		}); // end ajax()
+
 	}); // end replies.on()
 	
+    // 답글 불러오기
+	$('#replies').on('click','.reply_item .btnComment', function(){ 		
+		var boardReplyId = $(this).closest('.reply_item').find('#replyId').val();
+		console.log("답글버튼클릭 boardReplyId = " + boardReplyId);
+		getAllComments(boardReplyId, this);
+    }) // end btnComment.click()     
+     
+	// 게시판 답글 전체 가져오기
+	function getAllComments(boardReplyId, context) {
+		var commentContainer = $(context).closest('.reply_item').find('.comments');
+		commentContainer.html('');
+        console.log("getAllComments() 호출: boardReplyId = " + boardReplyId);
+        console.log(this);
+        var url = 'comments/' + boardReplyId;
+        var reply_item = $(this).closest('.reply_item');
+		
+        $.getJSON(
+				url, 
+				function(data) {
+					console.log(data);
+					var memberId = $('#memberId').val();
+					var list =''; 
+									
+					$(data).each(function(){
+						console.log(this);
+						
+						var boardCommentDateCreated = new Date(this.boardCommentDateCreated);						
+						var disabled = 'disabled';
+						var readonly = 'readonly';
+						
+						if(memberId == this.memberId) {
+							disabled = '';
+							readonly = '';
+						}
+
+		                // 포맷팅된 날짜 문자열 생성
+		                var formattedDate = boardCommentDateCreated.getFullYear() + '-' +
+		                                    ('0' + (boardCommentDateCreated.getMonth() + 1)).slice(-2) + '-' +
+		                                    ('0' + boardCommentDateCreated.getDate()).slice(-2) + ' ' +
+		                                    ('0' + boardCommentDateCreated.getHours()).slice(-2) + ':' +
+		                                    ('0' + boardCommentDateCreated.getMinutes()).slice(-2) + ':' +
+		                                    ('0' + boardCommentDateCreated.getSeconds()).slice(-2);
+						
+						list += '<div class="comment_item">'
+							+ '<pre>'
+							+ '<input type="hidden" id="commentId" value="' + this.boardCommentId +'">'
+							+ '<input type="hidden" id="authorNickname" value="' + this.authorNickname +'">'
+							+ this.authorNickname
+							+ '&nbsp;&nbsp;' // 공백
+							+ '<textarea rows="2" cols="50" id="boardCommentContent">' + this.boardCommentContent + '</textarea>'
+							+ '&nbsp;&nbsp;' // 공백
+							+ formattedDate
+							+ '&nbsp;&nbsp;' // 공백
+							+ '<button class="btnUpdateComment" >수정</button>'
+							+ '<button class="btnDeleteComment" >삭제</button>'
+							+ '</pre>'
+							+ '</div>';
+					}); // end each()
+
+					// 답글을 모두 불러온 뒤에 새로운 답글을 작성할 수 있는 input 추가
+		            list += '<div class="comment_regist_item">'
+		                + '<pre>'
+						+ '<input type="hidden" id="authorNickname" value="' + this.authorNickname +'">'
+		                + '&nbsp;&nbsp;' // 공백
+		                + '<textarea rows="2" cols="50" id="boardCommentContent" placeholder="답글을 입력하세요"></textarea>'
+		                + '&nbsp;&nbsp;' // 공백
+		                + '<button class="btnAddComment" >답글 추가</button>'
+		                + '</pre>'
+		                + '</div>';
+		            commentContainer.append(list);
+				}
+			); // end getJSON()
+	} // end getAllComments
+	
+	// 답글 입력
+    $(document).on('click', '.btnAddComment', function(){    	
+   		var replyItem = $(this).closest('.reply_item');   		
+   		var memberId = $('#memberId').val(); 
+		var boardReplyId = $(this).closest('.reply_item').find('#replyId').val();
+	    var boardCommentContent = $(this).prevAll('#boardCommentContent').val(); 	    
+	    var obj = {
+				'memberId' : memberId,
+				'boardReplyId' : boardReplyId, 
+				'boardCommentContent' : boardCommentContent
+		};
+		console.log(obj);		
+
+		$.ajax({
+			type : 'POST',
+			url : 'comments/' + boardReplyId,
+			headers : {
+				'Content-Type' : 'application/json'
+			},
+			data : JSON.stringify(obj),
+			success : function(result){
+				console.log(result);
+				if(result == 1){
+					alert('답글 입력 성공');
+					getAllComments(boardReplyId, replyItem);
+				} 
+			} // end success
+		}) // end ajax
+    }) // end document()
+    
+	// 대댓글 수정
+    $(document).on('click', '.btnUpdateComment', function(){   	 
+   		var replyItem = $(this).closest('.reply_item');
+   		var boardReplyId = $(this).closest('.reply_item').find('#replyId').val();
+		var boardCommentId = $(this).prevAll('#commentId').val();
+	    var boardCommentContent = $(this).prevAll('#boardCommentContent').val(); 	  
+	    console.log("boardCommentId = " + boardCommentId + " boardCommentContent = " + boardCommentContent);
+   	 
+   	 $.ajax({
+   		 type : 'PUT',
+   		 url : 'comments/' + boardCommentId,
+   		 headers : {
+   			 'Content-Type' : 'application/json'
+   		 },
+   		 data : boardCommentContent,
+   		 success : function(result){
+   			 console.log(result);
+   			 if(result == 1){
+   				 alert('답글 수정 성공!');
+   				 getAllComments(boardReplyId, replyItem);
+   				 console.log("수정 ajax 에서 this = " + this);
+   			 }
+   		 } // end success
+   	 }) // end ajax
+    }) // end document(*)
+    
+    $(document).on('click', '.btnDeleteComment', function(){
+   	 console.log(this);
+		var replyItem = $(this).closest('.reply_item');
+   		var boardReplyId = $(this).closest('.reply_item').find('#replyId').val();
+		var boardCommentId = $(this).prevAll('#commentId').val();
+		 
+		$.ajax({
+			type : 'DELETE',
+			url : 'comments/' + boardCommentId,
+			headers : {
+				'Content-Type' : 'application/json'
+			},
+			data : boardReplyId,
+			success : function(result) {
+				console.log(result);
+				if(result == 1){
+					alert('답글 삭제 성공!');
+					getAllComments(boardReplyId, replyItem);
+				}
+			} // end success
+		}) // end ajax
+    }); // end document()
+
+
 }) // end document
 
 

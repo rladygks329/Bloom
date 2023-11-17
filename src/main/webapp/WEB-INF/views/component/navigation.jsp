@@ -43,7 +43,7 @@ if (loginInfo != null) {
 								<i class="bi-person-fill me-1"></i> 마이페이지
 							</a>
 						</li>
-
+            
 						<li class="nav-item">
 							<a class="nav-link" href="/blooming/member/logout">
 								로그아웃

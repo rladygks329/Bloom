@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -34,10 +33,10 @@ public class BoardController {
   private BoardService boardService;
 
   @GetMapping("/list")
-  public void list(Model model, Integer page, Integer numsPerPage) {
+  public void list(Model model, Integer page, Integer numsPerPage, String option, String keyword) {
     logger.info("list() 호출");
     logger.info("page = " + page + ", numsPerPage = " + numsPerPage);
-
+    List<BoardVO> list = null;
     // Paging 처리
     PageCriteria criteria = new PageCriteria();
     if (page != null) {
@@ -48,12 +47,27 @@ public class BoardController {
       criteria.setNumsPerPage(numsPerPage);
     }
 
-    List<BoardVO> list = boardService.read(criteria);
-    model.addAttribute("list", list);
-
     PageMaker pageMaker = new PageMaker();
+    if (option != null) {
+      if (option.equals("searchNickname")) {
+        logger.info("searchNickname");
+        list = boardService.readByNickname(criteria, keyword);
+        pageMaker.setTotalCount(boardService.getTotalCountsByNickname(keyword));
+      } else if (option.equals("searchTitleOrContent")) {
+        logger.info("searchTitleOrContent");
+        list = boardService.readByTitleOrContent(criteria, keyword);
+        pageMaker.setTotalCount(boardService.getTotalCountsByTitleOrContent(keyword));
+      }
+    } else {
+      logger.info("totalCount = " + pageMaker.getTotalCount());
+      list = boardService.read(criteria);
+      pageMaker.setTotalCount(boardService.getTotalCounts());
+    }
+    model.addAttribute("list", list);
+    model.addAttribute("option", option);
+    model.addAttribute("keyword", keyword);
+
     pageMaker.setCriteria(criteria);
-    pageMaker.setTotalCount(boardService.getTotalCounts());
     pageMaker.setPageData();
     model.addAttribute("pageMaker", pageMaker);
   } // end list()
@@ -62,21 +76,9 @@ public class BoardController {
   public String detail(Model model, @RequestParam Integer boardId, @RequestParam Integer page,
       HttpServletRequest request, HttpServletResponse response) {
     // 게시글 조회 코드
-    List<BoardVO> list = boardService.read(boardId);
-    model.addAttribute("list", list);
+    BoardVO vo = boardService.read(boardId);
+    model.addAttribute("vo", vo);
     model.addAttribute("page", page);
-
-    // 좋아요 체크
-    // model.addAttribute("like", false);
-    //
-    // if (request.getSession().getAttribute("vo") != null) {
-    // HttpSession session = request.getSession();
-    // int memberId = ((MemberVO) session.getAttribute("vo")).getMemberId();
-    // Boolean isLike = boardService.checkIsLike(memberId, boardId);
-    //
-    // model.addAttribute("memberId", memberId);
-    // model.addAttribute("like", isLike);
-    // }
 
     // 쿠키 이름과 현재 게시글 ID 및 페이지를 조합하여 쿠키 이름 생성
     String cookieName = "viewed_" + boardId + "_page" + page;
@@ -103,7 +105,7 @@ public class BoardController {
     return "board/detail"; // JSP 페이지 경로만 반환
   }
 
-  @GetMapping("/getLikeStatus/{boardId}/{memberId}")
+  @GetMapping("/like/{boardId}/{memberId}")
   @ResponseBody
   public boolean getLikeStatus(@PathVariable("boardId") int boardId,
       @PathVariable("memberId") int memberId) {
@@ -131,11 +133,10 @@ public class BoardController {
     }
   } // end registerPOST()
 
-
   @GetMapping("/update")
   public void updateGET(Model model, Integer boardId, Integer page) {
     logger.info("updateGET() 호출 : boardId = " + boardId);
-    BoardVO vo = boardService.readForUpdate(boardId);
+    BoardVO vo = boardService.read(boardId);
     model.addAttribute("vo", vo);
     model.addAttribute("page", page);
   }
@@ -156,7 +157,7 @@ public class BoardController {
   public ResponseEntity<Integer> likeBoard(@PathVariable("boardId") int boardId,
       @PathVariable("memberId") int memberId) {
     boardService.likeBoard(boardId, memberId);
-    int result = boardService.readForUpdate(boardId).getBoardLikeCount();
+    int result = boardService.read(boardId).getBoardLikeCount();
     return new ResponseEntity<Integer>(result, HttpStatus.OK);
   }
 
@@ -164,24 +165,25 @@ public class BoardController {
   public ResponseEntity<Integer> dislikeBoard(@PathVariable("boardId") int boardId,
       @PathVariable("memberId") int memberId) {
     boardService.dislikeBoard(boardId, memberId);
-    int result = boardService.readForUpdate(boardId).getBoardLikeCount();
+    int result = boardService.read(boardId).getBoardLikeCount();
     return new ResponseEntity<Integer>(result, HttpStatus.OK);
   }
 
-  // 답글 입력
-  @PostMapping(value = "/{boardId}")
-  public ResponseEntity<Integer> createAnswer(@PathVariable("boardId") int boardId,
-      @RequestBody BoardVO vo) {
-
-    logger.info("createAnswer() 호출 : boardId = " + boardId + " vo = " + vo);
-
-    int result = boardService.createAnswer(boardId, vo);
-    return new ResponseEntity<Integer>(result, HttpStatus.OK);
-    // HttpStatus status = (result == 1) ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
-
-    // return new ResponseEntity<>(1, status);
+  @GetMapping("/deleteOrUpdate")
+  public void deleteOrUpdateGET() {
+    logger.info("deleteOrUpdateGET()");
   }
 
+  @PostMapping("/deleteOrUpdate")
+  public String deleteOrUpdatePOST(BoardVO vo) {
+    logger.info("deleteOrUpdatePOST()호출: vo = " + vo.toString());
+    int result = boardService.deleteOrUpdate(vo);
+    if (result == 1) {
+      return "redirect:/board/list";
+    } else {
+      return "redirect:/board/detail?boardId=" + vo.getBoardId();
+    }
+  }
 
 
 }

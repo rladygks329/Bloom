@@ -6,30 +6,29 @@ public class BoardVO {
 
   private int boardId;
   private int memberId;
-  private String authorName;
-  private int boardParentId;
+  private String authorNickname;
   private String boardTitle;
   private String boardContent;
   private int boardViewCount;
-  private int boardAnswerCount;
   private int boardReplyCount;
   private int boardLikeCount;
   private Date boardDateCreated;
 
-  public BoardVO() {}
+  public BoardVO() {
+    super();
+    // TODO Auto-generated constructor stub
+  }
 
-  public BoardVO(int boardId, int memberId, String authorName, int boardParentId, String boardTitle,
-      String boardContent, int boardViewCount, int boardAnswerCount, int boardReplyCount,
-      int boardLikeCount, Date boardDateCreated) {
+  public BoardVO(int boardId, int memberId, String authorNickname, String boardTitle,
+      String boardContent, int boardViewCount, int boardReplyCount, int boardLikeCount,
+      Date boardDateCreated) {
     super();
     this.boardId = boardId;
     this.memberId = memberId;
-    this.authorName = authorName;
-    this.boardParentId = boardParentId;
+    this.authorNickname = authorNickname;
     this.boardTitle = boardTitle;
     this.boardContent = boardContent;
     this.boardViewCount = boardViewCount;
-    this.boardAnswerCount = boardAnswerCount;
     this.boardReplyCount = boardReplyCount;
     this.boardLikeCount = boardLikeCount;
     this.boardDateCreated = boardDateCreated;
@@ -51,20 +50,12 @@ public class BoardVO {
     this.memberId = memberId;
   }
 
-  public String getAuthorName() {
-    return authorName;
+  public String getAuthorNickname() {
+    return authorNickname;
   }
 
-  public void setAuthorName(String authorName) {
-    this.authorName = authorName;
-  }
-
-  public int getBoardParentId() {
-    return boardParentId;
-  }
-
-  public void setBoardParentId(int boardParentId) {
-    this.boardParentId = boardParentId;
+  public void setAuthorNickname(String authorNickname) {
+    this.authorNickname = authorNickname;
   }
 
   public String getBoardTitle() {
@@ -89,14 +80,6 @@ public class BoardVO {
 
   public void setBoardViewCount(int boardViewCount) {
     this.boardViewCount = boardViewCount;
-  }
-
-  public int getBoardAnswerCount() {
-    return boardAnswerCount;
-  }
-
-  public void setBoardAnswerCount(int boardAnswerCount) {
-    this.boardAnswerCount = boardAnswerCount;
   }
 
   public int getBoardReplyCount() {
@@ -125,11 +108,10 @@ public class BoardVO {
 
   @Override
   public String toString() {
-    return "BoardVO [boardId=" + boardId + ", memberId=" + memberId + ", authorName=" + authorName
-        + ", boardParentId=" + boardParentId + ", boardTitle=" + boardTitle + ", boardContent="
-        + boardContent + ", boardViewCount=" + boardViewCount + ", boardAnswerCount="
-        + boardAnswerCount + ", boardReplyCount=" + boardReplyCount + ", boardLikeCount="
-        + boardLikeCount + ", boardDateCreated=" + boardDateCreated + "]";
+    return "BoardVO [boardId=" + boardId + ", memberId=" + memberId + ", authorNickname="
+        + authorNickname + ", boardTitle=" + boardTitle + ", boardContent=" + boardContent
+        + ", boardViewCount=" + boardViewCount + ", boardReplyCount=" + boardReplyCount
+        + ", boardLikeCount=" + boardLikeCount + ", boardDateCreated=" + boardDateCreated + "]";
   }
 
 }

@@ -5,6 +5,7 @@ public class MemberVO {
   private String memberEmail;
   private String memberPassword;
   private String memberName;
+  private String memberNickname;
   private String memberPhone;
   private String memberAddress;
   private String memberLevel;
@@ -14,12 +15,13 @@ public class MemberVO {
   public MemberVO() {}
 
   public MemberVO(int memberId, String memberEmail, String memberPassword, String memberName,
-      String memberPhone, String memberAddress, String memberLevel, String memberIntroduce,
-      String memberProfileUrl) {
+      String memberNickname, String memberPhone, String memberAddress, String memberLevel,
+      String memberIntroduce, String memberProfileUrl) {
     this.memberId = memberId;
     this.memberEmail = memberEmail;
     this.memberPassword = memberPassword;
     this.memberName = memberName;
+    this.memberName = memberNickname;
     this.memberPhone = memberPhone;
     this.memberAddress = memberAddress;
     this.memberLevel = memberLevel;
@@ -99,12 +101,21 @@ public class MemberVO {
     this.memberProfileUrl = memberProfileUrl;
   }
 
+  public String getMemberNickname() {
+    return memberNickname;
+  }
+
+  public void setMemberNickname(String memberNickname) {
+    this.memberNickname = memberNickname;
+  }
+
   @Override
   public String toString() {
     return "MemberVO [memberId=" + memberId + ", memberEmail=" + memberEmail + ", memberPassword="
-        + memberPassword + ", memberName=" + memberName + ", memberPhone=" + memberPhone
-        + ", memberAddress=" + memberAddress + ", memberLevel=" + memberLevel + ", memberIntroduce="
-        + memberIntroduce + ", memberProfileUrl=" + memberProfileUrl + "]";
+        + memberPassword + ", memberName=" + memberName + ", memberNickname=" + memberNickname
+        + ", memberPhone=" + memberPhone + ", memberAddress=" + memberAddress + ", memberLevel="
+        + memberLevel + ", memberIntroduce=" + memberIntroduce + ", memberProfileUrl="
+        + memberProfileUrl + "]";
   }
 
 }

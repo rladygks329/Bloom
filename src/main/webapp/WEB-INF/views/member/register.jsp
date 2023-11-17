@@ -8,87 +8,58 @@
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <meta charset="UTF-8">
 <title>회원가입</title>
-<style>
-.form_instructor {
-	display: none;
-}
+	<style>
+		.form_instructor {display: none;}
+	</style>
+	
+	<script>
+		var emailFinalCheck = false;
+		var pwFinalCheck = false;
+		var pwckFinalCheck = false;
+		var nameFinalCheck = false;
+		var nicknameFinalCheck = false;
+		var phoneFinalCheck = false;
+		var addressFinalCheck = false;
+				
+		function validateInputs(event){
+			if(emailFinalCheck == false) {
+				alert("회원가입 정보를 확인해 주세요 : 이메일");
+				return false;	
+			}
+			
+			if(pwFinalCheck == false) {
+				alert("회원가입 정보를 확인해 주세요 : 비밀번호");
+				return false;	
+			}
+			
+			if(pwckFinalCheck == false) {
+				alert("회원가입 정보를 확인해 주세요 : 비밀번호확인");
+				return false;	
+			}
+			
+			if(nameFinalCheck == false) {
+				alert("회원가입 정보를 확인해 주세요 : 이름");
+				return false;
+			}
+			
+			if(nicknameFinalCheck == false) {
+				alert("회원가입 정보를 확인해 주세요 : 닉네임");
+				return false;
+			}
+			
+			if(phoneFinalCheck == false) {
+				alert("회원가입 정보를 확인해 주세요 : 휴대폰번호");
+				return false;
+			}
+			
+			if(addressFinalCheck == false) {
+				alert("회원가입 정보를 확인해 주세요 : 주소");
+				return false;
+			}
+			
+		} // end validateInputs()		
+	</script>
 
-.divider-text {
-	position: relative;
-	text-align: center;
-	margin-top: 15px;
-	margin-bottom: 15px;
-}
-
-.divider-text span {
-	padding: 7px;
-	font-size: 12px;
-	position: relative;
-	z-index: 2;
-}
-
-.divider-text:after {
-	content: "";
-	position: absolute;
-	width: 100%;
-	border-bottom: 1px solid #ddd;
-	top: 55%;
-	left: 0;
-	z-index: 1;
-}
-
-.btn-facebook {
-	background-color: #405D9D;
-	color: #fff;
-}
-
-.btn-twitter {
-	background-color: #42AEEC;
-	color: #fff;
-}
-</style>
-
-<script>
-	var emailFinalCheck = false;
-	var pwFinalCheck = false;
-	var pwckFinalCheck = false;
-	var nameFinalCheck = false;
-	var phoneFinalCheck = false;
-	var addressFinalCheck = false;
-
-	function validateInputs(event) {
-		if (emailFinalCheck == false) {
-			alert("회원가입 정보를 확인해 주세요 : 이메일");
-			return false;
-		}
-
-		if (pwFinalCheck == false) {
-			alert("회원가입 정보를 확인해 주세요 : 비밀번호");
-			return false;
-		}
-
-		if (pwckFinalCheck == false) {
-			alert("회원가입 정보를 확인해 주세요 : 비밀번호확인");
-			return false;
-		}
-
-		if (nameFinalCheck == false) {
-			alert("회원가입 정보를 확인해 주세요 : 이름");
-			return false;
-		}
-
-		if (phoneFinalCheck == false) {
-			alert("회원가입 정보를 확인해 주세요 : 휴대폰번호");
-			return false;
-		}
-
-		if (addressFinalCheck == false) {
-			alert("회원가입 정보를 확인해 주세요 : 주소");
-			return false;
-		}
-		return true;
-	} // end validateInputs()
-</script>
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/component/navigation.jsp"%>
@@ -98,19 +69,44 @@
 	%>
 
 	<h2>회원 가입하기</h2>
-	<form action="register" method="post" onsubmit="return validateInputs(event)">
-		<p>이메일</p>
-		<input class="email_input" type="text" name="memberEmail"> <span class="email_input_warning" style="display: none;">유효한 이메일 형식이 아닙니다.</span><br> <span class="email_input_re_1" style="display: none;">사용 가능한 이메일입니다.</span> <span class="email_input_re_2" style="display: none;">이메일이 이미 존재합니다.</span>
-		<p>비밀번호</p>
-		<input class="pw_input" type="password" name="memberPassword" placeholder="비밀번호 입력"> <span class="pw_input_re" style="display: none;"></span>
-		<p>비밀번호 확인</p>
-		<input class="pwck_input" type="password" name="memberPasswordCheck" placeholder="비밀번호 확인"> <span class="pwck_input_re_1" style="display: none;">비밀번호가 일치합니다.</span> <span class="pwck_input_re_2" style="display: none;">비밀번호가 일치하지 않습니다.</span>
-		<p>이름</p>
-		<input class="name_input" type="text" name="memberName" placeholder="이름 입력"> <span class="name_input_re" style="display: none;"></span>
-		<p>휴대폰번호</p>
-		<input class="pn_input" type="text" name="memberPhone" placeholder="번호 입력"> <span class="pn_input_re" style="display: none;"></span>
-		<p>주소</p>
-		<input type="text" id="sample6_postcode" placeholder="우편번호" readonly> <input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기" readonly><br> <input type="text" id="sample6_address" name="address" placeholder="주소" readonly><br> <input type="text" id="sample6_detailAddress" name="detailAddress" placeholder="상세주소"> <input type="text" id="sample6_extraAddress" placeholder="참고항목: 선택사항"> <input type="hidden" id="address_input" name="memberAddress">
+  	<form action="register" method="post" onsubmit="return validateInputs(event)">
+    	
+    	<p>이메일</p>
+	    <input class="email_input" type="text" name="memberEmail">
+	    <span class="email_input_warning" style="display: none;">유효한 이메일 형식이 아닙니다.</span><br>
+	    <span class="email_input_re_1" style="display: none;">사용 가능한 이메일입니다.</span> 
+	    <span class="email_input_re_2" style="display: none;">이메일이 이미 존재합니다.</span>	    
+	    	    
+	    <p>비밀번호</p>
+	    <input class="pw_input" type="password" name="memberPassword" placeholder="비밀번호 입력">
+	    <span class="pw_input_re" style="display: none;"></span>
+	    
+	    <p>비밀번호 확인</p>
+	    <input class="pwck_input" type="password" name="memberPasswordCheck" placeholder="비밀번호 확인">
+	    <span class="pwck_input_re_1" style="display: none;">비밀번호가 일치합니다.</span>
+        <span class="pwck_input_re_2" style="display: none;">비밀번호가 일치하지 않습니다.</span>
+	    
+	    <p>이름</p>
+	    <input class="name_input" type="text" name="memberName" placeholder="이름 입력">
+	    <span class="name_input_re" style="display: none;"></span>
+	    
+	    <p>닉네임</p>
+	    <input class="nickname_input" type="text" name="memberNickname" placeholder="닉네임 입력">
+		<span class="nickname_input_warning" style="display: none;">닉네임은 한글, 영문, 숫자 2~6자로 입력해 주세요.</span><br>
+	    <span class="nickname_input_re_1" style="display: none;">사용 가능한 닉네임입니다.</span> 
+	    <span class="nickname_input_re_2" style="display: none;">닉네임이 이미 존재합니다.</span>
+	    	    
+	    <p>휴대폰번호</p>
+	    <input class="pn_input" type="text" name="memberPhone" placeholder="번호 입력">
+	    <span class="pn_input_re" style="display: none;"></span>
+	    
+	    <p>주소</p>
+	    <input type="text" id="sample6_postcode" placeholder="우편번호" readonly>
+		<input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기" readonly><br>
+		<input type="text" id="sample6_address" name="address" placeholder="주소" readonly><br>
+		<input type="text" id="sample6_detailAddress" name="detailAddress" placeholder="상세주소">
+		<input type="text" id="sample6_extraAddress" placeholder="참고항목: 선택사항">
+		<input type="hidden" id="address_input" name="memberAddress">
 		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 		<script>
 			// 입력 이메일 형식 유효성 검사 
@@ -160,6 +156,55 @@
 			$('.email_input').on("blur", function() {
 				checkEmailDuplication($('.email_input').val());
 			});
+			
+			
+			
+			// 닉네임 형식 유효성 검사 
+		    function nicknameFormCheck(nickname){
+		       var form = /^[가-힣a-zA-Z0-9]{2,6}$/;
+		       return form.test(nickname);
+		    }		    
+	    	
+			// 닉네임 중복검사 함수
+			function checkNicknameDuplication(nickname) {
+				if($('.nickname_input').val() === "") {
+					$('.nickname_input_warning').hide();
+					
+				// 유효성 검사를 통과한 경우에만 중복 검사 실행
+				} else if (nicknameFormCheck(nickname)) {
+			    	$('.nickname_input_warning').hide();
+			        var data = { memberNickname: nickname };
+			        $.ajax({
+			            type: 'POST',
+			            url: '/blooming/member/nickname',
+			            data: data,
+			            success: function (result) {
+			                if (result === 'success') {
+			                    $('.nickname_input_re_1').show();
+			                    $('.nickname_input_re_2').hide();
+			                    nicknameFinalCheck = true;
+
+			                } else if (result === 'faile') {
+			                    $('.nickname_input_re_1').hide();
+			                    $('.nickname_input_re_2').show();
+			                    
+			                }
+			            }
+			        });
+			    } else {
+			        // 유효성 검사를 통과하지 못한 경우
+			        $('.nickname_input_warning').show();
+			        $('.nickname_input_re_1').hide();
+			        $('.nickname_input_re_2').hide();
+			        	
+			    }
+			} // end checkEmailDuplication()
+
+			// 이메일 입력 필드의 값이 변경될 때 검사 실행
+			$('.nickname_input').on("blur", function () {
+			    checkNicknameDuplication($('.nickname_input').val());
+			});
+			
 
 			// 비밀번호 형식 및 확인 일치 유효성 검사			
 			$('.pw_input').on("change", function() {

@@ -39,22 +39,35 @@ public class BoardReplyDAOImple implements BoardReplyDAO {
 
   @Override
   public int delete(int boardReplyId) {
-    logger.info("delete() 호출: boardReplyId = " + boardReplyId);
-
-    Map<String, Integer> args = new HashMap<>();
-    args.put("boardReplyId", boardReplyId);
-
+    logger.info("delete 호출 : boardReplyId = " + boardReplyId);
     return sqlSession.delete(NAMESPACE + ".delete", boardReplyId);
   }
 
   @Override
   public List<BoardReplyVO> selectByBoardId(int boardId) {
     logger.info("selectByBoardId() 호출 : boardId = " + boardId);
+    return sqlSession.selectList(NAMESPACE + ".select_by_board_id", boardId);
+  }
 
+  @Override
+  public int updateCommentCount(int boardReplyId, int amount) {
+    logger.info("updateCommentCount() 호출 : boardReplyId = " + boardReplyId + " amount = " + amount);
     Map<String, Integer> args = new HashMap<>();
-    args.put("boardId", boardId);
+    args.put("boardReplyId", boardReplyId);
+    args.put("amount", amount);
+    return sqlSession.update(NAMESPACE + ".update_comment_count", args);
+  }
 
-    return sqlSession.selectList(NAMESPACE + ".select_by_board_id", args);
+  @Override
+  public BoardReplyVO selectByReplyId(int boardReplyId) {
+    logger.info("selectByReplyId() 호출 : boardReplyId = " + boardReplyId);
+    return sqlSession.selectOne(NAMESPACE + ".select_by_reply_id", boardReplyId);
+  }
+
+  @Override
+  public int updateForDelete(int boardReplyId) {
+    logger.info("updateForDelete() 호출 : boardReplyId = " + boardReplyId);
+    return sqlSession.update(NAMESPACE + ".update_for_delete", boardReplyId);
   }
 
 }

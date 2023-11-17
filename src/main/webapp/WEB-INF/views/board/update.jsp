@@ -19,7 +19,7 @@
 			<input type="text" name="boardTitle" value="${vo.boardTitle }">
 		</div>
 		<div>
-			<p>작성자 : ${vo.authorName }</p>
+			<p>작성자 : ${vo.authorNickname }</p>
 			<p>작성일 : ${vo.boardDateCreated }</p>
 		</div>
 		<div>
@@ -35,7 +35,6 @@
 	        window.history.back();
 	    }	    
 	</script>
-
 
 </body>
 </html>

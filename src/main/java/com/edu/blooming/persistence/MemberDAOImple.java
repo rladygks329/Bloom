@@ -65,6 +65,32 @@ public class MemberDAOImple implements MemberDAO {
     return sqlSession.update(NAMESPACE + ".update_password", args);
   }
 
+  @Override
+  public int checkNickname(String nickname) {
+    logger.info("checkNickname() 호출");
+    return sqlSession.selectOne(NAMESPACE + ".check_nickname_duplicated", nickname);
+  }
+
+  @Override
+  public int updateNickname(int memberId, String memberNickname) {
+    logger.info("updateNickname 호출");
+    HashMap<String, Object> args = new HashMap<>();
+    args.put("memberId", memberId);
+    args.put("memberNickname", memberNickname);
+
+    return sqlSession.update(NAMESPACE + ".update_nickname", args);
+  }
+
+  @Override
+  public int updateIntroduce(int memberId, String memberIntroduce) {
+    logger.info("updateIntroduce 호출");
+    HashMap<String, Object> args = new HashMap<>();
+    args.put("memberId", memberId);
+    args.put("memberIntroduce", memberIntroduce);
+
+    return sqlSession.update(NAMESPACE + ".update_introduce", args);
+  }
+
 }
 
 

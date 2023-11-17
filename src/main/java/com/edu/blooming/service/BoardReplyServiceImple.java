@@ -37,13 +37,24 @@ public class BoardReplyServiceImple implements BoardReplyService {
     return boardReplyDAO.update(boardReplyId, boardReplyContent);
   }
 
+  @Transactional(value = "transactionManager")
   @Override
   public int delete(int boardReplyId, int boardId) {
     logger.info("delete() 호출 : boardReplyId = " + boardReplyId);
-    int resultDelete = boardReplyDAO.delete(boardReplyId);
-    logger.info(resultDelete + "행 삭제 성공");
-    int result = boardDAO.updateReplyCount(-1, boardId);
-    logger.info(result + "행 수정 성공");
+    BoardReplyVO vo = boardReplyDAO.selectByReplyId(boardReplyId);
+    logger.info("대댓글 수 = " + vo.getBoardReplyCommentCount());
+
+    if (vo.getBoardReplyCommentCount() == 0) {
+      int resultDelete = boardReplyDAO.delete(boardReplyId);
+      logger.info(resultDelete + "행 삭제 성공");
+      int result = boardDAO.updateReplyCount(boardId, -1);
+      logger.info(result + "행 수정 성공");
+    } else {
+      int resultDelete = boardReplyDAO.updateForDelete(boardReplyId);
+      logger.info(resultDelete + "행 삭제 성공");
+      int result = boardDAO.updateReplyCount(boardId, -1);
+      logger.info(result + "행 수정 성공");
+    }
     return 1;
   }
 

@@ -12,8 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.edu.blooming.domain.MemberVO;
@@ -72,7 +73,7 @@ public class MemberController {
     session.invalidate();
     return "redirect:/main";
   }
-
+  
   @GetMapping("/member-detail")
   public void memberDetailGET() {
     logger.info("memberDetail 호출");
@@ -91,22 +92,56 @@ public class MemberController {
     }
     return "/member/member-detail";
   }
-
-  @PostMapping("/changePassword")
+  
+  @PutMapping("/password")
   @ResponseBody
-  public ResponseEntity<String> changePasswordPOST(@RequestParam("memberId") Integer memberId,
-      @RequestParam("memberPassword") String memberPassword, HttpSession session,
-      RedirectAttributes redirectAttributes) {
-    logger.info("changePassword 호출 memberId = " + memberId);
-    int result = memberService.updatePassword(memberId, memberPassword);
+  public ResponseEntity<Void> changePasswordPOST(@RequestBody String memberPassword,
+      HttpSession session) {
+    int result = 0;
+    if (session.getAttribute("loginVo") != null) {
+      int memberId = ((MemberVO) session.getAttribute("loginVo")).getMemberId();
+      result = memberService.updatePassword(memberId, memberPassword);
+    }
 
     logger.info("결과값 : " + result);
     if (result == 1) {
-      session.invalidate();
-      return new ResponseEntity<String>("success", HttpStatus.OK);
+      return new ResponseEntity<>(HttpStatus.OK);
     }
-    return new ResponseEntity<String>("fail", HttpStatus.OK);
+    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+  }
 
+  @PutMapping("/nickname")
+  @ResponseBody
+  public ResponseEntity<Void> changeNicknamePUT(@RequestBody String memberNickname,
+      HttpSession session) {
+    int result = 0;
+    if (session.getAttribute("loginVo") != null) {
+      int memberId = ((MemberVO) session.getAttribute("loginVo")).getMemberId();
+      result = memberService.updatePassword(memberId, memberNickname);
+    }
+
+    logger.info("결과값 : " + result);
+    if (result == 1) {
+      return new ResponseEntity<>(HttpStatus.OK);
+    }
+    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+  }
+
+  @PutMapping("/introduce")
+  @ResponseBody
+  public ResponseEntity<Void> changeIntroducePUT(@RequestBody String memberIntroduce,
+      HttpSession session) {
+    int result = 0;
+    if (session.getAttribute("loginVo") != null) {
+      int memberId = ((MemberVO) session.getAttribute("loginVo")).getMemberId();
+      result = memberService.updatePassword(memberId, memberIntroduce);
+    }
+
+    logger.info("결과값 : " + result);
+    if (result == 1) {
+      return new ResponseEntity<>(HttpStatus.OK);
+    }
+    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
   }
 
 

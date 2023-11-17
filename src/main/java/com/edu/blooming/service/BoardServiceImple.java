@@ -31,13 +31,29 @@ public class BoardServiceImple implements BoardService {
   }
 
   @Override
+  public List<BoardVO> readByNickname(PageCriteria criteria, String keyword) {
+    logger.info("readByNickname() 호출 keyword: " + keyword);
+    logger.info("start = " + criteria.getStart());
+    logger.info("end = " + criteria.getEnd());
+    return boardDAO.selectByNickname(criteria, keyword);
+  }
+
+  @Override
+  public List<BoardVO> readByTitleOrContent(PageCriteria criteria, String keyword) {
+    logger.info("readByTitleOrContent() 호출");
+    logger.info("start = " + criteria.getStart());
+    logger.info("end = " + criteria.getEnd());
+    return boardDAO.selectByTitleOrContent(criteria, keyword);
+  }
+
+  @Override
   public int getTotalCounts() {
     logger.info("getTotalCounts() 호출");
     return boardDAO.getTotalCounts();
   }
 
   @Override
-  public List<BoardVO> read(int boardId) {
+  public BoardVO read(int boardId) {
     logger.info("read() 호출: boardId = " + boardId);
     return boardDAO.select(boardId);
   }
@@ -46,12 +62,6 @@ public class BoardServiceImple implements BoardService {
   public int update(BoardVO vo) {
     logger.info("update() 호출: vo = " + vo.toString());
     return boardDAO.update(vo);
-  }
-
-  @Override
-  public BoardVO readForUpdate(int boardId) {
-    logger.info("readForUpdate()호출: boardId = " + boardId);
-    return boardDAO.selectForUpdate(boardId);
   }
 
   @Override
@@ -82,15 +92,33 @@ public class BoardServiceImple implements BoardService {
     return boardDAO.selectIsMemberLikeBoard(memberId, boardId);
   }
 
-  @Transactional(value = "transactionManager")
   @Override
-  public int createAnswer(int memberId, BoardVO vo) {
-    logger.info("create()호출 : memberId = " + memberId + "vo = " + vo.toString());
+  public int getTotalCountsByTitleOrContent(String keyword) {
+    logger.info("getTotalCountsByTitleOrContent() 호출");
+    return boardDAO.getTotalCountsByTitleOrContent(keyword);
+  }
 
-    boardDAO.insertAnswer(vo);
-    boardDAO.updateAnswerCount(vo.getBoardId(), 1);
+  @Override
+  public int getTotalCountsByNickname(String keyword) {
+    logger.info("getTotalCountsByMemberId() 호출");
+    return boardDAO.getTotalCountsByNickname(keyword);
+  }
+
+  @Override
+  public int deleteOrUpdate(BoardVO vo) {
+    logger.info("deleteOrUpdate() 호출 : boardId = " + vo.getBoardId() + " boardReplyCount = "
+        + vo.getBoardReplyCount());
+    if (vo.getBoardReplyCount() == 0) {
+      boardDAO.delete(vo.getBoardId());
+      logger.info("delete() 호출");
+    } else {
+      boardDAO.updateForDelete(vo);
+      logger.info("updateForDelete() 호출");
+    }
     return 1;
   }
+
+
 
 }
 

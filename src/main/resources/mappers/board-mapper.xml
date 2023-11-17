@@ -8,45 +8,36 @@
 			b.${boardId},
 			b.${boardTitle},
 			b.${boardContent},
-			m.${memberName} ${authorName},
+			m.${memberNickname} ${authorNickname},
 			b.${boardDateCreated},
 			b.${boardViewCount},
-			b.${boardAnswerCount},
+			b.${boardReplyCount},
 			b.${boardLikeCount}
 		from (
 			select rownum rn, a.* 
 			from (
 					select * 
-					from ${board}
-					where board_parent_id = 0
+					from ${board}					
 					order by ${boardId} desc
 				 ) a
 			 ) b left join ${member} m on b.${memberId} = m.${memberId}
-		where rn between #{start} and #{end}		
+		where rn between #{start} and #{end}	
 	</select>
 	
 	<!-- 페이징처리: 게시글 총 개수 -->
 	<select id="total_count" resultType="Integer">
 		select count(*) total_cnt 
-		from ${board}
-		where board_parent_id = 0	
+		from ${board}			
 	</select>
 	
 	<!-- 특정 게시글 조회 -->
 	<select id="select_by_board_id" resultType="BoardVO">
 		select 
 			b.*, 
-			m.${memberName} ${authorName}
+			m.${memberNickname} ${authorNickname}
 		from ${board} b left join ${member} m on b.${memberId} = m.${memberId}
-		where b.${boardId} = #{boardId} or b.${boardParentId} = #{boardId}
+		where b.${boardId} = #{boardId}
 	</select>	
-	
-	<!-- 게시글 수정: 불러오기 -->
-	<select id="select_by_board_id_for_update" resultType="BoardVO">
-		select * 
-		from ${board}
-		where ${boardId} = #{boardId} 	
-	</select>
 	
 	<!-- 게시글 수정 -->
 	<update id="update">
@@ -58,8 +49,8 @@
 	<!-- 게시글 등록 -->
 	<insert id="insert">
 		insert into ${board}
-		(${memberId}, ${boardParentId}, ${boardTitle}, ${boardContent})
-		values (#{memberId}, #{boardParentId}, #{boardTitle}, #{boardContent})		
+		(${memberId}, ${boardTitle}, ${boardContent})
+		values (#{memberId}, #{boardTitle}, #{boardContent})		
 	</insert>
 	
 	<!-- 게시글 댓글 갯수 수정 -->
@@ -81,9 +72,8 @@
 	 	select count(*)
 	 	from ${board_like} a join ${board} b on a.${boardId} = b.${boardId}  
 	 	where a.${boardId} = #{boardId} and a.${memberId} = #{memberId}
-	 </select>
-	
-	
+	 </select>	
+		
 	<!-- 게시글 좋아요 -->
 	<insert id="insert_board_like">
 		insert into ${board_like}
@@ -104,40 +94,73 @@
 		where ${boardId} = #{boardId}
 	</update>
 	
-	<!-- 답글 등록 -->
-	<insert id="insert_answer">
-		insert into ${board}
-		(${memberId}, ${boardParentId}, ${boardContent})
-		values (#{memberId}, #{boardParentId}, #{boardContent})		
-	</insert>
+	<!-- 1. 보드에서 키워드로 타이틀, 내용 추려서 고르고
+		2. 1번 + rownum rn 이라는 컬럼 붙여서 고르고(b)
+		3. 여기에 조인으로 member테이블에 memberid 로 붙여서 member테이블까지 가져오고
+		4. 여기서 b만 다시 쏙 뺴고 + member테이블 붙인거에서 nickname만 가져오기 -->
+	<!-- 게시글 검색 PageNation: 제목, 내용 -->
+	<select id="paging_select_by_title_content" resultType="BoardVO">
+		select b.*, m.${memberNickname} ${authorNickname}
+		from (
+			select rownum rn, a.* 
+			from (
+					select * 
+					from ${board}
+					where ${boardTitle} like #{keyword} or ${boardContent} like #{keyword}
+					order by ${boardId} desc
+				) a
+			) b join ${member} m on b.${memberId} = m.${memberId}
+		where rn between #{start} and #{end}
+	</select>
+		
+	<!-- 게시글 개수 페이징처리: 제목,내용 -->
+	<select id="total_count_by_title_content" resultType="Integer">
+		select count(*) total_cnt 
+		from ${board}
+		where ${boardTitle} like #{keyword} or ${boardContent} like #{keyword}		
+	</select>
 	
-	<!-- 게시글 답글 갯수 수정 -->
-	<update id="update_answer_count">
+	<!-- 게시글 검색 PageNation: 닉네임 -->
+	<select id="paging_select_by_nickname" resultType="boardVO">
+		select c.${boardId}, c.${memberId}, c.${boardTitle}, c.${boardContent},
+			 c.${boardViewCount}, c.${boardReplyCount}, c.${boardLikeCount}, 
+			 c.${boardDateCreated}, c.${memberNickname} ${authorNickname}
+		from (
+			select rownum rn, a.* 
+			from (
+					select b.*, m.${memberNickname}
+					from ${board} b
+					join ${member} m on b.${memberId} = m.${memberId}
+					where ${memberNickname} like #{keyword} 
+					order by ${boardId} desc
+				) a
+			) c
+		where rn between #{start} and #{end}
+	</select>
+	
+	<!-- 게시글 개수 페이징처리: 닉네임 -->
+	<select id="total_count_by_nickname" resultType="Integer">
+		select count(*) total_cnt 
+		from (
+				select b.*, m.${memberNickname}
+				from ${board} b
+				join ${member} m on b.${memberId} = m.${memberId}
+				where ${memberNickname} like #{keyword}
+			)
+	</select>	
+	
+	<!-- 게시글 삭제관련: 내용 및 멤버 수정 -->
+	<update id="update_for_delete">
 		update ${board}
-		set ${boardAnswerCount} = ${boardAnswerCount} + #{amount}
-		where ${boardId} = #{boardId}
+	 	set ${boardTitle} = '삭제된 게시글입니다', ${boardContent} = '삭제된 게시글입니다', ${memberId} = 999999 
+	 	where ${boardId} = #{boardId}
 	</update>
 	
+	<!-- 게시글 삭제관련: 삭제처리 -->
+	<delete id="delete">
+		delete from ${board}
+		where ${boardId} = #{boardId}
+	</delete>	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<!-- 우선 기존에 있는 boardId로 조회 and 등록하는 쿼리로 가능한지 해보기-->
-	<!-- 게시글 답글 등록시 답글 불러오기 -->
-	<select id="select_all_asnwer_by_boardParent_id">
-		select * from ${board}
-		where ${boardParentId} = #{boardId}
-		order by ${boardId}	
-	</select>
-
-
-
-
-
 </mapper>
+
