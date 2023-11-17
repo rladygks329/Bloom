@@ -25,8 +25,9 @@ public class RegisterController {
   private MemberService memberService;
 
   @GetMapping("/register")
-  public void registerGET() {
+  public void registerGET(@RequestParam("type") String type, Model model) {
     logger.info("registerGET() 호출");
+    model.addAttribute("memberLevel", type);
   } // end registerGET()
 
   @PostMapping("/register")

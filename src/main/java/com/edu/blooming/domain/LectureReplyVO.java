@@ -6,18 +6,21 @@ public class LectureReplyVO {
   private int lectureId;
   private String lectureReplyContent;
   private String authorName;
+  private String authorNickName;
   private String authorProfileUrl;
   private int lectureReplyScore;
 
   public LectureReplyVO() {}
 
   public LectureReplyVO(int lectureReplyId, int memberId, int lectureId, String lectureReplyContent,
-      String authorName, String authorProfileUrl, int lectureReplyScore) {
+      String authorName, String authorNickName, String authorProfileUrl, int lectureReplyScore) {
+    super();
     this.lectureReplyId = lectureReplyId;
     this.memberId = memberId;
     this.lectureId = lectureId;
     this.lectureReplyContent = lectureReplyContent;
     this.authorName = authorName;
+    this.authorNickName = authorNickName;
     this.authorProfileUrl = authorProfileUrl;
     this.lectureReplyScore = lectureReplyScore;
   }
@@ -62,6 +65,14 @@ public class LectureReplyVO {
     this.authorName = authorName;
   }
 
+  public String getAuthorNickName() {
+    return authorNickName;
+  }
+
+  public void setAuthorNickName(String authorNickName) {
+    this.authorNickName = authorNickName;
+  }
+
   public String getAuthorProfileUrl() {
     return authorProfileUrl;
   }
@@ -82,8 +93,9 @@ public class LectureReplyVO {
   public String toString() {
     return "LectureReplyVO [lectureReplyId=" + lectureReplyId + ", memberId=" + memberId
         + ", lectureId=" + lectureId + ", lectureReplyContent=" + lectureReplyContent
-        + ", authorName=" + authorName + ", authorProfileUrl=" + authorProfileUrl
-        + ", lectureReplyScore=" + lectureReplyScore + "]";
+        + ", authorName=" + authorName + ", authorNickName=" + authorNickName
+        + ", authorProfileUrl=" + authorProfileUrl + ", lectureReplyScore=" + lectureReplyScore
+        + "]";
   }
 
 }

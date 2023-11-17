@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.edu.blooming.LessonMapper">
+
 	<insert id="insert">
+		insert into ${lesson}
+		(${lectureId}, ${lessonName}, ${lessonUrl}, ${lessonIndex})
+		values (#{lectureId}, #{lessonName}, #{lessonUrl}, #{lessonIndex})
+		
+		<!-- 입력후 lecture_Id를 리턴함 -->
+		<selectKey keyProperty="lessonId" resultType="Integer" order="AFTER">
+			SELECT LESSON_SEQ.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+	
+	<insert id="append">
 		insert into ${lesson}
 		(${lectureId}, ${lessonName}, ${lessonUrl})
 		values (#{lectureId}, #{lessonName}, #{lessonUrl})
@@ -16,20 +28,7 @@
 		update ${lesson}
 		set ${lessonName} = #{lessonName},
 			${lessonUrl} = #{lessonUrl},
-			${lessonVideoProcessingLevel} = 0
-		where ${lessonId} = #{lessonId}
-	</update>
-	
-	<update id="update_lesson_name">
-		update ${lesson}
-		set ${lessonName} = #{name}
-		where ${lessonId} = #{lessonId}
-	</update>
-	
-	<update id="update_lesson_url">
-		update ${lesson}
-		set ${lessonUrl} = #{url},
-			${lessonVideoProcessingLevel} = 0
+			${lessonIndex} = #{lessonIndex}
 		where ${lessonId} = #{lessonId}
 	</update>
 	
@@ -59,7 +58,17 @@
 	<select id="select_by_lecture_id" resultType="LessonVO">
 		select * from ${lesson}
 		where ${lectureId} = #{lectureId}
-		order by ${lessonId}
+		order by ${lessonIndex}
+	</select>
+	
+	<!-- 강좌 처리 상태를 가져옴 -->
+	<select id="select_lesson_status" resultType="map">	
+		select status.*, l.${lectureTitle}, l.${lectureId}
+		from (
+			select trunc(avg(lesson_video_processing_level), 2) proccess_rate, ${lectureId}
+			from ${lesson} 
+			group by ${lectureId}
+		) status join ${lecture} l on status.${lectureId} = l.${lectureId} 
 	</select>
 	
 </mapper>

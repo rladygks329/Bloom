@@ -1,5 +1,6 @@
 package com.edu.blooming.service;
 
+import java.util.Map;
 import javax.servlet.http.HttpSession;
 import com.edu.blooming.domain.MemberVO;
 
@@ -20,6 +21,8 @@ public interface MemberService {
   int updateNickname(int memberId, String memberNickname);
 
   int updateIntroduce(int memberId, String memberIntroduce);
+
+  Map<String, Object> getInstuctorStatus(int memberId);
 
 } // end MemberService
 

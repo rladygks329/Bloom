@@ -26,27 +26,16 @@ public class LessonDAOImple implements LessonDAO {
   }
 
   @Override
+  public int append(LessonVO vo) {
+    logger.info("append() 호출: vo = " + vo);
+    sqlSession.insert(NAMESPACE + ".append", vo);
+    return vo.getLessonId();
+  }
+
+  @Override
   public int update(LessonVO vo) {
     logger.info("update() 호출 : vo = " + vo);
     return sqlSession.update(NAMESPACE + ".update", vo);
-  }
-
-  @Override
-  public int updateLessonName(int lessonId, String name) {
-    logger.info("updateLessonName() 호출 : lessonId = " + lessonId + " name: " + name);
-    Map<String, Object> args = new HashMap<>();
-    args.put("lessonId", lessonId);
-    args.put("name", name);
-    return sqlSession.update(NAMESPACE + ".update_lesson_name", args);
-  }
-
-  @Override
-  public int updateLessonUrl(int lessonId, String url) {
-    logger.info("updateLessonName() 호출 : lessonId = " + lessonId + " url: " + url);
-    Map<String, Object> args = new HashMap<>();
-    args.put("lessonId", lessonId);
-    args.put("url", url);
-    return sqlSession.update(NAMESPACE + ".update_lesson_url", args);
   }
 
   @Override
@@ -88,6 +77,14 @@ public class LessonDAOImple implements LessonDAO {
     Map<String, Integer> args = new HashMap<>();
     args.put("lessonId", lessonId);
     return sqlSession.selectOne(NAMESPACE + ".select_by_lesson_id", args);
+  }
+
+  @Override
+  public List<Map<String, Object>> selectLessonStatus(int memberId) {
+    logger.info("selectLessonStatus() 호출 : memberId : " + memberId);
+    Map<String, Integer> args = new HashMap<>();
+    args.put("memberId", memberId);
+    return sqlSession.selectList(NAMESPACE + ".select_lesson_status", args);
   }
 
 }
