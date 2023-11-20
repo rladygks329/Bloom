@@ -66,9 +66,10 @@
 		select status.*, l.${lectureTitle}, l.${lectureId}
 		from (
 			select trunc(avg(lesson_video_processing_level), 2) proccess_rate, ${lectureId}
-			from ${lesson} 
+			from ${lesson}
 			group by ${lectureId}
-		) status join ${lecture} l on status.${lectureId} = l.${lectureId} 
+		) status join ${lecture} l on status.${lectureId} = l.${lectureId}
+		where l.${memberId} = #{memberId} 
 	</select>
 	
 </mapper>
