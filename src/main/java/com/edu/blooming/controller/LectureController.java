@@ -193,19 +193,23 @@ public class LectureController {
   }
 
   /// @formatter:off
-  @PostMapping("/like/{lectureId}/{memberId}")
+  @PostMapping("/like/{lectureId}")
   public ResponseEntity<Integer> likeLecture(
-      @PathVariable("lectureId") int lectureId,
-      @PathVariable("memberId") int memberId) {
+      HttpServletRequest request,
+      @PathVariable("lectureId") int lectureId
+  ) {
+    int memberId = (int) request.getAttribute("memberId");
     lectureService.likeLecture(memberId, lectureId);
     int result = lectureService.read(lectureId).getLectureLikeCount();
     return new ResponseEntity<Integer>(result, HttpStatus.OK);
   }
 
-  @DeleteMapping("/like/{lectureId}/{memberId}")
+  @DeleteMapping("/like/{lectureId}")
   public ResponseEntity<Integer> dislikeLecture(
-      @PathVariable("lectureId") int lectureId,
-      @PathVariable("memberId") int memberId) {
+      HttpServletRequest request,
+      @PathVariable("lectureId") int lectureId
+  ) {
+    int memberId = (int) request.getAttribute("memberId");
     lectureService.dislikeLecture(memberId,lectureId);
     int result = lectureService.read(lectureId).getLectureLikeCount();
     return new ResponseEntity<Integer>(result, HttpStatus.OK);

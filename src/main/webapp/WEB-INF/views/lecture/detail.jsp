@@ -60,7 +60,7 @@
 		
 		$.ajax({
 			type : "POST",
-			url : `like/${lectureId}/${memberId}`,
+			url : `like/${lectureId}`,
 			headers : {
 				'Content-Type' : 'application/json'
 			},
@@ -85,7 +85,7 @@
 		
 		$.ajax({
 			type : "DELETE",
-			url : `like/${lectureId}/${memberId}`,
+			url : `like/${lectureId}`,
 			headers : {
 				'Content-Type' : 'application/json'
 			},
@@ -110,7 +110,7 @@
 		
 		$.ajax({
 			type : "POST",
-			url : `/blooming/cart/item/${memberId}/${lectureId}`,
+			url : "/blooming/cart/item/" + lectureId,
 			headers : {
 				'Content-Type' : 'application/json'
 			},
@@ -537,7 +537,6 @@
 		        	getAllReplies();
 		        }
 		    }); // end ajax
-		    
 		}
 	</script>
 	

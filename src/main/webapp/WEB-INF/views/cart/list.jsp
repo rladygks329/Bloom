@@ -2,7 +2,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-
 <!-- Bootstrap css -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
 <!-- Bootstrap icons -->
@@ -19,7 +18,6 @@
 <body>
 	<%@ include file="/WEB-INF/views/component/navigation.jsp"%>
 	<hr>
-	<input type="hidden" name="memberId" value="${memberId }">
 	<div class="container px-4 px-lg-5">
 		<header class="py-2">
 			<div class="d-flex justify-content-between">
@@ -29,10 +27,6 @@
 		</header>
 		<section class="pb-5">
 			<div class="container">
-				<div class="d-flex justify-content-between">
-					<!-- title -->
-
-				</div>
 				<div class="row w-100">
 					<div class="col-lg-12 col-md-12 col-12">
 						<table id="shoppingCart" class="table table-condensed table-responsive">
@@ -55,7 +49,7 @@
 				<div class="row mt-4 d-flex align-items-center">
 
 					<div class="text-center">
-						<form action="/blooming/purchase/${memberId }" method="post">
+						<form action="/blooming/purchase" method="post">
 							<button type="submit" class="btn btn-primary mb-4 btn-lg pl-5 pr-5">결제하기</button>
 						</form>
 					</div>
@@ -70,58 +64,58 @@
 			console.log("updateView 실행")
 			console.log(lectureList);
 			let total = 0;
+			
 			$("table tbody").html("");
-
 			$.each(lectureList, function(index, lecture) {
-								console.log(lecture);
-								let newRow = $("<tr>");
-								let productCell = $("<td>").attr("data-th","Product");
-								let imageCol = $("<div>").addClass("col-md-3 text-left");
-								let img = $("<img>")
-										.attr("src",lecture.lectureThumbnailUrl)
-										.attr("alt", "")
-										.addClass("img-fluid d-none d-md-block rounded mb-2 shadow");
-								
-								imageCol.append(img);
-								let textCol = $("<div>").addClass("col-md-9 text-left mt-sm-2");
-								let productName = $("<h4>").text(lecture.lectureTitle);
-								let brandName = $("<p>").addClass("font-weight-light").text("blooming");
-								textCol.append(productName, brandName);
-								
-								productCell.append(imageCol, textCol);
-								let priceCell = $("<td>")
-										.addClass("align-middle")
-										.attr("data-th", "Price")
-										.text(lecture.lecturePrice.toLocaleString('ko-KR'));
-								total += lecture.lecturePrice;
-								
-								let actionsCell = $("<td>").addClass("actions align-middle").attr("data-th","");
-								let buttonDiv = $("<div>").addClass("text-center");
-								let deleteButton = $("<button>").addClass("btn btn-lg btn-outline-danger");
-								let trashIcon = $("<i>").css("font-size", "1.5em").addClass("bi bi-trash-fill");
-
-								deleteButton.click(function() {
-									const lectureId = lecture.lectureId;
-									const memberId = $("input[name=memberId]").val();
-									console.log(lectureId);
-									removeCartItem(memberId, lectureId);
-								})
-								
-								deleteButton.append(trashIcon);
-								buttonDiv.append(deleteButton);
-								actionsCell.append(buttonDiv);
-
-								newRow.append(productCell, priceCell, actionsCell);
-								$("table tbody").append(newRow);
-							})
+				console.log(lecture);
+				total += lecture.lecturePrice;
+				
+				let newRow = $("<tr>");
+				
+				// productCell
+				let productCell = $("<td>").attr("data-th","Product");
+				let imageCol = $("<div>").addClass("col-md-3 text-left");
+				let img = $("<img>")
+					.attr("src", lecture.lectureThumbnailUrl)
+					.attr("alt", "")
+					.addClass("img-fluid d-none d-md-block rounded mb-2 shadow");
+				imageCol.append(img);
+				let textCol = $("<div>").addClass("col-md-9 text-left mt-sm-2");
+				let productName = $("<h4>").text(lecture.lectureTitle);
+				let brandName = $("<p>").addClass("font-weight-light").text("blooming");
+				textCol.append(productName, brandName);
+				productCell.append(imageCol, textCol);
+				
+				// priceCell
+				let priceCell = $("<td>")
+					.addClass("align-middle")
+					.attr("data-th", "Price")
+					.text(lecture.lecturePrice.toLocaleString('ko-KR'));
+				
+				// actionCell
+				let actionsCell = $("<td>").addClass("actions align-middle").attr("data-th","");
+				let buttonDiv = $("<div>").addClass("text-center");
+				let deleteButton = $("<button>").addClass("btn btn-lg btn-outline-danger");
+				let trashIcon = $("<i>").css("font-size", "1.5em").addClass("bi bi-trash-fill");
+				
+				deleteButton.click(function() {	
+					const lectureId = lecture.lectureId;
+					removeCartItem(lectureId);
+				})
+				deleteButton.append(trashIcon);
+				buttonDiv.append(deleteButton);
+				actionsCell.append(buttonDiv);
+				
+				newRow.append(productCell, priceCell, actionsCell);
+				$("table tbody").append(newRow);
+			})
 			$("#total").text(total.toLocaleString('ko-KR') + " 원");
 		}
 
 		function getCartList() {
-			const memberId = $("input[name=memberId]").val();
 			$.ajax({
 				type : "GET",
-				url : `/blooming/cart/item/${memberId}`,
+				url : "/blooming/cart/item",
 				headers : {
 					'Content-Type' : 'application/json'
 				},
@@ -133,11 +127,10 @@
 			});
 		}
 
-		function removeCartItem(memberId, lectureId) {
-			console.log("removeCartItem() 호출");
+		function removeCartItem(lectureId) {
 			$.ajax({
 				type : "DELETE",
-				url : `/blooming/cart/item/` + memberId + "/" + lectureId,
+				url : "/blooming/cart/item/" + lectureId,
 				headers : {
 					'Content-Type' : 'application/json'
 				},
@@ -146,28 +139,6 @@
 					console.log(response);
 					getCartList();
 				},
-				error : function(xhr, status, error) {
-					console.log(error);
-					// Handle error here
-				}
-			});
-		}
-
-		function purchaseItems(lectureIds) {
-			$.ajax({
-				type : "POST",
-				url : `/blooming/purchase/${memberId}`,
-				headers : {
-					'Content-Type' : 'application/json'
-				},
-				data : JSON.stringify({
-					lectureId : lectureIds
-				}),
-				success : function(response) {
-					console.log("purchaseItems 성공");
-					console.log(response);
-					// move to my page
-				}
 			});
 		}
 
