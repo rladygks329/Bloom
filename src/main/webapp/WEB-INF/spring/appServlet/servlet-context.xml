@@ -51,6 +51,8 @@
 	
 	<interceptors>
 		<interceptor>
+			<mapping path="/lecture/*/course"/>
+			<mapping path="/lecture/modify"/>
 			<mapping path="/lecture/upload"/>
 			<mapping path="/lecture/like/*"/>
 			<mapping path="/cart/**"/>

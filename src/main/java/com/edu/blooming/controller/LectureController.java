@@ -178,18 +178,11 @@ public class LectureController {
   //@formatter:on
 
   @GetMapping("/{lectureId}/course")
-  public String getCourse(Model model, HttpSession session,
+  public String getCourse(Model model, HttpServletRequest request,
       @PathVariable("lectureId") int lectureId) {
 
-    // check login
-    if (session.getAttribute("loginVo") == null) {
-      model.addAttribute("msg", "로그인을 진행해 주세요");
-      model.addAttribute("url", "/blooming/lecture/list");
-      return "alert";
-    }
-
     // check purchase
-    int memberId = ((MemberVO) session.getAttribute("loginVo")).getMemberId();
+    int memberId = (int) request.getAttribute("memberId");
     if (!purchaseService.checkPurchase(memberId, lectureId)) {
       model.addAttribute("msg", "강의를 구매하셔야 보실 수 있습니다.");
       model.addAttribute("url", "/blooming/lecture/list");
