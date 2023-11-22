@@ -47,9 +47,8 @@ public class LectureServiceImple implements LectureService {
     int lectureId = lectureDAO.insert(vo);
     for (LessonVO lesson : lessons) {
       lesson.setLectureId(lectureId);
-      int lessonId = lessonDAO.append(lesson);
-      publisher
-          .publishEvent(new VideoUploadedEvent(this, lesson.getLessonUrl(), lectureId, lessonId));
+      lessonDAO.append(lesson);
+      publisher.publishEvent(new VideoUploadedEvent(this, lesson));
     }
     return 1;
   }
@@ -63,9 +62,7 @@ public class LectureServiceImple implements LectureService {
       if (lesson.getLessonId() == 0) {
         lectureDAO.updateVideoProcessingLevel(lectureId, 0);
         lessonDAO.insert(lesson);
-
-        publisher.publishEvent(new VideoUploadedEvent(this, lesson.getLessonUrl(),
-            lesson.getLectureId(), lesson.getLessonId()));
+        publisher.publishEvent(new VideoUploadedEvent(this, lesson));
       } else {
         lessonDAO.update(lesson);
       }

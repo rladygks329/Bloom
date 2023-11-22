@@ -1,30 +1,27 @@
 package com.edu.blooming.event;
 
 import org.springframework.context.ApplicationEvent;
+import com.edu.blooming.domain.LessonVO;
 
 public class VideoUploadedEvent extends ApplicationEvent {
 
-  private String filename;
-  private int lectureId;
-  private int lessonId;
+  private LessonVO lessonVO;
 
-  public VideoUploadedEvent(Object source, String filename, int lectureId, int lessonId) {
+  public VideoUploadedEvent(Object source, LessonVO lessonVO) {
     super(source);
-    this.filename = filename;
-    this.lectureId = lectureId;
-    this.lessonId = lessonId;
+    this.lessonVO = lessonVO;
   }
 
   public String getFilename() {
-    return filename;
+    return lessonVO.getLessonUrl();
   }
 
   public int getLectureId() {
-    return lectureId;
+    return lessonVO.getLectureId();
   }
 
   public int getLessonId() {
-    return lessonId;
+    return lessonVO.getLessonId();
   }
 
 }
