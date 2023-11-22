@@ -65,7 +65,9 @@ public class PurchaseServiceImple implements PurchaseService {
   @Override
   public boolean checkPurchase(int memberId, int lectureId) {
     logger.info("checkPurchase() 호출, memberId : " + memberId + " lectureId : " + lectureId);
-    return purchaseDAO.selectIsMemberBuyLecture(memberId, lectureId);
+    boolean hasPurchase = purchaseDAO.selectIsMemberBuyLecture(memberId, lectureId);
+    boolean isAuthor = lectureDAO.select(lectureId).getMemberId() == memberId;
+    return hasPurchase || isAuthor;
   }
 
 }
