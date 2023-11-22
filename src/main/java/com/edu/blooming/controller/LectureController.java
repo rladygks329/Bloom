@@ -11,11 +11,8 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +22,7 @@ import com.edu.blooming.domain.LessonVO;
 import com.edu.blooming.domain.MemberVO;
 import com.edu.blooming.service.LectureService;
 import com.edu.blooming.service.LessonService;
+import com.edu.blooming.service.PurchaseService;
 import com.edu.blooming.util.PageCriteria;
 import com.edu.blooming.util.PageMaker;
 
@@ -45,6 +43,9 @@ public class LectureController {
 
   @Autowired
   private LessonService lessonService;
+
+  @Autowired
+  private PurchaseService purchaseService;
 
   @GetMapping("/list")
   public void lectureGET(Model model, String page, String numsPerPage, String keyword,
@@ -172,17 +173,33 @@ public class LectureController {
                                       .mapToObj(i -> new LessonVO(lessonId[i], lecture.getLectureId(), -1, lessonIndex[i], lessonName[i], lessonUrl[i]))
                                       .collect(Collectors.toList());
     lectureService.update(lecture, lessons);
-    return "redirect:/member/mypage";
+    return "redirect:/member/instructor-page";
   }
   //@formatter:on
 
   @GetMapping("/{lectureId}/course")
-  public String getCourse(Model model, @PathVariable("lectureId") int lectureId) {
-    List<LessonVO> lessons = lessonService.getByLectureId(lectureId);
+  public String getCourse(Model model, HttpSession session,
+      @PathVariable("lectureId") int lectureId) {
 
+    // check login
+    if (session.getAttribute("loginVo") == null) {
+      model.addAttribute("msg", "로그인을 진행해 주세요");
+      model.addAttribute("url", "/blooming/lecture/list");
+      return "alert";
+    }
+
+    // check purchase
+    int memberId = ((MemberVO) session.getAttribute("loginVo")).getMemberId();
+    if (!purchaseService.checkPurchase(memberId, lectureId)) {
+      model.addAttribute("msg", "강의를 구매하셔야 보실 수 있습니다.");
+      model.addAttribute("url", "/blooming/lecture/list");
+      return "alert";
+    }
+
+    List<LessonVO> lessons = lessonService.getByLectureId(lectureId);
     if (lessons.isEmpty()) {
       model.addAttribute("msg", "찾으시는 강의가 존재하지 않습니다.");
-      model.addAttribute("url", "list");
+      model.addAttribute("url", "/blooming/lecture/list");
       return "alert";
     }
 
@@ -192,27 +209,4 @@ public class LectureController {
     return "/lecture/course";
   }
 
-  /// @formatter:off
-  @PostMapping("/like/{lectureId}")
-  public ResponseEntity<Integer> likeLecture(
-      HttpServletRequest request,
-      @PathVariable("lectureId") int lectureId
-  ) {
-    int memberId = (int) request.getAttribute("memberId");
-    lectureService.likeLecture(memberId, lectureId);
-    int result = lectureService.read(lectureId).getLectureLikeCount();
-    return new ResponseEntity<Integer>(result, HttpStatus.OK);
-  }
-
-  @DeleteMapping("/like/{lectureId}")
-  public ResponseEntity<Integer> dislikeLecture(
-      HttpServletRequest request,
-      @PathVariable("lectureId") int lectureId
-  ) {
-    int memberId = (int) request.getAttribute("memberId");
-    lectureService.dislikeLecture(memberId,lectureId);
-    int result = lectureService.read(lectureId).getLectureLikeCount();
-    return new ResponseEntity<Integer>(result, HttpStatus.OK);
-  }
-  
 }
