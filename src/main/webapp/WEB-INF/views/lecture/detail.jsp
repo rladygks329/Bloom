@@ -144,7 +144,7 @@
 	})
 </script>
 <meta charset="UTF-8">
-<title>Bloom - 전체 강의</title>
+<title>Bloom - ${lecture.lectureTitle }</title>
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/component/navigation.jsp"%>

@@ -11,7 +11,7 @@
 <!-- Jquery -->
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>장바구니 내역</title>
 <style type="text/css">
 </style>
 </head>
