@@ -76,16 +76,10 @@ public class MemberController {
 
   @GetMapping("/instructor-page")
   public String instructorPageGet(HttpServletRequest request, Model model) {
-    HttpSession session = request.getSession();
-    MemberVO user = (MemberVO) session.getAttribute("loginVo");
-
-    if (user.getMemberLevel().equals("instructor")) {
-      Map<String, Object> result = memberService.getInstuctorStatus(user.getMemberId());
-      model.addAllAttributes(result);
-      return "/member/mypage-instructor";
-    }
-    return "/member/mypage";
-
+    int memberId = (int) request.getAttribute("memberId");
+    Map<String, Object> result = memberService.getInstuctorStatus(memberId);
+    model.addAllAttributes(result);
+    return "/member/mypage-instructor";
   }
 
   @GetMapping("/mypage")

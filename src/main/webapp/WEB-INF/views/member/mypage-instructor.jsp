@@ -128,7 +128,7 @@
 					</table>
 				</div>
 				
-				<h2>나의 강의 상태</h2>s
+				<h2>나의 강의 상태</h2>
 				<div class="table-responsive mb-3">
 					<table class="table table-striped table-sm">
 						<thead>

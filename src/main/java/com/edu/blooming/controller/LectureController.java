@@ -25,6 +25,7 @@ import com.edu.blooming.service.LessonService;
 import com.edu.blooming.service.PurchaseService;
 import com.edu.blooming.util.PageCriteria;
 import com.edu.blooming.util.PageMaker;
+import com.edu.blooming.util.Utils;
 
 @Controller
 @RequestMapping(value = "/lecture")
@@ -101,14 +102,6 @@ public class LectureController {
     logger.info("lectureUploadGET() 호출");
 
     int memberId = (int) request.getAttribute("memberId");
-    String memberLevel = (String) request.getAttribute("memberLevel");
-
-    if (!memberLevel.equals("instructor")) {
-      model.addAttribute("msg", "강사만이 업로드할 수 있습니다.");
-      model.addAttribute("url", "list");
-      return "alert";
-    }
-
     model.addAttribute("memberId", memberId);
     model.addAttribute("postURL", "/blooming/lecture/upload");
     return "/lecture/modify";
@@ -130,15 +123,12 @@ public class LectureController {
 
   @GetMapping("/modify")
   public String getModify(HttpServletRequest request, Model model, String target) {
-    HttpSession session = request.getSession();
-    int memberId = ((MemberVO) session.getAttribute("loginVo")).getMemberId();
-    int lectureId = 0;
+    int memberId = (int) request.getAttribute("memberId");
+    int lectureId = Utils.parseInt(target, -1);
 
-    try {
-      lectureId = Integer.parseInt(target);
-    } catch (NumberFormatException e) {
+    if (lectureId == -1) {
       model.addAttribute("msg", "잘못된 요청입니다.");
-      model.addAttribute("url", "list");
+      model.addAttribute("url", "/blooming/lecture/list");
       return "alert";
     }
 
