@@ -12,15 +12,6 @@
 <!-- Bootstrap core JS-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-	function debounce(func, timeout = 300) {
-		let timer;
-		return (...args) => {
-		  clearTimeout(timer);
-		  timer = setTimeout(() => {
-		    func.apply(this, args);
-		  }, timeout);
-		};
-	}
 	$(function() {
 		const barCtx = document.getElementById('myChart');
 		const lineCtx = document.getElementById('myChart2');
@@ -52,7 +43,7 @@
 				} ]
 			},
 			options : {
-				responsive : false,
+				animation: false,
 				scales : {
 					x: {
 						ticks: {
@@ -83,7 +74,7 @@
 				} ]
 			},
 			options : {
-				responsive : false,
+				animation: false,
 				scales : {
 					y : {
 						beginAtZero : true
@@ -91,16 +82,8 @@
 				}
 			}
 		});
-		
-		// debounce를 통해 이벤트를 한번만 호출하기
-		$(window).resize(
-			debounce(()=>{
-				console.log("resize");
-			 	barChart.resize();
-				lineChart.resize();
-			})
-		 );
 	})
+	
 </script>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -110,22 +93,17 @@
 	<div class="container-fluid">
 		<div class="row d-flex justify-content-center">
 			<main class="col-md-9 col-lg-10 px-md-4">
-				<div class="chartjs-size-monitor">
-					<div class="chartjs-size-monitor-expand">
-						<div class=""></div>
+				<div class="d-flex flex-row">
+				  	<div class="chart-container flex-fill" style="position: relative; width: 8em;">
+						<h1 class="h2">강좌별 판매량</h1>
+						<canvas id="myChart"></canvas>
 					</div>
-					<div class="chartjs-size-monitor-shrink">
-						<div class=""></div>
-					</div>
+					<div class="chart-container flex-fill" style="position: relative; width: 8em;">
+						<h1 class="h2">월 수익</h1>
+						<canvas id="myChart2"></canvas>
+  					</div>
 				</div>
-				<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-					<h1 class="h2">강좌별 판매량</h1>
-				</div>
-				<canvas class="my-4 w-100 chartjs-render-monitor my-3" id="myChart" style="display: block; width: 842px; height: 355px;"></canvas>
-				<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-					<h1 class="h2">월 수익</h1>
-				</div>
-				<canvas class="my-4 w-100 chartjs-render-monitor mb-3" id="myChart2" style="display: block; width: 842px; height: 355px;"></canvas>
+				
 				<h2>수강평</h2>
 				<div class="table-responsive mb-3">
 					<table class="table table-striped table-sm">
@@ -150,7 +128,7 @@
 					</table>
 				</div>
 				
-				<h2>나의 강의 상태</h2>
+				<h2>나의 강의 상태</h2>s
 				<div class="table-responsive mb-3">
 					<table class="table table-striped table-sm">
 						<thead>
