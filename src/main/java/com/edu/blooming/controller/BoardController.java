@@ -1,12 +1,23 @@
 package com.edu.blooming.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,16 +29,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.edu.blooming.domain.BoardVO;
 import com.edu.blooming.service.BoardService;
+import com.edu.blooming.util.MediaUtil;
 import com.edu.blooming.util.PageCriteria;
 import com.edu.blooming.util.PageMaker;
+import com.google.gson.JsonObject;
 
 @Controller
 @RequestMapping(value = "/board")
 public class BoardController {
   private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
+
+  @Value("${uploadPath.img}")
+  private String uploadPath;
 
   @Autowired
   private BoardService boardService;
@@ -167,6 +184,72 @@ public class BoardController {
     }
     return "redirect:/board/detail?boardId=" + vo.getBoardId();
   }
+
+  @ResponseBody
+  @PostMapping("/upload")
+  public ResponseEntity<Map<String, Object>> summer_image(
+      @RequestParam("file") MultipartFile multipartFile, HttpServletRequest request) {
+    JsonObject jsonObject = new JsonObject();
+
+    String fileRoot = uploadPath;
+    // String fileRoot = "C:\\Study\\BloomingBucket\\img\\";
+    logger.info("fileRoot = " + fileRoot);
+    String originalFileName = multipartFile.getOriginalFilename(); // 오리지날 파일명
+    logger.info("originalFileName = " + originalFileName);
+    String extension = originalFileName.substring(originalFileName.lastIndexOf(".")); // 파일 확장자
+    logger.info("extension = " + extension);
+    String savedFileName = UUID.randomUUID() + extension; // 저장될 파일 명
+    logger.info("savedFileName = " + savedFileName);
+
+    File targetFile = new File(fileRoot + savedFileName);
+    Map<String, Object> result = new HashMap<String, Object>();
+    try {
+      InputStream fileStream = multipartFile.getInputStream();
+      FileUtils.copyInputStreamToFile(fileStream, targetFile); // 파일 저장
+      result.put("url", fileRoot + savedFileName);
+      result.put("responseCode", "success");
+      // contextroot + resources + 저장할 내부 폴더명
+    } catch (IOException e) {
+      FileUtils.deleteQuietly(targetFile); // 저장된 파일 삭제
+      result.put("responseCode", "error");
+      e.printStackTrace();
+    }
+    logger.info("result = " + result.toString());
+    return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+  }
+
+  @GetMapping("/display")
+  public ResponseEntity<byte[]> display(String fileName) {
+    logger.info("display() 호출");
+
+    ResponseEntity<byte[]> entity = null;
+    InputStream in = null;
+
+    String filePath = uploadPath + fileName;
+
+    try {
+      in = new FileInputStream(filePath);
+
+      // 파일 확장자
+      String extension = filePath.substring(filePath.lastIndexOf(".") + 1);
+      logger.info(extension);
+
+      // 응답 헤더(response header)에 Content-Type 설정
+      HttpHeaders httpHeaders = new HttpHeaders();
+      httpHeaders.setContentType(MediaUtil.getMediaType(extension));
+      // 데이터 전송
+      entity = new ResponseEntity<byte[]>(IOUtils.toByteArray(in), // 파일에서 읽은 데이터
+          httpHeaders, // 응답 헤더
+          HttpStatus.OK);
+
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return entity;
+  }
+
+
 
 }
 
