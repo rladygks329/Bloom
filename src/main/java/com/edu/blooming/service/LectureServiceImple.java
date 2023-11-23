@@ -89,21 +89,14 @@ public class LectureServiceImple implements LectureService {
     if (keyword == null || keyword.isBlank()) {
       return lectureDAO.select(criteria, orderType);
     }
+
+    if (keyword.startsWith("writer.")) {
+      String memberName = keyword.replaceFirst("^writer.", "");
+      return lectureDAO.selectByAuthorName(criteria, memberName, orderType);
+    }
+
+    keyword = keyword.replaceFirst("^content.", "");
     return lectureDAO.select(criteria, keyword, orderType);
-  }
-
-  @Override
-  public boolean checkIsLike(int memberId, int lectureId) {
-    logger.info("checkIsLike() 호출");
-    return lectureDAO.selectIsMemberLikeLecture(memberId, lectureId);
-  }
-
-  @Override
-  public List<LectureVO> findLectureByAuthorId(PageCriteria criteria, int authorId) {
-    logger.info("findLectureByAuthorId() 호출");
-    logger.info("start = " + criteria.getStart());
-    logger.info("end = " + criteria.getEnd());
-    return lectureDAO.select(criteria, authorId);
   }
 
   @Override
@@ -123,6 +116,41 @@ public class LectureServiceImple implements LectureService {
     return result;
   }
 
+  @Override
+  public int getTotalCountsByMemberName(String memberName) {
+    logger.info("getTotalCountsByMemberName() 호출 : memberName : " + memberName);
+    return lectureDAO.getLectureCountByMemberName(memberName);
+  }
+
+  @Override
+  public int getTotalCountsByKeyword(String keyword) {
+    logger.info("getTotalCounts() 호출 : keyword : " + keyword);
+    if (keyword == null || keyword.isBlank()) {
+      return lectureDAO.getLectureCount();
+    }
+
+    if (keyword.startsWith("writer.")) {
+      String memberName = keyword.replaceFirst("^writer.", "");
+      return lectureDAO.getLectureCountByMemberName(memberName);
+    }
+
+    keyword = keyword.replaceFirst("^content.", "");
+    return lectureDAO.getLectureCountByKeyword(keyword);
+  }
+
+  @Override
+  public List<LectureVO> readHotLikeLectures(int month, int rank) {
+    logger.info("readHotLikeLectures() 호출");
+    return lectureDAO.selectHotLikeLecture(month, rank);
+  }
+
+  @Override
+  public List<LectureVO> readHotSaleLectures(int month, int rank) {
+    logger.info("readHotSaleLectures() 호출");
+    return lectureDAO.selectHotSaleLecture(month, rank);
+  }
+
+  // --- lecture Like ---
   @Transactional(value = "transactionManager")
   @Override
   public int likeLecture(int memberId, int lectureId) throws AlreadyExistException {
@@ -151,30 +179,9 @@ public class LectureServiceImple implements LectureService {
   }
 
   @Override
-  public int getTotalCounts(int authorId) {
-    logger.info("getTotalCounts() 호출 : memberId : " + authorId);
-    return lectureDAO.getLectureCount(authorId);
-  }
-
-  @Override
-  public int getTotalCounts(String keyword) {
-    logger.info("getTotalCounts() 호출 : keyword : " + keyword);
-    if (keyword == null || keyword.isBlank()) {
-      return lectureDAO.getLectureCount();
-    }
-    return lectureDAO.getLectureCount(keyword);
-  }
-
-  @Override
-  public List<LectureVO> readHotLikeLectures(int month, int rank) {
-    logger.info("readHotLikeLectures() 호출");
-    return lectureDAO.selectHotLikeLecture(month, rank);
-  }
-
-  @Override
-  public List<LectureVO> readHotSaleLectures(int month, int rank) {
-    logger.info("readHotSaleLectures() 호출");
-    return lectureDAO.selectHotSaleLecture(month, rank);
+  public boolean checkIsLike(int memberId, int lectureId) {
+    logger.info("checkIsLike() 호출");
+    return lectureDAO.selectIsMemberLikeLecture(memberId, lectureId);
   }
 
 }

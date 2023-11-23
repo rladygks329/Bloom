@@ -98,13 +98,13 @@ public class LectureDAOTest {
   } // end testGetLectureCount()
 
   private void testGetLectureCountByMemberId() {
-    int result = dao.getLectureCount(1);
-    logger.info(result + "행 존재");
+    // int result = dao.getLectureCount(1);
+    // logger.info(result + "행 존재");
   } // end testGetLectureCountByMemberId()
 
   private void testGetLectureCountByKeyword() {
-    int result = dao.getLectureCount("강좌");
-    logger.info(result + "행 존재");
+    // int result = dao.getLectureCount("강좌");
+    // logger.info(result + "행 존재");
   }// end testGetLectureCountByKeyword
 
   private void testSelect() {
@@ -155,9 +155,10 @@ public class LectureDAOTest {
     }
   } // end testSelectByMemberId()
 
-  private void testSelectByAuthor() {
+  @Test
+  public void testSelectByAuthorName() {
     logger.info("testSelectByAuthor() 호출");
-    List<LectureVO> list = dao.selectByAuthor(1);
+    List<LectureVO> list = dao.selectByAuthorName(new PageCriteria(), "강사1", 1);
     for (LectureVO vo : list) {
       logger.info("vo : " + vo.toString());
     }

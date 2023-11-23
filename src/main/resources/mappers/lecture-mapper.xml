@@ -59,22 +59,32 @@
 		where ${lectureId} = #{lectureId}
 	</update>
 	
-	<!-- 강좌 번호로 강좌 조회 -->
-	<select id="select_by_lecture_id" resultType="LectureVO">
-		select 
-			l.*,
-			m.${memberName} ${authorName}
-		from ${lecture} l join ${member} m on l.${memberId} = m.${memberId}
-		where ${lectureId} = #{lectureId}	
+	<!-- 페이지 네이션을 위한 전체 강의 수 조회 -->
+	<select id="total_count" resultType="Integer">
+		select count(${lectureId})
+		from ${lecture}	
+		where ${lectureVideoProcessingLevel} > 0
 	</select>
 	
-	<!-- 내가 만든 강의 보기 -->
-	<select id="select_by_member_id" resultType="LectureVO">
-		select
-			l.*,
-			m.${memberName} ${authorName} 
+	<!-- 검색을 위한 해당 키워드가 들어간 강의 수 조회 -->
+	<select id="keyword_lecture_count" resultType="Integer">
+		select count(${lectureId})
+		from ${lecture}
+		where ${lectureVideoProcessingLevel} > 0 and (${lectureTitle} like #{keyword} or ${lectureDescription} like #{keyword})
+	</select>
+	
+	<!-- 페이지 네이션을 위한 특정 강사 강의 수 조회 -->
+	<select id="member_lecture_count" resultType="Integer">
+		select count(${lectureId})
+		from ${lecture} l join ${member} m on l.${memberId} = m.${memberId}	
+		where ${memberName} = #{memberName} and ${lectureVideoProcessingLevel} > 0
+	</select>
+	
+	<!-- 강좌 번호로 강좌 조회 -->
+	<select id="select_by_lecture_id" resultType="LectureVO">
+		select l.*, m.${memberName} ${authorName}
 		from ${lecture} l join ${member} m on l.${memberId} = m.${memberId}
-		where l.${memberId} = #{memberId}	
+		where ${lectureId} = #{lectureId}	
 	</select>
 	
 	<!-- 강좌 조회 PageNation -->
@@ -99,21 +109,6 @@
 		where rn between #{start} and #{end}
 	</select>
 	
-	<!-- 특정 강사의 강의 조회 pagenation-->
-	<select id="paging_select_by_member_id" resultType="LectureVO">
-		select l.*, m.${memberName} ${authorName}
-		from (
-			select rownum rn, a.* 
-			from (
-					select * 
-					from ${lecture} 
-					where ${memberId} = #{memberId} and ${lectureVideoProcessingLevel} > 0
-					order by ${lectureId} desc
-				) a
-			) l join ${member} m on l.${memberId} = m.${memberId}
-		where rn between #{start} and #{end}
-	</select>
-	
 	<!-- 강좌 검색 조회 PageNation -->
 	<select id="paging_select_by_keyword" resultType="LectureVO">
 		select l.*, m.${memberName} ${authorName}
@@ -133,6 +128,28 @@
 					</choose>
 				) a
 			) l join ${member} m on l.${memberId} = m.${memberId}
+		where rn between #{start} and #{end}
+	</select>
+	
+	<!-- 강좌 작성자 검색 조회 PageNation -->
+	<select id="paging_select_by_member_name" resultType="LectureVO">
+		select b.*, b.${memberName} ${authorName}
+		from (
+			select rownum rn, a.* 
+			from (
+					select * 
+					from ${lecture} l join ${member} m on l.${memberId} = m.${memberId} 
+					where ${memberName} = #{memberName} and ${lectureVideoProcessingLevel} > 0
+					<choose>
+						<when test="orderType == 1"> order by ${lecturePrice} desc </when>
+					    <when test="orderType == 2"> order by ${lecturePrice} asc </when>
+					    <when test="orderType == 3"> order by ${lectureLikeCount} desc</when>
+					    <when test="orderType == 4"> order by ${lectureSalesCount} desc</when>
+					    <when test="orderType == 5"> order by ${lectureReplyCount} desc</when>
+						<otherwise> order by ${lectureId} desc </otherwise>
+					</choose>
+				) a
+			) b
 		where rn between #{start} and #{end}
 	</select>
 	
@@ -162,26 +179,6 @@
 		where ROWNUM <![CDATA[<]]> #{rank}
 	</select>
 	
-	<!-- 페이지 네이션을 위한 전체 강의 수 조회 -->
-	<select id="total_count" resultType="Integer">
-		select count(${lectureId})
-		from ${lecture}	
-		where ${lectureVideoProcessingLevel} > 0
-	</select>
-	
-	<!-- 페이지 네이션을 위한 특정 강사 강의 수 조회 -->
-	<select id="member_lecture_count" resultType="Integer">
-		select count(${lectureId})
-		from ${lecture}	
-		where ${memberId} = #{memberId} and ${lectureVideoProcessingLevel} > 0
-	</select>
-	 
-	<!-- 검색을 위한 해당 키워드가 들어간 강의 수 조회 -->
-	<select id="keyword_lecture_count" resultType="Integer">
-		select count(${lectureId})
-		from ${lecture}
-		where ${lectureVideoProcessingLevel} > 0 and (${lectureTitle} like #{keyword} or ${lectureDescription} like #{keyword})
-	</select>
 
 	 <!-- Lecture LIKE Query -->	
 	 <!-- 강좌 좋아요 -->

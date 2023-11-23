@@ -59,7 +59,7 @@ public class LectureController {
     List<LectureVO> list = lectureService.read(criteria, keyword, orderType);
     PageMaker pageMaker = new PageMaker();
     pageMaker.setCriteria(criteria);
-    pageMaker.setTotalCount(lectureService.getTotalCounts(keyword));
+    pageMaker.setTotalCount(lectureService.getTotalCountsByKeyword(keyword));
     pageMaker.setPageData();
 
     model.addAttribute("keyword", keyword);
