@@ -16,6 +16,10 @@ public interface BoardDAO {
 
   List<BoardVO> selectByTitleOrContent(PageCriteria criteria, String keyword);
 
+  List<BoardVO> selectByMemberId(int memberId);
+
+  List<BoardVO> selectByMemberIdAndLike(int memberId);
+
   int getTotalCounts();
 
   int getTotalCountsByTitleOrContent(String keyword);

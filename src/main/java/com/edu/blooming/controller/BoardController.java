@@ -78,8 +78,9 @@ public class BoardController {
   } // end list()
 
   @GetMapping("/detail")
-  public String detail(Model model, @RequestParam Integer boardId, @RequestParam Integer page,
-      HttpServletRequest request, HttpServletResponse response) {
+  public String detail(Model model, @RequestParam Integer boardId,
+      @RequestParam(defaultValue = "1") Integer page, HttpServletRequest request,
+      HttpServletResponse response) {
     // 게시글 조회 코드
     BoardVO vo = boardService.read(boardId);
     model.addAttribute("vo", vo);

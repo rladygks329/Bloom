@@ -76,9 +76,7 @@
 				success : function(data) {	
 					console.log(data);
 
-
-					$(el).summernote('editor.insertImage', "/blooming/image/display?fileName=" + data);					
-					
+					$(el).summernote('editor.insertImage', "/blooming/image/display?fileName=" + data);						
 				}
 			});
 		}	   

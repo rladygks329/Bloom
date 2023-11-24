@@ -71,19 +71,29 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 			</c:forEach>
 		</tbody> 
 	</table>
+	
+	<!-- 검색어와 정렬방법을 쿼리 스트링에 추가한다. -->
+	<c:set scope="page" var="queryString" value="" />
+	<c:if test="${not empty option }">
+		<c:set scope ="page" var="queryString" value="${queryString }&option=${option}"/>
+	</c:if>
+	<c:if test="${not empty keyword }">
+		<c:set scope ="page" var="queryString" value="${queryString }&keyword=${keyword}"/>
+	</c:if>
+			
 	<ul>
 		<c:if test="${pageMaker.hasPrev }">
-			<li><a href="list?page=${pageMaker.startPageNo -1 }">이전</a></li>
+			<li><a href="list?page=${pageMaker.startPageNo -1 }${queryString}">이전</a></li>
 		</c:if>
 		<c:forEach begin="${pageMaker.startPageNo }" end="${pageMaker.endPageNo }" var="num">
-			<li><a href="list?page=${num }">${num }</a></li>
+			<li><a href="list?page=${num }${queryString}">${num }</a></li>
 		</c:forEach>
 		<c:if test="${pageMaker.hasNext }">
-			<li><a href="list?page=${pageMaker.endPageNo + 1}">다음</a></li>
+			<li><a href="list?page=${pageMaker.endPageNo + 1}${queryString}">다음</a></li>
 		</c:if>
 		
 	</ul>
-
+	
 </body>
 </html>
 

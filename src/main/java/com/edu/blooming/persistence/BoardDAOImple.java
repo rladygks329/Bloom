@@ -159,6 +159,18 @@ public class BoardDAOImple implements BoardDAO {
     return sqlSession.delete(NAMESPACE + ".delete", boardId);
   }
 
+  @Override
+  public List<BoardVO> selectByMemberId(int memberId) {
+    logger.info("selectByMemberId 호출 : memberId = " + memberId);
+    return sqlSession.selectList(NAMESPACE + ".select_by_member_id", memberId);
+  }
+
+  @Override
+  public List<BoardVO> selectByMemberIdAndLike(int memberId) {
+    logger.info("selectByMemberIdAndLike 호출 : memberId = " + memberId);
+    return sqlSession.selectList(NAMESPACE + ".select_by_member_id_and_like", memberId);
+  }
+
 }
 
 

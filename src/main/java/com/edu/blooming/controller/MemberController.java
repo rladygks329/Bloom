@@ -1,5 +1,6 @@
 package com.edu.blooming.controller;
 
+import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.edu.blooming.domain.BoardVO;
 import com.edu.blooming.domain.MemberVO;
+import com.edu.blooming.service.BoardService;
 import com.edu.blooming.service.MemberService;
 
 
@@ -28,6 +31,9 @@ public class MemberController {
 
   @Autowired
   private MemberService memberService;
+
+  @Autowired
+  private BoardService boardService;
 
   @GetMapping("/main")
   public void mainGET() {
@@ -91,6 +97,16 @@ public class MemberController {
   @GetMapping("/mypage")
   public String myPageGET(HttpServletRequest request, Model model) {
     logger.info("myPageGET() 호출");
+    HttpSession session = request.getSession();
+    MemberVO user = (MemberVO) session.getAttribute("loginVo");
+    int memberId = user.getMemberId();
+
+    List<BoardVO> listByMemberId = boardService.readByMemberId(memberId);
+    List<BoardVO> listByLike = boardService.readByMemberIdAndLIke(memberId);
+
+    model.addAttribute("listByMemberId", listByMemberId);
+    model.addAttribute("listByLike", listByLike);
+
     return "/member/mypage";
   }
 
