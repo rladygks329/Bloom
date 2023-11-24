@@ -102,6 +102,7 @@
 					    <when test="orderType == 3"> order by ${lectureLikeCount} desc</when>
 					    <when test="orderType == 4"> order by ${lectureSalesCount} desc</when>
 					    <when test="orderType == 5"> order by ${lectureReplyCount} desc</when>
+					    <when test="orderType == 6"> order by decode(lecture_reply_count, 0, 0, lecture_total_score/lecture_reply_count) desc, lecture_id desc</when>
 						<otherwise> order by ${lectureId} desc </otherwise>
 					</choose>
 				) a
