@@ -15,6 +15,8 @@
 <title>게시글 상세보기</title>
 </head>
 <body>
+	<input type="hidden" id="memberId" name="memberId" value="${vo.memberId}" />
+
 	<h2>글내용 보기</h2>
 	<div>
 		<p>글 번호: ${vo.boardId }</p>
@@ -37,19 +39,23 @@
 	<a href="list?&page=${page }">
 	<input type="button" value="글 목록">
 	</a>
-	<a href="update?boardId=${vo.boardId }&page=${page }"><input type="button" value="글 수정"></a>
+	<c:if test="${loginVo != null and loginVo.memberId eq vo.memberId}">
+		<a href="update?boardId=${vo.boardId }&page=${page }"><input type="button" value="글 수정"></a>
+		
+		<form action="deleteOrUpdate" method="post">
+		    <input type="hidden" name="boardId" value="${vo.boardId}">
+		    <input type="hidden" name="memberId" value="${vo.memberId}">
+		    <input type="hidden" name="boardTitle" value="${vo.boardTitle}">
+		    <input type="hidden" name="boardContent"> <!-- value="${vo.boardContent}"를 뺐음 1124 -->
+		    <input type="hidden" id="boardReplyCount" name="boardReplyCount" value="${vo.boardReplyCount}">
+			<input type="submit" value="글 삭제">	    
+		</form>
+	</c:if>
 	
-	<form action="deleteOrUpdate" method="post">
-	    <input type="hidden" name="boardId" value="${vo.boardId}">
-	    <input type="hidden" name="memberId" value="${vo.memberId}">
-	    <input type="hidden" name="boardTitle" value="${vo.boardTitle}">
-	    <input type="hidden" name="boardContent"> <!-- value="${vo.boardContent}"를 뺐음 1124 -->
-	    <input type="hidden" id="boardReplyCount" name="boardReplyCount" value="${vo.boardReplyCount}">
-		<input type="submit" value="글 삭제">	    
-	</form>
-					
-	<input type="button" id="boardLike" value="좋아요">		
-
+	<c:if test="${loginVo != null and loginVo.memberId ne vo.memberId}">
+		<input type="button" id="boardLike" value="좋아요">		
+	</c:if>
+	
 	<br>
 	<br>
 	<br>

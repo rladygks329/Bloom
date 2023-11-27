@@ -1,5 +1,7 @@
 package com.edu.blooming.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -46,21 +48,35 @@ public class MemberController {
   }
 
   @PostMapping("/login")
-  public String loginPOST(HttpServletRequest request, MemberVO vo, RedirectAttributes rttr)
-      throws Exception {
+  public String loginPOST(HttpServletRequest request, MemberVO vo, String targetURL,
+      RedirectAttributes rttr) throws Exception {
     logger.info("loginPOST() 호출 memberEmail = " + vo.getMemberEmail());
 
     MemberVO loginVo = memberService.login(vo);
 
-    if (loginVo == null) {
-      int result = 0;
-      rttr.addFlashAttribute("result", result);
-      return "redirect:/member/login";
-    } else {
+    if (loginVo != null) {
       HttpSession session = request.getSession();
       session.setAttribute("loginVo", loginVo);
       logger.info("loginVo =  " + loginVo.toString());
-      return "redirect:/main";
+      logger.info(targetURL.length() + "");
+      if (!targetURL.equals("")) {
+        return "redirect:" + targetURL;
+      } else {
+        return "redirect:/board/list";
+      }
+    } else {
+      logger.info("로그인 실패 : targetURL =" + targetURL);
+      if (targetURL != null) {
+        try {
+          targetURL = URLEncoder.encode(targetURL, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+        return "redirect:/member/login?targetURL=" + targetURL;
+      } else {
+        return "redirect:/member/login";
+      }
     }
   } // end loginPOST()
 
