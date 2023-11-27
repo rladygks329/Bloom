@@ -31,6 +31,7 @@
 			e.preventDefault();
 			const keyword = $(".searchType").val() + '.' + $('input[name="keyword"]').val();
 			url.set("keyword", keyword);
+			url.set("page", "1");
 			location.href = origin + pathname + "?" + url.toString();
 		})
 	})
