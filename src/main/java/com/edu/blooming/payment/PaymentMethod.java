@@ -1,7 +1,9 @@
 package com.edu.blooming.payment;
 
-import org.springframework.http.ResponseEntity;
+import java.util.Map;
 
-public interface PaymentMethod<T> {
-  public ResponseEntity<T> pay(int memberId, int price) throws Exception;
+public interface PaymentMethod {
+  public Map<String, Object> readyForPay(int memberId, String name, int price);
+
+  public Map<String, Object> approvePay(int memberId, String token);
 }

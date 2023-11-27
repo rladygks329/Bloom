@@ -57,7 +57,7 @@
 			<mapping path="/lecture/upload"/>
 			<mapping path="/lecture/like/*"/>
 			<mapping path="/cart/**"/>
-			<mapping path="/purchase"/>
+			<mapping path="/purchase/**"/>
 			<mapping path="/member/instructor-page"/>
 			<beans:ref bean="authInterceptor"/>
 		</interceptor>

@@ -1,6 +1,7 @@
 package com.edu.blooming.service;
 
 import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.edu.blooming.domain.LectureVO;
 import com.edu.blooming.exception.AlreadyExistException;
+import com.edu.blooming.payment.PaymentMethod;
 import com.edu.blooming.persistence.CartDAO;
 import com.edu.blooming.persistence.LectureDAO;
 import com.edu.blooming.persistence.PurchaseDAO;
@@ -26,9 +28,30 @@ public class PurchaseServiceImple implements PurchaseService {
   @Autowired
   private CartDAO cartDAO;
 
+  @Override
+  public Map<String, Object> readyForPurchase(PaymentMethod method, int memberId) {
+    List<LectureVO> list = cartDAO.select(memberId);
+    int total_price = 0;
+    for (LectureVO vo : list) {
+      total_price += vo.getLecturePrice();
+    }
+
+    String name = list.get(0).getLectureTitle();
+    if (list.size() > 1) {
+      name += " 그 외 " + (list.size() - 1) + "개의 강의";
+    }
+
+    return method.readyForPay(memberId, name, total_price);
+  }
+
+  @Override
+  public Map<String, Object> approvePurchase(PaymentMethod method, int memberId, String token) {
+    return method.approvePay(memberId, token);
+  }
+
   @Transactional(value = "transactionManager")
   @Override
-  public int purchase(int memberId) throws AlreadyExistException {
+  public int success(int memberId) throws AlreadyExistException {
     logger.info("purchase() 호출, memberId: " + memberId);
     List<LectureVO> list = cartDAO.select(memberId);
     if (list.isEmpty()) {

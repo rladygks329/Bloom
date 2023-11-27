@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<c:set var="path" value="${pageContext.request.contextPath}" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -49,8 +51,10 @@
 				<div class="row mt-4 d-flex align-items-center">
 
 					<div class="text-center">
-						<form action="/blooming/purchase" method="post">
-							<button type="submit" class="btn btn-primary mb-4 btn-lg pl-5 pr-5">결제하기</button>
+						<form id="purchase" method="post">
+							<button type="submit" class="btn btn-outline-warning mb-4 btn-lg pl-5 pr-5">
+								<img src="${path}/resources/assets/payment_icon_yellow_medium.png" alt="카카오 결제">
+							결제하기</button>
 						</form>
 					</div>
 				</div>
@@ -144,6 +148,20 @@
 
 		$(function() {
 			getCartList();
+			
+			$("#purchase").submit(function(e){
+				e.preventDefault();
+				$.ajax({
+					type : "POST",
+					url : "/blooming/purchase/kakao/ready",
+					headers : {
+						'Content-Type' : 'application/json'
+					},
+					success : function(response) {
+						window.location.href = response.next_redirect_pc_url; 
+					},
+				})
+			});
 		})
 	</script>
 </body>
