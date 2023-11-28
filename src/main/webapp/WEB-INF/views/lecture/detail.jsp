@@ -60,7 +60,7 @@
 		
 		$.ajax({
 			type : "POST",
-			url : `like/${lectureId}/${memberId}`,
+			url : `like/${lectureId}`,
 			headers : {
 				'Content-Type' : 'application/json'
 			},
@@ -85,7 +85,7 @@
 		
 		$.ajax({
 			type : "DELETE",
-			url : `like/${lectureId}/${memberId}`,
+			url : `like/${lectureId}`,
 			headers : {
 				'Content-Type' : 'application/json'
 			},
@@ -110,7 +110,7 @@
 		
 		$.ajax({
 			type : "POST",
-			url : `/blooming/cart/item/${memberId}/${lectureId}`,
+			url : "/blooming/cart/item/" + lectureId,
 			headers : {
 				'Content-Type' : 'application/json'
 			},
@@ -144,7 +144,7 @@
 	})
 </script>
 <meta charset="UTF-8">
-<title>Bloom - 전체 강의</title>
+<title>Bloom - ${lecture.lectureTitle }</title>
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/component/navigation.jsp"%>
@@ -537,7 +537,6 @@
 		        	getAllReplies();
 		        }
 		    }); // end ajax
-		    
 		}
 	</script>
 	

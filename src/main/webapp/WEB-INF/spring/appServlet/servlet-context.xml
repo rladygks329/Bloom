@@ -47,16 +47,26 @@
 	</beans:bean>
 	
 	<!--  Interceptor -->
-	<beans:bean id="authInterceptor" class="com.edu.blooming.interceptor.AuthInterceptor"></beans:bean>
+	<beans:bean id="authInterceptor" class="com.edu.blooming.interceptor.AuthInterceptor"/>
+	<beans:bean id="userRoleInterceptor" class="com.edu.blooming.interceptor.UserRoleInterceptor"/>
 	
 	<interceptors>
 		<interceptor>
+			<mapping path="/lecture/*/course"/>
+			<mapping path="/lecture/modify"/>
 			<mapping path="/lecture/upload"/>
-			<mapping path="/lecture/like"/>
-			<mapping path="/lecture/#/replies"/>
-			<mapping path="/cart"/>			
-			<mapping path="/purchase"/>
+			<mapping path="/lecture/like/*"/>
+			<mapping path="/cart/**"/>
+			<mapping path="/purchase/**"/>
+			<mapping path="/member/instructor-page"/>
 			<beans:ref bean="authInterceptor"/>
+		</interceptor>
+		
+		<interceptor>
+			<mapping path="/lecture/modify"/>
+			<mapping path="/lecture/upload"/>
+			<mapping path="/member/instructor-page"/>
+			<beans:ref bean="userRoleInterceptor"/>
 		</interceptor>
 	</interceptors>
 	

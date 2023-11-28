@@ -7,7 +7,6 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import com.edu.blooming.service.HlsService;
-import com.edu.blooming.service.LectureService;
 import com.edu.blooming.service.LessonService;
 
 @Component
@@ -16,9 +15,6 @@ public class VideoUploadedEventListener implements ApplicationListener<VideoUplo
 
   @Autowired
   private HlsService hlsService;
-
-  @Autowired
-  private LectureService lectureService;
 
   @Autowired
   private LessonService lessonService;

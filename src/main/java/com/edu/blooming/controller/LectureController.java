@@ -11,11 +11,8 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,8 +22,10 @@ import com.edu.blooming.domain.LessonVO;
 import com.edu.blooming.domain.MemberVO;
 import com.edu.blooming.service.LectureService;
 import com.edu.blooming.service.LessonService;
+import com.edu.blooming.service.PurchaseService;
 import com.edu.blooming.util.PageCriteria;
 import com.edu.blooming.util.PageMaker;
+import com.edu.blooming.util.Utils;
 
 @Controller
 @RequestMapping(value = "/lecture")
@@ -46,6 +45,9 @@ public class LectureController {
   @Autowired
   private LessonService lessonService;
 
+  @Autowired
+  private PurchaseService purchaseService;
+
   @GetMapping("/list")
   public void lectureGET(Model model, String page, String numsPerPage, String keyword,
       String order) {
@@ -57,7 +59,7 @@ public class LectureController {
     List<LectureVO> list = lectureService.read(criteria, keyword, orderType);
     PageMaker pageMaker = new PageMaker();
     pageMaker.setCriteria(criteria);
-    pageMaker.setTotalCount(lectureService.getTotalCounts(keyword));
+    pageMaker.setTotalCount(lectureService.getTotalCountsByKeyword(keyword));
     pageMaker.setPageData();
 
     model.addAttribute("keyword", keyword);
@@ -100,14 +102,6 @@ public class LectureController {
     logger.info("lectureUploadGET() 호출");
 
     int memberId = (int) request.getAttribute("memberId");
-    String memberLevel = (String) request.getAttribute("memberLevel");
-
-    if (!memberLevel.equals("instructor")) {
-      model.addAttribute("msg", "강사만이 업로드할 수 있습니다.");
-      model.addAttribute("url", "list");
-      return "alert";
-    }
-
     model.addAttribute("memberId", memberId);
     model.addAttribute("postURL", "/blooming/lecture/upload");
     return "/lecture/modify";
@@ -129,15 +123,12 @@ public class LectureController {
 
   @GetMapping("/modify")
   public String getModify(HttpServletRequest request, Model model, String target) {
-    HttpSession session = request.getSession();
-    int memberId = ((MemberVO) session.getAttribute("loginVo")).getMemberId();
-    int lectureId = 0;
+    int memberId = (int) request.getAttribute("memberId");
+    int lectureId = Utils.parseInt(target, -1);
 
-    try {
-      lectureId = Integer.parseInt(target);
-    } catch (NumberFormatException e) {
+    if (lectureId == -1) {
       model.addAttribute("msg", "잘못된 요청입니다.");
-      model.addAttribute("url", "list");
+      model.addAttribute("url", "/blooming/lecture/list");
       return "alert";
     }
 
@@ -172,17 +163,26 @@ public class LectureController {
                                       .mapToObj(i -> new LessonVO(lessonId[i], lecture.getLectureId(), -1, lessonIndex[i], lessonName[i], lessonUrl[i]))
                                       .collect(Collectors.toList());
     lectureService.update(lecture, lessons);
-    return "redirect:/member/mypage";
+    return "redirect:/member/instructor-page";
   }
   //@formatter:on
 
   @GetMapping("/{lectureId}/course")
-  public String getCourse(Model model, @PathVariable("lectureId") int lectureId) {
-    List<LessonVO> lessons = lessonService.getByLectureId(lectureId);
+  public String getCourse(Model model, HttpServletRequest request,
+      @PathVariable("lectureId") int lectureId) {
 
+    // check purchase
+    int memberId = (int) request.getAttribute("memberId");
+    if (!purchaseService.checkPurchase(memberId, lectureId)) {
+      model.addAttribute("msg", "강의를 구매하셔야 보실 수 있습니다.");
+      model.addAttribute("url", "/blooming/lecture/list");
+      return "alert";
+    }
+
+    List<LessonVO> lessons = lessonService.getByLectureId(lectureId);
     if (lessons.isEmpty()) {
       model.addAttribute("msg", "찾으시는 강의가 존재하지 않습니다.");
-      model.addAttribute("url", "list");
+      model.addAttribute("url", "/blooming/lecture/list");
       return "alert";
     }
 
@@ -192,23 +192,4 @@ public class LectureController {
     return "/lecture/course";
   }
 
-  /// @formatter:off
-  @PostMapping("/like/{lectureId}/{memberId}")
-  public ResponseEntity<Integer> likeLecture(
-      @PathVariable("lectureId") int lectureId,
-      @PathVariable("memberId") int memberId) {
-    lectureService.likeLecture(memberId, lectureId);
-    int result = lectureService.read(lectureId).getLectureLikeCount();
-    return new ResponseEntity<Integer>(result, HttpStatus.OK);
-  }
-
-  @DeleteMapping("/like/{lectureId}/{memberId}")
-  public ResponseEntity<Integer> dislikeLecture(
-      @PathVariable("lectureId") int lectureId,
-      @PathVariable("memberId") int memberId) {
-    lectureService.dislikeLecture(memberId,lectureId);
-    int result = lectureService.read(lectureId).getLectureLikeCount();
-    return new ResponseEntity<Integer>(result, HttpStatus.OK);
-  }
-  
 }

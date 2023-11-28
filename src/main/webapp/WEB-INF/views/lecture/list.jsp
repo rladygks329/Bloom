@@ -1,3 +1,4 @@
+<%@page import="org.apache.ibatis.javassist.compiler.ast.Keyword"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -16,12 +17,21 @@
 <title>Bloom - 전체 강의</title>
 <script>
 	$(function(){
-		const select = $("select");
+		const orderType = $(".orderType");
 		const {origin, pathname} = window.location;
 		const url = (new URL(document.location)).searchParams;
-		select.change(function(event){
+		
+		orderType.change(function(event){
 			const newOrderType = event.target.value;
 			url.set("order", newOrderType);
+			location.href = origin + pathname + "?" + url.toString();
+		})
+		
+		$(".search").submit(function(e){
+			e.preventDefault();
+			const keyword = $(".searchType").val() + '.' + $('input[name="keyword"]').val();
+			url.set("keyword", keyword);
+			url.set("page", "1");
 			location.href = origin + pathname + "?" + url.toString();
 		})
 	})
@@ -36,7 +46,7 @@
 			<!-- title -->
 			<div class="col-md-8 col-sm-8 col-xs-12">
 				<c:if test="${not empty keyword }">
-					<h4>'${keyword }'의 검색 결과</h4>
+					<h4>'${keyword.startsWith("content.") || keyword.startsWith("writer.") ? keyword.substring(keyword.indexOf('.') + 1) : keyword}'의 검색 결과</h4>
 				</c:if>
 				<c:if test="${ empty keyword }">
 					<h4>전체 강의</h4>
@@ -44,7 +54,7 @@
 			</div>
 			<div class="d-flex justify-content-between my-3">
 				<div>
-					<select class="form-select">
+					<select class="form-select orderType">
 						<option value="seq" ${((order == "seq") or empty order) ? "selected" : "" }>최신 순</option>
 						<option value="price-desc" ${order == "price-desc"? "selected" : "" }>가격 높은 순</option>
 						<option value="price-asc" ${order == "price-asc"? "selected" : "" }>가격 낮은 순</option>
@@ -56,8 +66,12 @@
 				
 				<!-- search bar -->
 				<div>
-				<form class="input-group">
-					<input name="keyword" type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" value="${keyword}" />
+				<form class="input-group search">
+					<select class="form-select searchType">
+						<option value="content" ${empty keyword or keyword.startsWith("content.") ? "selected" : "" }>제목 + 내용</option>
+						<option value="writer" ${not empty keyword and keyword.startsWith("writer.") ? "selected" : "" }>작성자</option>
+					</select>
+					<input name="keyword" type="search" class="form-control rounded flex-grow-1" placeholder="Search" aria-label="Search" aria-describedby="search-addon" value="${keyword.startsWith("content.") || keyword.startsWith("writer.") ? keyword.substring(keyword.indexOf('.') + 1) : keyword}" />
 					<button type="submit" class="btn btn-outline-primary">search</button>
 				</form>
 				</div>

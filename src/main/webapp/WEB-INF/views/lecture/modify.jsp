@@ -1,4 +1,6 @@
-	<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@page import="com.edu.blooming.domain.LectureVO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
 	<!DOCTYPE html>
 	<html>
 	<head>
@@ -18,9 +20,17 @@
 		
 		<!-- Tus protocol -->
 		<script src="https://cdn.jsdelivr.net/npm/tus-js-client@latest/dist/tus.min.js"></script>
-		
+		<style type="text/css">
+			input[name=lessonName] {
+				border: dashed green;
+				background: #dddddd;
+			}
+			input[name=lessonName]:disabled {
+				border:none;
+			}
+		</style>
 		<meta charset="UTF-8">
-		<title>강좌 변경</title>
+		<title>${(empty lecture) ? "강의 올리기" : "강의 수정하기"}</title>
 		<script>
 			function validateInputs(event) {
 				const title = $('#lectureTitle').val();
@@ -29,13 +39,13 @@
 				const thumbnail = $('#lectureThumbnailUrl').val();
 				const lectureVideos = $('.uploaded-div');
 				const uploadRate = $('.progress-bar');
-				
+				const lessonNames = $("input[name='lessonName']");
 
 				if (!title) {
 					alert("강좌 제목을 입력해주세요");
 					return false;
 				}
-
+				
 				if (!description) {
 					alert("강좌 설명을 입력해주세요");
 					return false;
@@ -65,19 +75,33 @@
 				$.each(uploadRate, function (index, el) {
 					const proccessRate = $(this).text();
 					if (proccessRate != "100.00%") {
-						alert("모든 강의 영상을 업로드 완료 해주세요");
 						result = false;
 					}
 				});
 				
-				if(result){
-					// diabled한 input은 넘어가지 않으므로 풀어준다.
-					$("input[name='lessonName']").each(function(i) {
-				        $(this).removeAttr('disabled');
-					});
+				if(!result){
+					alert("모든 강의 영상을 업로드 완료 해주세요");
+					return false;
 				}
 				
-				return result;
+				lessonNames.each(function() {
+					const condition = $(this).prop("disabled");
+					if(!condition){
+						result = false;
+					}
+				});
+				
+				if(!result){
+					alert("강의 제목을 수정완료 해주세요");
+					return false;
+				}
+				
+				// diabled한 input은 넘어가지 않으므로 풀어준다.
+				$("input[name='lessonName']").each(function(i) {
+			        $(this).removeAttr('disabled');
+				});
+				
+				return true;
 			} //end validateInputs()
 
 			function renderFile(file) {
@@ -296,46 +320,45 @@
 			<section class="py-2 bg-secondary">
 				<div class="container">
 					<div class="row d-flex justify-content-center align-items-center h-100">
-						<form action="${postURL}" method="post" onsubmit="return validateInputs(event)">
+						<form action="${postURL}" method="post" onsubmit="return validateInputs(event)" novalidate>
 							<input type="hidden" name="memberId" value="${memberId}"/>
 							<c:if test="${not empty lecture }">
 								<input type="hidden" name="lectureId" value="${lecture.lectureId }"/>
 							</c:if>
 							<div class="col">
-								<h1 class="text-white my-2">강좌 등록</h1>
+								<h1 class="text-white my-2">${(empty lecture) ? "강의 올리기" : "강의 수정하기"}</h1>
 								<div class="card" style="border-radius: 15px;">
 									<div class="card-body">
 										<!-- Lecture Title -->
-										<div class="row align-items-center pt-4 pb-3">
-											<div class="col-md-3 ps-5">
-												<h6 class="mb-0">강좌 제목</h6>
+										<div class="row align-items-center pt-4 pb-3 input-group">
+											<div class="col-md-3 text-center">
+												<h6>강좌 제목</h6>
 											</div>
-											<div class="col-md-9 pe-5">
+											<div class="col-md-9">
 												<input id="lectureTitle" name="lectureTitle" type="text"
-													class="form-control form-control-lg" placeholder="제목을 입력해주세요 " value="${lecture.lectureTitle }" autofocus />
+													class="form-control form-control-lg" placeholder="제목을 입력해주세요 " value="${lecture.lectureTitle }" required autofocus />
 											</div>
 										</div>
 
 										<!-- Lecture Description -->
-										<div class="row align-items-center pt-4 pb-3">
-											<div class="col-md-3 ps-5">
-												<h6 class="mb-0">강좌 설명</h6>
+										<div class="row align-items-center pt-4 pb-3 input-group">
+											<div class="col-md-3 text-center">
+												<h6>강좌 설명</h6>
 											</div>
-											<div class="col-md-9 pe-5">
+											<div class="col-md-9">
 												<textarea id="lectureDescription" name="lectureDescription" type="text" class="form-control" 
 												placeholder="강좌 설명을 입력해주세요" cols="20" rows="3">${lecture.lectureDescription }</textarea>
 											</div>
 										</div>
 
 										<hr class="mx-n3">
-
+										
 										<!-- Lecture Price -->
-										<div class="row align-items-center py-3">
-											<div class="col-md-3 ps-5">
-
-												<h6 class="mb-0">가격</h6>
+										<div class="row align-items-center py-3 input-group">
+											<div class="col-md-3 text-center">
+												<h6>가격</h6>
 											</div>
-											<div class="col-md-9 pe-5">
+											<div class="col-md-9">
 												<div id="lecturePriceLabel" class="small text-muted mt-2" hidden></div>
 												<input id="lecturePrice" name="lecturePrice" type="number" min="0"
 													step="1000" class="form-control form-control-lg"
@@ -347,12 +370,12 @@
 
 										<!-- Lecture Thumbnail -->
 										<div class="row align-items-center py-3">
-											<div class="col-md-3 ps-5">
-												<h6 class="mb-0">미리보기 이미지</h6>
+											<div class="col-md-3 text-center">
+												<h6>미리보기 이미지</h6>
 											</div>
-											<div class="col-md-9 pe-5">
-												<img id="lectureThumbnailImg" src="${lecture.lectureThumbnailUrl }"
-													class="img-fluid file-drop" alt="Responsive image"> 
+											<div class="col-md-9">
+												<img id="lectureThumbnailImg" src="${lecture.lectureThumbnailUrl }" onerror="this.src='https://dummyimage.com/700x300/dee2e6/6c757d.jpg';"
+													class="img-fluid file-drop mx-100" alt="Responsive image"> 
 													<input id="lectureThumbnailUrl" name="lectureThumbnailUrl" type="hidden" value="${lecture.lectureThumbnailUrl }" required>
 												<div class="small text-muted mt-2">파일을 끌어다가 올려주세요</div>
 											</div>
@@ -362,11 +385,11 @@
 									<hr class="mx-n3">
 
 									<!-- Lessons -->
-									<div class="row align-items-center py-3">
-										<div class="col-md-3 ps-5">
+									<div class="row align-items-center py-3 input-group">
+										<div class="col-md-3 text-center">
 											<h6 class="mb-0">강의 추가</h6>
 										</div>
-										<div class="col-md-9 pe-5">
+										<div class="col-md-9">
 											<input class="form-control form-control-lg" type="file" placeholder="파일 추가하기"
 												onchange="handleFileChange(event)" multiple="multiple" />
 											<hr>
@@ -395,7 +418,7 @@
 									</div>
 									<hr class="mx-n3">
 									<div class="px-5 py-4">
-										<button type="submit" class="btn btn-primary btn-lg">강좌 수정하기</button>
+										<button type="submit" class="btn btn-primary btn-lg">${(empty lecture) ? "강의 올리기" : "강의 수정하기"}</button>
 									</div>
 								</div>
 								<!-- end card -->
