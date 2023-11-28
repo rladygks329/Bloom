@@ -1,7 +1,7 @@
 package com.edu.blooming.controller;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.net.URLDecoder;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -42,11 +42,6 @@ public class MemberController {
   @Autowired
   private BoardReplyService boardReplyService;
 
-  @GetMapping("/main")
-  public void mainGET() {
-    logger.info("mainGET() 호출");
-  }
-
   @GetMapping("/login")
   public void loginGET() {
     logger.info("loginGET() 호출");
@@ -55,47 +50,22 @@ public class MemberController {
   @PostMapping("/login")
   public String loginPOST(HttpServletRequest request, MemberVO vo, String targetURL,
       RedirectAttributes rttr) throws Exception {
-    logger.info("loginPOST() 호출 memberEmail = " + vo.getMemberEmail());
-
     MemberVO loginVo = memberService.login(vo);
 
-    if (loginVo != null) {
-      HttpSession session = request.getSession();
-      session.setAttribute("loginVo", loginVo);
-      logger.info("loginVo =  " + loginVo.toString());
-      logger.info(targetURL.length() + "");
-      if (!targetURL.equals("")) {
-        return "redirect:" + targetURL;
-      } else {
-        return "redirect:/main";
-      }
-    } else {
-      logger.info("로그인 실패 : targetURL =" + targetURL);
-      if (targetURL != null) {
-        try {
-          targetURL = URLEncoder.encode(targetURL, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-        return "redirect:/member/login?targetURL=" + targetURL;
-      } else {
-        return "redirect:/member/login";
-      }
+    if (loginVo == null) {
+      String queryString = getLoginPageQueryString(targetURL);
+      logger.info("redirect:/member/login" + queryString);
+      return "redirect:/member/login" + queryString;
     }
+
+    HttpSession session = request.getSession();
+    session.setAttribute("loginVo", loginVo);
+    return "redirect:" + getRedirectURL(targetURL);
   } // end loginPOST()
 
   @GetMapping("/logout")
   public String logoutGET(HttpServletRequest request) throws Exception {
     logger.info("logoutGET() 호출");
-    HttpSession session = request.getSession();
-    session.invalidate();
-    return "redirect:/main";
-  }
-
-  @PostMapping("/logout")
-  public String logoutPOST(HttpServletRequest request) throws Exception {
-    logger.info("logoutPOST() 호출");
     HttpSession session = request.getSession();
     session.invalidate();
     return "redirect:/main";
@@ -112,9 +82,7 @@ public class MemberController {
   @GetMapping("/mypage")
   public String myPageGET(HttpServletRequest request, Model model) {
     logger.info("myPageGET() 호출");
-    HttpSession session = request.getSession();
-    MemberVO user = (MemberVO) session.getAttribute("loginVo");
-    int memberId = user.getMemberId();
+    int memberId = (int) request.getAttribute("memberId");
 
     List<BoardVO> listByMemberId = boardService.readByMemberId(memberId);
     List<BoardVO> listByLike = boardService.readByMemberIdAndLIke(memberId);
@@ -129,36 +97,30 @@ public class MemberController {
 
   @PutMapping("/password")
   @ResponseBody
-  public ResponseEntity<Void> changePasswordPOST(@RequestBody String memberPassword,
-      HttpSession session) {
-    int result = 0;
-    if (session.getAttribute("loginVo") != null) {
-      int memberId = ((MemberVO) session.getAttribute("loginVo")).getMemberId();
-      result = memberService.updatePassword(memberId, memberPassword);
-    }
+  public ResponseEntity<Void> changePasswordPOST(HttpServletRequest request,
+      @RequestBody String memberPassword) {
+    int memberId = (int) request.getAttribute("memberId");
+    int result = memberService.updatePassword(memberId, memberPassword);
 
     logger.info("결과값 : " + result);
-    if (result == 1) {
-      return new ResponseEntity<>(HttpStatus.OK);
+    if (result != 1) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
-    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @PutMapping("/nickname")
   @ResponseBody
-  public ResponseEntity<Void> changeNicknamePUT(@RequestBody String memberNickname,
-      HttpSession session) {
-    int result = 0;
-    if (session.getAttribute("loginVo") != null) {
-      int memberId = ((MemberVO) session.getAttribute("loginVo")).getMemberId();
-      result = memberService.updatePassword(memberId, memberNickname);
-    }
+  public ResponseEntity<Void> changeNicknamePUT(HttpServletRequest request,
+      @RequestBody String memberNickname) {
+    int memberId = (int) request.getAttribute("memberId");
+    int result = memberService.updatePassword(memberId, memberNickname);
 
     logger.info("결과값 : " + result);
-    if (result == 1) {
-      return new ResponseEntity<>(HttpStatus.OK);
+    if (result != 1) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
-    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @PutMapping("/introduce")
@@ -172,12 +134,31 @@ public class MemberController {
     }
 
     logger.info("결과값 : " + result);
-    if (result == 1) {
-      return new ResponseEntity<>(HttpStatus.OK);
+    if (result != 1) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
-    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 
+  private String getLoginPageQueryString(String url) {
+    if (url.isBlank()) {
+      return "";
+    }
+    return "?targetURL=" + url;
+  }
+
+  private String getRedirectURL(String url) {
+    if (url.isBlank()) {
+      return "/main";
+    }
+    try {
+      url = URLDecoder.decode(url, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      e.printStackTrace();
+    }
+
+    return url;
+  }
 
 } // end LoginController()
 

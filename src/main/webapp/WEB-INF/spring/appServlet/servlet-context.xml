@@ -59,6 +59,11 @@
 			<mapping path="/cart/**"/>
 			<mapping path="/purchase/**"/>
 			<mapping path="/member/instructor-page"/>
+			<mapping path="/member/mypage"/>
+			<mapping path="/member/password"/>
+			<mapping path="/member/nickname"/>
+			<mapping path="/member/introduce"/>
+			
 			<beans:ref bean="authInterceptor"/>
 		</interceptor>
 		

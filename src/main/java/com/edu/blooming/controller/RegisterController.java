@@ -40,7 +40,7 @@ public class RegisterController {
       return "main";
     }
     // 회원 가입 실패 시, 회원 가입 페이지로 리다이렉트
-    return "member/register";
+    return "/register";
 
   } // end registerPOST()
 
