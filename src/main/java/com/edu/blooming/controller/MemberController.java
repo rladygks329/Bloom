@@ -20,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.edu.blooming.domain.BoardReplyVO;
 import com.edu.blooming.domain.BoardVO;
 import com.edu.blooming.domain.MemberVO;
+import com.edu.blooming.service.BoardReplyService;
 import com.edu.blooming.service.BoardService;
 import com.edu.blooming.service.MemberService;
 
@@ -36,6 +38,9 @@ public class MemberController {
 
   @Autowired
   private BoardService boardService;
+
+  @Autowired
+  private BoardReplyService boardReplyService;
 
   @GetMapping("/main")
   public void mainGET() {
@@ -62,7 +67,7 @@ public class MemberController {
       if (!targetURL.equals("")) {
         return "redirect:" + targetURL;
       } else {
-        return "redirect:/board/list";
+        return "redirect:/main";
       }
     } else {
       logger.info("로그인 실패 : targetURL =" + targetURL);
@@ -119,9 +124,11 @@ public class MemberController {
 
     List<BoardVO> listByMemberId = boardService.readByMemberId(memberId);
     List<BoardVO> listByLike = boardService.readByMemberIdAndLIke(memberId);
+    List<BoardReplyVO> replyListByMemberId = boardReplyService.readByMemberId(memberId);
 
     model.addAttribute("listByMemberId", listByMemberId);
     model.addAttribute("listByLike", listByLike);
+    model.addAttribute("replyListByMemberId", replyListByMemberId);
 
     return "/member/mypage";
   }

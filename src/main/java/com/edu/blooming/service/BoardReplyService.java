@@ -12,4 +12,6 @@ public interface BoardReplyService {
 
   List<BoardReplyVO> getReplies(int boardId);
 
+  List<BoardReplyVO> readByMemberId(int memberId);
+
 }

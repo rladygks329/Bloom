@@ -62,6 +62,12 @@ public class BoardReplyServiceImple implements BoardReplyService {
     return boardReplyDAO.selectByBoardId(boardId);
   }
 
+  @Override
+  public List<BoardReplyVO> readByMemberId(int memberId) {
+    logger.info("readByMemberId() 호출 = " + memberId);
+    return boardReplyDAO.selectByMemberId(memberId);
+  }
+
 }
 
 

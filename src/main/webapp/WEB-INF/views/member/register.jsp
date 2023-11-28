@@ -414,7 +414,7 @@
 				var fileInput = $('input[name="uploadFile"]');
 				var fileList = fileInput[0].files;
 				var fileObj = fileList[0];
-
+				
 				console.log("fileName : " + fileObj.name);
 				console.log("fileSize : " + fileObj.size);
 				console.log("fileType(MimeType) : " + fileObj.type);
@@ -424,7 +424,7 @@
 				}
 
 				// key: uploadFile, value: fileObj
-				formData.append("uploadFile", fileObj);
+				formData.append("file", fileObj);
 
 				// ajax로 전송
 				$.ajax({
@@ -442,7 +442,6 @@
 						$('input[name="memberProfileUrl"]').val(result);
 					}
 				});
-
 			}); // end on()
 
 

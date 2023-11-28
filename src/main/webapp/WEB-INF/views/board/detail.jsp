@@ -15,8 +15,9 @@
 <title>게시글 상세보기</title>
 </head>
 <body>
-	<input type="hidden" id="memberId" name="memberId" value="${vo.memberId}" />
-
+	<!-- <input type="hidden" id="memberId" name="memberId" value="${vo.memberId}" /> -->
+	<input type="hidden" id="loginMemberId" name="loginMemberId" value="${sessionScope.loginVo.memberId}">
+	
 	<h2>글내용 보기</h2>
 	<div>
 		<p>글 번호: ${vo.boardId }</p>
@@ -52,7 +53,7 @@
 		</form>
 	</c:if>
 	
-	<c:if test="${loginVo != null and loginVo.memberId ne vo.memberId}">
+	<c:if test="${loginVo.memberId ne vo.memberId}">
 		<input type="button" id="boardLike" value="좋아요">		
 	</c:if>
 	
@@ -162,6 +163,7 @@ $(document).ready(function(){
 	// 게시판 댓글 전체 가져오기
 	function getAllReplies() {
 		var boardId = $('#boardId').val();
+
 		console.log(boardId);
 		var boardReplyCount = $('#boardReplyCount').val();
 		console.log(boardReplyCount);
@@ -187,12 +189,14 @@ $(document).ready(function(){
 					var boardReplyDateCreated = new Date(this.boardReplyDateCreated);
 					
 					var disabled = 'disabled';
-					var readonly = 'readonly';
+
+					console.log(memberId);
+					console.log(this.memberId);
 					
 					if(memberId == this.memberId) {
 						disabled = '';
-						readonly = '';
 					}
+					
 	                // 포맷팅된 날짜 문자열 생성
 	                var formattedDate = boardReplyDateCreated.getFullYear() + '-' +
 	                                    ('0' + (boardReplyDateCreated.getMonth() + 1)).slice(-2) + '-' +
@@ -204,6 +208,7 @@ $(document).ready(function(){
 					list += '<div class="reply_item">'
 						+ '<pre>'
 						+ '<input type="hidden" id="replyId" value="' + this.boardReplyId +'">'
+						+ '<input type="hidden" id="memberId" value="' + this.memberId +'">'
 						+ '<input type="hidden" id="authorNickname" value="' + this.authorNickname +'">'
 						+ this.authorNickname
 						+ '&nbsp;&nbsp;' // 공백
@@ -211,8 +216,8 @@ $(document).ready(function(){
 						+ '&nbsp;&nbsp;' // 공백
 						+ formattedDate
 						+ '&nbsp;&nbsp;' // 공백
-						+ '<button class="btn_update" >수정</button>'
-						+ '<button class="btn_delete" >삭제</button>'
+						+ '<button class="btn_update" ' + disabled + '>수정</button>'
+						+ '<button class="btn_delete" ' + disabled + '>삭제</button>'
 						+ '<button class="btnComment">답글</button>'		
 						+ '<div class="comments"></div>'
 						+ '</pre>'
@@ -307,11 +312,9 @@ $(document).ready(function(){
 						
 						var boardCommentDateCreated = new Date(this.boardCommentDateCreated);						
 						var disabled = 'disabled';
-						var readonly = 'readonly';
 						
 						if(memberId == this.memberId) {
 							disabled = '';
-							readonly = '';
 						}
 
 		                // 포맷팅된 날짜 문자열 생성
@@ -332,8 +335,8 @@ $(document).ready(function(){
 							+ '&nbsp;&nbsp;' // 공백
 							+ formattedDate
 							+ '&nbsp;&nbsp;' // 공백
-							+ '<button class="btnUpdateComment" >수정</button>'
-							+ '<button class="btnDeleteComment" >삭제</button>'
+							+ '<button class="btnUpdateComment" ' + disabled + '>수정</button>'
+							+ '<button class="btnDeleteComment" ' + disabled + '>삭제</button>'
 							+ '</pre>'
 							+ '</div>';
 					}); // end each()

@@ -16,5 +16,7 @@ public interface BoardReplyDAO {
 
   List<BoardReplyVO> selectByBoardId(int boardId);
 
+  List<BoardReplyVO> selectByMemberId(int memberId);
+
   int updateCommentCount(int boardReplyId, int amount);
 }
