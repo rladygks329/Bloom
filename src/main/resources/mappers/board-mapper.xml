@@ -162,5 +162,24 @@
 		where ${boardId} = #{boardId}
 	</delete>	
 	
+	<!-- 특정인이 작성한 게시글 조회 -->
+	<select id="select_by_member_id" resultType="BoardVO">
+		select *
+		from ${board}
+		where ${memberId} = #{memberId}	
+	</select>
+	
+	<!-- 특정인이 좋아요 누른 게시글 조회 -->
+	<select id="select_by_member_id_and_like" resultType="BoardVO">
+		select *
+		from ${board}
+		where ${boardId} in (
+			select ${boardId}
+			from ${board_like}
+			where ${memberId} = #{memberId}
+		)
+	</select>
+	
+	
 </mapper>
 

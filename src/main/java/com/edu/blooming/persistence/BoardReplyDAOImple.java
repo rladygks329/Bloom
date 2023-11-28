@@ -70,6 +70,12 @@ public class BoardReplyDAOImple implements BoardReplyDAO {
     return sqlSession.update(NAMESPACE + ".update_for_delete", boardReplyId);
   }
 
+  @Override
+  public List<BoardReplyVO> selectByMemberId(int memberId) {
+    logger.info("selectByMemberId 호출 : memberId = " + memberId);
+    return sqlSession.selectList(NAMESPACE + ".select_by_member_id", memberId);
+  }
+
 }
 
 

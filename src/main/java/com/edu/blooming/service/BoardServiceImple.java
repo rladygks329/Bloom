@@ -26,7 +26,7 @@ public class BoardServiceImple implements BoardService {
 
   @Override
   public List<BoardVO> read(PageCriteria criteria, String option, String keyword) {
-    logger.info("read() 호출 option : " + option + "keyword : " + keyword);
+    logger.info("read() 호출 option : " + option + " keyword : " + keyword);
     logger.info("start = " + criteria.getStart());
     logger.info("end = " + criteria.getEnd());
 
@@ -35,7 +35,7 @@ public class BoardServiceImple implements BoardService {
     }
 
     if (option.equals(OPTION_NICKNAME)) {
-      boardDAO.selectByNickname(criteria, keyword);
+      return boardDAO.selectByNickname(criteria, keyword);
     }
 
     return boardDAO.selectByTitleOrContent(criteria, keyword);
@@ -105,6 +105,18 @@ public class BoardServiceImple implements BoardService {
     }
     logger.info("delete() 호출");
     return boardDAO.delete(vo.getBoardId());
+  }
+
+  @Override
+  public List<BoardVO> readByMemberId(int memberId) {
+    logger.info("readByMemberId() 호출 = " + memberId);
+    return boardDAO.selectByMemberId(memberId);
+  }
+
+  @Override
+  public List<BoardVO> readByMemberIdAndLIke(int memberId) {
+    logger.info("readByMemberIdAndLike() 호출 = " + memberId);
+    return boardDAO.selectByMemberIdAndLike(memberId);
   }
 
 }

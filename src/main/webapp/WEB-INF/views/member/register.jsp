@@ -386,10 +386,24 @@
 
 			if (memberLevel === "instructor") {
 				formInstructor.style.display = "block"; // 자기소개 및 프로필 사진을 보임
-			}
-		</script>
+			}			
+			
+			// 업로드 파일 양식 및 크기 체크
+			var regex = new RegExp("(.*?)\.(jpg|png)$");
+			var maxSize = 1048576; //1MB
+			function fileCheck(fileName, fileSize) {
+				if (fileSize >= maxSize) {
+					alert("파일 사이즈 초과");
+					return false;
+				}
 
-		<script>
+				if (!regex.test(fileName)) {
+					alert("해당 종류의 파일은 업로드할 수 없습니다.");
+					return false;
+				}
+				return true;
+			} // end fileCheck()
+
 			// 이미지 업로드		    
 			$("input[type='file']").on("change", function(e) {
 
@@ -400,7 +414,7 @@
 				var fileInput = $('input[name="uploadFile"]');
 				var fileList = fileInput[0].files;
 				var fileObj = fileList[0];
-
+				
 				console.log("fileName : " + fileObj.name);
 				console.log("fileSize : " + fileObj.size);
 				console.log("fileType(MimeType) : " + fileObj.type);
@@ -410,7 +424,7 @@
 				}
 
 				// key: uploadFile, value: fileObj
-				formData.append("uploadFile", fileObj);
+				formData.append("file", fileObj);
 
 				// ajax로 전송
 				$.ajax({
@@ -428,28 +442,9 @@
 						$('input[name="memberProfileUrl"]').val(result);
 					}
 				});
-
 			}); // end on()
 
-			// 업로드 파일 양식 및 크기 체크
-			var regex = new RegExp("(.*?)\.(jpg|png)$");
-			var maxSize = 1048576; //1MB	
 
-			function fileCheck(fileName, fileSize) {
-
-				if (fileSize >= maxSize) {
-					alert("파일 사이즈 초과");
-					return false;
-				}
-
-				if (!regex.test(fileName)) {
-					alert("해당 종류의 파일은 업로드할 수 없습니다.");
-					return false;
-				}
-
-				return true;
-
-			} // end fileCheck()
 		</script>
 
 		<br> <input type="submit" value="회원가입">

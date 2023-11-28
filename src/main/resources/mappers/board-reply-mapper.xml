@@ -47,6 +47,13 @@
 		set ${boardReplyCommentCount} = ${boardReplyCommentCount} + #{amount}
 		where ${boardReplyId} = #{boardReplyId}	
 	</update>	
+	
+	<!-- 특정인이 작성한 댓글 조회 -->
+	<select id="select_by_member_id" resultType="BoardReplyVO">
+		select *
+		from ${board_reply}
+		where ${memberId} = #{memberId}	
+	</select>
 
 </mapper>
 

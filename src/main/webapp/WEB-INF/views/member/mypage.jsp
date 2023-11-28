@@ -2,23 +2,128 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
     
 <!DOCTYPE html>
 <html>
 <head>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<style>
+table, th, td {
+	board-style : solid;
+	board-width : 1px;
+	text-align : center;
+}
+
+ul {
+	list-style-type : none;
+}
+
+li {
+	display : inline-block;
+}
+</style>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 <body>
      
-    <%
-    	MemberVO vo = (MemberVO) session.getAttribute("loginVo"); // 세션에서 로그인 정보를 가져옴
-    %>
-    
-	<h2>마이페이지</h2>	
+	<h2>마이페이지</h2>
+	<hr>
 	<br>
-	<hr>	
+	<br>
+		
+	<h4>내가 작성한 글</h4>
+	<hr>
+	<table>
+		<thead>
+			<tr>
+				<th style="width : 60px">번호</th>
+				<th style="width : 700px">제목</th>
+				<th style="width : 120px">작성자</th>
+				<th style="width : 60px">조회수</th>
+				<th style="width : 60px">댓글수</th>
+				<th style="width : 60px">좋아요</th>
+				<th style="width : 300px">작성일</th>
+			</tr>
+		</thead>
+		
+		<tbody>
+			<c:forEach var="vo" items="${listByMemberId }">
+				<tr>
+					<td>${vo.boardId }</td>
+					<td><a href="/blooming/board/detail?boardId=${vo.boardId }">${vo.boardTitle }</a></td>
+					<td>${vo.authorNickname }</td>
+					<td>${vo.boardViewCount }</td>
+					<td>${vo.boardReplyCount }</td>
+					<td>${vo.boardLikeCount }</td>
+					<fmt:formatDate value="${vo.boardDateCreated }"
+					pattern="yyyy-MM-dd HH:mm:ss" var="boardDateCreated"/>
+					<td>${boardDateCreated }</td>
+				</tr>			
+			</c:forEach>
+		</tbody> 
+	</table>
+	
+	<h4>내가 좋아요 누른 글</h4>
+	<hr>
+	<table>
+		<thead>
+			<tr>
+				<th style="width : 60px">번호</th>
+				<th style="width : 700px">제목</th>
+				<th style="width : 120px">작성자</th>
+				<th style="width : 60px">조회수</th>
+				<th style="width : 60px">댓글수</th>
+				<th style="width : 60px">좋아요</th>
+				<th style="width : 300px">작성일</th>
+			</tr>
+		</thead>
+		
+		<tbody>
+			<c:forEach var="vo" items="${listByLike }">
+				<tr>
+					<td>${vo.boardId }</td>
+					<td><a href="/blooming/board/detail?boardId=${vo.boardId }">${vo.boardTitle }</a></td>
+					<td>${vo.authorNickname }</td>
+					<td>${vo.boardViewCount }</td>
+					<td>${vo.boardReplyCount }</td>
+					<td>${vo.boardLikeCount }</td>
+					<fmt:formatDate value="${vo.boardDateCreated }"
+					pattern="yyyy-MM-dd HH:mm:ss" var="boardDateCreated"/>
+					<td>${boardDateCreated }</td>
+				</tr>			
+			</c:forEach>
+		</tbody> 
+	</table>	
+	
+	<h4>내가 작성한 댓글</h4>
+	<hr>
+	<table>
+		<thead>
+			<tr>
+				<th style="width : 60px">번호</th>
+				<th style="width : 700px">댓글내용</th>
+				<th style="width : 300px">작성일</th>
+			</tr>
+		</thead>
+		
+		<tbody>
+			<c:forEach var="vo" items="${replyListByMemberId }">
+				<tr>
+					<td>${vo.boardReplyId }</td>
+					<td><a href="/blooming/board/detail?boardId=${vo.boardId }">${vo.boardReplyContent }</a></td>
+					<fmt:formatDate value="${vo.boardReplyDateCreated }"
+					pattern="yyyy-MM-dd HH:mm:ss" var="boardReplyDateCreated"/>
+					<td>${boardReplyDateCreated }</td>
+				</tr>			
+			</c:forEach>
+		</tbody> 
+	</table>
+		
+	<br>
+	<hr>
+	<h4>비밀번호 변경하기</h4>	
 	<input type="hidden" id="memberId" name="memberId" value="${loginVo.memberId}" />
 	<form id="passwordChangeForm">
 	    <label for="newPassword">새 비밀번호:</label>
@@ -32,6 +137,7 @@
 	<br>
 	<hr>
 	
+	<h4>닉네임 변경하기</h4>
 	<form id="changeNicknameForm">	
 		<label for="nickname">새 닉네임 :</label>
 		<input type="text" id="nickname" name="nickname" required><br>
@@ -39,6 +145,18 @@
 		<p>한글, 영문, 숫자 2~6자로 입력해 주세요.</p>	
 	</form>
 	
+	<br>
+	<hr>
+
+	<h4>프로필사진 변경하기</h4>
+	<form id="changeProfileForm" enctype="multipart/form-data">
+	    <input type="file" id="profileImage" name="profileImage" accept="image/*" required>
+	    <button type="button" id="changeProfileBtn">프로필사진 변경</button>
+	    <button type="button" id="deleteProfileBtn">프로필사진 삭제</button>
+	</form>
+	<!-- 기존 프로필 이미지 표시 -->
+	<img src="/blooming/image/display?fileName=${vo.memberProfileUrl}" alt="프로필사진" id="profilePreview">
+
 	<br>
 	<hr>
 
@@ -137,19 +255,11 @@
 	                    alert("닉네임 변경에 실패했습니다. 다시 시도해 주세요.");
 	                }
 	            }); // end ajax()	        	
-	        }); // end changeNicknameBtn()
-	        
-	        
-	        
+	        }); // end changeNicknameBtn()	        
 	        
 	    }); // end document()
 	    
-	    
-	    
-	    
 	</script>
-
-
 
 </body>
 </html>

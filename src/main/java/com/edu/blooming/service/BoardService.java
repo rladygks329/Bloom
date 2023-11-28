@@ -10,6 +10,10 @@ public interface BoardService {
 
   List<BoardVO> read(PageCriteria criteria, String option, String keyword);
 
+  List<BoardVO> readByMemberId(int memberId);
+
+  List<BoardVO> readByMemberIdAndLIke(int memberId);
+
   BoardVO read(int boardId);
 
   int getTotalCounts(String option, String keyword);

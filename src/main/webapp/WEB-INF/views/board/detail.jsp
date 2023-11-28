@@ -5,14 +5,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script src="https://code.jquery.com/jquery-3.7.1.js" 
-integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous">
-</script>	
-
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <meta charset="UTF-8">
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+
 <title>게시글 상세보기</title>
 </head>
 <body>
+	<!-- <input type="hidden" id="memberId" name="memberId" value="${vo.memberId}" /> -->
+	<input type="hidden" id="loginMemberId" name="loginMemberId" value="${sessionScope.loginVo.memberId}">
+	
 	<h2>글내용 보기</h2>
 	<div>
 		<p>글 번호: ${vo.boardId }</p>
@@ -29,24 +34,29 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 		<p>댓글수: ${vo.boardReplyCount }</p>
 		<p>좋아요: ${vo.boardLikeCount }</p>
 	</div>
-	<div>
-		<textarea rows="20" cols="120" readonly>${vo.boardContent }</textarea>
+	<div class="boardContent" style="border: 1px solid black; padding: 10px;">
+		${vo.boardContent }
 	</div>
+	<a href="list?&page=${page }">
+	<input type="button" value="글 목록">
+	</a>
+	<c:if test="${loginVo != null and loginVo.memberId eq vo.memberId}">
+		<a href="update?boardId=${vo.boardId }&page=${page }"><input type="button" value="글 수정"></a>
+		
+		<form action="deleteOrUpdate" method="post">
+		    <input type="hidden" name="boardId" value="${vo.boardId}">
+		    <input type="hidden" name="memberId" value="${vo.memberId}">
+		    <input type="hidden" name="boardTitle" value="${vo.boardTitle}">
+		    <input type="hidden" name="boardContent"> <!-- value="${vo.boardContent}"를 뺐음 1124 -->
+		    <input type="hidden" id="boardReplyCount" name="boardReplyCount" value="${vo.boardReplyCount}">
+			<input type="submit" value="글 삭제">	    
+		</form>
+	</c:if>
 	
-	<input type="button" onclick="goBack()" value="글 목록">
-	<a href="update?boardId=${vo.boardId }&page=${page }"><input type="button" value="글 수정"></a>
+	<c:if test="${loginVo.memberId ne vo.memberId}">
+		<input type="button" id="boardLike" value="좋아요">		
+	</c:if>
 	
-	<form action="deleteOrUpdate" method="post">
-	    <input type="hidden" name="boardId" value="${vo.boardId}">
-	    <input type="hidden" name="memberId" value="${vo.memberId}">
-	    <input type="hidden" name="boardTitle" value="${vo.boardTitle}">
-	    <input type="hidden" name="boardContent" value="${vo.boardContent}">
-	    <input type="hidden" id="boardReplyCount" name="boardReplyCount" value="${vo.boardReplyCount}">
-		<input type="submit" value="글 삭제">	    
-	</form>
-					
-	<input type="button" id="boardLike" value="좋아요">		
-
 	<br>
 	<br>
 	<br>
@@ -67,7 +77,7 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 	    window.history.back();
 	}
 
-$(document).ready(function(){
+$(document).ready(function(){	
 	getAllReplies();
 	
   	var boardId = $('#boardId').val(); 
@@ -96,7 +106,7 @@ $(document).ready(function(){
         // 버튼 텍스트를 확인하여 좋아요 또는 좋아요 취소 요청 구분
         
         if(memberId ===''){
-			alert("로그인을 하셔야 이용하실 수 있습니다.");
+			alert("로그인을 하셔야 이용하실 수 있습니다."); 
 			return;
 		}
         
@@ -153,6 +163,7 @@ $(document).ready(function(){
 	// 게시판 댓글 전체 가져오기
 	function getAllReplies() {
 		var boardId = $('#boardId').val();
+
 		console.log(boardId);
 		var boardReplyCount = $('#boardReplyCount').val();
 		console.log(boardReplyCount);
@@ -178,12 +189,14 @@ $(document).ready(function(){
 					var boardReplyDateCreated = new Date(this.boardReplyDateCreated);
 					
 					var disabled = 'disabled';
-					var readonly = 'readonly';
+
+					console.log(memberId);
+					console.log(this.memberId);
 					
 					if(memberId == this.memberId) {
 						disabled = '';
-						readonly = '';
 					}
+					
 	                // 포맷팅된 날짜 문자열 생성
 	                var formattedDate = boardReplyDateCreated.getFullYear() + '-' +
 	                                    ('0' + (boardReplyDateCreated.getMonth() + 1)).slice(-2) + '-' +
@@ -195,6 +208,7 @@ $(document).ready(function(){
 					list += '<div class="reply_item">'
 						+ '<pre>'
 						+ '<input type="hidden" id="replyId" value="' + this.boardReplyId +'">'
+						+ '<input type="hidden" id="memberId" value="' + this.memberId +'">'
 						+ '<input type="hidden" id="authorNickname" value="' + this.authorNickname +'">'
 						+ this.authorNickname
 						+ '&nbsp;&nbsp;' // 공백
@@ -202,8 +216,8 @@ $(document).ready(function(){
 						+ '&nbsp;&nbsp;' // 공백
 						+ formattedDate
 						+ '&nbsp;&nbsp;' // 공백
-						+ '<button class="btn_update" >수정</button>'
-						+ '<button class="btn_delete" >삭제</button>'
+						+ '<button class="btn_update" ' + disabled + '>수정</button>'
+						+ '<button class="btn_delete" ' + disabled + '>삭제</button>'
 						+ '<button class="btnComment">답글</button>'		
 						+ '<div class="comments"></div>'
 						+ '</pre>'
@@ -298,11 +312,9 @@ $(document).ready(function(){
 						
 						var boardCommentDateCreated = new Date(this.boardCommentDateCreated);						
 						var disabled = 'disabled';
-						var readonly = 'readonly';
 						
 						if(memberId == this.memberId) {
 							disabled = '';
-							readonly = '';
 						}
 
 		                // 포맷팅된 날짜 문자열 생성
@@ -323,8 +335,8 @@ $(document).ready(function(){
 							+ '&nbsp;&nbsp;' // 공백
 							+ formattedDate
 							+ '&nbsp;&nbsp;' // 공백
-							+ '<button class="btnUpdateComment" >수정</button>'
-							+ '<button class="btnDeleteComment" >삭제</button>'
+							+ '<button class="btnUpdateComment" ' + disabled + '>수정</button>'
+							+ '<button class="btnDeleteComment" ' + disabled + '>삭제</button>'
 							+ '</pre>'
 							+ '</div>';
 					}); // end each()
