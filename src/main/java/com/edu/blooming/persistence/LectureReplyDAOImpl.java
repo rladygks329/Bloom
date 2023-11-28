@@ -29,7 +29,7 @@ public class LectureReplyDAOImpl implements LectureReplyDAO {
   @Override
   public int update(LectureReplyVO vo) {
     logger.info("update() 호출,  vo : " + vo.toString());
-    return sqlSession.insert(NAMESPACE + ".update", vo);
+    return sqlSession.update(NAMESPACE + ".update", vo);
   }
 
   @Override
@@ -39,7 +39,7 @@ public class LectureReplyDAOImpl implements LectureReplyDAO {
     Map<String, Integer> args = new HashMap<>();
     args.put("lectureReplyId", lectureReplyId);
 
-    return sqlSession.insert(NAMESPACE + ".delete", args);
+    return sqlSession.delete(NAMESPACE + ".delete", args);
   }
 
   @Override
@@ -60,6 +60,16 @@ public class LectureReplyDAOImpl implements LectureReplyDAO {
     args.put("lectureId", lectureId);
 
     return sqlSession.selectList(NAMESPACE + ".select_by_lecture_id", args);
+  }
+
+  @Override
+  public List<LectureReplyVO> selectByInstructorId(int memberId) {
+    logger.info("selectByInstructorId() 호출,  memberId : " + memberId);
+
+    Map<String, Integer> args = new HashMap<>();
+    args.put("memberId", memberId);
+
+    return sqlSession.selectList(NAMESPACE + ".select_by_instructor_id", args);
   }
 
 }

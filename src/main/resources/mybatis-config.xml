@@ -9,11 +9,13 @@
 		<property name="memberEmail" value="member_email"/>
 		<property name="memberPassword" value="member_password"/>
 		<property name="memberName" value="member_name"/>
+		<property name="memberNickname" value="member_nickname"/>
 		<property name="memberPhone" value="member_phone"/>
 		<property name="memberAddress" value="member_address"/>
 		<property name="memberIntroduce" value="member_introduce"/>
     	<property name="memberProfileUrl" value="member_profile_url"/>
 		<property name="memberLevel" value="member_level"/>
+		<property name="memberNickName" value="member_nickname"/>
 		
 		<!-- LESSON -->
 		<property name="lesson" value="lesson"/>
@@ -21,6 +23,7 @@
 		<property name="lectureId" value="lecture_id"/>
 		<property name="lessonName" value="lesson_name"/>
 		<property name="lessonUrl" value="lesson_url"/>
+		<property name="lessonIndex" value="lesson_index"/>
 		<property name="lessonVideoProcessingLevel" value="lesson_video_processing_level"/>
 		
 		<!-- LECUTRE -->
@@ -47,6 +50,7 @@
 		<property name="lectureReplyContent" value="lecture_reply_content"/>
 		<property name="lectureReplyScore" value="lecture_reply_score"/>
 		<property name="authorName" value="author_name"/>
+		<property name="authorNickName" value="author_nick_name"/>
 		<property name="authorProfileUrl" value="author_Profile_Url"/>
 		
 		<!-- LECTURE_LIKE  -->
@@ -70,13 +74,12 @@
 		<!-- BOARD -->
 		<property name="board" value="board"/>
 		<property name="boardId" value="board_id"/>
-		<property name="memberId" value="member_id"/>		
-		<property name="boardParentId" value="board_parent_id"/>
+		<property name="memberId" value="member_id"/>
+		<property name="authorNickname" value="author_nickname"/>				
 		<property name="boardTitle" value="board_title"/>
 		<property name="boardContent" value="board_content"/>		
 		<property name="boardViewCount" value="board_view_count"/>
-		<property name="boardAnswerCount" value="board_answer_count"/>
-		<property name="boardReplyCount" value="board_reply_count"/>
+		<property name="boardReplyCount" value="board_reply_count"/>		
 		<property name="boardLikeCount" value="board_like_count"/>
 		<property name="boardDateCreated" value="board_date_created"/>
 		
@@ -87,6 +90,17 @@
 		<property name="memberId" value="member_id"/>
 		<property name="boardReplyContent" value="board_reply_content"/>
 		<property name="boardReplyDateCreated" value="board_reply_date_created"/>
+		<property name="boardReplyCommentCount" value="board_reply_comment_count"/>
+		<property name="authorNickname" value="author_Nickname"/>
+		
+		<!-- BOARD_COMMENT -->
+		<property name="board_comment" value="board_comment"/>
+		<property name="boardCommentId" value="board_comment_id"/>
+		<property name="boardReplyId" value="board_reply_id"/>
+		<property name="memberId" value="member_id"/>
+		<property name="boardCommentContent" value="board_comment_content"/>
+		<property name="boardCommentDateCreated" value="board_comment_date_created"/>
+		<property name="authorNickname" value="author_Nickname"/>
 		
 		<!-- BOARD_LIKE -->
 		<property name="board_like" value="board_like"/>

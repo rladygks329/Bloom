@@ -37,12 +37,21 @@ public class BoardReplyServiceImple implements BoardReplyService {
     return boardReplyDAO.update(boardReplyId, boardReplyContent);
   }
 
+  @Transactional(value = "transactionManager")
   @Override
   public int delete(int boardReplyId, int boardId) {
+    BoardReplyVO vo = boardReplyDAO.selectByReplyId(boardReplyId);
+    int resultDelete = 0;
+    if (vo.getBoardReplyCommentCount() == 0) {
+      resultDelete = boardReplyDAO.delete(boardReplyId);
+    } else {
+      resultDelete = boardReplyDAO.updateForDelete(boardReplyId);
+    }
+    int result = boardDAO.updateReplyCount(boardId, -1);
+
     logger.info("delete() 호출 : boardReplyId = " + boardReplyId);
-    int resultDelete = boardReplyDAO.delete(boardReplyId);
+    logger.info("대댓글 수 = " + vo.getBoardReplyCommentCount());
     logger.info(resultDelete + "행 삭제 성공");
-    int result = boardDAO.updateReplyCount(-1, boardId);
     logger.info(result + "행 수정 성공");
     return 1;
   }
@@ -51,6 +60,12 @@ public class BoardReplyServiceImple implements BoardReplyService {
   public List<BoardReplyVO> getReplies(int boardId) {
     logger.info("getReplies() 호출 : boardId: " + boardId);
     return boardReplyDAO.selectByBoardId(boardId);
+  }
+
+  @Override
+  public List<BoardReplyVO> readByMemberId(int memberId) {
+    logger.info("readByMemberId() 호출 = " + memberId);
+    return boardReplyDAO.selectByMemberId(memberId);
   }
 
 }

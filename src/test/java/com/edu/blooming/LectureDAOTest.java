@@ -17,7 +17,7 @@ import com.edu.blooming.util.PageCriteria;
 @RunWith(SpringJUnit4ClassRunner.class)
 
 @ContextConfiguration(locations = {"file:src/main/webapp/WEB-INF/spring/**/*.xml"})
-@TestPropertySource("classpath:database.properties")
+@TestPropertySource("classpath:application.properties")
 @WebAppConfiguration
 public class LectureDAOTest {
 
@@ -98,20 +98,22 @@ public class LectureDAOTest {
   } // end testGetLectureCount()
 
   private void testGetLectureCountByMemberId() {
-    int result = dao.getLectureCount(1);
-    logger.info(result + "행 존재");
+    // int result = dao.getLectureCount(1);
+    // logger.info(result + "행 존재");
   } // end testGetLectureCountByMemberId()
 
   private void testGetLectureCountByKeyword() {
-    int result = dao.getLectureCount("강좌");
-    logger.info(result + "행 존재");
+    // int result = dao.getLectureCount("강좌");
+    // logger.info(result + "행 존재");
   }// end testGetLectureCountByKeyword
 
   private void testSelect() {
     PageCriteria criteria = new PageCriteria();
-    List<LectureVO> list = dao.select(criteria);
-    for (LectureVO vo : list) {
-      logger.info("vo : " + vo.toString());
+    for (int i = 0; i < 6; i++) {
+      List<LectureVO> list = dao.select(criteria, i);
+      for (LectureVO vo : list) {
+        logger.info("vo : " + vo.toString());
+      }
     }
   } // end testSelect()
 
@@ -137,9 +139,11 @@ public class LectureDAOTest {
 
   private void testSelectByKeyword() {
     PageCriteria criteria = new PageCriteria();
-    List<LectureVO> list = dao.select(criteria, "강좌");
-    for (LectureVO vo : list) {
-      logger.info("vo : " + vo.toString());
+    for (int i = 0; i < 6; i++) {
+      List<LectureVO> list = dao.select(criteria, "강좌", i);
+      for (LectureVO vo : list) {
+        logger.info("vo : " + vo.toString());
+      }
     }
   } // end testSelectByKeyword();
 
@@ -151,9 +155,10 @@ public class LectureDAOTest {
     }
   } // end testSelectByMemberId()
 
-  private void testSelectByAuthor() {
+  @Test
+  public void testSelectByAuthorName() {
     logger.info("testSelectByAuthor() 호출");
-    List<LectureVO> list = dao.selectByAuthor(1);
+    List<LectureVO> list = dao.selectByAuthorName(new PageCriteria(), "강사1", 1);
     for (LectureVO vo : list) {
       logger.info("vo : " + vo.toString());
     }

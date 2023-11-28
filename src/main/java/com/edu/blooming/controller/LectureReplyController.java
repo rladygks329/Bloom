@@ -1,7 +1,6 @@
 package com.edu.blooming.controller;
 
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,45 +41,46 @@ public class LectureReplyController {
 
   @PostMapping
   public ResponseEntity<Object> createReply(
-      HttpServletRequest request,
+      HttpSession session,
       @PathVariable("lectureId") int lectureId,
-      @RequestBody LectureReplyVO vo) {
+      @RequestBody LectureReplyVO vo
+  ) {
     logger.info("createReply() 호출 lectureId: " + lectureId + " vo :" + vo);
-    HttpSession session = request.getSession();
-    int memberId = ((MemberVO) session.getAttribute("loginVo")).getMemberId();
+    if(session.getAttribute("loginVo") == null) {
+      return new ResponseEntity<>("로그인이 필요합니다.", HttpStatus.UNAUTHORIZED); 
+    }
     
+    int memberId = ((MemberVO) session.getAttribute("loginVo")).getMemberId();
     if(!purchaseService.checkPurchase(memberId, lectureId)) {
       return new ResponseEntity<>("구매를 한 사람만 댓글을 달 수 있습니다.", HttpStatus.FORBIDDEN);
     }
     
     int result = lectureReplyService.create(lectureId, vo);
     HttpStatus status = (result == 1) ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
-    return new ResponseEntity<>(1, status);
+    return new ResponseEntity<>(status);
   }
 
   @PutMapping(value = "/{replyId}")
-  public ResponseEntity<Integer> updateReply(
+  public ResponseEntity<Void> updateReply(
       @PathVariable("lectureId") int lectureId,
       @PathVariable("replyId") int replyId, 
-      @RequestBody LectureReplyVO vo) {
-    logger
-        .info("updateReply() 호출 lectureId: " + lectureId + " replyId : " + replyId + " vo :" + vo);
-
+      @RequestBody LectureReplyVO vo
+  ) {
+    logger.info("updateReply() 호출 lectureId: " + lectureId + " replyId : " + replyId + " vo :" + vo);
     int result = lectureReplyService.update(vo);
-    return new ResponseEntity<>(1, HttpStatus.OK);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @DeleteMapping(value = "/{replyId}")
-  public ResponseEntity<Integer> deleteReply(
+  public ResponseEntity<Void> deleteReply(
       @PathVariable("lectureId") int lectureId,
-      @PathVariable("replyId") int replyId) {
+      @PathVariable("replyId") int replyId
+  ) {
     logger.info("updateReply() 호출 lectureId: " + lectureId + "replyId : " + replyId);
-
     int result = lectureReplyService.delete(replyId);
     logger.info("result : " + result);
     HttpStatus status = (result == 1) ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
-
-    return new ResponseEntity<>(1, status);
+    return new ResponseEntity<>(status);
   }
 
 }

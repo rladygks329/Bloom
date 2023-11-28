@@ -11,4 +11,7 @@ public interface BoardReplyService {
   int delete(int boardReplyId, int boardId);
 
   List<BoardReplyVO> getReplies(int boardId);
+
+  List<BoardReplyVO> readByMemberId(int memberId);
+
 }

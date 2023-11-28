@@ -23,9 +23,7 @@ public class FileUploadUtil {
 
     String saveName = uuid.toString() + "_" + fileName;
 
-    String savePath = getUploadPath(uploadPath);
-
-    File target = new File(uploadPath + File.separator + savePath, saveName);
+    File target = new File(uploadPath, saveName);
 
     FileCopyUtils.copy(data, target);
 
@@ -33,9 +31,7 @@ public class FileUploadUtil {
 
     String result = null;
     if (MediaUtil.getMediaType(extension) != null) {
-      result = createThumbnail(uploadPath, savePath, saveName);
-    } else {
-      result = createIcon(uploadPath, savePath, saveName);
+      result = createIcon(uploadPath, saveName);
     }
 
     return result;
@@ -109,11 +105,13 @@ public class FileUploadUtil {
     return thumbnailName.substring(uploadPath.length()).replace(File.separatorChar, '/');
   }
 
-  private static String createIcon(String uploadPath, String savePath, String fileName) {
+  private static String createIcon(String uploadPath, String fileName) {
 
-    String iconName = uploadPath + File.separator + savePath + File.separator + fileName;
-
-    return iconName.substring(uploadPath.length()).replace(File.separatorChar, '/');
+    String iconName = uploadPath + File.separator + fileName;
+    logger.info(iconName);
+    logger.info(fileName);
+    return fileName;
+    // iconName.substring(uploadPath.length()).replace(File.separatorChar, '/');
 
   }
 

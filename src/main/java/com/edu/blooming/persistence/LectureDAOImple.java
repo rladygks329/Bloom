@@ -95,23 +95,72 @@ public class LectureDAOImple implements LectureDAO {
   }
 
   @Override
-  public int getLectureCount(int memberId) {
-    logger.info("getLectureCount() 호출 : memberId : " + memberId);
+  public int getLectureCountByKeyword(String keyword) {
+    logger.info("getLectureCountByKeyword() 호출 : keyword : " + keyword);
 
-    HashMap<String, Integer> args = new HashMap<>();
-    args.put("memberId", memberId);
+    HashMap<String, Object> args = new HashMap<>();
+    args.put("keyword", "%" + keyword + "%");
+
+    return sqlSession.selectOne(NAMESPACE + ".keyword_lecture_count", args);
+  }
+
+  @Override
+  public int getLectureCountByMemberName(String memberName) {
+    logger.info("getLectureCountByMemberName() 호출 : memberName : " + memberName);
+
+    HashMap<String, Object> args = new HashMap<>();
+    args.put("memberName", memberName);
 
     return sqlSession.selectOne(NAMESPACE + ".member_lecture_count", args);
   }
 
   @Override
-  public int getLectureCount(String keyword) {
-    logger.info("getLectureCount() 호출 : keyword : " + keyword);
+  public LectureVO select(int lectureId) {
+    logger.info("select() 호출 : lectureId : " + lectureId);
 
-    HashMap<String, String> args = new HashMap<>();
+    HashMap<String, Integer> args = new HashMap<>();
+    args.put("lectureId", lectureId);
+
+    return sqlSession.selectOne(NAMESPACE + ".select_by_lecture_id", args);
+  }
+
+  @Override
+  public List<LectureVO> select(PageCriteria criteria, int orderType) {
+    logger.info("select() 호출 : criteria : " + criteria);
+
+    HashMap<String, Integer> args = new HashMap<>();
+    args.put("start", criteria.getStart());
+    args.put("end", criteria.getEnd());
+    args.put("orderType", LectureVO.getOrderType(orderType));
+
+    return sqlSession.selectList(NAMESPACE + ".paing_select", args);
+  }
+
+  @Override
+  public List<LectureVO> select(PageCriteria criteria, String keyword, int orderType) {
+    logger.info("select() 호출 : criteria : " + criteria.toString() + " keyword : " + keyword);
+
+    HashMap<String, Object> args = new HashMap<>();
+    args.put("start", criteria.getStart());
+    args.put("end", criteria.getEnd());
     args.put("keyword", "%" + keyword + "%");
+    args.put("orderType", LectureVO.getOrderType(orderType));
 
-    return sqlSession.selectOne(NAMESPACE + ".keyword_lecture_count", args);
+    return sqlSession.selectList(NAMESPACE + ".paging_select_by_keyword", args);
+  }
+
+  @Override
+  public List<LectureVO> selectByAuthorName(PageCriteria criteria, String memberName,
+      int orderType) {
+    logger.info("selectByAuthorName() 호출 : memberName : " + memberName);
+
+    HashMap<String, Object> args = new HashMap<>();
+    args.put("start", criteria.getStart());
+    args.put("end", criteria.getEnd());
+    args.put("orderType", orderType);
+    args.put("memberName", memberName);
+
+    return sqlSession.selectList(NAMESPACE + ".paging_select_by_member_name", args);
   }
 
   @Override
@@ -134,61 +183,6 @@ public class LectureDAOImple implements LectureDAO {
     args.put("rank", rank + 1);
 
     return sqlSession.selectList(NAMESPACE + ".select_top_sale_lecture", args);
-  }
-
-  @Override
-  public List<LectureVO> select(PageCriteria criteria) {
-    logger.info("select() 호출 : criteria : " + criteria);
-
-    HashMap<String, Integer> args = new HashMap<>();
-    args.put("start", criteria.getStart());
-    args.put("end", criteria.getEnd());
-
-    return sqlSession.selectList(NAMESPACE + ".paing_select", args);
-  }
-
-  @Override
-  public List<LectureVO> select(PageCriteria criteria, String keyword) {
-    logger.info("select() 호출 : criteria : " + criteria.toString() + " keyword : " + keyword);
-
-    HashMap<String, Object> args = new HashMap<>();
-    args.put("start", criteria.getStart());
-    args.put("end", criteria.getEnd());
-    args.put("keyword", "%" + keyword + "%");
-
-    return sqlSession.selectList(NAMESPACE + ".paging_select_by_keyword", args);
-  }
-
-  @Override
-  public List<LectureVO> select(PageCriteria criteria, int memberId) {
-    logger.info("select() 호출 : criteria : " + criteria + " memberId = " + memberId);
-
-    HashMap<String, Integer> args = new HashMap<>();
-    args.put("start", criteria.getStart());
-    args.put("end", criteria.getEnd());
-    args.put("memberId", memberId);
-
-    return sqlSession.selectList(NAMESPACE + ".paging_select_by_member_id", args);
-  }
-
-  @Override
-  public LectureVO select(int lectureId) {
-    logger.info("select() 호출 : lectureId : " + lectureId);
-
-    HashMap<String, Integer> args = new HashMap<>();
-    args.put("lectureId", lectureId);
-
-    return sqlSession.selectOne(NAMESPACE + ".select_by_lecture_id", args);
-  }
-
-  @Override
-  public List<LectureVO> selectByAuthor(int memberId) {
-    logger.info("select() 호출 : memberId : " + memberId);
-
-    HashMap<String, Integer> args = new HashMap<>();
-    args.put("memberId", memberId);
-
-    return sqlSession.selectList(NAMESPACE + ".select_by_member_id", args);
   }
 
   // --------- lecture like --------

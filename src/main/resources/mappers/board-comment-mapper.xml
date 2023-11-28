@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.blooming.BoardCommentMapper">
+
+	<insert id="insert">
+		insert into ${board_comment}
+		(${memberId}, ${boardReplyId}, ${boardCommentContent})
+		values (#{memberId}, #{boardReplyId}, #{boardCommentContent})
+	</insert>
+	
+	<update id="update">
+		update ${board_comment}
+		set ${boardCommentContent} = #{boardCommentContent}
+		where ${boardCommentId} = #{boardCommentId}
+	</update>
+	
+	<delete id="delete">
+		delete from ${board_comment}
+		where ${boardCommentId} = #{boardCommentId}	
+	</delete>	
+	
+	<select id="select_by_reply_id" resultType="BoardCommentVO">
+		select c.*, m.${memberNickname} ${authorNickname} 
+		from ${board_comment} c join ${member} m on c.${memberId} = m.${memberId}
+		where ${boardReplyId} = #{boardReplyId}
+		order by ${boardCommentId}	
+	</select>			
+
+</mapper>
+

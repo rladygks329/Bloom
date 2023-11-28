@@ -4,6 +4,11 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 <title>${vo.boardTitle }</title>
 </head>
 <body>
@@ -19,11 +24,11 @@
 			<input type="text" name="boardTitle" value="${vo.boardTitle }">
 		</div>
 		<div>
-			<p>작성자 : ${vo.authorName }</p>
+			<p>작성자 : ${vo.authorNickname }</p>
 			<p>작성일 : ${vo.boardDateCreated }</p>
 		</div>
 		<div>
-			<textarea rows="20" cols="120" name="boardContent">${vo.boardContent }</textarea>
+			<textarea rows="20" cols="120" class="boardContent" name="boardContent">${vo.boardContent }</textarea>
 		</div>
 		<div>
 			<input type="submit" value="등록">
@@ -33,9 +38,43 @@
 	<script>
 	    function goBack() {
 	        window.history.back();
-	    }	    
-	</script>
+	    }	 
+	    
+	    $(function() {
+			$('.boardContent').summernote({
+			    height: 300,
+			    lang: 'ko-KR',
+			    callbacks: {
+			    	onImageUpload: function(files, editor, welEditable) {
+			        	for(var i = files.length -1; i>=0; i--) {
+			        			sendFile(files[i], this);
+			        	}
+			        }
+			    }
+			});
+		});
+	    
+	    function sendFile(file, el) {
+			var data = new FormData();
+			data.append('file', file);
+			$.ajax({
+				data: data,
+				type : "post",
+				url: '/blooming/image',
+				cache :false,
+				contentType : false,
+				enctype : 'multipart/form-data',
+				processData : false,
+				success : function(data) {	
+					console.log(data);
 
+
+					$(el).summernote('editor.insertImage', "/blooming/image/display?fileName=" + data);					
+					
+				}
+			});
+		}
+	</script>
 
 </body>
 </html>

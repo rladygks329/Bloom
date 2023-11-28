@@ -25,21 +25,22 @@ public class RegisterController {
   private MemberService memberService;
 
   @GetMapping("/register")
-  public void registerGET() {
+  public void registerGET(@RequestParam("type") String type, Model model) {
     logger.info("registerGET() 호출");
+    model.addAttribute("memberLevel", type);
   } // end registerGET()
 
   @PostMapping("/register")
   public String registerPOST(MemberVO vo, HttpSession session) {
     logger.info("registerPOST() 호출");
-    int result = memberService.create(vo);
+    int result = memberService.register(vo);
     if (result == 1) {
       session.setAttribute("loginVo", vo);
       // 메인 페이지로 리다이렉트
       return "main";
     }
     // 회원 가입 실패 시, 회원 가입 페이지로 리다이렉트
-    return "member/register";
+    return "/register";
 
   } // end registerPOST()
 
@@ -68,7 +69,22 @@ public class RegisterController {
       return new ResponseEntity<String>("success", HttpStatus.OK);
     }
     return new ResponseEntity<String>("faile", HttpStatus.OK);
-
   } // end emailCheckPOST()
 
+  @PostMapping("/nickname")
+  @ResponseBody
+  public ResponseEntity<String> checkNicknamePOST(
+      @RequestParam("memberNickname") String memberNickname) throws Exception {
+    logger.info("checkNickname() 호출");
+    int result = memberService.checkNickname(memberNickname);
+
+    logger.info("결과값 : " + result);
+    if (result == 0) {
+      return new ResponseEntity<String>("success", HttpStatus.OK);
+    }
+    return new ResponseEntity<String>("faile", HttpStatus.OK);
+  } // end checkNicknamePOST()
+
+
 } // end RegisterController
+

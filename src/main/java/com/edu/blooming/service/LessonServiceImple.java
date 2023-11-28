@@ -1,5 +1,6 @@
 package com.edu.blooming.service;
 
+import static com.edu.blooming.util.Constants.VID_PROC_LEVEL_COMPLETE;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,13 +54,10 @@ public class LessonServiceImple implements LessonService {
   @Override
   public void handleLessonUploaded(int lectureId, int lessonId) {
     logger.info("handleLessonUploaded() 호출 lectureId : " + lectureId + " lessonId : " + lessonId);
-
-    int COMPLETE = 1;
-    lessonDAO.updateVideoProcessingLevel(lessonId, COMPLETE);
-
+    lessonDAO.updateVideoProcessingLevel(lessonId, VID_PROC_LEVEL_COMPLETE);
     int minLevel = lessonDAO.selectMinVideoProcessingLevel(lectureId);
-    if (minLevel == COMPLETE) {
-      lectureDAO.updateVideoProcessingLevel(lectureId, COMPLETE);
+    if (minLevel == VID_PROC_LEVEL_COMPLETE) {
+      lectureDAO.updateVideoProcessingLevel(lectureId, VID_PROC_LEVEL_COMPLETE);
     }
   }
 

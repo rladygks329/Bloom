@@ -16,6 +16,8 @@ public class BoardServiceImple implements BoardService {
   @Autowired
   private BoardDAO boardDAO;
 
+  public static final String OPTION_NICKNAME = "searchNickname";
+
   @Override
   public int create(BoardVO vo) {
     logger.info("create() 호출 : vo = " + vo.toString());
@@ -23,21 +25,38 @@ public class BoardServiceImple implements BoardService {
   }
 
   @Override
-  public List<BoardVO> read(PageCriteria criteria) {
-    logger.info("read() 호출");
+  public List<BoardVO> read(PageCriteria criteria, String option, String keyword) {
+    logger.info("read() 호출 option : " + option + " keyword : " + keyword);
     logger.info("start = " + criteria.getStart());
     logger.info("end = " + criteria.getEnd());
-    return boardDAO.select(criteria);
+
+    if (option == null) {
+      return boardDAO.select(criteria);
+    }
+
+    if (option.equals(OPTION_NICKNAME)) {
+      return boardDAO.selectByNickname(criteria, keyword);
+    }
+
+    return boardDAO.selectByTitleOrContent(criteria, keyword);
   }
 
   @Override
-  public int getTotalCounts() {
-    logger.info("getTotalCounts() 호출");
-    return boardDAO.getTotalCounts();
+  public int getTotalCounts(String option, String keyword) {
+    logger.info("getTotalCounts() 호출" + option + "keyword : " + keyword);
+    if (option == null) {
+      return boardDAO.getTotalCounts();
+    }
+
+    if (option.equals(OPTION_NICKNAME)) {
+      return boardDAO.getTotalCountsByNickname(keyword);
+    }
+
+    return boardDAO.getTotalCountsByTitleOrContent(keyword);
   }
 
   @Override
-  public List<BoardVO> read(int boardId) {
+  public BoardVO read(int boardId) {
     logger.info("read() 호출: boardId = " + boardId);
     return boardDAO.select(boardId);
   }
@@ -46,12 +65,6 @@ public class BoardServiceImple implements BoardService {
   public int update(BoardVO vo) {
     logger.info("update() 호출: vo = " + vo.toString());
     return boardDAO.update(vo);
-  }
-
-  @Override
-  public BoardVO readForUpdate(int boardId) {
-    logger.info("readForUpdate()호출: boardId = " + boardId);
-    return boardDAO.selectForUpdate(boardId);
   }
 
   @Override
@@ -82,14 +95,28 @@ public class BoardServiceImple implements BoardService {
     return boardDAO.selectIsMemberLikeBoard(memberId, boardId);
   }
 
-  @Transactional(value = "transactionManager")
   @Override
-  public int createAnswer(int memberId, BoardVO vo) {
-    logger.info("create()호출 : memberId = " + memberId + "vo = " + vo.toString());
+  public int delete(BoardVO vo) {
+    logger.info("deleteOrUpdate() 호출 : boardId = " + vo.getBoardId() + " boardReplyCount = "
+        + vo.getBoardReplyCount());
+    if (vo.getBoardReplyCount() != 0) {
+      logger.info("updateForDelete() 호출");
+      return boardDAO.updateForDelete(vo);
+    }
+    logger.info("delete() 호출");
+    return boardDAO.delete(vo.getBoardId());
+  }
 
-    boardDAO.insertAnswer(vo);
-    boardDAO.updateAnswerCount(vo.getBoardId(), 1);
-    return 1;
+  @Override
+  public List<BoardVO> readByMemberId(int memberId) {
+    logger.info("readByMemberId() 호출 = " + memberId);
+    return boardDAO.selectByMemberId(memberId);
+  }
+
+  @Override
+  public List<BoardVO> readByMemberIdAndLIke(int memberId) {
+    logger.info("readByMemberIdAndLike() 호출 = " + memberId);
+    return boardDAO.selectByMemberIdAndLike(memberId);
   }
 
 }

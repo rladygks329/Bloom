@@ -1,5 +1,9 @@
 package com.edu.blooming.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
@@ -8,13 +12,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.edu.blooming.domain.BoardReplyVO;
+import com.edu.blooming.domain.BoardVO;
 import com.edu.blooming.domain.MemberVO;
+import com.edu.blooming.service.BoardReplyService;
+import com.edu.blooming.service.BoardService;
 import com.edu.blooming.service.MemberService;
 
 
@@ -26,10 +36,11 @@ public class MemberController {
   @Autowired
   private MemberService memberService;
 
-  @GetMapping("/main")
-  public void mainGET() {
-    logger.info("mainGET() 호출");
-  }
+  @Autowired
+  private BoardService boardService;
+
+  @Autowired
+  private BoardReplyService boardReplyService;
 
   @GetMapping("/login")
   public void loginGET() {
@@ -37,22 +48,19 @@ public class MemberController {
   }
 
   @PostMapping("/login")
-  public String loginPOST(HttpServletRequest request, MemberVO vo, RedirectAttributes rttr)
-      throws Exception {
-    logger.info("loginPOST() 호출 memberEmail = " + vo.getMemberEmail());
-
+  public String loginPOST(HttpServletRequest request, MemberVO vo, String targetURL,
+      RedirectAttributes rttr) throws Exception {
     MemberVO loginVo = memberService.login(vo);
 
     if (loginVo == null) {
-      int result = 0;
-      rttr.addFlashAttribute("result", result);
-      return "redirect:/member/login";
-    } else {
-      HttpSession session = request.getSession();
-      session.setAttribute("loginVo", loginVo);
-      logger.info("loginVo =  " + loginVo.toString());
-      return "redirect:/main";
+      String queryString = getLoginPageQueryString(targetURL);
+      logger.info("redirect:/member/login" + queryString);
+      return "redirect:/member/login" + queryString;
     }
+
+    HttpSession session = request.getSession();
+    session.setAttribute("loginVo", loginVo);
+    return "redirect:" + getRedirectURL(targetURL);
   } // end loginPOST()
 
   @GetMapping("/logout")
@@ -63,37 +71,94 @@ public class MemberController {
     return "redirect:/main";
   }
 
-  @PostMapping("/logout")
-  public String logoutPOST(HttpServletRequest request) throws Exception {
-    logger.info("logoutPOST() 호출");
-    HttpSession session = request.getSession();
-    session.invalidate();
-    return "redirect:/main";
+  @GetMapping("/instructor-page")
+  public String instructorPageGet(HttpServletRequest request, Model model) {
+    int memberId = (int) request.getAttribute("memberId");
+    Map<String, Object> result = memberService.getInstuctorStatus(memberId);
+    model.addAllAttributes(result);
+    return "/member/mypage-instructor";
   }
 
+  @GetMapping("/mypage")
+  public String myPageGET(HttpServletRequest request, Model model) {
+    logger.info("myPageGET() 호출");
+    int memberId = (int) request.getAttribute("memberId");
 
-  @GetMapping("/member-detail")
-  public void memberDetailGET() {
-    logger.info("memberDetail 호출");
+    List<BoardVO> listByMemberId = boardService.readByMemberId(memberId);
+    List<BoardVO> listByLike = boardService.readByMemberIdAndLIke(memberId);
+    List<BoardReplyVO> replyListByMemberId = boardReplyService.readByMemberId(memberId);
+
+    model.addAttribute("listByMemberId", listByMemberId);
+    model.addAttribute("listByLike", listByLike);
+    model.addAttribute("replyListByMemberId", replyListByMemberId);
+
+    return "/member/mypage";
   }
 
-  @PostMapping("/changePassword")
+  @PutMapping("/password")
   @ResponseBody
-  public ResponseEntity<String> changePasswordPOST(@RequestParam("memberId") Integer memberId,
-      @RequestParam("memberPassword") String memberPassword, HttpSession session,
-      RedirectAttributes redirectAttributes) {
-    logger.info("changePassword 호출 memberId = " + memberId);
+  public ResponseEntity<Void> changePasswordPOST(HttpServletRequest request,
+      @RequestBody String memberPassword) {
+    int memberId = (int) request.getAttribute("memberId");
     int result = memberService.updatePassword(memberId, memberPassword);
 
     logger.info("결과값 : " + result);
-    if (result == 1) {
-      session.invalidate();
-      return new ResponseEntity<String>("success", HttpStatus.OK);
+    if (result != 1) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
-    return new ResponseEntity<String>("fail", HttpStatus.OK);
-
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 
+  @PutMapping("/nickname")
+  @ResponseBody
+  public ResponseEntity<Void> changeNicknamePUT(HttpServletRequest request,
+      @RequestBody String memberNickname) {
+    int memberId = (int) request.getAttribute("memberId");
+    int result = memberService.updatePassword(memberId, memberNickname);
+
+    logger.info("결과값 : " + result);
+    if (result != 1) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @PutMapping("/introduce")
+  @ResponseBody
+  public ResponseEntity<Void> changeIntroducePUT(@RequestBody String memberIntroduce,
+      HttpSession session) {
+    int result = 0;
+    if (session.getAttribute("loginVo") != null) {
+      int memberId = ((MemberVO) session.getAttribute("loginVo")).getMemberId();
+      result = memberService.updatePassword(memberId, memberIntroduce);
+    }
+
+    logger.info("결과값 : " + result);
+    if (result != 1) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  private String getLoginPageQueryString(String url) {
+    if (url.isBlank()) {
+      return "";
+    }
+    return "?targetURL=" + url;
+  }
+
+  private String getRedirectURL(String url) {
+    if (url.isBlank()) {
+      return "/main";
+    }
+    try {
+      url = URLDecoder.decode(url, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      e.printStackTrace();
+    }
+
+    return url;
+  }
 
 } // end LoginController()
 

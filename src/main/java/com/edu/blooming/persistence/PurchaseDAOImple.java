@@ -64,4 +64,26 @@ public class PurchaseDAOImple implements PurchaseDAO {
     return result == 1;
   }
 
+  @Override
+  public List<Map<String, Object>> getSalesByLecture(int memberId, int day) {
+    logger.info("getSalesByLecture() 호출 : memberId = " + memberId + " day : " + day);
+
+    Map<String, Integer> args = new HashMap<>();
+    args.put("memberId", memberId);
+    args.put("day", day);
+
+    return sqlSession.selectList(NAMESPACE + ".select_sales_count", args);
+  }
+
+  @Override
+  public List<Map<String, Object>> getMonthlySales(int memberId, int day) {
+    logger.info("getMonthlySales() 호출 : memberId = " + memberId + " day : " + day);
+
+    Map<String, Integer> args = new HashMap<>();
+    args.put("memberId", memberId);
+    args.put("day", day);
+
+    return sqlSession.selectList(NAMESPACE + ".select_monthly_income", args);
+  }
+
 }

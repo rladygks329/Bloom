@@ -1,12 +1,23 @@
 package com.edu.blooming.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,26 +26,31 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.edu.blooming.domain.BoardVO;
 import com.edu.blooming.service.BoardService;
+import com.edu.blooming.util.MediaUtil;
 import com.edu.blooming.util.PageCriteria;
 import com.edu.blooming.util.PageMaker;
+import com.google.gson.JsonObject;
 
 @Controller
 @RequestMapping(value = "/board")
 public class BoardController {
   private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
 
+  @Value("${uploadPath.img}")
+  private String uploadPath;
+
   @Autowired
   private BoardService boardService;
 
   @GetMapping("/list")
-  public void list(Model model, Integer page, Integer numsPerPage) {
+  public void list(Model model, Integer page, Integer numsPerPage, String option, String keyword) {
     logger.info("list() 호출");
     logger.info("page = " + page + ", numsPerPage = " + numsPerPage);
 
@@ -48,35 +64,27 @@ public class BoardController {
       criteria.setNumsPerPage(numsPerPage);
     }
 
-    List<BoardVO> list = boardService.read(criteria);
-    model.addAttribute("list", list);
+    List<BoardVO> list = boardService.read(criteria, option, keyword);
 
     PageMaker pageMaker = new PageMaker();
+    pageMaker.setTotalCount(boardService.getTotalCounts(option, keyword));
     pageMaker.setCriteria(criteria);
-    pageMaker.setTotalCount(boardService.getTotalCounts());
     pageMaker.setPageData();
+
+    model.addAttribute("list", list);
+    model.addAttribute("option", option);
+    model.addAttribute("keyword", keyword);
     model.addAttribute("pageMaker", pageMaker);
   } // end list()
 
   @GetMapping("/detail")
-  public String detail(Model model, @RequestParam Integer boardId, @RequestParam Integer page,
-      HttpServletRequest request, HttpServletResponse response) {
+  public String detail(Model model, @RequestParam Integer boardId,
+      @RequestParam(defaultValue = "1") Integer page, HttpServletRequest request,
+      HttpServletResponse response) {
     // 게시글 조회 코드
-    List<BoardVO> list = boardService.read(boardId);
-    model.addAttribute("list", list);
+    BoardVO vo = boardService.read(boardId);
+    model.addAttribute("vo", vo);
     model.addAttribute("page", page);
-
-    // 좋아요 체크
-    // model.addAttribute("like", false);
-    //
-    // if (request.getSession().getAttribute("vo") != null) {
-    // HttpSession session = request.getSession();
-    // int memberId = ((MemberVO) session.getAttribute("vo")).getMemberId();
-    // Boolean isLike = boardService.checkIsLike(memberId, boardId);
-    //
-    // model.addAttribute("memberId", memberId);
-    // model.addAttribute("like", isLike);
-    // }
 
     // 쿠키 이름과 현재 게시글 ID 및 페이지를 조합하여 쿠키 이름 생성
     String cookieName = "viewed_" + boardId + "_page" + page;
@@ -103,7 +111,7 @@ public class BoardController {
     return "board/detail"; // JSP 페이지 경로만 반환
   }
 
-  @GetMapping("/getLikeStatus/{boardId}/{memberId}")
+  @GetMapping("/like/{boardId}/{memberId}")
   @ResponseBody
   public boolean getLikeStatus(@PathVariable("boardId") int boardId,
       @PathVariable("memberId") int memberId) {
@@ -119,23 +127,19 @@ public class BoardController {
   @PostMapping("/register")
   public String registerPOST(BoardVO vo, RedirectAttributes reAttr) {
     // RedirectAttributes - 리다이렉트 시 데이터를 전달하기 위한 인터페이스
-    logger.info("registerPOST() 호출");
-    logger.info(vo.toString());
+    logger.info("registerPOST() 호출 vo : " + vo.toString());
     int result = boardService.create(vo);
-    logger.info(result + "행 삽입");
     if (result == 1) {
       reAttr.addFlashAttribute("insert_result", "success");
       return "redirect:/board/list";
-    } else {
-      return "redirect:/board/register";
     }
-  } // end registerPOST()
-
+    return "redirect:/board/register";
+  }
 
   @GetMapping("/update")
   public void updateGET(Model model, Integer boardId, Integer page) {
     logger.info("updateGET() 호출 : boardId = " + boardId);
-    BoardVO vo = boardService.readForUpdate(boardId);
+    BoardVO vo = boardService.read(boardId);
     model.addAttribute("vo", vo);
     model.addAttribute("page", page);
   }
@@ -147,16 +151,15 @@ public class BoardController {
     logger.info("page : " + page + "result : " + result);
     if (result == 1) {
       return "redirect:/board/detail?boardId=" + vo.getBoardId() + "&page=" + page;
-    } else {
-      return "redirect:/board/update?boardId=" + vo.getBoardId();
     }
+    return "redirect:/board/update?boardId=" + vo.getBoardId();
   }
 
   @PostMapping("/like/{boardId}/{memberId}")
   public ResponseEntity<Integer> likeBoard(@PathVariable("boardId") int boardId,
       @PathVariable("memberId") int memberId) {
     boardService.likeBoard(boardId, memberId);
-    int result = boardService.readForUpdate(boardId).getBoardLikeCount();
+    int result = boardService.read(boardId).getBoardLikeCount();
     return new ResponseEntity<Integer>(result, HttpStatus.OK);
   }
 
@@ -164,22 +167,87 @@ public class BoardController {
   public ResponseEntity<Integer> dislikeBoard(@PathVariable("boardId") int boardId,
       @PathVariable("memberId") int memberId) {
     boardService.dislikeBoard(boardId, memberId);
-    int result = boardService.readForUpdate(boardId).getBoardLikeCount();
+    int result = boardService.read(boardId).getBoardLikeCount();
     return new ResponseEntity<Integer>(result, HttpStatus.OK);
   }
 
-  // 답글 입력
-  @PostMapping(value = "/{boardId}")
-  public ResponseEntity<Integer> createAnswer(@PathVariable("boardId") int boardId,
-      @RequestBody BoardVO vo) {
+  @GetMapping("/deleteOrUpdate")
+  public void deleteOrUpdateGET() {
+    logger.info("deleteOrUpdateGET()");
+  }
 
-    logger.info("createAnswer() 호출 : boardId = " + boardId + " vo = " + vo);
+  @PostMapping("/deleteOrUpdate")
+  public String deleteOrUpdatePOST(BoardVO vo) {
+    logger.info("deleteOrUpdatePOST()호출: vo = " + vo.toString());
+    int result = boardService.delete(vo);
+    if (result == 1) {
+      return "redirect:/board/list";
+    }
+    return "redirect:/board/detail?boardId=" + vo.getBoardId();
+  }
 
-    int result = boardService.createAnswer(boardId, vo);
-    return new ResponseEntity<Integer>(result, HttpStatus.OK);
-    // HttpStatus status = (result == 1) ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
+  @ResponseBody
+  @PostMapping("/upload")
+  public ResponseEntity<Map<String, Object>> summer_image(
+      @RequestParam("file") MultipartFile multipartFile, HttpServletRequest request) {
+    JsonObject jsonObject = new JsonObject();
 
-    // return new ResponseEntity<>(1, status);
+    String fileRoot = uploadPath;
+    // String fileRoot = "C:\\Study\\BloomingBucket\\img\\";
+    logger.info("fileRoot = " + fileRoot);
+    String originalFileName = multipartFile.getOriginalFilename(); // 오리지날 파일명
+    logger.info("originalFileName = " + originalFileName);
+    String extension = originalFileName.substring(originalFileName.lastIndexOf(".")); // 파일 확장자
+    logger.info("extension = " + extension);
+    String savedFileName = UUID.randomUUID() + extension; // 저장될 파일 명
+    logger.info("savedFileName = " + savedFileName);
+
+    File targetFile = new File(fileRoot + savedFileName);
+    Map<String, Object> result = new HashMap<String, Object>();
+    try {
+      InputStream fileStream = multipartFile.getInputStream();
+      FileUtils.copyInputStreamToFile(fileStream, targetFile); // 파일 저장
+      result.put("url", fileRoot + savedFileName);
+      result.put("responseCode", "success");
+      // contextroot + resources + 저장할 내부 폴더명
+    } catch (IOException e) {
+      FileUtils.deleteQuietly(targetFile); // 저장된 파일 삭제
+      result.put("responseCode", "error");
+      e.printStackTrace();
+    }
+    logger.info("result = " + result.toString());
+    return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+  }
+
+  @GetMapping("/display")
+  public ResponseEntity<byte[]> display(String fileName) {
+    logger.info("display() 호출");
+
+    ResponseEntity<byte[]> entity = null;
+    InputStream in = null;
+
+    String filePath = uploadPath + fileName;
+
+    try {
+      in = new FileInputStream(filePath);
+
+      // 파일 확장자
+      String extension = filePath.substring(filePath.lastIndexOf(".") + 1);
+      logger.info(extension);
+
+      // 응답 헤더(response header)에 Content-Type 설정
+      HttpHeaders httpHeaders = new HttpHeaders();
+      httpHeaders.setContentType(MediaUtil.getMediaType(extension));
+      // 데이터 전송
+      entity = new ResponseEntity<byte[]>(IOUtils.toByteArray(in), // 파일에서 읽은 데이터
+          httpHeaders, // 응답 헤더
+          HttpStatus.OK);
+
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return entity;
   }
 
 

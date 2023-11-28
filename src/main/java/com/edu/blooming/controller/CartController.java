@@ -2,7 +2,6 @@ package com.edu.blooming.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.edu.blooming.domain.LectureVO;
-import com.edu.blooming.domain.MemberVO;
 import com.edu.blooming.service.CartService;
 
 @Controller
@@ -30,35 +28,36 @@ public class CartController {
   @GetMapping
   public String getCartPage(Model model, HttpServletRequest request) {
     logger.info("getCartPage() 호출");
-
-    HttpSession session = request.getSession();
-
-    int memberId = ((MemberVO) session.getAttribute("loginVo")).getMemberId();
+    int memberId = (int) request.getAttribute("memberId");
     model.addAttribute("memberId", memberId);
-    logger.info("memberId : " + memberId);
     return "/cart/list";
   }
 
-  @GetMapping(value = "/item/{memberId}")
-  public ResponseEntity<List<LectureVO>> getCartItems(@PathVariable("memberId") int memberId) {
+  @GetMapping(value = "/item")
+  public ResponseEntity<List<LectureVO>> getCartItems(HttpServletRequest request) {
+    int memberId = (int) request.getAttribute("memberId");
     List<LectureVO> list = cartService.getItems(memberId);
     return new ResponseEntity<List<LectureVO>>(list, HttpStatus.OK);
   }
 
-  /// @formatter:off
-  @PostMapping("/item/{memberId}/{lectureId}")
+  // @formatter:off
+  @PostMapping("/item/{lectureId}")
   public ResponseEntity<Void> addCart(
-      @PathVariable("lectureId") int lectureId,
-      @PathVariable("memberId") int memberId) {
+      HttpServletRequest request,
+      @PathVariable("lectureId") int lectureId
+  ) {
+    int memberId = (int) request.getAttribute("memberId");
     logger.info("addCart() 추가 memberId: "+ memberId + " lectureId " + lectureId);
     cartService.add(memberId, lectureId);
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
-  @DeleteMapping("/item/{memberId}/{lectureId}")
-  public ResponseEntity<Void> removeCart(  
-      @PathVariable("memberId") int memberId,
-      @PathVariable("lectureId") int lectureId) {
+  @DeleteMapping("/item/{lectureId}")
+  public ResponseEntity<Void> removeCart(
+      HttpServletRequest request,
+      @PathVariable("lectureId") int lectureId
+  ) {
+    int memberId = (int) request.getAttribute("memberId");
     logger.info("removeCart() 추가 memberId: "+ memberId + " lectureId " + lectureId);
     cartService.remove(memberId, lectureId);
     return new ResponseEntity<>(HttpStatus.OK);

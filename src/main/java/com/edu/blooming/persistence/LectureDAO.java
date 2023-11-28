@@ -25,11 +25,17 @@ public interface LectureDAO {
 
   int getLectureCount();
 
-  int getLectureCount(int memberId);
+  int getLectureCountByKeyword(String keyword);
 
-  int getLectureCount(String keyword);
+  int getLectureCountByMemberName(String memberName);
 
   LectureVO select(int lectureId);
+
+  List<LectureVO> select(PageCriteria criteria, int orderType);
+
+  List<LectureVO> select(PageCriteria criteria, String keyword, int orderType);
+
+  List<LectureVO> selectByAuthorName(PageCriteria criteria, String memberName, int orderType);
 
   /* @formatter:off 
    * @param: month : n month ago
@@ -47,17 +53,10 @@ public interface LectureDAO {
    */
   List<LectureVO> selectHotSaleLecture(int month, int rank);
 
-  List<LectureVO> select(PageCriteria criteria, String keyword);
-
-  List<LectureVO> select(PageCriteria criteria);
-
-  List<LectureVO> select(PageCriteria criteria, int memberId);
-
-  List<LectureVO> selectByAuthor(int memberId);
-
-  boolean selectIsMemberLikeLecture(int memberId, int lectureId);
-
   int insertLike(int memberId, int lectureId) throws DataIntegrityViolationException;
 
   int deleteLike(int memberId, int lectureId);
+
+  boolean selectIsMemberLikeLecture(int memberId, int lectureId);
+
 }

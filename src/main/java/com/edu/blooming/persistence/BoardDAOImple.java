@@ -26,7 +26,7 @@ public class BoardDAOImple implements BoardDAO {
 
   @Override
   public List<BoardVO> select(PageCriteria criteria) {
-    logger.info("select() 호출");
+    logger.info("select() 호출: criteria = " + criteria.toString());
     logger.info("start = " + criteria.getStart());
     logger.info("end = " + criteria.getEnd());
     return sqlSession.selectList(NAMESPACE + ".paging", criteria);
@@ -39,21 +39,15 @@ public class BoardDAOImple implements BoardDAO {
   }
 
   @Override
-  public List<BoardVO> select(int boardId) {
+  public BoardVO select(int boardId) {
     logger.info("select() 호출: boardId = " + boardId);
-    return sqlSession.selectList(NAMESPACE + ".select_by_board_id", boardId);
+    return sqlSession.selectOne(NAMESPACE + ".select_by_board_id", boardId);
   }
 
   @Override
   public int update(BoardVO vo) {
     logger.info("update() 호출: vo = " + vo.toString());
     return sqlSession.update(NAMESPACE + ".update", vo);
-  }
-
-  @Override
-  public BoardVO selectForUpdate(int boardId) {
-    logger.info("readForUpdate()호출: boardId = " + boardId);
-    return sqlSession.selectOne(NAMESPACE + ".select_by_board_id_for_update", boardId);
   }
 
   @Override
@@ -118,20 +112,63 @@ public class BoardDAOImple implements BoardDAO {
   }
 
   @Override
-  public int insertAnswer(BoardVO vo) {
-    logger.info("insert() 호출: vo = " + vo.toString());
-    return sqlSession.insert(NAMESPACE + ".insert_answer", vo);
+  public List<BoardVO> selectByTitleOrContent(PageCriteria criteria, String keyword) {
+    logger.info("select() 호출 : criteria : " + criteria.toString() + " keyword : " + keyword);
+
+    HashMap<String, Object> args = new HashMap<>();
+    args.put("start", criteria.getStart());
+    args.put("end", criteria.getEnd());
+    args.put("keyword", "%" + keyword + "%");
+
+    return sqlSession.selectList(NAMESPACE + ".paging_select_by_title_content", args);
   }
 
   @Override
-  public int updateAnswerCount(int boardId, int amount) {
-    logger.info("updateAnswerCount()호출: boardId = " + boardId);
+  public List<BoardVO> selectByNickname(PageCriteria criteria, String keyword) {
+    logger.info("select() 호출 : criteria : " + criteria + " keyword = " + keyword);
 
-    HashMap<String, Integer> args = new HashMap<>();
-    args.put("boardId", boardId);
-    args.put("amount", amount);
+    HashMap<String, Object> args = new HashMap<>();
+    args.put("start", criteria.getStart());
+    args.put("end", criteria.getEnd());
+    args.put("keyword", "%" + keyword + "%");
 
-    return sqlSession.update(NAMESPACE + ".update_answer_count", args);
+    return sqlSession.selectList(NAMESPACE + ".paging_select_by_nickname", args);
+  }
+
+  @Override
+  public int getTotalCountsByTitleOrContent(String keyword) {
+    logger.info("getTotalCountsByTitleOrContent()호출");
+    return sqlSession.selectOne(NAMESPACE + ".total_count_by_title_content", "%" + keyword + "%");
+  }
+
+  @Override
+  public int getTotalCountsByNickname(String keyword) {
+    logger.info("getTotalCountsByMemberId()호출");
+    return sqlSession.selectOne(NAMESPACE + ".total_count_by_nickname", "%" + keyword + "%");
+  }
+
+  @Override
+  public int updateForDelete(BoardVO vo) {
+    logger.info("updateForDelete 호출: vo = " + vo);
+    return sqlSession.update(NAMESPACE + ".update_for_delete", vo);
+  }
+
+  @Override
+  public int delete(int boardId) {
+    logger.info("delete 호출 : boardId = " + boardId);
+    return sqlSession.delete(NAMESPACE + ".delete", boardId);
+  }
+
+  @Override
+  public List<BoardVO> selectByMemberId(int memberId) {
+    logger.info("selectByMemberId 호출 : memberId = " + memberId);
+    return sqlSession.selectList(NAMESPACE + ".select_by_member_id", memberId);
+  }
+
+  @Override
+  public List<BoardVO> selectByMemberIdAndLike(int memberId) {
+    logger.info("selectByMemberIdAndLike 호출 : memberId = " + memberId);
+    return sqlSession.selectList(NAMESPACE + ".select_by_member_id_and_like", memberId);
   }
 
 }

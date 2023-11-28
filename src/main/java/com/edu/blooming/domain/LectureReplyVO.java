@@ -4,20 +4,25 @@ public class LectureReplyVO {
   private int lectureReplyId;
   private int memberId;
   private int lectureId;
+  private String lectureTitle;
   private String lectureReplyContent;
   private String authorName;
+  private String authorNickName;
   private String authorProfileUrl;
   private int lectureReplyScore;
 
   public LectureReplyVO() {}
 
-  public LectureReplyVO(int lectureReplyId, int memberId, int lectureId, String lectureReplyContent,
-      String authorName, String authorProfileUrl, int lectureReplyScore) {
+  public LectureReplyVO(int lectureReplyId, int memberId, int lectureId, String lectureTitle,
+      String lectureReplyContent, String authorName, String authorNickName, String authorProfileUrl,
+      int lectureReplyScore) {
     this.lectureReplyId = lectureReplyId;
     this.memberId = memberId;
     this.lectureId = lectureId;
+    this.lectureTitle = lectureTitle;
     this.lectureReplyContent = lectureReplyContent;
     this.authorName = authorName;
+    this.authorNickName = authorNickName;
     this.authorProfileUrl = authorProfileUrl;
     this.lectureReplyScore = lectureReplyScore;
   }
@@ -46,6 +51,14 @@ public class LectureReplyVO {
     this.lectureId = lectureId;
   }
 
+  public String getLectureTitle() {
+    return lectureTitle;
+  }
+
+  public void setLectureTitle(String lectureTitle) {
+    this.lectureTitle = lectureTitle;
+  }
+
   public String getLectureReplyContent() {
     return lectureReplyContent;
   }
@@ -60,6 +73,14 @@ public class LectureReplyVO {
 
   public void setAuthorName(String authorName) {
     this.authorName = authorName;
+  }
+
+  public String getAuthorNickName() {
+    return authorNickName;
+  }
+
+  public void setAuthorNickName(String authorNickName) {
+    this.authorNickName = authorNickName;
   }
 
   public String getAuthorProfileUrl() {
@@ -81,9 +102,10 @@ public class LectureReplyVO {
   @Override
   public String toString() {
     return "LectureReplyVO [lectureReplyId=" + lectureReplyId + ", memberId=" + memberId
-        + ", lectureId=" + lectureId + ", lectureReplyContent=" + lectureReplyContent
-        + ", authorName=" + authorName + ", authorProfileUrl=" + authorProfileUrl
-        + ", lectureReplyScore=" + lectureReplyScore + "]";
+        + ", lectureId=" + lectureId + ", lectureTitle=" + lectureTitle + ", lectureReplyContent="
+        + lectureReplyContent + ", authorName=" + authorName + ", authorNickName=" + authorNickName
+        + ", authorProfileUrl=" + authorProfileUrl + ", lectureReplyScore=" + lectureReplyScore
+        + "]";
   }
 
 }
