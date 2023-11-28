@@ -109,7 +109,7 @@
 					<table class="table table-striped table-sm">
 						<thead>
 							<tr>
-								<th scope="col">강좌 번호</th>
+								<th scope="col">강좌 이름</th>
 								<th scope="col">작성자 닉네임</th>
 								<th scope="col">강의 평</th>
 								<th scope="col">평점</th>
@@ -118,7 +118,7 @@
 						<tbody>
 							<c:forEach var="reply" items="${replies }">
 								<tr>
-									<td>${reply.lectureId }</td>
+									<td>${reply.lectureTitle }</td>
 									<td>${reply.authorNickName }</td>
 									<td>${reply.lectureReplyContent }</td>
 									<td>${reply.lectureReplyScore }</td>

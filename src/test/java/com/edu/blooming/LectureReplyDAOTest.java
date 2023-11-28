@@ -33,7 +33,7 @@ public class LectureReplyDAOTest {
 
   @Test
   public void testInsert() {
-    LectureReplyVO vo = new LectureReplyVO(-1, 1, 1, "강의가 좋네요", "닉네임 1", null, null, 5);
+    LectureReplyVO vo = new LectureReplyVO(-1, 1, 1, null, "강의가 좋네요", "닉네임 1", null, null, 5);
     int result = dao.insert(vo);
 
     assertEquals(1, result);
@@ -41,7 +41,7 @@ public class LectureReplyDAOTest {
 
   @Test
   public void testUpdate() {
-    LectureReplyVO vo = new LectureReplyVO(48, 1, 1, "변경된 수강평", "닉네임 2", null, null, 3);
+    LectureReplyVO vo = new LectureReplyVO(48, 1, 1, null, "변경된 수강평", "닉네임 2", null, null, 3);
     int result = dao.update(vo);
 
     assertEquals(1, result);
@@ -49,7 +49,7 @@ public class LectureReplyDAOTest {
 
   @Test
   public void testSelectByLectureId() {
-    LectureReplyVO vo = new LectureReplyVO(-1, 1, 1, "강의가 좋네요", "닉네임 1", null, null, 5);
+    LectureReplyVO vo = new LectureReplyVO(-1, 1, 1, null, "강의가 좋네요", "닉네임 1", null, null, 5);
     dao.insert(vo);
     List<LectureReplyVO> list = dao.selectByLectureId(1);
 

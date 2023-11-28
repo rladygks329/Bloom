@@ -4,6 +4,7 @@ public class LectureReplyVO {
   private int lectureReplyId;
   private int memberId;
   private int lectureId;
+  private String lectureTitle;
   private String lectureReplyContent;
   private String authorName;
   private String authorNickName;
@@ -12,11 +13,13 @@ public class LectureReplyVO {
 
   public LectureReplyVO() {}
 
-  public LectureReplyVO(int lectureReplyId, int memberId, int lectureId, String lectureReplyContent,
-      String authorName, String authorNickName, String authorProfileUrl, int lectureReplyScore) {
+  public LectureReplyVO(int lectureReplyId, int memberId, int lectureId, String lectureTitle,
+      String lectureReplyContent, String authorName, String authorNickName, String authorProfileUrl,
+      int lectureReplyScore) {
     this.lectureReplyId = lectureReplyId;
     this.memberId = memberId;
     this.lectureId = lectureId;
+    this.lectureTitle = lectureTitle;
     this.lectureReplyContent = lectureReplyContent;
     this.authorName = authorName;
     this.authorNickName = authorNickName;
@@ -46,6 +49,14 @@ public class LectureReplyVO {
 
   public void setLectureId(int lectureId) {
     this.lectureId = lectureId;
+  }
+
+  public String getLectureTitle() {
+    return lectureTitle;
+  }
+
+  public void setLectureTitle(String lectureTitle) {
+    this.lectureTitle = lectureTitle;
   }
 
   public String getLectureReplyContent() {
@@ -91,8 +102,8 @@ public class LectureReplyVO {
   @Override
   public String toString() {
     return "LectureReplyVO [lectureReplyId=" + lectureReplyId + ", memberId=" + memberId
-        + ", lectureId=" + lectureId + ", lectureReplyContent=" + lectureReplyContent
-        + ", authorName=" + authorName + ", authorNickName=" + authorNickName
+        + ", lectureId=" + lectureId + ", lectureTitle=" + lectureTitle + ", lectureReplyContent="
+        + lectureReplyContent + ", authorName=" + authorName + ", authorNickName=" + authorNickName
         + ", authorProfileUrl=" + authorProfileUrl + ", lectureReplyScore=" + lectureReplyScore
         + "]";
   }
