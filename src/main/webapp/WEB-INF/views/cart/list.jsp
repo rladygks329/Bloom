@@ -114,6 +114,7 @@
 				$("table tbody").append(newRow);
 			})
 			$("#total").text(total.toLocaleString('ko-KR') + " 원");
+			$("#purchase button").attr("disabled", (total == 0));
 		}
 
 		function getCartList() {
@@ -127,7 +128,7 @@
 					console.log("getCartList 성공");
 					console.log(response);
 					updateView(response)
-				},
+				}
 			});
 		}
 
@@ -160,6 +161,10 @@
 					success : function(response) {
 						window.location.href = response.next_redirect_pc_url; 
 					},
+					error: function (request, status, error) {
+						console.log("에러 코드: " + request.status + " " + request.responseText)
+						alert(request.responseText);
+					}
 				})
 			});
 		})

@@ -31,6 +31,10 @@ public class PurchaseServiceImple implements PurchaseService {
   @Override
   public Map<String, Object> readyForPurchase(PaymentMethod method, int memberId) {
     List<LectureVO> list = cartDAO.select(memberId);
+    if (list.isEmpty()) {
+      throw new IllegalStateException("장바구니가 비어 있습니다.");
+    }
+
     int total_price = 0;
     for (LectureVO vo : list) {
       total_price += vo.getLecturePrice();
