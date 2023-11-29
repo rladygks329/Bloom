@@ -15,6 +15,12 @@
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <meta charset="UTF-8">
 <title>Bloom - 전체 강의</title>
+<style>
+.card-img-top{
+	height: 10rem;
+	object-fit: cover;
+}
+</style>
 <script>
 	$(function(){
 		const orderType = $(".orderType");

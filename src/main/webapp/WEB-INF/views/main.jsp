@@ -50,7 +50,10 @@
 .carousel-inner .carousel-item-end, .carousel-inner .carousel-item-start{
 	transform: translateX(0);
 }
-
+.card-img-top{
+	height: 10rem;
+	object-fit: cover;
+}
 </style>
 <script>
 $(function(){
