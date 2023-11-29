@@ -7,9 +7,9 @@ public interface MemberDAO {
 
   MemberVO login(MemberVO loginVo); // 로그인
 
-  int checkEmail(String email); // 이메일 중복체크
+  boolean checkEmail(String email); // 이메일 중복체크
 
-  int checkNickname(String nickname);
+  boolean checkNickname(String nickname);
 
   MemberVO select(String email); // 회원정보조회
 
@@ -17,9 +17,9 @@ public interface MemberDAO {
 
   int delete(String email); // 회원탈퇴
 
-  int updatePassword(int memberId, String memberPassword);
+  int updatePassword(int memberId, String password);
 
-  int updateNickname(int memberId, String memberNickname);
+  int updateNickname(int memberId, String nickname);
 
-  int updateIntroduce(int memberId, String memberIntroduce);
+  int updateIntroduce(int memberId, String introduce);
 }

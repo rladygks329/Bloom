@@ -25,9 +25,10 @@ public class MemberDAOImple implements MemberDAO {
   } // end insert()
 
   @Override
-  public int checkEmail(String memberEmail) {
+  public boolean checkEmail(String memberEmail) {
     logger.info("emailCheck() 호출");
-    return sqlSession.selectOne(NAMESPACE + ".check_email_duplicated", memberEmail);
+    int result = sqlSession.selectOne(NAMESPACE + ".check_email_duplicated", memberEmail);
+    return result == 1;
   } // end emailCheck()
 
   @Override
@@ -66,27 +67,28 @@ public class MemberDAOImple implements MemberDAO {
   }
 
   @Override
-  public int checkNickname(String nickname) {
+  public boolean checkNickname(String nickname) {
     logger.info("checkNickname() 호출");
-    return sqlSession.selectOne(NAMESPACE + ".check_nickname_duplicated", nickname);
+    int result = sqlSession.selectOne(NAMESPACE + ".check_nickname_duplicated", nickname);
+    return result == 1;
   }
 
   @Override
-  public int updateNickname(int memberId, String memberNickname) {
+  public int updateNickname(int memberId, String nickname) {
     logger.info("updateNickname 호출");
     HashMap<String, Object> args = new HashMap<>();
     args.put("memberId", memberId);
-    args.put("memberNickname", memberNickname);
+    args.put("memberNickname", nickname);
 
     return sqlSession.update(NAMESPACE + ".update_nickname", args);
   }
 
   @Override
-  public int updateIntroduce(int memberId, String memberIntroduce) {
+  public int updateIntroduce(int memberId, String introduce) {
     logger.info("updateIntroduce 호출");
     HashMap<String, Object> args = new HashMap<>();
     args.put("memberId", memberId);
-    args.put("memberIntroduce", memberIntroduce);
+    args.put("memberIntroduce", introduce);
 
     return sqlSession.update(NAMESPACE + ".update_introduce", args);
   }

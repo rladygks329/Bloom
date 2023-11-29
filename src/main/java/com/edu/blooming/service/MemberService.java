@@ -8,17 +8,17 @@ public interface MemberService {
   int register(MemberVO vo);
 
   // 이메일 중복검사
-  int checkEmail(String email);
+  boolean checkEmail(String email);
 
-  int checkNickname(String nickname);
+  boolean checkNickname(String nickname);
 
   public MemberVO login(MemberVO member);
 
-  int updatePassword(int memberId, String memberPassword);
+  int updatePassword(int memberId, String password);
 
-  int updateNickname(int memberId, String memberNickname);
+  int updateNickname(int memberId, String nickname);
 
-  int updateIntroduce(int memberId, String memberIntroduce);
+  int updateIntroduce(int memberId, String introduce);
 
   Map<String, Object> getInstuctorStatus(int memberId);
 

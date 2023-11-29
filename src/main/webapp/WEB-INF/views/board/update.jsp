@@ -67,13 +67,13 @@
 				processData : false,
 				success : function(data) {	
 					console.log(data);
-
-
+					
 					$(el).summernote('editor.insertImage', "/blooming/image/display?fileName=" + data);					
 					
 				}
 			});
-		}
+		} // end senFile()		
+
 	</script>
 
 </body>

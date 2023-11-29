@@ -134,6 +134,12 @@ $(document).ready(function(){
 		console.log("댓글입력");
 		var boardId = $('#boardId').val(); 
 		var memberId = $('#memberId').val(); 
+		
+		if (memberId === "") {	    
+	        alert("댓글을 작성하려면 로그인이 필요합니다.");
+	        return;
+	    }
+		
 		var boardReplyContent = $('#boardReplyContent').val(); 
 		var obj = {
 				'boardId' : boardId, 
@@ -306,16 +312,21 @@ $(document).ready(function(){
 					console.log(data);
 					var memberId = $('#memberId').val();
 					var list =''; 
+					var disabledWrite = 'disabled';
+					
+					if(memberId != "") {
+						disabledWrite = '';
+					}
 									
 					$(data).each(function(){
 						console.log(this);
 						
 						var boardCommentDateCreated = new Date(this.boardCommentDateCreated);						
-						var disabled = 'disabled';
+						var disabled = 'disabled';						
 						
 						if(memberId == this.memberId) {
 							disabled = '';
-						}
+						}						
 
 		                // 포맷팅된 날짜 문자열 생성
 		                var formattedDate = boardCommentDateCreated.getFullYear() + '-' +
@@ -348,7 +359,7 @@ $(document).ready(function(){
 		                + '&nbsp;&nbsp;' // 공백
 		                + '<textarea rows="2" cols="50" id="boardCommentContent" placeholder="답글을 입력하세요"></textarea>'
 		                + '&nbsp;&nbsp;' // 공백
-		                + '<button class="btnAddComment" >답글 추가</button>'
+		                + '<button class="btnAddComment" ' + disabledWrite + '>답글 추가</button>'
 		                + '</pre>'
 		                + '</div>';
 		            commentContainer.append(list);

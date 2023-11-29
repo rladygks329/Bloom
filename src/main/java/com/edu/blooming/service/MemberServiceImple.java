@@ -38,7 +38,7 @@ public class MemberServiceImple implements MemberService {
   }
 
   @Override
-  public int checkEmail(String email) {
+  public boolean checkEmail(String email) {
     logger.info("emailCheck() 호출: email = " + email);
     return memberDAO.checkEmail(email);
   }
@@ -51,9 +51,9 @@ public class MemberServiceImple implements MemberService {
   }
 
   @Override
-  public int updatePassword(int memberId, String memberPassword) {
+  public int updatePassword(int memberId, String password) {
     logger.info("updatePassword 호출");
-    return memberDAO.updatePassword(memberId, memberPassword);
+    return memberDAO.updatePassword(memberId, password);
   }
 
   @Override
@@ -75,21 +75,21 @@ public class MemberServiceImple implements MemberService {
   }
 
   @Override
-  public int checkNickname(String nickname) {
+  public boolean checkNickname(String nickname) {
     logger.info("checkNickname() 호출: nickname = " + nickname);
     return memberDAO.checkNickname(nickname);
   }
 
   @Override
-  public int updateNickname(int memberId, String memberNickname) {
+  public int updateNickname(int memberId, String nickname) {
     logger.info("updateNickname 호출");
-    return memberDAO.updateNickname(memberId, memberNickname);
+    return memberDAO.updateNickname(memberId, nickname);
   }
 
   @Override
-  public int updateIntroduce(int memberId, String memberIntroduce) {
+  public int updateIntroduce(int memberId, String introduce) {
     logger.info("updateIntroduce 호출");
-    return memberDAO.updateIntroduce(memberId, memberIntroduce);
+    return memberDAO.updateIntroduce(memberId, introduce);
   }
 
 } // end MemberService
