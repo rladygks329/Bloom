@@ -60,7 +60,7 @@
 						<option value="price-asc" ${order == "price-asc"? "selected" : "" }>가격 낮은 순</option>
 						<option value="famous" ${order == "famous"? "selected" : "" }>좋아요 많은 순</option>
 						<option value="sales" ${order == "sales"? "selected" : "" }>판매량 많은 순</option>
-						<!-- <option value="ratings">평점 순</option> -->
+						<option value="rating" ${order == "rating"? "selected" : "" }>평점 순</option>
 					</select>
 				</div>
 				
