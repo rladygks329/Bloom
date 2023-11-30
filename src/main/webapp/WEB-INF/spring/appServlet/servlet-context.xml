@@ -62,6 +62,7 @@
 			<mapping path="/member/mypage"/>
 			<mapping path="/member/password"/>
 			<mapping path="/member/nickname"/>
+			<mapping path="/member/profile"/>
 			<mapping path="/member/introduce"/>
 			<mapping path="/board/register"/>
 			<mapping path="/board/update"/>

@@ -78,7 +78,7 @@ public class MemberDAOImple implements MemberDAO {
     logger.info("updateNickname 호출");
     HashMap<String, Object> args = new HashMap<>();
     args.put("memberId", memberId);
-    args.put("memberNickname", nickname);
+    args.put("nickname", nickname);
 
     return sqlSession.update(NAMESPACE + ".update_nickname", args);
   }
@@ -88,9 +88,19 @@ public class MemberDAOImple implements MemberDAO {
     logger.info("updateIntroduce 호출");
     HashMap<String, Object> args = new HashMap<>();
     args.put("memberId", memberId);
-    args.put("memberIntroduce", introduce);
+    args.put("introduce", introduce);
 
     return sqlSession.update(NAMESPACE + ".update_introduce", args);
+  }
+
+  @Override
+  public int updateProfileUrl(int memberId, String memberProfileUrl) {
+    logger.info("updateProfileUrl 호출");
+    HashMap<String, Object> args = new HashMap<>();
+    args.put("memberId", memberId);
+    args.put("memberProfileUrl", memberProfileUrl);
+
+    return sqlSession.update(NAMESPACE + ".update_profileUrl", args);
   }
 
 }

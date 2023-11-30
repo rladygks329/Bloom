@@ -18,6 +18,8 @@ public interface MemberService {
 
   int updateNickname(int memberId, String nickname);
 
+  int updateProfileUrl(int memberId, String profileUrl);
+
   int updateIntroduce(int memberId, String introduce);
 
   Map<String, Object> getInstuctorStatus(int memberId);

@@ -22,4 +22,6 @@ public interface MemberDAO {
   int updateNickname(int memberId, String nickname);
 
   int updateIntroduce(int memberId, String introduce);
+
+  int updateProfileUrl(int memberId, String profileUrl);
 }

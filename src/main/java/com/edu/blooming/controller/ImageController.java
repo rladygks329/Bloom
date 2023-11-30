@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.edu.blooming.util.FileUploadUtil;
 import com.edu.blooming.util.MediaUtil;
 
-
 @Controller
 @RequestMapping(value = "/image")
 public class ImageController {
@@ -77,8 +76,6 @@ public class ImageController {
     }
     return entity;
   }
-
-
 
 } // end ImageController
 

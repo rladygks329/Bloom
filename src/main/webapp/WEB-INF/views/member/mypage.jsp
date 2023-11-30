@@ -125,6 +125,7 @@ li {
 	<hr>
 	<h4>비밀번호 변경하기</h4>	
 	<input type="hidden" id="memberId" name="memberId" value="${loginVo.memberId}" />
+	
 	<form id="passwordChangeForm">
 	    <label for="newPassword">새 비밀번호:</label>
 	    <input type="password" id="newPassword" name="newPassword" required><br>
@@ -149,18 +150,20 @@ li {
 	<hr>
 
 	<h4>프로필사진 변경하기</h4>
+	<!-- 기존 프로필 이미지 표시 -->
+	<img src="/blooming/image/display?fileName=${loginVo.memberProfileUrl}" alt="프로필사진" id="profilePreview">
 	<form id="changeProfileForm" enctype="multipart/form-data">
-	    <input type="file" id="profileImage" name="profileImage" accept="image/*" required>
+		<input type="hidden" id="profileUrl" name="memberProfileUrl">
+	    <input type="file" id="fileItem" name='uploadFile' style="height: 30px;">
 	    <button type="button" id="changeProfileBtn">프로필사진 변경</button>
 	    <button type="button" id="deleteProfileBtn">프로필사진 삭제</button>
 	</form>
-	<!-- 기존 프로필 이미지 표시 -->
-	<img src="/blooming/image/display?fileName=${vo.memberProfileUrl}" alt="프로필사진" id="profilePreview">
 
 	<br>
 	<hr>
 
-	<script>	
+	<script>
+
 		// 비밀번호 형식 유효성 검사 
 	    function checkPasswordValid(password){
 	    	var passwordPattern = /^(?=.*[a-zA-Z])(?=.*\d).{4,8}$/;
@@ -214,8 +217,7 @@ li {
 	                    alert("비밀번호 변경에 실패했습니다. 다시 시도해 주세요.");
 	                }
 	            }); // end ajax()
-	        }); // end changePasswordButton()
-	        
+	        }); // end changePasswordButton()	        
 	        
 	        
 	        $('#changeNicknameBtn').click(function() {
@@ -255,9 +257,95 @@ li {
 	                    alert("닉네임 변경에 실패했습니다. 다시 시도해 주세요.");
 	                }
 	            }); // end ajax()	        	
-	        }); // end changeNicknameBtn()	        
+	        }); // end changeNicknameBtn()		        
+	        
+	    	// 업로드 파일 양식 및 크기 체크
+			var regex = new RegExp("(.*?)\.(jpg|png)$");
+			var maxSize = 1048576; //1MB
+			function fileCheck(fileName, fileSize) {
+				if (fileSize >= maxSize) {
+					alert("파일 사이즈 초과");
+					return false;
+				}
+
+				if (!regex.test(fileName)) {
+					alert("해당 종류의 파일은 업로드할 수 없습니다.");
+					return false;
+				}
+				return true;
+			} // end fileCheck()
+
+			// 이미지 업로드		    
+			$("input[type='file']").on("change", function(e) {
+
+				// FormData 객체를 인스턴스화 하여 변수에 저장 후 전송 (객체의 주소를 변수에 저장)
+				var formData = new FormData();
+
+				// fileList, file 객체에 접근
+				var fileInput = $('input[name="uploadFile"]');
+				var fileList = fileInput[0].files;
+				var fileObj = fileList[0];
+				
+				console.log("fileName : " + fileObj.name);
+				console.log("fileSize : " + fileObj.size);
+				console.log("fileType(MimeType) : " + fileObj.type);
+
+				if (!fileCheck(fileObj.name, fileObj.size)) {
+					return false;
+				}
+
+				// key: uploadFile, value: fileObj
+				formData.append("file", fileObj);
+
+				// ajax로 전송
+				$.ajax({
+					url : '/blooming/image',
+					processData : false,
+					contentType : false,
+					data : formData,
+					type : 'POST',
+					dataType : 'text',
+
+					success : function(result) {
+						// 파일 업로드 성공 시 실행되는 코드
+						console.log("파일 업로드 성공, 파일 이름: " + result);
+						// 파일 이름을 memberProfileUrl 입력 상자에 설정
+						$('input[name="memberProfileUrl"]').val(result);
+					}
+				});
+			}); // end on()        
+	        
+			$('#changeProfileBtn').click(function() {
+	            var memberProfileUrl = $('#profileUrl').val();	          
+	            console.log(memberProfileUrl);
+	            // AJAX 요청을 통해 서버로 프로필사진 변경 요청 전송
+	            $.ajax({
+	                type: 'PUT',
+	                url: '/blooming/member/profile', 
+	                headers : {
+	    				'Content-Type' : 'application/json'
+	    			},
+	                data: memberProfileUrl,
+	                
+	                success: function(data) {
+	                    // 변경이 성공적으로 완료된 경우
+	                    alert("프로필사진이 성공적으로 변경되었습니다.");	                	                
+	                },
+	                error: function(xhr, status, error) {
+	                    // 변경이 실패한 경우
+	                    alert("프로필사진 변경에 실패했습니다. 다시 시도해 주세요.");
+	                }
+	            }); // end ajax()	        	
+	        }); // end changeNicknameBtn()
 	        
 	    }); // end document()
+	    
+	    
+	 	
+	    
+	    
+	    
+	    
 	    
 	</script>
 

@@ -92,6 +92,12 @@ public class MemberServiceImple implements MemberService {
     return memberDAO.updateIntroduce(memberId, introduce);
   }
 
+  @Override
+  public int updateProfileUrl(int memberId, String profileUrl) {
+    logger.info("updateprofileUrl 호출");
+    return memberDAO.updateProfileUrl(memberId, profileUrl);
+  }
+
 } // end MemberService
 
 

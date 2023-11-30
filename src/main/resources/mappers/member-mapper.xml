@@ -51,6 +51,13 @@
 		where ${memberId} = #{memberId}	
 	</update>
 	
+	<!-- 프로필사진 변경, 삭제 -->
+	<update id="update_profileUrl">
+		update ${member}
+		set ${memberProfileUrl} = #{memberProfileUrl}
+		where ${memberId} = #{memberId}
+	</update>
+
 </mapper>
 
 

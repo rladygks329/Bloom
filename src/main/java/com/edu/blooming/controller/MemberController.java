@@ -111,10 +111,10 @@ public class MemberController {
 
   @PutMapping("/nickname")
   @ResponseBody
-  public ResponseEntity<Void> changeNicknamePUT(HttpServletRequest request,
+  public ResponseEntity<Void> changeNicknamePUT(HttpSession session, HttpServletRequest request,
       @RequestBody String memberNickname) {
     int memberId = (int) request.getAttribute("memberId");
-    int result = memberService.updatePassword(memberId, memberNickname);
+    int result = memberService.updateNickname(memberId, memberNickname);
 
     logger.info("결과값 : " + result);
     if (result != 1) {
@@ -139,6 +139,21 @@ public class MemberController {
     }
     return new ResponseEntity<>(HttpStatus.OK);
   }
+
+  @PutMapping("/profile")
+  @ResponseBody
+  public ResponseEntity<Void> changeProfilePUT(HttpServletRequest request,
+      @RequestBody String memberProfileUrl) {
+    int memberId = (int) request.getAttribute("memberId");
+    int result = memberService.updateProfileUrl(memberId, memberProfileUrl);
+
+    logger.info("결과값 : " + result);
+    if (result != 1) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
 
   private String getLoginPageQueryString(String url) {
     if (url.isBlank()) {
