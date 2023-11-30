@@ -130,7 +130,6 @@
 		$("#btn-like").click((like === 'false') ? addLike : removeLike);
 		$("#addCartBtn").click(addCart);
 	    
-		getAllReplies();
 	    $('#exampleModal').on('show.bs.modal', function (event) {
 	        const button = $(event.relatedTarget);
 	        const replyId = button.data('replyid');
@@ -141,6 +140,9 @@
 	        const replyId = $('#lecture-reply-id').val();
 	        updateReply(replyId);
 	    })
+	    
+	    $(".more-reply-btn").click(fetchNext);
+        fetchNext();
 	})
 </script>
 <meta charset="UTF-8">
@@ -169,19 +171,14 @@
 					<div class="small mb-1"></div>
 					<h1 class="display-5 fw-bolder">${lecture.lectureTitle }</h1>
 					<div class="fs-5 mb-5">
-						<fmt:formatNumber type="number" maxFractionDigits="3"
-							value="${lecture.lecturePrice }" />
-						원
+						<fmt:formatNumber type="number" maxFractionDigits="3" value="${lecture.lecturePrice }" /> 원
 					</div>
 					<div class="fs-5 mb-5"></div>
 					<p class="lead">${lecture.lectureDescription }</p>
 					<div class="d-flex">
-						<button id="btn-like"
-							class="btn btn-outline-dark flex-shrink-0 me-1" type="button">
-							<i class="bi bi-suit-heart${likeStatus ? "-fill" : ""} p-1" >
-								${lecture.lectureLikeCount } </i>
+						<button id="btn-like" class="btn btn-outline-dark flex-shrink-0 me-1" type="button">
+							<i class="bi bi-suit-heart${likeStatus ? "-fill" : ""} p-1" > ${lecture.lectureLikeCount } </i>
 						</button>
-
 
 						<!-- 차례로 원작자, 구매자, 장바구니에 있는 사람, 없는 사람 -->
 						<c:choose>
@@ -217,7 +214,6 @@
 	</section>
 	<hr>
 
-
 	<div class="container px-4 px-lg-5 my-5">
 		<!-- 영상 리스트 -->
 		<h3 class="display-6 fw-bolder">커리 큘럼</h3>
@@ -227,8 +223,17 @@
 			</c:forEach>
 		</ul>
 		<hr>
-		<h3 class="display-6 fw-bolder">수강평</h3>
-		<div class="lecture-comment-container"></div>
+		<div class="d-flex flex-column">
+			<h3 class="display-6 fw-bolder">수강평</h3>
+			<div class="my-comment-container"></div>
+			<div class="lecture-comment-container"></div>
+			<button class="btn btn-secondary m-auto more-reply-btn">더 보기</button>
+			<div class="d-flex justify-content-center mt-3" >
+  				<div class="spinner-border" role="status" hidden>
+    				<span class="visually-hidden">Loading...</span>
+  				</div>
+			</div>
+		</div>
 
 		<!-- 댓글 입력 창 -->
 		<hr>
@@ -320,106 +325,59 @@
 		});
 		SetRatingStar();
 		
-		function makeReplyDiv(replies){
-		    $(".lecture-comment-container").empty();
-		    
-		    const authorId = $("#authorId").val();
-		    let memberId = $("#memberId").val();
-		    let myComment;
-			let hasPrevComment = false;
-	
-		    if(memberId === ""){
-		        memberId = -1;
+		function makeStarRatingDiv(rating){
+			const starRatingDiv = $("<div>").addClass("star-rating");
+			for (let i = 1; i <= 5; i++) {
+				const starIcon = $("<i>").addClass("bi");
+				if (i <= rating) {
+					starIcon.addClass("bi-star-fill");
+				} else if (i - 0.5 <= rating && rating < i) {
+					starIcon.addClass("bi-star-half");
+				} else {
+					starIcon.addClass("bi-star");
+		        }
+				starRatingDiv.append(starIcon);
 		    }
-		    
-		    if(replies.length == 0){
-			    const info = $('<p>').addClass("text-secondary").text("수강평이 없습니다.");
-		    	$(".lecture-comment-container").append(info);
-		    }
-	
-		    $.each(replies, function (index, reply) {
-		        if(reply.memberId == memberId){
-		            hasPrevComment = true;
-		        }
-	
-		        const starRating = reply.lectureReplyScore;
-		        const replyCard = $("<div>").addClass("card my-3");
-		        const cardHeader = $("<div>").addClass("card-header");
-		        const cardBody = $("<div>").addClass("card-body");
-		        const cardFooter = $('<div class="d-flex flex-row-reverse">').addClass("card-footer"); 
-		        const starRatingDiv = $("<div>").addClass("star-rating");
-		  
-		        // make star icon
-		        for (let i = 1; i <= 5; i++) {
-		          const starIcon = $("<i>").addClass("bi");
-		          if (i <= starRating) {
-		            starIcon.addClass("bi-star-fill");
-		          } else if (i - 0.5 <= starRating && starRating < i) {
-		            starIcon.addClass("bi-star-half");
-		          } else {
-		            starIcon.addClass("bi-star");
-		          }
-		          starRatingDiv.append(starIcon);
-		        }
-		  
-		        cardHeader.append(starRatingDiv);
-		        cardHeader.append($("<span>").text(reply.authorNickName));
-		        cardBody.append($("<div>").text(reply.lectureReplyContent));
-		        cardFooter.append($(`<input type="hidden" value=${reply.lectureReplyId}>`))
-	
-		        // make button
-		        if(memberId == reply.memberId){
-		            const editBtn = $("<button class='me-1 btn btn-primary btn-edit' data-bs-toggle='modal' data-bs-target='#exampleModal' data-replyId='" + reply.lectureReplyId + "'>").text("수정");
-		            const deleteBtn = $("<button>").addClass("btn").addClass("btn-danger").addClass("btn-delete").data("replyid", reply.lectureReplyId).text("삭제"); 
-		            deleteBtn.click(function(){
-		                deleteReply(reply.lectureReplyId);
-		            })
-		            cardFooter.append(deleteBtn).append(editBtn);
-		            
-		        }
-		        
-		        replyCard.append(cardHeader);
-		        replyCard.append(cardBody);
-		        if(hasPrevComment){
-		        	replyCard.append(cardFooter);
-		        }
-	
-		        //내가 쓴 글이면 나중에 추가하기
-		        if(memberId == reply.memberId){
-		            myComment = replyCard;
-		        }else{
-		            $(".lecture-comment-container").prepend(replyCard);
-		        }
-		    }); // end each()
-	
-		    // 회원이 없거나 쓴 글이 있는 경우, 또는 자기 자신인 경우 입력창을 보여주지 않는다.
-		    if(hasPrevComment || memberId == -1 || memberId == authorId){
-		        $('.lecture-comment-prompt').hide();
-		    }else{
-		        $('.lecture-comment-prompt').show();
-		    }
-	
-		    //내가 쓴 글을 맨 위에 올리기
-		    if(myComment){
-		        $(".lecture-comment-container").prepend(myComment);
-		    }
-		} //end makeReplyDiv()
-	
-		function getAllReplies(){
-		    const lectureId = $("#lectureId").val();
-		    $.ajax({
-		        type : "GET",
-		        url : `/blooming/lecture/${lectureId}/replies`,
-		        headers : {
-		            'Content-Type' : 'application/json'
-		        },
-		        success : function(result) {
-		            console.log("getAllReplies 성공");
-		            makeReplyDiv(result);
-		        },
-		    }); // end ajax
+			return starRatingDiv;
 		}
-	
+		
+		function makeReplyBody(reply){
+	        const replyCard = $("<div>").addClass("card my-3");
+	        const cardHeader = $("<div>").addClass("card-header");
+	        const cardBody = $("<div>").addClass("card-body");
+	        const starRatingDiv = makeStarRatingDiv(reply.lectureReplyScore);
+	        cardHeader.append(starRatingDiv);
+	        cardHeader.append($("<span>").text(reply.authorNickName));
+	        cardBody.append($("<div>").text(reply.lectureReplyContent));
+	        
+	        replyCard.append(cardHeader);
+	        replyCard.append(cardBody);
+			return replyCard;	
+		}
+		
+		function makeReplyFooter(reply){
+			const cardFooter = $('<div class="d-flex flex-row-reverse">').addClass("card-footer");
+	        cardFooter.append($(`<input type="hidden" value=${reply.lectureReplyId}>`))
+	        const editBtn = $("<button class='me-1 btn btn-primary btn-edit' data-bs-toggle='modal' data-bs-target='#exampleModal' data-replyId='" + reply.lectureReplyId + "'>").text("수정");
+	        const deleteBtn = $("<button>").addClass("btn").addClass("btn-danger").addClass("btn-delete").data("replyid", reply.lectureReplyId).text("삭제");
+	        deleteBtn.click(function(){
+	        	deleteReply(reply.lectureReplyId);
+	        })
+	        cardFooter.append(deleteBtn).append(editBtn);
+	        return cardFooter;
+		}
+		
+		function makeMyComment(reply){
+			if(reply == null){
+				return;
+			}
+			const cardBody = makeReplyBody(reply);
+			const cardFooter = makeReplyFooter(reply);
+			$(cardBody).append(cardFooter);
+			$(".my-comment-container").empty();
+	        $(".my-comment-container").append(cardBody);
+		}
+		
 		function addReply(){
 		    const memberId = $("#memberId").val();
 		    const lectureId = $("#lectureId").val();
@@ -452,16 +410,17 @@
 		        data : JSON.stringify(data),
 		        statusCode : {
 		        	201: function(result) {
-			            getAllReplies();
-			            // 기존 값 지우기
+			            console.log("addReplies 성공 result : " + result);
+			            const newReply = {...data, lectureReplyId : result }; 
+			            makeMyComment(newReply);
+			         	// 기존 값 지우기
 			            $("#review-content").val("");
 			            $("#review-score").val(5);
 			            SetRatingStar();
-			            console.log("addReplies 성공 result : " + result);
+			            $('.lecture-comment-prompt').hide();
 			        },
 					409: function(response) {
 						alert(response.responseText);
-						getAllReplies();
 					}
 		       }
 		    }); // end ajax
@@ -501,7 +460,14 @@
 		        },
 		        data : JSON.stringify(data),
 		        success : function(result) {
-		            getAllReplies();
+		        	const newContent = $(".modal-body textarea").val()
+		            const newRating = $(".modal .review-rating input").val();
+		        	const starRatingDiv = makeStarRatingDiv(newRating);
+		        	
+		        	$(".my-comment-container .card-body > div").text(newContent);
+		        	$(".my-comment-container .card-header").empty()
+		        	$(".my-comment-container .card-header").append(starRatingDiv);
+		        	
 		            // 기존 값 지우기
 		            $(".modal-body textarea").val("")
 		            $(".modal .review-rating input").val(5);
@@ -530,14 +496,53 @@
 		            'Content-Type' : 'application/json'
 		        },
 		        success : function(result) {
-		            getAllReplies();
 		            console.log("deleteReplies 성공 result : " + result);
+		            $(".my-comment-container").empty();
+		            $('.lecture-comment-prompt').show();
 		        },
 		        error: function(){
-		        	getAllReplies();
 		        }
 		    }); // end ajax
 		}
+		
+        
+        const pageSize = 1;
+        let maxReplyId = 0;
+        function fetchNext(){
+        	const lectureId = $("#lectureId").val();
+        	$(".spinner-border").show();
+        	$.ajax({
+    		    type : "GET",
+    		    url : "/blooming/lecture/${lectureId}/replies?lastReplyId=" + maxReplyId + "&pageSize=" + pageSize,
+    		    headers : {
+    		    	'Content-Type' : 'application/json'
+    		   	},
+    		   	success : function(result) {
+    		   		console.log(result);
+    		   		$(".spinner-border").hide();
+    		   		$('.lecture-comment-prompt').toggle(!result.hasPrevComment);
+    		   		
+    		   		// 최댓값 갱신
+    		   		let resultArray = result.list.map(reply => reply.lectureReplyId);
+    		   		if(resultArray.length != 0){
+        		   		maxReplyId = Math.max(...resultArray);
+    		   		}else if(resultArray.length == 0){
+    		   		 	$(".more-reply-btn").remove();
+    		   		}
+    		   		
+    		   		// 다른 사람들의 코멘트 만들기
+    		   		result.list.map(reply =>  $(".lecture-comment-container").append(makeReplyBody(reply)));
+    		   		makeMyComment(result.myComment);
+    		   		
+    		   		const replyLength = $(".lecture-comment-container").children().length + $(".my-comment-container").children().length ;
+    			    if(replyLength == 0){
+    				    const info = $('<p>').addClass("text-secondary").text("수강평이 없습니다.");
+    			    	$(".lecture-comment-container").append(info);
+    			    }
+    		   	},
+    		}); // end ajax
+        	
+        }
 	</script>
 	
 <!-- footer -->

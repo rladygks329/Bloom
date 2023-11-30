@@ -43,6 +43,17 @@ public class LectureReplyDAOImpl implements LectureReplyDAO {
   }
 
   @Override
+  public LectureReplyVO select(int memberId, int lectureId) {
+    logger.info("select() 호출,  memberId : " + memberId + "lectureId : " + lectureId);
+    Map<String, Integer> args = new HashMap<>();
+
+    args.put("memberId", memberId);
+    args.put("lectureId", lectureId);
+
+    return sqlSession.selectOne(NAMESPACE + ".select", args);
+  }
+
+  @Override
   public LectureReplyVO selectByLectureReplyId(int lectureReplyId) {
     logger.info("selectByLectureReplyId() 호출,  lectureReplyId : " + lectureReplyId);
 
@@ -70,6 +81,22 @@ public class LectureReplyDAOImpl implements LectureReplyDAO {
     args.put("memberId", memberId);
 
     return sqlSession.selectList(NAMESPACE + ".select_by_instructor_id", args);
+  }
+
+  @Override
+  public List<LectureReplyVO> selectPageForInfiniteScroll(int memberId, int lectureId,
+      int lastReplyId, int pageSize) {
+    logger.info("selectPageForInfiniteScroll() 호출,  lectureId : " + lectureId + " lastReplyId: "
+        + lastReplyId + " pageSize: " + pageSize);
+
+    Map<String, Integer> args = new HashMap<>();
+
+    args.put("memberId", memberId);
+    args.put("lectureId", lectureId);
+    args.put("lastLectureReplyId", lastReplyId);
+    args.put("pageSize", pageSize);
+
+    return sqlSession.selectList(NAMESPACE + ".select_infinite_scroll", args);
   }
 
 }

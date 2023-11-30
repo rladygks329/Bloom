@@ -1,6 +1,8 @@
 package com.edu.blooming.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +37,13 @@ public class LectureReplyServiceImple implements LectureReplyService {
     } catch (DataIntegrityViolationException e) {
       throw new AlreadyExistException("댓글은 하나만 작성할 수 있습니다.");
     }
-    return 1;
+    return vo.getLectureReplyId();
+  }
+
+  @Override
+  public LectureReplyVO select(int memberId, int lectureId) {
+    logger.info("select() 호출 : memberId :" + memberId + " lectureId : " + lectureId);
+    return lectureReplyDAO.select(memberId, lectureId);
   }
 
   @Transactional(value = "transactionManager")
@@ -65,9 +73,20 @@ public class LectureReplyServiceImple implements LectureReplyService {
   }
 
   @Override
-  public List<LectureReplyVO> getReplies(int lectureId) {
-    logger.info("getReplies() 호출 : lectureId: " + lectureId);
-    return lectureReplyDAO.selectByLectureId(lectureId);
+  public Map<String, Object> getReplies(int lectureId, int memberId, int pageSize,
+      int lastReplyId) {
+    logger.info("getReplies() 호출" + "lectureId: " + lectureId + "memberId: " + memberId
+        + " pageSize: " + pageSize + " lastReplyId: " + lastReplyId);
+    Map<String, Object> result = new HashMap<>();
+    LectureReplyVO myComment = lectureReplyDAO.select(memberId, lectureId);
+    boolean hasPrevComment = (myComment != null);
+    List<LectureReplyVO> list =
+        lectureReplyDAO.selectPageForInfiniteScroll(memberId, lectureId, lastReplyId, pageSize);
+
+    result.put("myComment", myComment);
+    result.put("hasPrevComment", hasPrevComment);
+    result.put("list", list);
+    return result;
   }
 
 }
