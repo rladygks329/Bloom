@@ -50,13 +50,14 @@
     	<property name="host" value="smtp.gmail.com" />
     	<property name="port" value="587" />
     	<property name="username" value="cho100323@gmail.com" />
-    	<property name="password" value="$pvrm muej xdmh rfcn" />
+    	<property name="password" value="pvrmmuejxdmhrfcn" />
     	<property name="javaMailProperties">
     		<props>
             	<prop key="mail.transport.protocol">smtp</prop>
                 <prop key="mail.smtp.auth">true</prop>
                 <!-- gmail의 경우 보안문제 업데이트로 인해 SSLSocketFactory를 추가해야 smtp 사용 가능. -->
-                <prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
+                <prop key
+                ="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
                 <prop key="mail.smtp.starttls.enable">true</prop>
                 <prop key="mail.debug">true</prop>
                 <prop key="mail.smtp.ssl.trust">smtp.gmail.com</prop>
