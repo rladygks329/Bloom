@@ -465,8 +465,8 @@
 		        	const starRatingDiv = makeStarRatingDiv(newRating);
 		        	
 		        	$(".my-comment-container .card-body > div").text(newContent);
-		        	$(".my-comment-container .card-header").empty()
-		        	$(".my-comment-container .card-header").append(starRatingDiv);
+		        	$(".my-comment-container .card-header i").remove();
+		        	$(".my-comment-container .card-header").prepend(starRatingDiv);
 		        	
 		            // 기존 값 지우기
 		            $(".modal-body textarea").val("")
