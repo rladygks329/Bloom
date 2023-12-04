@@ -117,7 +117,7 @@
 					return;
 				}
 				
-				$('.email_input_warning').hide();
+				// $('.email_input_warning').hide();
 				var data = {
 					memberEmail : email
 				};
@@ -125,17 +125,14 @@
 					type : 'POST',
 					url : '/blooming/member/email',
 					data : data,
-					success: function (result, status, xhr) {
-						console.log(result);
-				        if (xhr.status === 200) {
-				            $(".email-label").text("사용가능한 이메일입니다.");
-				            emailFinalCheck = true;
-				        } else if (xhr.status === 400) {
-				            $(".email-label").text("중복된 이메일입니다.");
-				        }
-				    }
+					success: function (data) {				        
+				    	$(".email-label").text("사용가능한 이메일입니다.");
+				    	emailFinalCheck = true; 
+				    },
+					error: function(xhr, status, error) {
+						$(".email-label").text("중복된 이메일입니다.");
+	                }				
 				});
-				return
 			} // end checkEmailDuplication()
 
 			// 이메일 입력 필드의 값이 변경될 때 검사 실행
@@ -158,7 +155,7 @@
 					return;
 				}
 				
-				$('.nickname_input_warning').hide();
+				// $('.nickname_input_warning').hide();
 				var data = {
 					memberNickname : nickname
 				};
@@ -166,16 +163,14 @@
 					type : 'POST',
 					url : '/blooming/member/checknickname',
 					data : data,
-					success : function(result) {
-						if (result === 'success') {
-							$(".nickname-label").text("사용가능한 닉네임입니다.");
-							nicknameFinalCheck = true;
-						} else if (result === 'faile') {
-							$(".nickname-label").text("중복된 닉네임입니다.");
-						}
-					}
-				});
-				return
+					success: function (data) {				        
+						$(".nickname-label").text("사용가능한 닉네임입니다.");
+				    	nicknameFinalCheck = true; 
+				    },
+					error: function(xhr, status, error) {
+						$(".nickname-label").text("중복된 닉네임입니다.");
+	                }				
+				});					
 			} // end checkNicknameDuplication()
 
 			// 닉네임 입력 필드의 값이 변경될 때 검사 실행

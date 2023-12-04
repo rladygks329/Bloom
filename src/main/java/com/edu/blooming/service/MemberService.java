@@ -22,6 +22,8 @@ public interface MemberService {
 
   int updateIntroduce(int memberId, String introduce);
 
+  int deleteProfileUrl(int memberId);
+
   Map<String, Object> getInstuctorStatus(int memberId);
 
 }

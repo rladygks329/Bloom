@@ -61,10 +61,11 @@ public class RegisterController {
     logger.info("emailCheck() 호출");
     boolean isEmailAvailable = memberService.checkEmail(memberEmail);
     logger.info("결과값 : " + isEmailAvailable);
-    if (!isEmailAvailable) {
-      return new ResponseEntity<>(HttpStatus.OK);
+
+    if (isEmailAvailable) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
-    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(HttpStatus.OK);
   } // end emailCheckPOST()
 
   @PostMapping("/checknickname")
@@ -73,12 +74,12 @@ public class RegisterController {
       @RequestParam("memberNickname") String memberNickname) throws Exception {
     logger.info("checkNickname() 호출");
     boolean isNicknameAvailable = memberService.checkNickname(memberNickname);
-
     logger.info("결과값 : " + isNicknameAvailable);
-    if (!isNicknameAvailable) {
-      return new ResponseEntity<String>("success", HttpStatus.OK);
+
+    if (isNicknameAvailable) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
-    return new ResponseEntity<String>("faile", HttpStatus.OK);
+    return new ResponseEntity<>(HttpStatus.OK);
   } // end checkNicknamePOST()
 
 } // end RegisterController

@@ -9,19 +9,22 @@
 <head>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <style>
-table, th, td {
-	board-style : solid;
-	board-width : 1px;
-	text-align : center;
-}
+	table, th, td {
+		board-style : solid;
+		board-width : 1px;
+		text-align : center;
+	}
+	
+	ul {
+		list-style-type : none;
+	}
+	
+	li {
+		display : inline-block;
+	}
 
-ul {
-	list-style-type : none;
-}
+	.form_instructor {display: none;}
 
-li {
-	display : inline-block;
-}
 </style>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -125,6 +128,8 @@ li {
 	<hr>
 	<h4>비밀번호 변경하기</h4>	
 	<input type="hidden" id="memberId" name="memberId" value="${loginVo.memberId}" />
+	<input type="hidden" id="memberIntroduce" name="memberIntroduce" value="${loginVo.memberIntroduce}" />
+	<input type="hidden" id="memberLevel" name="memberLevel" value="${loginVo.memberLevel}" />
 	
 	<form id="passwordChangeForm">
 	    <label for="newPassword">새 비밀번호:</label>
@@ -149,20 +154,37 @@ li {
 	<br>
 	<hr>
 
-	<h4>프로필사진 변경하기</h4>
-	<!-- 기존 프로필 이미지 표시 -->
-	<img src="/blooming/image/display?fileName=${loginVo.memberProfileUrl}" alt="프로필사진" id="profilePreview">
-	<form id="changeProfileForm" enctype="multipart/form-data">
-		<input type="hidden" id="profileUrl" name="memberProfileUrl">
-	    <input type="file" id="fileItem" name='uploadFile' style="height: 30px;">
-	    <button type="button" id="changeProfileBtn">프로필사진 변경</button>
-	    <button type="button" id="deleteProfileBtn">프로필사진 삭제</button>
-	</form>
-
-	<br>
-	<hr>
-
+	<div class="form_instructor">
+		<h4>프로필사진 변경하기</h4>
+		<!-- 기존 프로필 이미지 표시 -->
+		<img src="/blooming/image/display?fileName=${loginVo.memberProfileUrl}" alt="프로필사진" id="profilePreview" onerror="this.src='https://dummyimage.com/450x300/dee2e6/6c757d.jpg';" alt="...">
+		<form id="changeProfileForm" enctype="multipart/form-data">
+			<input type="hidden" id="profileUrl" name="memberProfileUrl">
+		    <input type="file" id="fileItem" name='uploadFile' style="height: 30px;">
+		    <button type="button" id="changeProfileBtn">프로필사진 변경적용</button>
+		    <button type="button" id="deleteProfileBtn">프로필사진 삭제</button>
+		</form>
+	
+		<br>
+		<hr>
+		<h4>소개글 변경하기</h4>
+		<form id="changeIntroduceForm">	
+			<label for="introduce">소개글 입력 :</label>
+			<br>
+			<textarea name="memberIntroduce" rows="10" cols="50" class="memberIntroduce" required></textarea>
+			<button type="button" id="changeIntroduceBtn">소개글 변경</button>
+			<p>100자 이내로 작성해 주세요.</p>	
+		</form>
+	</div>
+	
 	<script>
+		// 프로필사진, 소개글 출력조건
+		var memberLevel = $('#memberLevel').val();
+		var formInstructor = document.querySelector(".form_instructor"); 
+	
+		if (memberLevel === "instructor") {
+			formInstructor.style.display = "block"; 
+		}
 
 		// 비밀번호 형식 유효성 검사 
 	    function checkPasswordValid(password){
@@ -177,6 +199,36 @@ li {
 	    }
 		
 	    $(document).ready(function() {
+	    	// 소개글 출력
+	    	var memberIntroduce = $('#memberIntroduce').val();
+	    	console.log(memberIntroduce);
+	    	$(".memberIntroduce").val(memberIntroduce);
+	    	
+	    	// 소개글 변경버튼
+	    	$('#changeIntroduceBtn').click(function() {
+	    		var memberIntroduce = $(".memberIntroduce").val();
+	    		console.log("memberIntroduce = " + memberIntroduce);
+	    		$.ajax({
+	                type: 'PUT',
+	                url: '/blooming/member/introduce', 
+	                headers : {
+	    				'Content-Type' : 'application/json'
+	    			},
+	    			data: memberIntroduce,
+	                
+	                success: function(data) {
+	                    // 변경이 성공적으로 완료된 경우
+	                    alert("소개글이 성공적으로 변경되었습니다.");	                	
+	                },
+	                error: function(xhr, status, error) {
+	                    // 변경이 실패한 경우
+	                    alert("소개글 변경에 실패했습니다. 다시 시도해 주세요.");
+	                }
+	            }); // end ajax()	
+	    	})
+	    	
+	    	
+	    	// 비밀번호 변경버튼
 	        $('#changePasswordButton').click(function() {
 	        	var memberId = $('#memberId').val();
 	            var memberPassword = $('#newPassword').val();
@@ -217,11 +269,17 @@ li {
 	                    alert("비밀번호 변경에 실패했습니다. 다시 시도해 주세요.");
 	                }
 	            }); // end ajax()
-	        }); // end changePasswordButton()	        
+	        }); // end changePasswordButton()	
 	        
+	     // 닉네임 입력 필드의 값이 변경될 때 검사 실행
+			$('#nickname').on("blur", function () {
+			    console.log('1')
+			});
 	        
+	        // 닉네임 변경버튼
 	        $('#changeNicknameBtn').click(function() {
 	            var memberNickname = $('#nickname').val();
+	            console.log(memberNickname);
 	            
 	            // 닉네임 형식 확인
 	            if(memberNickname === "") {
@@ -229,11 +287,6 @@ li {
 	            	return;
 	            }
 	            
-	            if (!checkNicknameValid(memberNickname)) {
-	                alert("닉네임 형식을 확인해 주세요.");
-	                return;
-	            }
-	        	
 	            if (!checkNicknameValid(memberNickname)) {
 	                alert("닉네임 형식을 확인해 주세요.");
 	                return;
@@ -329,7 +382,7 @@ li {
 	                
 	                success: function(data) {
 	                    // 변경이 성공적으로 완료된 경우
-	                    alert("프로필사진이 성공적으로 변경되었습니다.");	                	                
+	                    alert("프로필사진이 성공적으로 변경되었습니다.");	                    
 	                },
 	                error: function(xhr, status, error) {
 	                    // 변경이 실패한 경우
@@ -337,6 +390,27 @@ li {
 	                }
 	            }); // end ajax()	        	
 	        }); // end changeNicknameBtn()
+	        
+			$('#deleteProfileBtn').click(function() {
+			    // AJAX 요청을 통해 서버로 프로필 사진 삭제 요청 전송
+			    $.ajax({
+			        type: 'PUT',
+			        url: '/blooming/member/profile', 
+			        headers: {
+			            'Content-Type': 'application/json'
+			        },
+			        data: JSON.stringify({ memberProfileUrl: null }),
+
+			        success: function(data) {
+			            alert("프로필 사진이 성공적으로 삭제되었습니다.");
+			            //$('#profilePreview').attr('src', '');
+			        },
+			        error: function(xhr, status, error) {
+			            alert("프로필 사진 삭제에 실패했습니다. 다시 시도해 주세요.");
+			        }
+			    }); // end ajax()
+			}); // end deleteProfileBn()
+	        
 	        
 	    }); // end document()
 	    

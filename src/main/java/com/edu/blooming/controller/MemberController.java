@@ -111,7 +111,7 @@ public class MemberController {
 
   @PutMapping("/nickname")
   @ResponseBody
-  public ResponseEntity<Void> changeNicknamePUT(HttpSession session, HttpServletRequest request,
+  public ResponseEntity<Void> changeNicknamePUT(HttpServletRequest request,
       @RequestBody String memberNickname) {
     int memberId = (int) request.getAttribute("memberId");
     int result = memberService.updateNickname(memberId, memberNickname);
@@ -120,22 +120,40 @@ public class MemberController {
     if (result != 1) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
+    // 회원 정보 업데이트 후 세션 업데이트
+    HttpSession session = request.getSession();
+    MemberVO loginVo = (MemberVO) session.getAttribute("loginVo");
+
+    if (loginVo != null) {
+      // 기존 세션에서 가져온 loginVo가 null이 아닌 경우에만 업데이트 수행
+      loginVo.setMemberNickname(memberNickname);
+      session.setAttribute("loginVo", loginVo);
+    }
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @PutMapping("/introduce")
   @ResponseBody
   public ResponseEntity<Void> changeIntroducePUT(@RequestBody String memberIntroduce,
-      HttpSession session) {
-    int result = 0;
-    if (session.getAttribute("loginVo") != null) {
-      int memberId = ((MemberVO) session.getAttribute("loginVo")).getMemberId();
-      result = memberService.updatePassword(memberId, memberIntroduce);
-    }
+      HttpServletRequest request) {
+    int memberId = (int) request.getAttribute("memberId");
+    logger.info(memberIntroduce);
+    int result = memberService.updateIntroduce(memberId, memberIntroduce);
 
     logger.info("결과값 : " + result);
     if (result != 1) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    // 회원 정보 업데이트 후 세션 업데이트
+    HttpSession session = request.getSession();
+    MemberVO loginVo = (MemberVO) session.getAttribute("loginVo");
+
+    if (loginVo != null) {
+      // 기존 세션에서 가져온 loginVo가 null이 아닌 경우에만 업데이트 수행
+      loginVo.setMemberIntroduce(memberIntroduce);
+      session.setAttribute("loginVo", loginVo);
     }
     return new ResponseEntity<>(HttpStatus.OK);
   }
@@ -144,12 +162,33 @@ public class MemberController {
   @ResponseBody
   public ResponseEntity<Void> changeProfilePUT(HttpServletRequest request,
       @RequestBody String memberProfileUrl) {
+    logger.info(memberProfileUrl);
     int memberId = (int) request.getAttribute("memberId");
-    int result = memberService.updateProfileUrl(memberId, memberProfileUrl);
+
+    int result;
+    if (memberProfileUrl == null || memberProfileUrl.equals("null")) {
+      // 프로필 사진을 삭제하는 경우
+      logger.info("프로필 사진을 삭제하는 경우");
+      result = memberService.deleteProfileUrl(memberId);
+    } else {
+      // 프로필 사진을 업데이트하는 경우
+      logger.info("프로필 사진을 업데이트하는 경우");
+      result = memberService.updateProfileUrl(memberId, memberProfileUrl);
+    }
 
     logger.info("결과값 : " + result);
     if (result != 1) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    // 회원 정보 업데이트 후 세션 업데이트
+    HttpSession session = request.getSession();
+    MemberVO loginVo = (MemberVO) session.getAttribute("loginVo");
+
+    if (loginVo != null) {
+      // 기존 세션에서 가져온 loginVo가 null이 아닌 경우에만 업데이트 수행
+      loginVo.setMemberProfileUrl(memberProfileUrl);
+      session.setAttribute("loginVo", loginVo);
     }
     return new ResponseEntity<>(HttpStatus.OK);
   }

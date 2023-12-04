@@ -44,6 +44,12 @@ public class MemberServiceImple implements MemberService {
   }
 
   @Override
+  public boolean checkNickname(String nickname) {
+    logger.info("checkNickname() 호출: nickname = " + nickname);
+    return memberDAO.checkNickname(nickname);
+  }
+
+  @Override
   public MemberVO login(MemberVO member) {
     logger.info("memberLogin() 호출");
     logger.info("vo값 = " + member.toString());
@@ -74,11 +80,7 @@ public class MemberServiceImple implements MemberService {
     return result;
   }
 
-  @Override
-  public boolean checkNickname(String nickname) {
-    logger.info("checkNickname() 호출: nickname = " + nickname);
-    return memberDAO.checkNickname(nickname);
-  }
+
 
   @Override
   public int updateNickname(int memberId, String nickname) {
@@ -89,6 +91,7 @@ public class MemberServiceImple implements MemberService {
   @Override
   public int updateIntroduce(int memberId, String introduce) {
     logger.info("updateIntroduce 호출");
+    logger.info(introduce);
     return memberDAO.updateIntroduce(memberId, introduce);
   }
 
@@ -96,6 +99,12 @@ public class MemberServiceImple implements MemberService {
   public int updateProfileUrl(int memberId, String profileUrl) {
     logger.info("updateprofileUrl 호출");
     return memberDAO.updateProfileUrl(memberId, profileUrl);
+  }
+
+  @Override
+  public int deleteProfileUrl(int memberId) {
+    logger.info("deleteProfileUrl 호출");
+    return memberDAO.updateProfileUrl(memberId, null);
   }
 
 } // end MemberService
