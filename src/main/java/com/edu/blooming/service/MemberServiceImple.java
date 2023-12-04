@@ -80,11 +80,13 @@ public class MemberServiceImple implements MemberService {
     return result;
   }
 
-
-
   @Override
   public int updateNickname(int memberId, String nickname) {
     logger.info("updateNickname 호출");
+    boolean isNicknameDuplicated = memberDAO.checkNickname(nickname);
+    if (isNicknameDuplicated) {
+      throw new IllegalStateException("중복된 닉네임입니다.");
+    }
     return memberDAO.updateNickname(memberId, nickname);
   }
 

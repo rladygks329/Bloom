@@ -307,7 +307,7 @@
 	                },
 	                error: function(xhr, status, error) {
 	                    // 변경이 실패한 경우
-	                    alert("닉네임 변경에 실패했습니다. 다시 시도해 주세요.");
+	                    alert("중복된 닉네임입니다. 다시 시도해 주세요.");
 	                }
 	            }); // end ajax()	        	
 	        }); // end changeNicknameBtn()		        

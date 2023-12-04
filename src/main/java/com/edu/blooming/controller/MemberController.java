@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -193,6 +194,10 @@ public class MemberController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
+  @ExceptionHandler(IllegalStateException.class)
+  public ResponseEntity<String> duplicatedNickname(Exception e) {
+    return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+  }
 
   private String getLoginPageQueryString(String url) {
     if (url.isBlank()) {
@@ -213,6 +218,8 @@ public class MemberController {
 
     return url;
   }
+
+
 
 } // end LoginController()
 
