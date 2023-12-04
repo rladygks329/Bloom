@@ -364,6 +364,7 @@
 						console.log("파일 업로드 성공, 파일 이름: " + result);
 						// 파일 이름을 memberProfileUrl 입력 상자에 설정
 						$('input[name="memberProfileUrl"]').val(result);
+						$('#profilePreview').attr('src', '/blooming/image/display?fileName=' + result);
 					}
 				});
 			}); // end on()        
