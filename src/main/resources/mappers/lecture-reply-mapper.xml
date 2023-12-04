@@ -25,9 +25,9 @@
 	</delete>
 	
 	<select id="select" resultType="LectureReplyVO">
-		select *
-		from ${lecture_reply}
-		where ${memberId} = #{memberId} and ${lectureId} = #{lectureId}
+		select r.*, m.${memberNickName} ${authorNickName}
+		from ${lecture_reply} r join ${member} m on r.${memberId} = m.${memberId}
+		where r.${memberId} = #{memberId} and r.${lectureId} = #{lectureId}
 	</select>
 	
 	<!-- 특정 수강평 조회 -->
@@ -55,6 +55,7 @@
 		order by ${lectureReplyId} desc
 	</select>
 	
+	<!-- 댓글 페이징 처리 -->
 	<select id="select_infinite_scroll" resultType="LectureReplyVO">
 		select b.* 
 		from 
