@@ -73,6 +73,9 @@
 				<h4 class="card-title mt-3 text-center">계정 만들기</h4>
 				<p class="text-center">무료로 시작하세요</p>
 				<form action="register" method="post" onsubmit="return validateInputs(event)">
+					<input type="hidden" name="memberLevel" value="${memberLevel}">
+					<input type="hidden" name="memberProfileUrl">
+					
 					<!-- email -->
 					<div class="input-group input-group-lg mb-3">
 						<span class="input-group-text"> <i class="fa fa-envelope"></i></span> 
@@ -161,7 +164,9 @@
 					<p class="text-center">
 						계정이 있으십니까? <a href="/blooming/member/login">로그인 하기</a>
 					</p>
-					<input type="submit" value="회원가입">
+					<div class="d-flex justify-content-center">
+						<input type="submit" class="btn btn-primary" value="회원가입">
+					</div>
 				</form>
 			</article>
 		</div>
@@ -181,6 +186,7 @@
 				if ($('#email_input').val() === "") {
 					invalidMsg.text("이메일이 비어있습니다.")
 					input.removeClass("is-valid").addClass("is-invalid");
+					emailFinalCheck = false;
 					return;
 				}
 				
@@ -188,6 +194,7 @@
 				if (!emailRegex.test(email)){					
 					invalidMsg.text("이메일 형식을 확인해주세요")
 					input.removeClass("is-valid").addClass("is-invalid");
+					emailFinalCheck = false;
 					return;
 				}
 				
@@ -205,6 +212,7 @@
 					error: function(xhr, status, error) {
 						invalidMsg.text("중복된 이메일입니다")
 						input.removeClass("is-valid").addClass("is-invalid");
+						emailFinalCheck = false;
 	                }				
 				});
 			} // end checkEmailDuplication()
@@ -223,6 +231,7 @@
 				if ($('#nickname_input').val() === "") {	
 					invalidMsg.text("닉네임이 비어있습니다.")
 					input.removeClass("is-valid").addClass("is-invalid");
+					nicknameFinalCheck = false;
 					return;
 				}
 				
@@ -230,7 +239,8 @@
 				if (!nicknameRegex.test(nickname)){
 					console.log(nickname);
 					invalidMsg.text("한글, 영문, 숫자 2~6자리로 입력해 주세요")
-					input.removeClass("is-valid").addClass("is-invalid");					
+					input.removeClass("is-valid").addClass("is-invalid");	
+					nicknameFinalCheck = false;
 					return;
 				}
 				console.log(nickname);
@@ -249,6 +259,7 @@
 					error: function(xhr, status, error) {
 						invalidMsg.text("중복된 닉네임입니다")
 						input.removeClass("is-valid").addClass("is-invalid");
+						nicknameFinalCheck = false;
 						console.log(nicknameFinalCheck);
 	                }				
 				});					
@@ -278,10 +289,12 @@
 				
 				if (pw === "") {
 					invalidMsg.text("비밀번호를 입력해 주세요.")
-					input.removeClass("is-valid").addClass("is-invalid");								
+					input.removeClass("is-valid").addClass("is-invalid");	
+					pwFinalCheck = false;
 				} else if (!passwordRegex.test(pw)) {
 					invalidMsg.text("영문자와 숫자 조합, 4~8자리로 입력해 주세요.")
-					input.removeClass("is-valid").addClass("is-invalid");					
+					input.removeClass("is-valid").addClass("is-invalid");	
+					pwFinalCheck = false;
 				} else {					
 					input.removeClass("is-invalid").addClass("is-valid");
 					pwFinalCheck = true;					
@@ -300,12 +313,14 @@
 				
 				if(pwck === '') {
 					input.removeClass("is-valid is-invalid");
+					pwckFinalCheck = false;
 					return;
 				}
 				
 				if (pw !== pwck) {
 					invalidMsg.text("비밀번호가 일치하지 않습니다.")
 					input.removeClass("is-valid").addClass("is-invalid");
+					pwckFinalCheck = false;
 				} else {
 					input.removeClass("is-invalid").addClass("is-valid");
 					pwckFinalCheck = true;
@@ -327,6 +342,7 @@
 				if (name === "") {
 					invalidMsg.text("이름: 입력해 주세요.")
 					input.removeClass("is-valid").addClass("is-invalid");
+					nameFinalCheck = false;
 					return;
 				} 
 				
@@ -335,6 +351,7 @@
 					invalidMsg.text("이름 형식을 확인해 주세요(2~10자).")
 					input.removeClass("is-valid").addClass("is-invalid");	
 					console.log(name);
+					nameFinalCheck = false;
 					return;
 				}
 				input.removeClass("is-invalid").addClass("is-valid");
@@ -362,12 +379,14 @@
 				if(thirdNum.length < 4){
 					invalidMsg.text("세번째 칸은 4자리어야 합니다.")
 					input.removeClass("is-valid").addClass("is-invalid");
+					phoneFinalCheck = false;
 					return;
 				}
 				
 				if (!phoneRegex.test(phone)) {
 					invalidMsg.text("휴대폰번호를 확인해 주세요.")
 					input.removeClass("is-valid").addClass("is-invalid");
+					phoneFinalCheck = false;
 					return;
 				} 
 				
@@ -457,19 +476,6 @@
 			} // end sumAddress()
 			
 		</script>
-
-		<input type="hidden" name="memberLevel" value="${memberLevel}">
-
-		<div class="form_instructor">
-			<p>강사소개</p>
-			<textarea name="memberIntroduce" rows="5" cols="25"></textarea>
-
-			<p>프로필 사진</p>
-			<input type="file" id="fileItem" name='uploadFile' style="height: 30px;">
-
-		</div>
-
-		<input type="hidden" name="memberProfileUrl">
 
 		<script>
 			var memberLevel = "${memberLevel}"; // memberLevel 값을 가져옴
