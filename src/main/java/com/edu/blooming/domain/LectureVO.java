@@ -31,7 +31,6 @@ public class LectureVO {
       String lectureDescription, int lecturePrice, int lectureVideoProcessingLevel,
       int lectureSalesCount, int lectureTotalScore, int lectureReplyCount, int lectureLikeCount,
       String lectureThumbnailUrl, Date lectureDateCreated) {
-    super();
     this.lectureId = lectureId;
     this.memberId = memberId;
     this.authorName = authorName;

@@ -19,7 +19,6 @@ public class BoardVO {
   public BoardVO(int boardId, int memberId, String authorNickname, String boardTitle,
       String boardContent, int boardViewCount, int boardReplyCount, int boardLikeCount,
       Date boardDateCreated) {
-    super();
     this.boardId = boardId;
     this.memberId = memberId;
     this.authorNickname = authorNickname;
