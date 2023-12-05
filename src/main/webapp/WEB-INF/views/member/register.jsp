@@ -65,59 +65,132 @@
 <body>
 	<%@ include file="/WEB-INF/views/component/navigation.jsp"%>
 	
-	<h2>회원 가입하기</h2>
-  	<form action="register" method="post" onsubmit="return validateInputs(event)">
-    	
-    	<p>이메일</p>
-	    <input class="email_input" type="text" name="memberEmail">
-		<span class="email-label"></span>	    
-	    	    
-	    <p>비밀번호</p>
-	    <input class="pw_input" type="password" name="memberPassword" placeholder="비밀번호 입력">
-	    <span class="pw-label-1"></span>
-	    
-	    <p>비밀번호 확인</p>
-	    <input class="pwck_input" type="password" name="memberPasswordCheck" placeholder="비밀번호 확인">
-	    <span class="pw-label-2"></span>
-	    
-	    <p>이름</p>
-	    <input class="name_input" type="text" name="memberName" placeholder="이름 입력">
-	    <span class="name-label"></span>
-	    
-	    <p>닉네임</p>
-	    <input class="nickname_input" type="text" name="memberNickname" placeholder="닉네임 입력">
-	    <span class="nickname-label"></span>
-	    	    
-	    <p>휴대폰번호</p>
-	    <input class="pn_input" type="text" name="memberPhone" placeholder="번호 입력">
-	    <span class="phone-label"></span>
-	    
-	    <p>주소</p>
-	    <input type="text" id="sample6_postcode" placeholder="우편번호" readonly>
-		<input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기" readonly><br>
-		<input type="text" id="sample6_address" name="address" placeholder="주소" readonly><br>
-		<input type="text" id="sample6_detailAddress" name="detailAddress" placeholder="상세주소">
-		<input type="text" id="sample6_extraAddress" placeholder="참고항목: 선택사항">
-		<input type="hidden" id="address_input" name="memberAddress">
+	<div class="container">
+		<br>
+
+		<div class="card bg-light">
+			<article class="card-body mx-auto">
+				<h4 class="card-title mt-3 text-center">계정 만들기</h4>
+				<p class="text-center">무료로 시작하세요</p>
+				<form action="register" method="post" onsubmit="return validateInputs(event)">
+					<!-- email -->
+					<div class="input-group input-group-lg mb-3">
+						<span class="input-group-text"> <i class="fa fa-envelope"></i></span> 
+						<input name="memberEmail" class="form-control" id="email_input" placeholder="Email address" type="email">
+						<div class="valid-feedback">사용 가능한 이메일입니다.</div>
+						<div class="invalid-feedback"></div>
+					</div>
+					
+					<!-- password -->
+					<div class="input-group input-group-lg mb-3">
+						<span class="input-group-text"> <i class="fa fa-lock"></i></span> 
+						<input name="memberPassword" class="form-control" id="pw_input" placeholder="비밀번호" type="password">
+						<div class="valid-feedback">유효한 비밀번호입니다.</div>
+						<div class="invalid-feedback"></div>
+					</div>
+					<div class="input-group input-group-lg mb-3">
+						<span class="input-group-text"> <i class="fa fa-lock"></i></span> 
+						<input class="form-control" id="pwck_input" placeholder="비밀번호 확인" type="password">
+						<div class="valid-feedback">비밀번호가 일치합니다.</div>
+						<div class="invalid-feedback"></div>
+					</div>
+					
+					<!-- name -->
+					<div class="input-group input-group-lg mb-3">
+						<span class="input-group-text"> <i class="fa fa-user"></i></span> 
+						<input name="memberName" class="form-control" id="name_input" placeholder="이름" type="text">
+						<div class="valid-feedback">유효한 이름입니다</div>
+						<div class="invalid-feedback"></div>
+					</div>
+					
+					<!-- nickname -->
+					<div class="input-group input-group-lg mb-3">
+						<span class="input-group-text"> <i class="fa fa-user"></i></span> 
+						<input name="memberNickname" class="form-control" id="nickname_input" placeholder="닉네임" type="text">
+						<div class="valid-feedback">사용 가능한 닉네임입니다</div>
+						<div class="invalid-feedback"></div>
+					</div>
+					
+					<!-- phone -->
+					<div class="input-group input-group-lg mb-3">
+						<span class="input-group-text"> <i class="fa fa-phone"></i></span>
+						<select class="form-select" id="phoneGroup01">
+							<option selected value="010">010</option>
+							<option value="011">011</option>
+							<option value="016">016</option>
+							<option value="017">017</option>
+							<option value="018">018</option>
+							<option value="019">019</option>
+						</select>
+						<input type="text" class="form-control" id="phoneGroup02" placeholder="xxxx" maxlength="4" aria-label="Username"> 
+						<span class="input-group-text">-</span> 
+						<input type="text" class="form-control" id="phoneGroup03" placeholder="xxxx" maxlength="4" aria-label="Server">
+						<input type="hidden" id="phone_input" type="text" name="memberPhone" placeholder="번호 입력">
+						<div class="valid-feedback">유효한 휴대폰번호입니다.</div>
+						<div class="invalid-feedback"></div>
+					</div>
+
+					<!-- address -->
+					<div class="input-group input-group-lg mb-3">
+						<input type="text" id="sample6_postcode" class="form-control" placeholder="우편번호" aria-label="Recipient's username" aria-describedby="button-addon2" readonly>
+						<button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="sample6_execDaumPostcode()">우편번호 찾기</button>
+					</div>
+					<div class="input-group input-group-lg mb-3">
+						<input type="text" id="sample6_address" class="form-control" placeholder="주소" aria-label="Recipient's username" aria-describedby="button-addon2" readonly>
+					</div>
+					<div class="input-group input-group-lg mb-3">
+						<input type="text" id="sample6_detailAddress" class="form-control" placeholder="상세 주소" aria-label="Recipient's username" aria-describedby="button-addon2"> <input type="text" id="sample6_extraAddress" class="form-control" placeholder="상세 주소 참고: 선택사항" aria-label="Recipient's username" aria-describedby="button-addon2">
+					</div>
+					<div>
+						<input type="hidden" id="address_input" name="memberAddress">	
+					</div>
+
+					<div class="form_instructor">
+						<!-- introduce -->
+						<div class="input-group input-group-lg mb-3">
+							<span class="input-group-text">자기소개</span>
+							<textarea class="form-control" name="memberIntroduce" aria-label="With textarea"></textarea>
+						</div>
+	
+						<!-- profile img -->
+						<div>
+							<label for="formFileLg" class="form-label">프로필 사진 이미지</label> <input class="form-control form-control-lg" id="fileItem" name='uploadFile' type="file">
+						</div>
+					</div>
+					<!-- form-group end.// -->
+					<p class="text-center">
+						계정이 있으십니까? <a href="/blooming/member/login">로그인 하기</a>
+					</p>
+					<input type="submit" value="회원가입">
+				</form>
+			</article>
+		</div>
+		<!-- card.// -->
+	</div>
+	<!--container end.//-->
+	
 		<!-- 카카오톡 주소찾기 -->
 		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 		<script>
 			// 이메일 유효성 및 중복검사
 			function checkEmailDuplication(email) {
 				var emailRegex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+				var input = $('#email_input');
+				var invalidMsg = input.siblings(".invalid-feedback");
 				
-				if ($('.email_input').val() === "") {	
-					$(".email-label").text("");
+				if ($('#email_input').val() === "") {
+					invalidMsg.text("이메일이 비어있습니다.")
+					input.removeClass("is-valid").addClass("is-invalid");
 					return;
 				}
 				
 				// 유효성 검사를 통과하지 못한 경우
-				if (!emailRegex.test(email)){
-					$(".email-label").text("이메일 형식을 확인해주세요");
+				if (!emailRegex.test(email)){					
+					invalidMsg.text("이메일 형식을 확인해주세요")
+					input.removeClass("is-valid").addClass("is-invalid");
 					return;
 				}
 				
-				// $('.email_input_warning').hide();
 				var data = {
 					memberEmail : email
 				};
@@ -126,36 +199,41 @@
 					url : '/blooming/member/email',
 					data : data,
 					success: function (data) {				        
-				    	$(".email-label").text("사용가능한 이메일입니다.");
+						input.removeClass("is-invalid").addClass("is-valid");
 				    	emailFinalCheck = true; 
 				    },
 					error: function(xhr, status, error) {
-						$(".email-label").text("중복된 이메일입니다.");
+						invalidMsg.text("중복된 이메일입니다")
+						input.removeClass("is-valid").addClass("is-invalid");
 	                }				
 				});
 			} // end checkEmailDuplication()
 
 			// 이메일 입력 필드의 값이 변경될 때 검사 실행
-			$('.email_input').on("blur", function() {
-				checkEmailDuplication($('.email_input').val());
+			$('#email_input').on("blur", function() {
+				checkEmailDuplication($('#email_input').val());
 			});
 						
 			// 닉네임 유효성 및 중복검사
 			function checkNicknameDuplication(nickname) {
 				var nicknameRegex = /^[가-힣a-zA-Z0-9]{2,6}$/;
+				var input = $('#nickname_input');
+				var invalidMsg = input.siblings(".invalid-feedback");
 				
-				if ($('.nickname_input').val() === "") {	
-					$(".nickname-label").text("");
+				if ($('#nickname_input').val() === "") {	
+					invalidMsg.text("닉네임이 비어있습니다.")
+					input.removeClass("is-valid").addClass("is-invalid");
 					return;
 				}
 				
 				// 유효성 검사를 통과하지 못한 경우
 				if (!nicknameRegex.test(nickname)){
-					$(".nickname-label").text("닉네임 형식을 확인해주세요(한글, 영문, 숫자 2~6자)");
+					console.log(nickname);
+					invalidMsg.text("한글, 영문, 숫자 2~6자리로 입력해 주세요")
+					input.removeClass("is-valid").addClass("is-invalid");					
 					return;
 				}
-				
-				// $('.nickname_input_warning').hide();
+				console.log(nickname);
 				var data = {
 					memberNickname : nickname
 				};
@@ -164,117 +242,139 @@
 					url : '/blooming/member/checknickname',
 					data : data,
 					success: function (data) {				        
-						$(".nickname-label").text("사용가능한 닉네임입니다.");
+						input.removeClass("is-invalid").addClass("is-valid");
 				    	nicknameFinalCheck = true; 
+				    	console.log(nicknameFinalCheck);
 				    },
 					error: function(xhr, status, error) {
-						$(".nickname-label").text("중복된 닉네임입니다.");
+						invalidMsg.text("중복된 닉네임입니다")
+						input.removeClass("is-valid").addClass("is-invalid");
+						console.log(nicknameFinalCheck);
 	                }				
 				});					
 			} // end checkNicknameDuplication()
 
 			// 닉네임 입력 필드의 값이 변경될 때 검사 실행
-			$('.nickname_input').on("blur", function () {
-			    checkNicknameDuplication($('.nickname_input').val());
+			$('#nickname_input').on("blur", function () {
+			    checkNicknameDuplication($('#nickname_input').val());
 			});
 			
 			// 비밀번호 및 비밀번호 확인 필드 값이 변경될 때 검사 실행			
-			$('.pw_input').on("change", function() {
+			$('#pw_input').on("change", function() {
 				checkPasswordValid();
 				checkPasswordMatch();
 			});
 
-			$('.pwck_input').on("change", function() {
+			$('#pwck_input').on("change", function() {
 				checkPasswordMatch();
 			});
 			
 			// 비밀번호 유효성검사
 			function checkPasswordValid(password) {
-				var pw = $('.pw_input').val();
+				var pw = $('#pw_input').val();
 				var passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d).{4,8}$/;
+				var input = $('#pw_input');
+				var invalidMsg = input.siblings(".invalid-feedback");
+				
 				if (pw === "") {
-					$(".pw-label-1").text("");
-					return;			
-				}
-				
-				if (!passwordRegex.test(pw)) {
-					$('.pw-label-1').text('영문자와 숫자 조합, 4~8자리로 입력해 주세요');
-					return;
-				} 
-				
-				if (passwordRegex.test(pw)) {
-					$('.pw-label-1').text('유효한 비밀번호입니다');
-					pwFinalCheck = true;
+					invalidMsg.text("비밀번호를 입력해 주세요.")
+					input.removeClass("is-valid").addClass("is-invalid");								
+				} else if (!passwordRegex.test(pw)) {
+					invalidMsg.text("영문자와 숫자 조합, 4~8자리로 입력해 주세요.")
+					input.removeClass("is-valid").addClass("is-invalid");					
+				} else {					
+					input.removeClass("is-invalid").addClass("is-valid");
+					pwFinalCheck = true;					
 				}
 			} // end checkPasswordValid()
+			
 			// 비밀번호확인 유효성검사
 			function checkPasswordMatch() {
-				var pw = $('.pw_input').val();
-				var pwck = $('.pwck_input').val();
-
-				if (pw === "" && pwck === "") {
-					$(".pw-label-2").text("");
-					return;
-				} 
+				var pw = $('#pw_input').val();
+				var pwck = $('#pwck_input').val();
+				var input = $('#pwck_input');
+				var invalidMsg = input.siblings(".invalid-feedback");
 				
-				if (!pw == pwck){
-					$('.pw-label-2').text('비밀번호가 일치하지 않습니다');
+				console.log(pw);
+				console.log(pwck);
+				
+				if(pwck === '') {
+					input.removeClass("is-valid is-invalid");
 					return;
 				}
 				
-				if (pw == pwck) {
-					$('.pw-label-2').text('비밀번호가 일치합니다');
+				if (pw !== pwck) {
+					invalidMsg.text("비밀번호가 일치하지 않습니다.")
+					input.removeClass("is-valid").addClass("is-invalid");
+				} else {
+					input.removeClass("is-invalid").addClass("is-valid");
 					pwckFinalCheck = true;
-				} 				
+				}				
 			}; // end checkPasswordMatch()
 
 			// 이름 필드 값이 변경될 때 검사 실행
-			$('.name_input').on("change", function() {
+			$('#name_input').on("change", function() {
 				checkNameValid();
 			});
 
 			// 이름 유효성검사
 			function checkNameValid() {
-				var name = $('.name_input').val();
-				var namePattern = /^[가-힣]{2,10}$/;
+				var name = $('#name_input').val();
+				var nameRegex = /^[가-힣]{2,10}$/;
+				var input = $('#name_input');
+				var invalidMsg = input.siblings(".invalid-feedback");
+				
 				if (name === "") {
-					$(".name-label").text("");
+					invalidMsg.text("이름: 입력해 주세요.")
+					input.removeClass("is-valid").addClass("is-invalid");
 					return;
 				} 
 				
-				if (!namePattern.test(name)) {
-					$('.name-label').text('이름을 확인해 주세요(2~10자)');
+				// 유효성 검사를 통과하지 못한경우
+				if (!nameRegex.test(name)) {
+					invalidMsg.text("이름 형식을 확인해 주세요(2~10자).")
+					input.removeClass("is-valid").addClass("is-invalid");	
+					console.log(name);
 					return;
 				}
-				
-				if (namePattern.test(name)) {
-					$(".name-label").text("");
-					nameFinalCheck = true;
-				}
+				input.removeClass("is-invalid").addClass("is-valid");
+				nameFinalCheck = true;
+
 			} // end checkNameValid()			
 
 			// 휴대폰번호 필드값 변경 시 검사 실행	
-			$('.pn_input').on("change", function() {
+			$('#phoneGroup01, #phoneGroup02, #phoneGroup03').on("change", function() {
 				checkPhoneValid();
 			});
 			
 			// 휴대폰번호 유효성검사
 			function checkPhoneValid() {
-				var phone = $('.pn_input').val();
-				var phoneRegex = /^(01[016789]\d{7,8})$/;
-
-				if (phone === "") {
-					$(".phone-label").text("");
-					return;					
-				} 
+				var firstNum = $('#phoneGroup01').val();
+				var secondNum = $('#phoneGroup02').val();
+				var thirdNum = $('#phoneGroup03').val();
+				var phone = firstNum + '' + secondNum + '' + thirdNum;
+				
+				var phoneRegex = /^\d{10,11}$/;	
+				var input = $('#phone_input');
+				var invalidMsg = input.siblings(".invalid-feedback");
+				
+				console.log(thirdNum.length);
+				if(thirdNum.length < 4){
+					invalidMsg.text("세번째 칸은 4자리어야 합니다.")
+					input.removeClass("is-valid").addClass("is-invalid");
+					return;
+				}
 				
 				if (!phoneRegex.test(phone)) {
-					$('.phone-label').text('휴대전화번호 형식을 확인해 주세요.');
+					invalidMsg.text("휴대폰번호를 확인해 주세요.")
+					input.removeClass("is-valid").addClass("is-invalid");
 					return;
 				} 
 				
 				if (phoneRegex.test(phone)) {
-					$(".phone-label").text("");
+					input.removeClass("is-invalid").addClass("is-valid");
+					$('#phone_input').val(phone);
+					console.log($('#phone_input').val());
 					phoneFinalCheck = true;
 				}				
 			} // end checkPhoneValid()
@@ -434,93 +534,11 @@
 					}
 				});
 			}); // end on()
-
+		
+			
 
 		</script>
 
-		<br> <input type="submit" value="회원가입">
-	</form>
-
-	<div class="container">
-		<br>
-
-		<div class="card bg-light">
-			<article class="card-body mx-auto">
-				<h4 class="card-title mt-3 text-center">계정 만들기</h4>
-				<p class="text-center">무료로 시작하세요</p>
-				<form>
-					<!-- name -->
-					<div class="input-group input-group-lg mb-3">
-						<span class="input-group-text"> <i class="fa fa-user"></i></span> 
-						<input name="" class="form-control" placeholder="이름" type="text">
-						<div class="valid-feedback">Looks good!</div>
-						<div class="invalid-feedback">Looks bad!</div>
-					</div>
-					
-					<!-- email -->
-					<div class="input-group input-group-lg mb-3">
-						<span class="input-group-text"> <i class="fa fa-envelope"></i>
-						</span> <input name="" class="form-control" placeholder="Email address" type="email">
-					</div>
-
-					<!-- phone -->
-					<div class="input-group input-group-lg mb-3">
-						<span class="input-group-text"> <i class="fa fa-phone"></i>
-						</span>
-						<select class="form-select" id="inputGroupSelect01">
-							<option selected value="010">010</option>
-							<option value="011">011</option>
-							<option value="016">016</option>
-							<option value="017">017</option>
-							<option value="018">018</option>
-							<option value="019">019</option>
-						</select>
-						<input type="text" class="form-control" placeholder="xxxx" aria-label="Username"> <span class="input-group-text">-</span> <input type="text" class="form-control" placeholder="xxxx" aria-label="Server">
-					</div>
-
-					<!-- password -->
-					<div class="input-group input-group-lg mb-3">
-						<span class="input-group-text"> <i class="fa fa-lock"></i>
-						</span> <input class="form-control" placeholder="비밀번호" type="password">
-					</div>
-					<div class="input-group input-group-lg mb-3">
-						<span class="input-group-text"> <i class="fa fa-lock"></i>
-						</span> <input class="form-control" placeholder="비밀번호 확인" type="password">
-					</div>
-
-					<!-- address -->
-					<div class="input-group input-group-lg mb-3">
-						<input type="text" class="form-control" placeholder="우편번호" aria-label="Recipient's username" aria-describedby="button-addon2">
-						<button class="btn btn-outline-secondary" type="button" id="button-addon2">우편번호 찾기</button>
-					</div>
-					<div class="input-group input-group-lg mb-3">
-						<input type="text" class="form-control" placeholder="주소" aria-label="Recipient's username" aria-describedby="button-addon2">
-					</div>
-					<div class="input-group input-group-lg mb-3">
-						<input type="text" class="form-control" placeholder="상세 주소" aria-label="Recipient's username" aria-describedby="button-addon2"> <input type="text" class="form-control" placeholder="상세 주소 참고: 선택사항" aria-label="Recipient's username" aria-describedby="button-addon2">
-					</div>
-
-					<!-- introduce -->
-					<div class="input-group input-group-lg mb-3">
-						<span class="input-group-text">자기소개</span>
-						<textarea class="form-control" aria-label="With textarea"></textarea>
-					</div>
-
-					<!-- profile img -->
-					<div>
-						<label for="formFileLg" class="form-label">프로필 사진 이미지</label> <input class="form-control form-control-lg" id="formFileLg" type="file">
-					</div>
-
-					<!-- form-group end.// -->
-					<p class="text-center">
-						계정이 있으십니까? <a href="/blooming/member/login">로그인 하기</a>
-					</p>
-				</form>
-			</article>
-		</div>
-		<!-- card.// -->
-	</div>
-	<!--container end.//-->
 
 	<br>
 	<br>
