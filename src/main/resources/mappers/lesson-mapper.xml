@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.edu.blooming.LessonMapper">
 
+	<!-- 강의 영상을 추가 (lessonIndex 반영) -->
 	<insert id="insert">
 		insert into ${lesson}
 		(${lectureId}, ${lessonName}, ${lessonUrl}, ${lessonIndex})
@@ -13,6 +14,7 @@
 		</selectKey>
 	</insert>
 	
+	<!-- 강의 영상을 업로드 (lessonIndex 미반영) -->
 	<insert id="append">
 		insert into ${lesson}
 		(${lectureId}, ${lessonName}, ${lessonUrl})
@@ -24,6 +26,7 @@
 		</selectKey>
 	</insert>
 	
+	<!-- 강의 영상 수정 -->
 	<update id="update">
 		update ${lesson}
 		set ${lessonName} = #{lessonName},
@@ -32,12 +35,14 @@
 		where ${lessonId} = #{lessonId}
 	</update>
 	
+	<!-- 강의 비디오 처리 단계 수정 -->
 	<update id="update_video_processing_level">
 		update ${lesson}
 		set ${lessonVideoProcessingLevel} = #{level}
 		where ${lessonId} = #{lessonId}
 	</update>
 	
+	<!-- 강의 삭제 -->
 	<delete id="delete">
 		delete from ${lesson}
 		where ${lessonId} = #{lessonId}
@@ -50,11 +55,13 @@
 		where ${lectureId} = #{lectureId}
 	</select>
 	
+	<!-- 강의 조회 -->
 	<select id="select_by_lesson_id" resultType="LessonVO">
 		select * from ${lesson}
 		where ${lessonId} = #{lessonId}
 	</select>
 	
+	<!-- 강좌 목록을 조회 -->
 	<select id="select_by_lecture_id" resultType="LessonVO">
 		select * from ${lesson}
 		where ${lectureId} = #{lectureId}

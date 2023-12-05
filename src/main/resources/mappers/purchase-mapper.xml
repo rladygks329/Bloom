@@ -29,6 +29,7 @@
 		where ${memberId} = #{memberId} and ${lectureId} = #{lectureId}
 	</select>
 	
+	<!-- 강의별 판매량 조회 -->
 	<select id="select_sales_count" resultType="map">
 		select l.${lectureTitle}, s.sales
 		from
@@ -41,6 +42,7 @@
 		where l.${memberId} = #{memberId}
 	</select>
 	
+	<!-- 월별 강의 판매 금액 조회 -->
 	<select id="select_monthly_income" resultType="map">
 		SELECT TO_CHAR(p.${purchaseDateCreated}, 'MM') AS month, SUM(l.${lecturePrice}) AS total_income
 		FROM ${purchase} p

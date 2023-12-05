@@ -19,6 +19,7 @@ public class FileConvertionScheduler {
   @Scheduled(cron = "0 0 * * * *") // every hour
   public void cleanup() throws IOException {
     logger.info("clean up : " + LocalDateTime.now().toString());
+    // tus config에 expire time이 지난 파일을 삭제
     tus.cleanup();
   }
 }
