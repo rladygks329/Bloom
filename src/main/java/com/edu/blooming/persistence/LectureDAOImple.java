@@ -209,6 +209,14 @@ public class LectureDAOImple implements LectureDAO {
   }
 
   @Override
+  public List<LectureVO> selectLikedLecture(int memberId) {
+    HashMap<String, Integer> args = new HashMap<>();
+
+    args.put("memberId", memberId);
+    return sqlSession.selectList(NAMESPACE + ".select_liked_lecture", args);
+  }
+
+  @Override
   public boolean selectIsMemberLikeLecture(int memberId, int lectureId) {
     logger
         .info("selectIsMemberLikeLecture() 호출 memberId: " + memberId + " lectureId : " + lectureId);

@@ -53,6 +53,8 @@ public interface LectureDAO {
    */
   List<LectureVO> selectHotSaleLecture(int month, int rank);
 
+  List<LectureVO> selectLikedLecture(int memberId);
+
   int insertLike(int memberId, int lectureId) throws DataIntegrityViolationException;
 
   int deleteLike(int memberId, int lectureId);

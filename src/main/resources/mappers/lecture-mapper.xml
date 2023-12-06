@@ -197,6 +197,13 @@
 	 	where ${lectureId} = #{lectureId} and ${memberId} = #{memberId} 
 	 </delete>
 	 
+	 <!-- 내가 좋아한 강의 -->
+	 <select id="select_liked_lecture" resultType="LectureVO">
+	 	select l.*
+		from ${lecture} l join ${lecture_like} ll on l.${lectureId} = ll.${lectureId}
+		where ll.${memberId} = #{memberId}
+	 </select>
+	 
 	 <!-- 특정 멤버가 어떤 강의를 좋아요눌렀는지 조회 -->
 	 <select id="select_is_member_like_lecture" resultType="Integer">
 	 	select count(*)
