@@ -13,8 +13,6 @@
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/component/navigation.jsp"%>
-	<h1>로그인</h1>
-
 
 	<div class="container my-5">
 		<br>
