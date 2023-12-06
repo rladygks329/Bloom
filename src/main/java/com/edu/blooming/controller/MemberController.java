@@ -96,6 +96,13 @@ public class MemberController {
     return "/member/mypage";
   }
 
+  @GetMapping("/mypage-update")
+  public String myPageUpdateGET(HttpServletRequest request) {
+    logger.info("myPageUpdateGET() 호출");
+    return "/member/mypage-update";
+  }
+
+
   @PutMapping("/password")
   @ResponseBody
   public ResponseEntity<Void> changePasswordPOST(HttpServletRequest request,

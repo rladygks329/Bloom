@@ -2,7 +2,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>    
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+    
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,36 +14,40 @@
 		board-width : 1px;
 		text-align : center;
 	}
-
+	
+	ul {
+		list-style-type : none;
+	}
+	
+	li {
+		display : inline-block;
+	}
 
 	.form_instructor {display: none;}
 
 </style>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 <body>
-    <%@ include file="/WEB-INF/views/component/navigation.jsp"%> 
+     
 	<h2>마이페이지</h2>
 	<hr>
 	<br>
 	<br>
 		
-	<h5>작성한 글</h5>
+	<h4>내가 작성한 글</h4>
 	<hr>
-	<table class="table">
+	<table>
 		<thead>
 			<tr>
-				<th scope="col" style="width : 60px">번호</th>
-				<th scope="col" style="width : 500px">제목</th>
-				<th scope="col" style="width : 120px">작성자</th>
-				<th scope="col" style="width : 60px">조회수</th>
-				<th scope="col" style="width : 60px">댓글수</th>
-				<th scope="col" style="width : 60px">좋아요</th>
-				<th scope="col" style="width : 300px">작성일</th>
+				<th style="width : 60px">번호</th>
+				<th style="width : 700px">제목</th>
+				<th style="width : 120px">작성자</th>
+				<th style="width : 60px">조회수</th>
+				<th style="width : 60px">댓글수</th>
+				<th style="width : 60px">좋아요</th>
+				<th style="width : 300px">작성일</th>
 			</tr>
 		</thead>
 		
@@ -63,18 +68,18 @@
 		</tbody> 
 	</table>
 	
-	<h5>좋아요 누른 글</h5>
+	<h4>내가 좋아요 누른 글</h4>
 	<hr>
-	<table class="table">
+	<table>
 		<thead>
 			<tr>
-				<th scope="col" style="width : 60px">번호</th>
-				<th scope="col" style="width : 500px">제목</th>
-				<th scope="col" style="width : 120px">작성자</th>
-				<th scope="col" style="width : 60px">조회수</th>
-				<th scope="col" style="width : 60px">댓글수</th>
-				<th scope="col" style="width : 60px">좋아요</th>
-				<th scope="col" style="width : 300px">작성일</th>
+				<th style="width : 60px">번호</th>
+				<th style="width : 700px">제목</th>
+				<th style="width : 120px">작성자</th>
+				<th style="width : 60px">조회수</th>
+				<th style="width : 60px">댓글수</th>
+				<th style="width : 60px">좋아요</th>
+				<th style="width : 300px">작성일</th>
 			</tr>
 		</thead>
 		
@@ -171,14 +176,6 @@
 			<p>100자 이내로 작성해 주세요.</p>	
 		</form>
 	</div>
-	<%@ include file="/WEB-INF/views/component/footer.jsp"%>
-	
-	
-	
-	
-	
-	
-	
 	
 	<script>
 		// 프로필사진, 소개글 출력조건
