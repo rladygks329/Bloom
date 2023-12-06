@@ -58,6 +58,14 @@
 		where ${memberId} = #{memberId}
 	</update>
 
+	<!-- 비밀번호 확인 
+	<select id="identify_password" resultType="Integer">
+		select count(*) 
+		from ${member}
+		where 
+	</select>
+	-->
+	
 	<!-- 강사정보 조회 -->
 	<select id="select_by_instructor_id">
 		select ${memberName}, ${memberEmail}, ${memberIntroduce}, ${memberProfileUrl}

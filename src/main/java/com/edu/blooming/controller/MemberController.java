@@ -201,6 +201,29 @@ public class MemberController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
+  @GetMapping("/mypage-identify")
+  public void mypageIdentifyGET() {
+    logger.info("mypageIdentifyGET() 호출");
+  }
+
+  @PostMapping("/identify")
+  public String mypageIdentifyPOST(HttpServletRequest request, MemberVO vo, String targetURL,
+      RedirectAttributes rttr) {
+    logger.info("mypageIdentifyPOST() 호출");
+    MemberVO loginVo = memberService.login(vo);
+
+    if (loginVo == null) {
+      // Handle the case when login is not successful
+      String queryString = getLoginPageQueryString(targetURL);
+      logger.info("redirect:/member/mypage-identify" + queryString);
+      return "redirect:/member/mypage-identify" + queryString;
+    }
+    return "redirect:/member/mypage-update";
+
+  }
+
+
+
   @ExceptionHandler(IllegalStateException.class)
   public ResponseEntity<String> duplicatedNickname(Exception e) {
     return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -214,15 +237,16 @@ public class MemberController {
   }
 
   private String getRedirectURL(String url) {
+
     if (url.isBlank()) {
       return "/main";
     }
+
     try {
       url = URLDecoder.decode(url, "UTF-8");
     } catch (UnsupportedEncodingException e) {
       e.printStackTrace();
     }
-
     return url;
   }
 
