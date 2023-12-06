@@ -77,24 +77,5 @@ public class LectureReplyDAOTest {
     assertEquals(1, result);
   }
 
-  // @Test
-  public void testPageForInfiniteScroll() {
-    List<LectureReplyVO> list = dao.selectPageForInfiniteScroll(22, 0, 1);
-    List<LectureReplyVO> list2 = dao.selectPageForInfiniteScroll(22, 78, 1);
-    List<LectureReplyVO> list3 = dao.selectPageForInfiniteScroll(22, 90, 1);
-
-    for (LectureReplyVO vo : list) {
-      logger.info("list : " + vo.toString());
-    }
-
-    for (LectureReplyVO vo : list) {
-      logger.info("list2 : " + vo.toString());
-    }
-
-    for (LectureReplyVO vo : list) {
-      logger.info("list3 : " + vo.toString());
-    }
-  }
-
 }
 
