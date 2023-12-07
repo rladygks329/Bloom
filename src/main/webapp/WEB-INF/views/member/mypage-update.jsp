@@ -25,16 +25,22 @@
 	li {
 		display : inline-block;
 	}
-
+	
+    .nav-tabs .nav-link {
+        font-size: 20px; 
+        color: #000000;  
+    }
+    
 	.form_instructor {display: none;}
-
 </style>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 <body>
     <%@ include file="/WEB-INF/views/component/navigation.jsp"%> 
-	<ul class="nav justify-content-center underline">
+    <br>
+    <div class="container">
+	<ul class="nav nav-tabs">
   		<li class="nav-item">
    			<a class="nav-link" href="/blooming/member/mypage">내 활동</a>
  		</li>
@@ -159,6 +165,7 @@
 		</div>
 		<!--container end.//-->
 		
+	</div>
 	</div>
 	<%@ include file="/WEB-INF/views/component/footer.jsp"%>
 	

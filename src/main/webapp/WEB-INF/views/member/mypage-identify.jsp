@@ -6,6 +6,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+<style>
+    .nav-tabs .nav-link {
+        font-size: 20px; 
+        color: #000000;  
+    }
+</style>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
@@ -15,16 +21,17 @@
 </head>
 <body>
     <%@ include file="/WEB-INF/views/component/navigation.jsp"%> 
-	<ul class="nav justify-content-center underline">
-  		<li class="nav-item">
-   			<a class="nav-link" href="/blooming/member/mypage">내 활동</a>
- 		</li>
-		<li class="nav-item">
-			<a class="nav-link" href="/blooming/member/mypage-identify">내 정보 수정</a>
-		</li>
-	</ul>
-	<hr>
-	<br>
+    <br>
+	<div class="container">
+	    <ul class="nav nav-tabs">
+	        <li class="nav-item">
+	            <a class="nav-link" href="/blooming/member/mypage">내 활동</a>
+	        </li>
+	        <li class="nav-item">
+	            <a class="nav-link" href="/blooming/member/mypage-identify">내 정보 수정</a>
+	        </li>
+	    </ul>
+	</div>
 	<br>
 	
 	<div class="container my-5">
@@ -63,6 +70,7 @@
 		<!-- card.// -->
 	</div>
 	<!--container end.//-->
+	
 
 	
 	<%@ include file="/WEB-INF/views/component/footer.jsp"%>

@@ -14,6 +14,10 @@
 		text-align : center;
 	}
 
+    .nav-tabs .nav-link {
+        font-size: 20px; 
+        color: #000000;  
+    }
 
 	.form_instructor {display: none;}
 
@@ -26,7 +30,9 @@
 </head>
 <body>
     <%@ include file="/WEB-INF/views/component/navigation.jsp"%> 
-	<ul class="nav justify-content-center underline">
+    <br>
+    <div class="container">
+	<ul class="nav nav-tabs">
   		<li class="nav-item">
    			<a class="nav-link" href="/blooming/member/mypage">내 활동</a>
  		</li>
@@ -34,98 +40,105 @@
 			<a class="nav-link" href="/blooming/member/mypage-identify">내 정보 수정</a>
 		</li>
 	</ul>
-	<hr>
 	<br>
 	<br>
-		
-	<h5>작성한 글</h5>
-	<hr>
-	<table class="table">
-		<thead>
-			<tr>
-				<th scope="col" style="width : 60px">번호</th>
-				<th scope="col" style="width : 500px">제목</th>
-				<th scope="col" style="width : 120px">작성자</th>
-				<th scope="col" style="width : 60px">조회수</th>
-				<th scope="col" style="width : 60px">댓글수</th>
-				<th scope="col" style="width : 60px">좋아요</th>
-				<th scope="col" style="width : 300px">작성일</th>
-			</tr>
-		</thead>
-		
-		<tbody>
-			<c:forEach var="vo" items="${listByMemberId }">
+	<div class="container" style="border: 1px solid #ddd; padding: 20px;">	
+		<h5>작성한 글</h5>
+		<hr>
+		<table class="table">
+			<thead>
 				<tr>
-					<td>${vo.boardId }</td>
-					<td><a href="/blooming/board/detail?boardId=${vo.boardId }">${vo.boardTitle }</a></td>
-					<td>${vo.authorNickname }</td>
-					<td>${vo.boardViewCount }</td>
-					<td>${vo.boardReplyCount }</td>
-					<td>${vo.boardLikeCount }</td>
-					<fmt:formatDate value="${vo.boardDateCreated }"
-					pattern="yyyy-MM-dd HH:mm:ss" var="boardDateCreated"/>
-					<td>${boardDateCreated }</td>
-				</tr>			
-			</c:forEach>
-		</tbody> 
-	</table>
+					<th scope="col" style="width : 60px">번호</th>
+					<th scope="col" style="width : 500px">제목</th>
+					<th scope="col" style="width : 120px">작성자</th>
+					<th scope="col" style="width : 60px">조회수</th>
+					<th scope="col" style="width : 60px">댓글수</th>
+					<th scope="col" style="width : 60px">좋아요</th>
+					<th scope="col" style="width : 300px">작성일</th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				<c:forEach var="vo" items="${listByMemberId }">
+					<tr>
+						<td>${vo.boardId }</td>
+						<td><a href="/blooming/board/detail?boardId=${vo.boardId }">${vo.boardTitle }</a></td>
+						<td>${vo.authorNickname }</td>
+						<td>${vo.boardViewCount }</td>
+						<td>${vo.boardReplyCount }</td>
+						<td>${vo.boardLikeCount }</td>
+						<fmt:formatDate value="${vo.boardDateCreated }"
+						pattern="yyyy-MM-dd HH:mm:ss" var="boardDateCreated"/>
+						<td>${boardDateCreated }</td>
+					</tr>			
+				</c:forEach>
+			</tbody> 
+		</table>
+		<br>
+	</div>
 	
-	<h5>좋아요 누른 글</h5>
-	<hr>
-	<table class="table">
-		<thead>
-			<tr>
-				<th scope="col" style="width : 60px">번호</th>
-				<th scope="col" style="width : 500px">제목</th>
-				<th scope="col" style="width : 120px">작성자</th>
-				<th scope="col" style="width : 60px">조회수</th>
-				<th scope="col" style="width : 60px">댓글수</th>
-				<th scope="col" style="width : 60px">좋아요</th>
-				<th scope="col" style="width : 300px">작성일</th>
-			</tr>
-		</thead>
-		
-		<tbody>
-			<c:forEach var="vo" items="${listByLike }">
+	<div class="container" style="border: 1px solid #ddd; padding: 20px;">
+		<h5>좋아요 누른 글</h5>
+		<hr>
+		<table class="table">
+			<thead>
 				<tr>
-					<td>${vo.boardId }</td>
-					<td><a href="/blooming/board/detail?boardId=${vo.boardId }">${vo.boardTitle }</a></td>
-					<td>${vo.authorNickname }</td>
-					<td>${vo.boardViewCount }</td>
-					<td>${vo.boardReplyCount }</td>
-					<td>${vo.boardLikeCount }</td>
-					<fmt:formatDate value="${vo.boardDateCreated }"
-					pattern="yyyy-MM-dd HH:mm:ss" var="boardDateCreated"/>
-					<td>${boardDateCreated }</td>
-				</tr>			
-			</c:forEach>
-		</tbody> 
-	</table>	
+					<th scope="col" style="width : 60px">번호</th>
+					<th scope="col" style="width : 500px">제목</th>
+					<th scope="col" style="width : 120px">작성자</th>
+					<th scope="col" style="width : 60px">조회수</th>
+					<th scope="col" style="width : 60px">댓글수</th>
+					<th scope="col" style="width : 60px">좋아요</th>
+					<th scope="col" style="width : 300px">작성일</th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				<c:forEach var="vo" items="${listByLike }">
+					<tr>
+						<td>${vo.boardId }</td>
+						<td><a href="/blooming/board/detail?boardId=${vo.boardId }">${vo.boardTitle }</a></td>
+						<td>${vo.authorNickname }</td>
+						<td>${vo.boardViewCount }</td>
+						<td>${vo.boardReplyCount }</td>
+						<td>${vo.boardLikeCount }</td>
+						<fmt:formatDate value="${vo.boardDateCreated }"
+						pattern="yyyy-MM-dd HH:mm:ss" var="boardDateCreated"/>
+						<td>${boardDateCreated }</td>
+					</tr>			
+				</c:forEach>
+			</tbody> 
+		</table>
+		<br>	
+	</div>
 	
-	<h5>작성한 댓글</h5>
-	<hr>
-	<table class="table">
-		<thead>
-			<tr>
-				<th scope="col" style="width : 60px">번호</th>
-				<th scope="col" style="width : 700px">댓글내용</th>
-				<th scope="col" style="width : 300px">작성일</th>
-			</tr>
-		</thead>
-		
-		<tbody>
-			<c:forEach var="vo" items="${replyListByMemberId }">
+	<div class="container" style="border: 1px solid #ddd; padding: 20px;">
+		<h5>작성한 댓글</h5>
+		<hr>
+		<table class="table">
+			<thead>
 				<tr>
-					<td>${vo.boardReplyId }</td>
-					<td><a href="/blooming/board/detail?boardId=${vo.boardId }">${vo.boardReplyContent }</a></td>
-					<fmt:formatDate value="${vo.boardReplyDateCreated }"
-					pattern="yyyy-MM-dd HH:mm:ss" var="boardReplyDateCreated"/>
-					<td>${boardReplyDateCreated }</td>
-				</tr>			
-			</c:forEach>
-		</tbody> 
-	</table>
-		
+					<th scope="col" style="width : 60px">번호</th>
+					<th scope="col" style="width : 700px">댓글내용</th>
+					<th scope="col" style="width : 300px">작성일</th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				<c:forEach var="vo" items="${replyListByMemberId }">
+					<tr>
+						<td>${vo.boardReplyId }</td>
+						<td><a href="/blooming/board/detail?boardId=${vo.boardId }">${vo.boardReplyContent }</a></td>
+						<fmt:formatDate value="${vo.boardReplyDateCreated }"
+						pattern="yyyy-MM-dd HH:mm:ss" var="boardReplyDateCreated"/>
+						<td>${boardReplyDateCreated }</td>
+					</tr>			
+				</c:forEach>
+			</tbody> 
+		</table>
+		<br>
+	</div>
+	</div>
 	<br>
 	<hr>
 
