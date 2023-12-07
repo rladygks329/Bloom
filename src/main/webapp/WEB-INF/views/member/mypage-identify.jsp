@@ -47,6 +47,11 @@
 					</div>
 					
 					<br>
+					<c:if test="${not empty errorMessage}">
+	 					<div class="alert alert-danger" role="alert">
+	    		    		${errorMessage}
+				    	</div>
+					</c:if>
 					<br>
 					<!-- form-group end.// -->
 					<div class="d-flex justify-content-center">
@@ -58,7 +63,7 @@
 		<!-- card.// -->
 	</div>
 	<!--container end.//-->
-	
+
 	
 	<%@ include file="/WEB-INF/views/component/footer.jsp"%>
 	

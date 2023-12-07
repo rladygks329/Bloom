@@ -13,7 +13,7 @@
 <style>
         body {
             margin-top: 20px;
-            background: #eee;
+
         }
 
 
@@ -23,7 +23,6 @@
         }
 
         .content-item.grey {
-            background-color: #F0F0F0;
             padding: 50px 0;
             height: 100%;
         }
@@ -51,15 +50,13 @@
         }
 
         .content-headline h2 {
-            background-color: #FFFFFF;
+
             display: inline-block;
             margin: -20px auto 0;
             padding: 0 20px;
         }
 
-        .grey .content-headline h2 {
-            background-color: #F0F0F0;
-        }
+
 
         .content-headline h3 {
             font-size: 14px;
@@ -70,7 +67,7 @@
         /* BOXES */
 
         .box {
-            background-color: #FFFFFF;
+
             padding: 10px 20px;
             box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
@@ -244,21 +241,86 @@
             line-height: 30px;
             font-weight: 800;
         }
-    </style>
+</style>
 <title>게시글 상세보기</title>
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/component/navigation.jsp"%>
 
-	<!-- <input type="hidden" id="loginMemberId" name="loginMemberId" value="${sessionScope.loginVo.memberId}"> -->
-	
-	<h2>글내용 보기</h2>
-	<div>
-		<p>글 번호: ${vo.boardId }</p>
-	</div>
-	<div>
-		<p>제목: ${vo.boardTitle }</p>
-	</div>
+
+	<section class="content-item grey" id="blog-item">
+        <div class="container">
+            <div class="row">
+                <!-- BLOG POST - START -->
+                <div class="col blog">
+                    <h2>${vo.boardTitle }</h2>
+                    <ul class="blog-detail list-unstyled list-inline">
+                        <li><i class="fa fa-calendar"></i> ${boardDateCreated }</li>
+                        <li><i class="fa fa-user"></i> ${vo.authorNickname }</li>
+                        <li><i class="fa fa-comments"></i> ${vo.boardReplyCount }</li>
+                    </ul>
+                    <div class="boardContent" style="border: 1px solid black; padding: 10px;">
+						${vo.boardContent } 
+					</div>
+                </div>
+                <!-- BLOG POST - END -->
+
+                <div>
+                    <div class="col">
+                        <div class="row">
+                            <div class="col">
+                                <div class="blog-comment">
+                                    <h3 class="text-success">Comments</h3>
+                                    <hr />
+                                    <ul class="comments">
+                                        <li class="clearfix">
+                                            <div class="post-comments border border-secondary">
+                                                <p class="meta">Dec 18, 2014 
+                                                	JohnDoe says : <i class="pull-right">
+                                                	<a href="#"><small>Reply</small></a></i></p>
+                                                <p>
+                                                    111
+                                                </p>
+                                            </div>
+                                        </li>
+                                        <li class="clearfix">
+                                            <div class="post-comments border border-secondary">
+                                                <p class="meta">Dec 19, 2014 <a href="#">JohnDoe</a> says : <i
+                                                        class="pull-right"><a href="#"><small>Reply</small></a></i></p>
+                                                <p>
+                                                    222
+                                                </p>
+                                            </div>
+
+                                            <ul class="comments border border-secondary">
+                                                <li class="clearfix">
+                                                    <div class="post-comments">
+                                                        <p class="meta">Dec 20, 2014 <a href="#">JohnDoe</a> says : <i
+                                                                class="pull-right"><a
+                                                                    href="#"><small>Reply</small></a></i></p>
+                                                        <p>
+                                                            333
+                                                        </p>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+
 	<div>
 		<p>작성자: ${vo.authorNickname } </p>
 		<fmt:formatDate value="${vo.boardDateCreated }"
@@ -321,7 +383,7 @@
                         <li><i class="fa fa-comments"></i> ${vo.boardReplyCount }</li>
                     </ul>
                     <div class="boardContent" style="border: 1px solid black; padding: 10px;">
-						${vo.boardContent } Etiam consequat odio sollicitudin metus condimentum, 
+						${vo.boardContent } 
 					</div>
                 </div>
                 <!-- BLOG POST - END -->
@@ -340,8 +402,7 @@
                                                 	JohnDoe says : <i class="pull-right">
                                                 	<a href="#"><small>Reply</small></a></i></p>
                                                 <p>
-                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                                    Etiam a sapien odio, sit amet
+                                                    111
                                                 </p>
                                             </div>
                                         </li>
@@ -350,8 +411,7 @@
                                                 <p class="meta">Dec 19, 2014 <a href="#">JohnDoe</a> says : <i
                                                         class="pull-right"><a href="#"><small>Reply</small></a></i></p>
                                                 <p>
-                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                                    Etiam a sapien odio, sit amet
+                                                    222
                                                 </p>
                                             </div>
 
@@ -362,8 +422,7 @@
                                                                 class="pull-right"><a
                                                                     href="#"><small>Reply</small></a></i></p>
                                                         <p>
-                                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                                            Etiam a sapien odio, sit amet
+                                                            333
                                                         </p>
                                                     </div>
                                                 </li>

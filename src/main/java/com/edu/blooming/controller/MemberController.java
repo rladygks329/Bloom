@@ -44,8 +44,14 @@ public class MemberController {
   private BoardReplyService boardReplyService;
 
   @GetMapping("/login")
-  public void loginGET() {
+  public String loginGET(HttpServletRequest request) {
     logger.info("loginGET() 호출");
+    HttpSession session = request.getSession();
+    if (session.getAttribute("loginVo") != null) {
+      logger.info("로그인되지 않은 상태 - mypage-identify로 리다이렉트");
+      return "redirect:/main";
+    }
+    return "/member/login";
   }
 
   @PostMapping("/login")
@@ -99,6 +105,13 @@ public class MemberController {
   @GetMapping("/mypage-update")
   public String myPageUpdateGET(HttpServletRequest request) {
     logger.info("myPageUpdateGET() 호출");
+
+    HttpSession session = request.getSession();
+    if (session.getAttribute("loginVo") == null) {
+      logger.info("로그인되지 않은 상태 - mypage-identify로 리다이렉트");
+      return "redirect:/member/mypage-identify";
+    }
+
     return "/member/mypage-update";
   }
 
@@ -216,13 +229,12 @@ public class MemberController {
       // Handle the case when login is not successful
       String queryString = getLoginPageQueryString(targetURL);
       logger.info("redirect:/member/mypage-identify" + queryString);
+      rttr.addFlashAttribute("errorMessage", "비밀번호를 확인해 주세요.");
       return "redirect:/member/mypage-identify" + queryString;
     }
     return "redirect:/member/mypage-update";
 
   }
-
-
 
   @ExceptionHandler(IllegalStateException.class)
   public ResponseEntity<String> duplicatedNickname(Exception e) {

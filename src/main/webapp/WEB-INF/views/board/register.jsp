@@ -42,7 +42,7 @@
 		</div>
 		<div id="register">
 			<input type="submit" class="btn btn-outline-secondary" value="등록">
-			<button type="button" class="btn btn-outline-info" onclick="goBack()">취소</button>
+			<a href="list"><button type="button" class="btn btn-outline-info" onclick="goBack()">취소</button></a>
 		</div>
 	
 	</form>

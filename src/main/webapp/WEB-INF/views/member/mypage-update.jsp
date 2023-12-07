@@ -8,6 +8,9 @@
 <html>
 <head>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
 <style>
 	table, th, td {
 		board-style : solid;
@@ -30,152 +33,134 @@
 <title>Insert title here</title>
 </head>
 <body>
-     
-	<h2>마이페이지</h2>
-	<hr>
-	<br>
-	<br>
-		
-	<h4>내가 작성한 글</h4>
-	<hr>
-	<table>
-		<thead>
-			<tr>
-				<th style="width : 60px">번호</th>
-				<th style="width : 700px">제목</th>
-				<th style="width : 120px">작성자</th>
-				<th style="width : 60px">조회수</th>
-				<th style="width : 60px">댓글수</th>
-				<th style="width : 60px">좋아요</th>
-				<th style="width : 300px">작성일</th>
-			</tr>
-		</thead>
-		
-		<tbody>
-			<c:forEach var="vo" items="${listByMemberId }">
-				<tr>
-					<td>${vo.boardId }</td>
-					<td><a href="/blooming/board/detail?boardId=${vo.boardId }">${vo.boardTitle }</a></td>
-					<td>${vo.authorNickname }</td>
-					<td>${vo.boardViewCount }</td>
-					<td>${vo.boardReplyCount }</td>
-					<td>${vo.boardLikeCount }</td>
-					<fmt:formatDate value="${vo.boardDateCreated }"
-					pattern="yyyy-MM-dd HH:mm:ss" var="boardDateCreated"/>
-					<td>${boardDateCreated }</td>
-				</tr>			
-			</c:forEach>
-		</tbody> 
-	</table>
-	
-	<h4>내가 좋아요 누른 글</h4>
-	<hr>
-	<table>
-		<thead>
-			<tr>
-				<th style="width : 60px">번호</th>
-				<th style="width : 700px">제목</th>
-				<th style="width : 120px">작성자</th>
-				<th style="width : 60px">조회수</th>
-				<th style="width : 60px">댓글수</th>
-				<th style="width : 60px">좋아요</th>
-				<th style="width : 300px">작성일</th>
-			</tr>
-		</thead>
-		
-		<tbody>
-			<c:forEach var="vo" items="${listByLike }">
-				<tr>
-					<td>${vo.boardId }</td>
-					<td><a href="/blooming/board/detail?boardId=${vo.boardId }">${vo.boardTitle }</a></td>
-					<td>${vo.authorNickname }</td>
-					<td>${vo.boardViewCount }</td>
-					<td>${vo.boardReplyCount }</td>
-					<td>${vo.boardLikeCount }</td>
-					<fmt:formatDate value="${vo.boardDateCreated }"
-					pattern="yyyy-MM-dd HH:mm:ss" var="boardDateCreated"/>
-					<td>${boardDateCreated }</td>
-				</tr>			
-			</c:forEach>
-		</tbody> 
-	</table>	
-	
-	<h4>내가 작성한 댓글</h4>
-	<hr>
-	<table>
-		<thead>
-			<tr>
-				<th style="width : 60px">번호</th>
-				<th style="width : 700px">댓글내용</th>
-				<th style="width : 300px">작성일</th>
-			</tr>
-		</thead>
-		
-		<tbody>
-			<c:forEach var="vo" items="${replyListByMemberId }">
-				<tr>
-					<td>${vo.boardReplyId }</td>
-					<td><a href="/blooming/board/detail?boardId=${vo.boardId }">${vo.boardReplyContent }</a></td>
-					<fmt:formatDate value="${vo.boardReplyDateCreated }"
-					pattern="yyyy-MM-dd HH:mm:ss" var="boardReplyDateCreated"/>
-					<td>${boardReplyDateCreated }</td>
-				</tr>			
-			</c:forEach>
-		</tbody> 
-	</table>
-		
+    <%@ include file="/WEB-INF/views/component/navigation.jsp"%> 
+	<ul class="nav justify-content-center underline">
+  		<li class="nav-item">
+   			<a class="nav-link" href="/blooming/member/mypage">내 활동</a>
+ 		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="/blooming/member/mypage-identify">내 정보 수정</a>
+		</li>
+	</ul>
 	<br>
 	<hr>
-	<h4>비밀번호 변경하기</h4>	
+
 	<input type="hidden" id="memberId" name="memberId" value="${loginVo.memberId}" />
 	<input type="hidden" id="memberIntroduce" name="memberIntroduce" value="${loginVo.memberIntroduce}" />
 	<input type="hidden" id="memberLevel" name="memberLevel" value="${loginVo.memberLevel}" />
 	
-	<form id="passwordChangeForm">
-	    <label for="newPassword">새 비밀번호:</label>
-	    <input type="password" id="newPassword" name="newPassword" required><br>
-	    <label for="confirmPassword">비밀번호 확인:</label>
-	    <input type="password" id="confirmPassword" name="confirmPassword" required><br>
-	    <button type="button" id="changePasswordButton">비밀번호 변경</button>
-	    <p>영문자와 숫자 조합, 4~8자리로 입력해 주세요</p>	    
-	</form>
-	
-	<br>
-	<hr>
-	
-	<h4>닉네임 변경하기</h4>
-	<form id="changeNicknameForm">	
-		<label for="nickname">새 닉네임 :</label>
-		<input type="text" id="nickname" name="nickname" required><br>
-		<button type="button" id="changeNicknameBtn">닉네임 변경</button>
-		<p>한글, 영문, 숫자 2~6자로 입력해 주세요.</p>	
-	</form>
-	
-	<br>
-	<hr>
+
+	<div class="container">
+		<br>
+		<div class="card bg-light">
+			<article class="card-body mx-auto">
+				<h4 class="card-title mt-3 text-center">비밀번호 변경</h4>
+				<form id="passwordChangeForm">
+					
+					<!-- password -->
+					<div class="input-group input-group-lg mb-3">
+						<span class="input-group-text"> <i class="fa fa-lock"></i></span> 
+						<input name="newPassword" class="form-control" id="newPassword" placeholder="변경할 비밀번호" type="password" required>
+					</div>
+					<div class="input-group input-group-lg mb-3">
+						<span class="input-group-text"> <i class="fa fa-lock"></i></span> 
+						<input class="form-control" id="confirmPassword" name="confirmPassword" placeholder="비밀번호 확인" type="password" required>
+					</div>
+					<div>
+						<p>영문자와 숫자 조합, 4~8자리로 입력해 주세요</p>	
+					</div>
+					<div class="d-flex justify-content-center">
+						<button type="button" id="changePasswordButton" class="btn btn-primary">비밀번호 변경</button>
+					</div>					
+				</form>
+			</article>
+		</div>
+		<!-- card.// -->
+	</div>
+	<!--container end.//-->
+
+	<div class="container">
+		<br>
+		<div class="card bg-light">
+			<article class="card-body mx-auto">
+				<h4 class="card-title mt-3 text-center">닉네임 변경</h4>
+				<form id="changeNicknameForm">
+					<!-- nickname -->
+					<div class="input-group input-group-lg mb-3">
+						<span class="input-group-text"> <i class="fa fa-user"></i></span> 
+						<input name="nickname" class="form-control" id="nickname" placeholder="변경할 닉네임" type="text" required>
+					</div>
+					<div>
+						<p>한글, 영문, 숫자 2~6자로 입력해 주세요.</p>	
+					</div>						
+					<div class="d-flex justify-content-center">
+						<button type="button" id="changeNicknameBtn" class="btn btn-primary">닉네임 변경</button>
+					</div>					
+				</form>
+			</article>
+		</div>
+		<!-- card.// -->
+	</div>
+	<!--container end.//-->
 
 	<div class="form_instructor">
-		<h4>프로필사진 변경하기</h4>
-		<!-- 기존 프로필 이미지 표시 -->
-		<img src="/blooming/image/display?fileName=${loginVo.memberProfileUrl}" alt="프로필사진" id="profilePreview" onerror="this.src='https://dummyimage.com/450x300/dee2e6/6c757d.jpg';" alt="...">
-		<form id="changeProfileForm" enctype="multipart/form-data">
-			<input type="hidden" id="profileUrl" name="memberProfileUrl">
-		    <input type="file" id="fileItem" name='uploadFile' style="height: 30px;">
-		    <button type="button" id="changeProfileBtn">프로필사진 변경적용</button>
-		    <button type="button" id="deleteProfileBtn">프로필사진 삭제</button>
-		</form>
-	
-		<br>
-		<hr>
-		<h4>소개글 변경하기</h4>
-		<form id="changeIntroduceForm">	
-			<label for="introduce">소개글 입력 :</label>
+		<div class="container">
 			<br>
-			<textarea name="memberIntroduce" rows="10" cols="50" class="memberIntroduce" required></textarea>
-			<button type="button" id="changeIntroduceBtn">소개글 변경</button>
-			<p>100자 이내로 작성해 주세요.</p>	
-		</form>
+			<div class="card bg-light">
+				<article class="card-body mx-auto">
+					<h4 class="card-title mt-3 text-center">프로필사진 변경</h4>
+					<!-- 기존 프로필 이미지 표시 -->
+					<div class="text-center">
+						<img src="/blooming/image/display?fileName=${loginVo.memberProfileUrl}" alt="프로필사진" id="profilePreview" onerror="this.src='https://dummyimage.com/450x300/dee2e6/6c757d.jpg';" alt="...">
+					</div>
+					<form id="changeProfileForm" enctype="multipart/form-data">
+						<input type="hidden" id="profileUrl" name="memberProfileUrl">
+						<!-- profile img -->
+						<div>
+							<input class="form-control form-control-lg" id="fileItem" name='uploadFile' type="file">
+						</div>
+						<div class="d-flex justify-content-center">
+							<p>1MB 이하의 jpg, png 파일 형식만 가능</p>	
+						</div>
+						<div class="d-flex justify-content-center" >
+							<button type="button" id="changeProfileBtn" class="btn btn-primary" style="margin-right: 5px;">프로필사진 적용</button>
+		    				<button type="button" id="deleteProfileBtn" class="btn btn-primary">프로필사진 삭제</button>
+						</div>
+					
+					</form>
+				</article>
+			</div>
+			<!-- card.// -->
+		</div>
+		<!--container end.//-->		
+
+		<div class="container">
+			<br>
+			<div class="card bg-light">
+				<article class="card-body mx-auto">
+					<h4 class="card-title mt-3 text-center">소개글 변경</h4>
+					<form id="changeIntroduceForm">
+						<!-- introduce -->
+						<div class="input-group input-group-lg mb-3">
+							<span class="input-group-text">자기소개</span>
+							<textarea class="form-control" name="memberIntroduce" class="memberIntroduce" aria-label="With textarea" required></textarea>
+						</div>
+						<div class="d-flex justify-content-center">
+							<p>100자 이내로 작성해 주세요.</p>	
+						</div>
+						<div class="d-flex justify-content-center" >							
+		    				<button type="button" id="changeIntroduceBtn" class="btn btn-primary">소개글 변경</button>
+						</div>
+					
+					</form>
+				</article>
+			</div>
+			<!-- card.// -->
+		</div>
+		<!--container end.//-->
+		
 	</div>
+	<%@ include file="/WEB-INF/views/component/footer.jsp"%>
 	
 	<script>
 		// 프로필사진, 소개글 출력조건
@@ -410,17 +395,8 @@
 			            alert("프로필 사진 삭제에 실패했습니다. 다시 시도해 주세요.");
 			        }
 			    }); // end ajax()
-			}); // end deleteProfileBn()
-	        
-	        
+			}); // end deleteProfileBn()	        
 	    }); // end document()
-	    
-	    
-	 	
-	    
-	    
-	    
-	    
 	    
 	</script>
 

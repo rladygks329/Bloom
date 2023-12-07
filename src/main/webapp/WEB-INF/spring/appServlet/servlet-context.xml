@@ -60,6 +60,7 @@
 			<mapping path="/purchase/**"/>
 			<mapping path="/member/instructor-page"/>
 			<mapping path="/member/mypage"/>
+			<mapping path="/member/mypage-identify"/>
 			<mapping path="/member/password"/>
 			<mapping path="/member/nickname"/>
 			<mapping path="/member/profile"/>
