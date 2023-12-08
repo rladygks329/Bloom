@@ -62,5 +62,5 @@ public class CartController {
     cartService.remove(memberId, lectureId);
     return new ResponseEntity<>(HttpStatus.OK);
   }
-  
+  // @formatter:on
 }

@@ -102,7 +102,7 @@
 					    <when test="orderType == 3"> order by ${lectureLikeCount} desc</when>
 					    <when test="orderType == 4"> order by ${lectureSalesCount} desc</when>
 					    <when test="orderType == 5"> order by ${lectureReplyCount} desc</when>
-					    <when test="orderType == 6"> order by decode(lecture_reply_count, 0, 0, lecture_total_score/lecture_reply_count) desc, lecture_id desc</when>
+					    <when test="orderType == 6"> order by decode(${lectureReplyCount}, 0, 0, ${lectureTotalScore} / ${lectureReplyCount}) desc </when>
 						<otherwise> order by ${lectureId} desc </otherwise>
 					</choose>
 				) a
@@ -125,6 +125,7 @@
 					    <when test="orderType == 3"> order by ${lectureLikeCount} desc</when>
 					    <when test="orderType == 4"> order by ${lectureSalesCount} desc</when>
 					    <when test="orderType == 5"> order by ${lectureReplyCount} desc</when>
+					    <when test="orderType == 6"> order by decode(${lectureReplyCount}, 0, 0, ${lectureTotalScore} / ${lectureReplyCount}) desc </when>
 						<otherwise> order by ${lectureId} desc </otherwise>
 					</choose>
 				) a
@@ -147,6 +148,7 @@
 					    <when test="orderType == 3"> order by ${lectureLikeCount} desc</when>
 					    <when test="orderType == 4"> order by ${lectureSalesCount} desc</when>
 					    <when test="orderType == 5"> order by ${lectureReplyCount} desc</when>
+					    <when test="orderType == 6"> order by decode(${lectureReplyCount}, 0, 0, ${lectureTotalScore} / ${lectureReplyCount}) desc </when>
 						<otherwise> order by ${lectureId} desc </otherwise>
 					</choose>
 				) a
@@ -194,6 +196,13 @@
 	 	delete from ${lecture_like}
 	 	where ${lectureId} = #{lectureId} and ${memberId} = #{memberId} 
 	 </delete>
+	 
+	 <!-- 내가 좋아한 강의 -->
+	 <select id="select_liked_lecture" resultType="LectureVO">
+	 	select l.*
+		from ${lecture} l join ${lecture_like} ll on l.${lectureId} = ll.${lectureId}
+		where ll.${memberId} = #{memberId}
+	 </select>
 	 
 	 <!-- 특정 멤버가 어떤 강의를 좋아요눌렀는지 조회 -->
 	 <select id="select_is_member_like_lecture" resultType="Integer">

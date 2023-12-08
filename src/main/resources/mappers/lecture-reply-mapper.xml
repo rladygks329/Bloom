@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.edu.blooming.LectureReplyMapper">
+	<!-- 수강평 추가 -->
 	<insert id="insert">
 		insert into ${lecture_reply}
 		(${memberId}, ${lectureId}, ${lectureReplyContent}, ${lectureReplyScore})
 		values (#{memberId}, #{lectureId}, #{lectureReplyContent}, #{lectureReplyScore})
+		
+		<!-- 입력후 lectureReplyId를 리턴함 -->
+		<selectKey keyProperty="lectureReplyId" resultType="Integer" order="AFTER">
+			SELECT LECTURE_REPLY_SEQ.CURRVAL FROM DUAL
+		</selectKey>
 	</insert>
 	
+	<!-- 수강평 수정 -->
 	<update id="update">
 		update ${lecture_reply}
 		set ${lectureReplyContent} = #{lectureReplyContent},
@@ -14,10 +21,18 @@
 		where ${lectureReplyId} = #{lectureReplyId}
 	</update>
 	
+	<!-- 수강평 삭제 -->
 	<delete id="delete">
 		delete from ${lecture_reply}
 		where ${lectureReplyId} = #{lectureReplyId}	
 	</delete>
+	
+	<!-- 내가 쓴 강의 수강평 조회 -->
+	<select id="select" resultType="LectureReplyVO">
+		select r.*, m.${memberNickName} ${authorNickName}
+		from ${lecture_reply} r join ${member} m on r.${memberId} = m.${memberId}
+		where r.${memberId} = #{memberId} and r.${lectureId} = #{lectureId}
+	</select>
 	
 	<!-- 특정 수강평 조회 -->
 	<select id="select_by_lecture_reply_id" resultType="LectureReplyVO">
@@ -43,5 +58,22 @@
 		where l.${memberId} = #{memberId}
 		order by ${lectureReplyId} desc
 	</select>
-
+	
+	<!-- 수강평 페이징 처리 -->
+	<select id="select_infinite_scroll" resultType="LectureReplyVO">
+		select b.* 
+		from 
+		(
+			select rownum rn, a.* 
+			from (
+				select r.*, m.${memberNickName} ${authorNickName}
+				from ${lecture_reply} r 
+					join ${member} m 
+					on r.${memberId} = m.${memberId}
+				where ${lectureId} = #{lectureId} and ${lectureReplyId} > #{lastLectureReplyId} and r.${memberId} != #{memberId}
+				order by ${lectureReplyId}
+			) a
+		) b
+		where rn  <![CDATA[<=]]> #{pageSize}
+	</select>
 </mapper>

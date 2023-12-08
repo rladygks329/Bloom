@@ -9,6 +9,7 @@ public class LectureVO {
   public static final int ORDER_TYPE_LIKE_COUNT_DESC = 3;
   public static final int ORDER_TYPE_SALES_COUNT_DESC = 4;
   public static final int ORDER_TYPE_REPLY_COUNT_DESC = 5;
+  public static final int ORDER_TYPE_RATING_DESC = 6;
 
   private int lectureId;
   private int memberId;
@@ -30,7 +31,6 @@ public class LectureVO {
       String lectureDescription, int lecturePrice, int lectureVideoProcessingLevel,
       int lectureSalesCount, int lectureTotalScore, int lectureReplyCount, int lectureLikeCount,
       String lectureThumbnailUrl, Date lectureDateCreated) {
-    super();
     this.lectureId = lectureId;
     this.memberId = memberId;
     this.authorName = authorName;
@@ -49,11 +49,11 @@ public class LectureVO {
   /*
    * @formatter:off
    * @param: number
-   * @return: LectureVO order type (0 <= x <= 8)
+   * @return: LectureVO order type (0 <= x <= 6)
    * @formatter:on
    */
   public static final int getOrderType(int n) {
-    if (ORDER_TYPE_DEFAULT <= n && n <= ORDER_TYPE_REPLY_COUNT_DESC) {
+    if (ORDER_TYPE_DEFAULT <= n && n <= ORDER_TYPE_RATING_DESC) {
       return n;
     }
     return ORDER_TYPE_DEFAULT;

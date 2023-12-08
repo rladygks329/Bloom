@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import com.edu.blooming.domain.LectureVO;
 import com.edu.blooming.domain.LessonVO;
+import com.edu.blooming.domain.MemberVO;
 import com.edu.blooming.exception.AlreadyExistException;
 import com.edu.blooming.util.PageCriteria;
 
@@ -15,6 +16,8 @@ public interface LectureService {
   int getTotalCountsByMemberName(String memberName);
 
   int getTotalCountsByKeyword(String keyword);
+
+  MemberVO getInstructorInfo(int memberId);
 
   LectureVO read(int lectureId);
 

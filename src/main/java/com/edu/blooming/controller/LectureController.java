@@ -37,6 +37,7 @@ public class LectureController {
     ORDER_TYPE_MAP.put("price-asc", LectureVO.ORDER_TYPE_PRICE_ASC);
     ORDER_TYPE_MAP.put("famous", LectureVO.ORDER_TYPE_LIKE_COUNT_DESC);
     ORDER_TYPE_MAP.put("sales", LectureVO.ORDER_TYPE_SALES_COUNT_DESC);
+    ORDER_TYPE_MAP.put("rating", LectureVO.ORDER_TYPE_RATING_DESC);
   }
 
   @Autowired
@@ -54,6 +55,7 @@ public class LectureController {
     logger.info("lectureGET() 호출");
 
     int orderType = ORDER_TYPE_MAP.getOrDefault(order, LectureVO.ORDER_TYPE_DEFAULT);
+    logger.info("orderType : " + orderType);
     PageCriteria criteria = new PageCriteria(parseInt(page, 1), parseInt(numsPerPage, 3));
 
     List<LectureVO> list = lectureService.read(criteria, keyword, orderType);
@@ -80,6 +82,9 @@ public class LectureController {
     }
 
     List<LessonVO> lessons = lessonService.getByLectureId(lectureId);
+
+    MemberVO author = lectureService.getInstructorInfo(lecture.getMemberId());
+    model.addAttribute("author", author);
     model.addAttribute("likeStatus", false);
     model.addAttribute("cartStatus", false);
     model.addAttribute("purchaseStatus", false);

@@ -11,7 +11,12 @@ public interface LectureReplyDAO {
 
   int delete(int lectureReplyId);
 
+  LectureReplyVO select(int memberId, int lectureId);
+
   LectureReplyVO selectByLectureReplyId(int lectureReplyId);
+
+  List<LectureReplyVO> selectPageForInfiniteScroll(int memberId, int lectureId, int lastReplyId,
+      int pageSize);
 
   List<LectureReplyVO> selectByLectureId(int lectureId);
 

@@ -77,12 +77,17 @@
 				let newRow = $("<tr>");
 				
 				// productCell
-				let productCell = $("<td>").attr("data-th","Product");
+				let productCell = $("<td>").attr("data-th","Product").addClass("d-flex gap-3");
 				let imageCol = $("<div>").addClass("col-md-3 text-left");
 				let img = $("<img>")
 					.attr("src", lecture.lectureThumbnailUrl)
 					.attr("alt", "")
 					.addClass("img-fluid d-none d-md-block rounded mb-2 shadow");
+				
+				img.on("error", function(){
+					$(this).attr("src", "https://dummyimage.com/450x300/dee2e6/6c757d.jpg");
+				})
+				
 				imageCol.append(img);
 				let textCol = $("<div>").addClass("col-md-9 text-left mt-sm-2");
 				let productName = $("<h4>").text(lecture.lectureTitle);

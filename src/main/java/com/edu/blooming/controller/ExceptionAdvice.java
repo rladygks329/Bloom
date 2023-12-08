@@ -9,9 +9,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.edu.blooming.exception.AlreadyExistException;
 
 @ControllerAdvice
-public class ExceptionController {
-  private Logger logger = LoggerFactory.getLogger(ExceptionController.class);
+public class ExceptionAdvice {
+  private Logger logger = LoggerFactory.getLogger(ExceptionAdvice.class);
 
+  /*
+   * @from (Cart Purchase, LectureLike) controller
+   */
   @ExceptionHandler(AlreadyExistException.class)
   public ResponseEntity<String> HandleAlreadyExistException(final RuntimeException ex) {
     logger.info("HandleAlreadyExistException() 실행");

@@ -293,21 +293,20 @@
 					// 드래그한 파일 정보를 갖고 있는 객체
 					var files = event.originalEvent.dataTransfer.files;
 					for (let i = 0; i < files.length; i++) {
-						console.log(files[i]);
-						formData.append("files", files[i]);
+						formData.append("file", files[i]);
 					}
 
 					// 수정해야할 부분 : url, attr 부분
 					$.ajax({
 						type: 'POST',
-						url: '/ex05/upload-ajax',
+						url: '/blooming/image',
 						data: formData,
 						contentType: false,
 						processData: false,
 						success: function (data) {
 							console.log("성공 data: " + data);
-							$("#lectureThumbnailImg").attr("src", "display?fileName=" + data);
-							$("#lectureThumbnailUrl").val("display?fileName=" + data);
+							$("#lectureThumbnailImg").attr("src", "/blooming/image/display?fileName=" + data);
+							$("#lectureThumbnailUrl").val("/blooming/image/display?fileName=" + data);
 						},
 					}); //end ajax
 				}); //end file drop

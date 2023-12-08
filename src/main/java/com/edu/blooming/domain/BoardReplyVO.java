@@ -15,7 +15,6 @@ public class BoardReplyVO {
 
   public BoardReplyVO(int boardReplyId, int memberId, int boardId, String boardReplyContent,
       Date boardReplyDateCreated, int boardReplyCommentCount, String authorNickname) {
-    super();
     this.boardReplyId = boardReplyId;
     this.memberId = memberId;
     this.boardId = boardId;

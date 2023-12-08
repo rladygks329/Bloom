@@ -11,6 +11,9 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
 <!-- Bootstrap core JS-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Bootstrap table -->
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.css">
+<script src="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.js"></script>
 <script>
 	$(function() {
 		const barCtx = document.getElementById('myChart');
@@ -104,9 +107,13 @@
   					</div>
 				</div>
 				
-				<h2>수강평</h2>
-				<div class="table-responsive mb-3">
-					<table class="table table-striped table-sm">
+				<hr>
+				<div class="table-responsive mb-3 ">
+					<h2>수강평</h2>
+					<table class="table table-striped table-sm" 
+						data-toggle="table"
+						data-pagination="true"
+  						data-search="true">
 						<thead>
 							<tr>
 								<th scope="col">강좌 이름</th>

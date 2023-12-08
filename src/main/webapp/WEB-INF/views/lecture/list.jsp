@@ -15,6 +15,12 @@
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <meta charset="UTF-8">
 <title>Bloom - 전체 강의</title>
+<style>
+.card-img-top{
+	height: 10rem;
+	object-fit: cover;
+}
+</style>
 <script>
 	$(function(){
 		const orderType = $(".orderType");
@@ -60,7 +66,7 @@
 						<option value="price-asc" ${order == "price-asc"? "selected" : "" }>가격 낮은 순</option>
 						<option value="famous" ${order == "famous"? "selected" : "" }>좋아요 많은 순</option>
 						<option value="sales" ${order == "sales"? "selected" : "" }>판매량 많은 순</option>
-						<!-- <option value="ratings">평점 순</option> -->
+						<option value="rating" ${order == "rating"? "selected" : "" }>평점 순</option>
 					</select>
 				</div>
 				

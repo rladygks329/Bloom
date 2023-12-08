@@ -1,6 +1,7 @@
 package com.edu.blooming.controller;
 
-import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,11 +35,21 @@ public class LectureReplyController {
   private PurchaseService purchaseService;
   
   @GetMapping
-  public ResponseEntity<List<LectureReplyVO>> getReplies(@PathVariable("lectureId") int lectureId) {
-    List<LectureReplyVO> list = lectureReplyService.getReplies(lectureId);
-    return new ResponseEntity<>(list, HttpStatus.OK);
+  public ResponseEntity<Map<String, Object>> getReplies(
+      HttpServletRequest request, 
+      @PathVariable("lectureId") int lectureId, 
+      int lastReplyId, 
+      int pageSize
+  ) {
+    int memberId = -1;
+    HttpSession session = request.getSession();
+    if (session.getAttribute("loginVo") != null) {
+      memberId = ((MemberVO) session.getAttribute("loginVo")).getMemberId();
+    }
+    Map<String, Object> result = lectureReplyService.getReplies(lectureId, memberId, pageSize, lastReplyId);
+    return new ResponseEntity<>(result, HttpStatus.OK);
   }
-
+  
   @PostMapping
   public ResponseEntity<Object> createReply(
       HttpSession session,
@@ -56,8 +67,7 @@ public class LectureReplyController {
     }
     
     int result = lectureReplyService.create(lectureId, vo);
-    HttpStatus status = (result == 1) ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
-    return new ResponseEntity<>(status);
+    return new ResponseEntity<>(result, HttpStatus.CREATED);
   }
 
   @PutMapping(value = "/{replyId}")
