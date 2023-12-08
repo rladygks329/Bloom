@@ -13,11 +13,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.edu.blooming.domain.LectureVO;
 import com.edu.blooming.domain.LessonVO;
+import com.edu.blooming.domain.MemberVO;
 import com.edu.blooming.event.VideoUploadedEvent;
 import com.edu.blooming.exception.AlreadyExistException;
 import com.edu.blooming.persistence.CartDAO;
 import com.edu.blooming.persistence.LectureDAO;
 import com.edu.blooming.persistence.LessonDAO;
+import com.edu.blooming.persistence.MemberDAO;
 import com.edu.blooming.persistence.PurchaseDAO;
 import com.edu.blooming.util.PageCriteria;
 
@@ -39,6 +41,9 @@ public class LectureServiceImple implements LectureService {
 
   @Autowired
   private PurchaseDAO purchaseDAO;
+
+  @Autowired
+  private MemberDAO memberDAO;
 
   @Transactional(value = "transactionManager")
   @Override
@@ -78,6 +83,21 @@ public class LectureServiceImple implements LectureService {
     }
 
     return lectureDAO.update(lecture);
+  }
+
+  @Override
+  public MemberVO getInstructorInfo(int memberId) {
+    logger.info("강사 Id: " + memberId);
+
+    /*
+     * MemberVO instructor = memberDAO.select(null); return instructor;
+     */
+    MemberVO vo = new MemberVO();
+    vo.setMemberName("임시이름");
+    vo.setMemberProfileUrl("임시 사진");
+    vo.setMemberIntroduce("임시 설명글");
+
+    return vo;
   }
 
   @Override

@@ -82,6 +82,9 @@ public class LectureController {
     }
 
     List<LessonVO> lessons = lessonService.getByLectureId(lectureId);
+
+    MemberVO author = lectureService.getInstructorInfo(lecture.getMemberId());
+    model.addAttribute("author", author);
     model.addAttribute("likeStatus", false);
     model.addAttribute("cartStatus", false);
     model.addAttribute("purchaseStatus", false);

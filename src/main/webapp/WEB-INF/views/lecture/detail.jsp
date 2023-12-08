@@ -170,8 +170,13 @@
 				<div class="col-md-6">
 					<div class="small mb-1"></div>
 					<h1 class="display-5 fw-bolder">${lecture.lectureTitle }</h1>
+					<div class="fs-5">
+						<a href="/blooming/lecture/list?keyword=writer.${author.memberName }&page=1" class="text-reset link-underline-secondary">${author.memberName}</a>
+					</div>
 					<div class="fs-5 mb-5">
 						<fmt:formatNumber type="number" maxFractionDigits="3" value="${lecture.lecturePrice }" /> 원
+						<br>
+						
 					</div>
 					<div class="fs-5 mb-5"></div>
 					<p class="lead">${lecture.lectureDescription }</p>
@@ -209,6 +214,24 @@
 
 					</div>
 				</div>
+				
+				<div class="collapse my-3" id="collapseExample">
+					<div class="">
+						<div class="d-flex">
+							<div class="col-md-3 me-3">
+								<img class="img-fluid mb-1" src="${author.memberProfileUrl }" onerror="this.src='https://dummyimage.com/450x300/dee2e6/6c757d.jpg';" alt="..." loading="lazy"/>
+							</div>
+							<br>
+								${author.memberIntroduce }
+							</div>
+					</div>
+				</div>
+				<div class="d-flex flex-row-reverse my-3">
+					<a class="btn btn-primary " data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+						강사 소개 보기
+					</a>
+				</div>
+				
 			</div>
 		</div>
 	</section>
