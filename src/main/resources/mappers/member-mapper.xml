@@ -67,7 +67,7 @@
 	-->
 	
 	<!-- 강사정보 조회 -->
-	<select id="select_by_instructor_id">
+	<select id="select_by_instructor_id" resultType="MemberVO">
 		select ${memberName}, ${memberEmail}, ${memberIntroduce}, ${memberProfileUrl}
 		from ${member}
 		where ${memberLevel} = 'instructor' and ${memberId} = #{memberId}	

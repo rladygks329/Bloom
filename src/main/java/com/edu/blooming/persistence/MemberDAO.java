@@ -11,7 +11,7 @@ public interface MemberDAO {
 
   boolean checkNickname(String nickname);
 
-  int selectInstructor(int memberId);
+  MemberVO selectInstructor(int memberId);
 
   int updatePassword(int memberId, String password);
 

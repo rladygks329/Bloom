@@ -87,9 +87,9 @@ public class MemberDAOImple implements MemberDAO {
   }
 
   @Override
-  public int selectInstructor(int memberId) {
+  public MemberVO selectInstructor(int memberId) {
     logger.info("selectInstructor() 호출");
-    return sqlSession.insert(NAMESPACE + ".select_by_instructor_id", memberId);
+    return sqlSession.selectOne(NAMESPACE + ".select_by_instructor_id", memberId);
   }
 
 }
