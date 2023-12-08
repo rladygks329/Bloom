@@ -14,9 +14,9 @@
 <body>
 	<%@ include file="/WEB-INF/views/component/navigation.jsp"%>
 
-	<div class="container my-5">
+	<div class="container">
 		<br>
-		<div class="card bg-light">
+		<div class="card bg-light mb-5 py-5">
 			<article class="card-body mx-auto">
 				<h4 class="card-title mt-3 text-center">로그인</h4>
 				<p class="text-center">Bloom</p>

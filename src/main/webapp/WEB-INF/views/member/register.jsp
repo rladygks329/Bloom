@@ -156,7 +156,7 @@
 						</div>
 	
 						<!-- profile img -->
-						<div>
+						<div class="mb-3">
 							<label for="formFileLg" class="form-label">프로필 사진 이미지</label> <input class="form-control form-control-lg" id="fileItem" name='uploadFile' type="file">
 						</div>
 					</div>

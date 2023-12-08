@@ -8,6 +8,7 @@
 <head type="text/css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
 <meta charset="UTF-8">
 <script src="https://code.jquery.com/jquery-3.7.1.js" 
@@ -24,52 +25,54 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 		display: inline-block;
 		margin-right: 2px; /* 버튼 사이의 간격을 조절  */
 	}
-	form {
-	float: right;
-	}
+
 </style>
 <title>질문답변 게시판</title>
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/component/navigation.jsp"%>
+	<hr>
 	<div class="container">
 		<input type="hidden" id="memberId" name="memberId" value="${loginVo.memberId}" />
 		<br>
-		<h1>묻고 답해요</h1>
+		<h4>묻고 답해요</h4>
 		<br>
 		
-		<div id="register">
-			<a href="register"><button type="button" class="btn btn-light">새 글 작성</button></a>
+		<div class="d-flex justify-content-between my-3">
+
+			<div id="register">
+				<a href="register"><button type="button" class="btn btn-light">새 글 작성</button></a>
+				<a href="list"><button type="button" class="btn btn-light">목록으로</button></a>
+			</div>
+			<div class="w-50">
+				<form class="input-group search" action="list" method="GET">
+				    <select class="form-select searchType" id="option" name="option">
+					    <option value="searchNickname">작성자</option>		    
+					    <option value="searchTitleOrContent">제목&내용</option>
+				    </select>      
+				    <input type="text" id="keyword" name="keyword" class="form-control rounded flex-grow-1" aria-describedby="search-addon" value="${keyword}" placeholder="Search">
+			    	<button type="submit" class="btn btn-outline-primary">search</button>
+			    </form>
+			</div>
 		</div>
-		<a href="list"><button type="button" class="btn btn-light">목록으로</button></a>
-		
-		<form action="list" method="GET">
-		    <select id="option" name="option">
-			    <option value="searchNickname">작성자</option>		    
-			    <option value="searchTitleOrContent">제목&내용</option>
-		    </select>      
-		    <input type="text" id="keyword" name="keyword" value="${keyword}" placeholder="검색어를 입력하세요">
-	    	<input type="submit" value="검색">
-	    </form>
-		
 		<hr>
 		<table class="table">
 		  <thead>
 		    <tr>
-		      <th scope="col" style="width : 60px">#</th>
-		      <th scope="col" style="width : 700px">제목</th>
-		      <th scope="col" style="width : 120px">작성자</th>
-		      <th scope="col" style="width : 60px">조회수</th>
-		      <th scope="col" style="width : 60px">댓글수</th>
-		      <th scope="col" style="width : 60px">좋아요</th>
-		      <th scope="col" style="width : 300px">작성일</th>
+		      <th scope="col">#</th>
+		      <th scope="col">제목</th>
+		      <th scope="col">작성자</th>
+		      <th scope="col">조회수</th>
+		      <th scope="col">댓글수</th>
+		      <th scope="col">좋아요</th>
+		      <th scope="col">작성일</th>
 		    </tr>
 		  </thead>
 		  	<tbody>
 				<c:forEach var="vo" items="${list }">
 					<tr>
 						<td>${vo.boardId }</td>
-						<td><a href="detail?boardId=${vo.boardId }&page=${pageMaker.criteria.page}">${vo.boardTitle }</a></td>
+						<td><a href="detail?boardId=${vo.boardId }&page=${pageMaker.criteria.page}" style="color: black; text-decoration: none;">${vo.boardTitle }</a></td>
 						<td>${vo.authorNickname }</td>
 						<td>${vo.boardViewCount }</td>
 						<td>${vo.boardReplyCount }</td>
@@ -114,15 +117,7 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
         }
     });
 	</script>
-	<%@ include file="/WEB-INF/views/component/footer.jsp"%>
-	
-	
-	
-	
-	
-	
-	
-	
+	<%@ include file="/WEB-INF/views/component/footer.jsp"%>	
 	
 </body>
 </html>

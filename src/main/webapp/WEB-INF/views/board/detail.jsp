@@ -10,11 +10,13 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
 
 <title>게시글 상세보기</title>
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/component/navigation.jsp"%>
+	<hr>
 
 	<br>
 	<br>
@@ -239,7 +241,7 @@
 							+ '<input type="hidden" id="replyId" value="' + this.boardReplyId +'">'
 							+ '<input type="hidden" id="memberId" value="' + this.memberId +'">'
 							+ '<input type="hidden" id="authorNickname" value="' + this.authorNickname +'">'
-							+ '<div class="author-nickname">' + this.authorNickname + '님이 작성  · ' + formattedDate + '</div>'
+							+ '<div class="author-nickname">' + this.authorNickname + '님이 작성 · ' + formattedDate + '</div>'
 							+ '<textarea class="form-control" rows="3" id="boardReplyContent" margin-bottom: 5px;">' + this.boardReplyContent + '</textarea>'
 						    + '<div style="text-align: right;">'
 							+ '<button id="btn_update" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;" ' + disabled + '>수정</button>'
@@ -357,18 +359,18 @@
 			                                    ('0' + boardCommentDateCreated.getMinutes()).slice(-2) + ':' +
 			                                    ('0' + boardCommentDateCreated.getSeconds()).slice(-2);
 							
-							list += '<div class="comment_item">'
+							list += '<div class="comment_item" style="margin-left: 20px;">'
 								+ '<pre>'
 								+ '<input type="hidden" id="commentId" value="' + this.boardCommentId +'">'
 								+ '<input type="hidden" id="authorNickname" value="' + this.authorNickname +'">'
-								+ this.authorNickname
-								+ '&nbsp;&nbsp;' // 공백
-								+ '<textarea class="form-control" rows="2" id="boardCommentContent">' + this.boardCommentContent + '</textarea>'
-								+ '&nbsp;&nbsp;' // 공백
-								+ formattedDate
-								+ '&nbsp;&nbsp;' // 공백
-								+ '<button class="btnUpdateComment" ' + disabled + '>수정</button>'
-								+ '<button class="btnDeleteComment" ' + disabled + '>삭제</button>'
+								+ '<i class="bi bi-arrow-return-right" style="font-size: 1rem"></i>'
+								+ '<div class="author-nickname">' + this.authorNickname + '님이 작성 · ' + formattedDate + '</div>'
+								
+								+ '<textarea class="form-control" rows="3" id="boardReplyContent" margin-bottom: 5px;">' + this.boardCommentContent + '</textarea>'
+								+ '<div style="text-align: right;">'
+								+ '<button id="btnUpdateComment" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;" ' + disabled + '>수정</button>'
+								+ '<button id="btnDeleteComment" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;" ' + disabled + '>삭제</button>'
+								+ '</div>';
 								+ '</pre>'
 								+ '</div>';
 						}); // end each()
@@ -422,7 +424,7 @@
 	    }) // end document()
 	    
 		// 대댓글 수정
-	    $(document).on('click', '.btnUpdateComment', function(){   	 
+	    $(document).on('click', '#btnUpdateComment', function(){   	 
 	   		var replyItem = $(this).closest('.reply_item');
 	   		var boardReplyId = $(this).closest('.reply_item').find('#replyId').val();
 			var boardCommentId = $(this).prevAll('#commentId').val();
@@ -447,7 +449,7 @@
 	   	 }) // end ajax
 	    }) // end document(*)
 	    
-	    $(document).on('click', '.btnDeleteComment', function(){
+	    $(document).on('click', '#btnDeleteComment', function(){
 	   	 console.log(this);
 			var replyItem = $(this).closest('.reply_item');
 	   		var boardReplyId = $(this).closest('.reply_item').find('#replyId').val();
