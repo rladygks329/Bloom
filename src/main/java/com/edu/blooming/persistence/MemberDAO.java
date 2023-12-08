@@ -3,23 +3,23 @@ package com.edu.blooming.persistence;
 import com.edu.blooming.domain.MemberVO;
 
 public interface MemberDAO {
-  int insert(MemberVO vo); // 회원가입
+  int insert(MemberVO vo);
 
-  MemberVO login(MemberVO loginVo); // 로그인
+  MemberVO login(MemberVO loginVo);
 
-  int checkEmail(String email); // 이메일 중복체크
+  boolean checkEmail(String email);
 
-  int checkNickname(String nickname);
+  boolean checkNickname(String nickname);
 
-  MemberVO select(String email); // 회원정보조회
+  MemberVO selectInstructor(int memberId);
 
-  int update(String email, MemberVO vo); // 회원정보업데이트
+  int updatePassword(int memberId, String password);
 
-  int delete(String email); // 회원탈퇴
+  int updateNickname(int memberId, String nickname);
 
-  int updatePassword(int memberId, String memberPassword);
+  int updateIntroduce(int memberId, String introduce);
 
-  int updateNickname(int memberId, String memberNickname);
+  int updateProfileUrl(int memberId, String profileUrl);
 
-  int updateIntroduce(int memberId, String memberIntroduce);
+
 }

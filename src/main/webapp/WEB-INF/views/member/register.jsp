@@ -13,6 +13,7 @@
 	</style>
 	
 	<script>
+	
 		var emailFinalCheck = false;
 		var pwFinalCheck = false;
 		var pwckFinalCheck = false;
@@ -63,61 +64,140 @@
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/component/navigation.jsp"%>
-	<h2>회원 가입하기</h2>
-  	<form action="register" method="post" onsubmit="return validateInputs(event)">
-    	
-    	<p>이메일</p>
-	    <input class="email_input" type="text" name="memberEmail">
-		<span class="email-label"></span>	    
-	    	    
-	    <p>비밀번호</p>
-	    <input class="pw_input" type="password" name="memberPassword" placeholder="비밀번호 입력">
-	    <span class="pw_input_re" style="display: none;"></span>
-	    
-	    <p>비밀번호 확인</p>
-	    <input class="pwck_input" type="password" name="memberPasswordCheck" placeholder="비밀번호 확인">
-	    <span class="pwck_input_re_1" style="display: none;">비밀번호가 일치합니다.</span>
-        <span class="pwck_input_re_2" style="display: none;">비밀번호가 일치하지 않습니다.</span>
-	    
-	    <p>이름</p>
-	    <input class="name_input" type="text" name="memberName" placeholder="이름 입력">
-	    <span class="name_input_re" style="display: none;"></span>
-	    
-	    <p>닉네임</p>
-	    <input class="nickname_input" type="text" name="memberNickname" placeholder="닉네임 입력">
-		<span class="nickname_input_warning" style="display: none;">닉네임은 한글, 영문, 숫자 2~6자로 입력해 주세요.</span><br>
-	    <span class="nickname_input_re_1" style="display: none;">사용 가능한 닉네임입니다.</span> 
-	    <span class="nickname_input_re_2" style="display: none;">닉네임이 이미 존재합니다.</span>
-	    	    
-	    <p>휴대폰번호</p>
-	    <input class="pn_input" type="text" name="memberPhone" placeholder="번호 입력">
-	    <span class="pn_input_re" style="display: none;"></span>
-	    
-	    <p>주소</p>
-	    <input type="text" id="sample6_postcode" placeholder="우편번호" readonly>
-		<input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기" readonly><br>
-		<input type="text" id="sample6_address" name="address" placeholder="주소" readonly><br>
-		<input type="text" id="sample6_detailAddress" name="detailAddress" placeholder="상세주소">
-		<input type="text" id="sample6_extraAddress" placeholder="참고항목: 선택사항">
-		<input type="hidden" id="address_input" name="memberAddress">
+	
+	<div class="container">
+		<br>
+
+		<div class="card bg-light">
+			<article class="card-body mx-auto">
+				<h4 class="card-title mt-3 text-center">계정 만들기</h4>
+				<p class="text-center">무료로 시작하세요</p>
+				<form action="register" method="post" onsubmit="return validateInputs(event)">
+					<input type="hidden" name="memberLevel" value="${memberLevel}">
+					<input type="hidden" name="memberProfileUrl">
+					
+					<!-- email -->
+					<div class="input-group input-group-lg mb-3">
+						<span class="input-group-text"> <i class="fa fa-envelope"></i></span> 
+						<input name="memberEmail" class="form-control" id="email_input" placeholder="Email address" type="email">
+						<div class="valid-feedback">사용 가능한 이메일입니다.</div>
+						<div class="invalid-feedback"></div>
+					</div>
+					
+					<!-- password -->
+					<div class="input-group input-group-lg mb-3">
+						<span class="input-group-text"> <i class="fa fa-lock"></i></span> 
+						<input name="memberPassword" class="form-control" id="pw_input" placeholder="비밀번호" type="password">
+						<div class="valid-feedback">유효한 비밀번호입니다.</div>
+						<div class="invalid-feedback"></div>
+					</div>
+					<div class="input-group input-group-lg mb-3">
+						<span class="input-group-text"> <i class="fa fa-lock"></i></span> 
+						<input class="form-control" id="pwck_input" placeholder="비밀번호 확인" type="password">
+						<div class="valid-feedback">비밀번호가 일치합니다.</div>
+						<div class="invalid-feedback"></div>
+					</div>
+					
+					<!-- name -->
+					<div class="input-group input-group-lg mb-3">
+						<span class="input-group-text"> <i class="fa fa-user"></i></span> 
+						<input name="memberName" class="form-control" id="name_input" placeholder="이름" type="text">
+						<div class="valid-feedback">유효한 이름입니다</div>
+						<div class="invalid-feedback"></div>
+					</div>
+					
+					<!-- nickname -->
+					<div class="input-group input-group-lg mb-3">
+						<span class="input-group-text"> <i class="fa fa-user"></i></span> 
+						<input name="memberNickname" class="form-control" id="nickname_input" placeholder="닉네임" type="text">
+						<div class="valid-feedback">사용 가능한 닉네임입니다</div>
+						<div class="invalid-feedback"></div>
+					</div>
+					
+					<!-- phone -->
+					<div class="input-group input-group-lg mb-3">
+						<span class="input-group-text"> <i class="fa fa-phone"></i></span>
+						<select class="form-select" id="phoneGroup01">
+							<option selected value="010">010</option>
+							<option value="011">011</option>
+							<option value="016">016</option>
+							<option value="017">017</option>
+							<option value="018">018</option>
+							<option value="019">019</option>
+						</select>
+						<input type="text" class="form-control" id="phoneGroup02" placeholder="xxxx" maxlength="4" aria-label="Username"> 
+						<span class="input-group-text">-</span> 
+						<input type="text" class="form-control" id="phoneGroup03" placeholder="xxxx" maxlength="4" aria-label="Server">
+						<input type="hidden" id="phone_input" type="text" name="memberPhone" placeholder="번호 입력">
+						<div class="valid-feedback">유효한 휴대폰번호입니다.</div>
+						<div class="invalid-feedback"></div>
+					</div>
+
+					<!-- address -->
+					<div class="input-group input-group-lg mb-3">
+						<input type="text" id="sample6_postcode" class="form-control" placeholder="우편번호" aria-label="Recipient's username" aria-describedby="button-addon2" readonly>
+						<button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="sample6_execDaumPostcode()">우편번호 찾기</button>
+					</div>
+					<div class="input-group input-group-lg mb-3">
+						<input type="text" id="sample6_address" class="form-control" placeholder="주소" aria-label="Recipient's username" aria-describedby="button-addon2" readonly>
+					</div>
+					<div class="input-group input-group-lg mb-3">
+						<input type="text" id="sample6_detailAddress" class="form-control" placeholder="상세 주소" aria-label="Recipient's username" aria-describedby="button-addon2"> <input type="text" id="sample6_extraAddress" class="form-control" placeholder="상세 주소 참고: 선택사항" aria-label="Recipient's username" aria-describedby="button-addon2">
+					</div>
+					<div>
+						<input type="hidden" id="address_input" name="memberAddress">	
+					</div>
+
+					<div class="form_instructor">
+						<!-- introduce -->
+						<div class="input-group input-group-lg mb-3">
+							<span class="input-group-text">자기소개</span>
+							<textarea class="form-control" name="memberIntroduce" aria-label="With textarea"></textarea>
+						</div>
+	
+						<!-- profile img -->
+						<div class="mb-3">
+							<label for="formFileLg" class="form-label">프로필 사진 이미지</label> <input class="form-control form-control-lg" id="fileItem" name='uploadFile' type="file">
+						</div>
+					</div>
+					<!-- form-group end.// -->
+					<p class="text-center">
+						계정이 있으십니까? <a href="/blooming/member/login">로그인 하기</a>
+					</p>
+					<div class="d-flex justify-content-center">
+						<input type="submit" class="btn btn-primary" value="회원가입">
+					</div>
+				</form>
+			</article>
+		</div>
+		<!-- card.// -->
+	</div>
+	<!--container end.//-->
+	
+		<!-- 카카오톡 주소찾기 -->
 		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 		<script>
-			// 이메일 중복검사 함수
+			// 이메일 유효성 및 중복검사
 			function checkEmailDuplication(email) {
 				var emailRegex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+				var input = $('#email_input');
+				var invalidMsg = input.siblings(".invalid-feedback");
 				
-				if ($('.email_input').val() === "") {	
-					$(".email-label").text("");
+				if ($('#email_input').val() === "") {
+					invalidMsg.text("이메일이 비어있습니다.")
+					input.removeClass("is-valid").addClass("is-invalid");
+					emailFinalCheck = false;
 					return;
 				}
 				
 				// 유효성 검사를 통과하지 못한 경우
-				if (!emailRegex.test(email)){
-					$(".email-label").text("이메일 형식을 확인해주세요");
+				if (!emailRegex.test(email)){					
+					invalidMsg.text("이메일 형식을 확인해주세요")
+					input.removeClass("is-valid").addClass("is-invalid");
+					emailFinalCheck = false;
 					return;
 				}
 				
-				$('.email_input_warning').hide();
 				var data = {
 					memberEmail : email
 				};
@@ -125,223 +205,253 @@
 					type : 'POST',
 					url : '/blooming/member/email',
 					data : data,
-					success : function(result) {
-						if (result === 'success') {
-							$(".email-label").text("사용가능한 이메일입니다.");
-							emailFinalCheck = true;
-						} else if (result === 'faile') {
-							$(".email-label").text("중복된 이메일입니다.");
-						}
-					}
+					success: function (data) {				        
+						input.removeClass("is-invalid").addClass("is-valid");
+				    	emailFinalCheck = true; 
+				    },
+					error: function(xhr, status, error) {
+						invalidMsg.text("중복된 이메일입니다")
+						input.removeClass("is-valid").addClass("is-invalid");
+						emailFinalCheck = false;
+	                }				
 				});
-				return
 			} // end checkEmailDuplication()
 
 			// 이메일 입력 필드의 값이 변경될 때 검사 실행
-			$('.email_input').on("blur", function() {
-				checkEmailDuplication($('.email_input').val());
+			$('#email_input').on("blur", function() {
+				checkEmailDuplication($('#email_input').val());
 			});
-			
-			
-			
-			// 닉네임 형식 유효성 검사 
-		    function nicknameFormCheck(nickname){
-		       var form = /^[가-힣a-zA-Z0-9]{2,6}$/;
-		       return form.test(nickname);
-		    }		    
-	    	
-			// 닉네임 중복검사 함수
+						
+			// 닉네임 유효성 및 중복검사
 			function checkNicknameDuplication(nickname) {
-				if($('.nickname_input').val() === "") {
-					$('.nickname_input_warning').hide();
-					
-				// 유효성 검사를 통과한 경우에만 중복 검사 실행
-				} else if (nicknameFormCheck(nickname)) {
-			    	$('.nickname_input_warning').hide();
-			        var data = { memberNickname: nickname };
-			        $.ajax({
-			            type: 'POST',
-			            url: '/blooming/member/nickname',
-			            data: data,
-			            success: function (result) {
-			                if (result === 'success') {
-			                    $('.nickname_input_re_1').show();
-			                    $('.nickname_input_re_2').hide();
-			                    nicknameFinalCheck = true;
+				var nicknameRegex = /^[가-힣a-zA-Z0-9]{2,6}$/;
+				var input = $('#nickname_input');
+				var invalidMsg = input.siblings(".invalid-feedback");
+				
+				if ($('#nickname_input').val() === "") {	
+					invalidMsg.text("닉네임이 비어있습니다.")
+					input.removeClass("is-valid").addClass("is-invalid");
+					nicknameFinalCheck = false;
+					return;
+				}
+				
+				// 유효성 검사를 통과하지 못한 경우
+				if (!nicknameRegex.test(nickname)){
+					console.log(nickname);
+					invalidMsg.text("한글, 영문, 숫자 2~6자리로 입력해 주세요")
+					input.removeClass("is-valid").addClass("is-invalid");	
+					nicknameFinalCheck = false;
+					return;
+				}
+				console.log(nickname);
+				var data = {
+					memberNickname : nickname
+				};
+				$.ajax({
+					type : 'POST',
+					url : '/blooming/member/checknickname',
+					data : data,
+					success: function (data) {				        
+						input.removeClass("is-invalid").addClass("is-valid");
+				    	nicknameFinalCheck = true; 
+				    	console.log(nicknameFinalCheck);
+				    },
+					error: function(xhr, status, error) {
+						invalidMsg.text("중복된 닉네임입니다")
+						input.removeClass("is-valid").addClass("is-invalid");
+						nicknameFinalCheck = false;
+						console.log(nicknameFinalCheck);
+	                }				
+				});					
+			} // end checkNicknameDuplication()
 
-			                } else if (result === 'faile') {
-			                    $('.nickname_input_re_1').hide();
-			                    $('.nickname_input_re_2').show();
-			                    
-			                }
-			            }
-			        });
-			    } else {
-			        // 유효성 검사를 통과하지 못한 경우
-			        $('.nickname_input_warning').show();
-			        $('.nickname_input_re_1').hide();
-			        $('.nickname_input_re_2').hide();
-			        	
-			    }
-			} // end checkEmailDuplication()
-
-			// 이메일 입력 필드의 값이 변경될 때 검사 실행
-			$('.nickname_input').on("blur", function () {
-			    checkNicknameDuplication($('.nickname_input').val());
+			// 닉네임 입력 필드의 값이 변경될 때 검사 실행
+			$('#nickname_input').on("blur", function () {
+			    checkNicknameDuplication($('#nickname_input').val());
 			});
 			
-			// 비밀번호 형식 및 확인 일치 유효성 검사			
-			$('.pw_input').on("change", function() {
+			// 비밀번호 및 비밀번호 확인 필드 값이 변경될 때 검사 실행			
+			$('#pw_input').on("change", function() {
 				checkPasswordValid();
 				checkPasswordMatch();
 			});
 
-			$('.pwck_input').on("change", function() {
+			$('#pwck_input').on("change", function() {
 				checkPasswordMatch();
 			});
-
-			function checkPasswordValid() {
-				var pw = $('.pw_input').val();
-				var passwordPattern = /^(?=.*[a-zA-Z])(?=.*\d).{4,8}$/;
+			
+			// 비밀번호 유효성검사
+			function checkPasswordValid(password) {
+				var pw = $('#pw_input').val();
+				var passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d).{4,8}$/;
+				var input = $('#pw_input');
+				var invalidMsg = input.siblings(".invalid-feedback");
+				
 				if (pw === "") {
-					$('.pw_input_re').css('display', 'none');
+					invalidMsg.text("비밀번호를 입력해 주세요.")
+					input.removeClass("is-valid").addClass("is-invalid");	
 					pwFinalCheck = false;
-				} else if (!passwordPattern.test(pw)) {
-					$('.pw_input_re').css('display', 'block');
-					$('.pw_input_re').text('영문자와 숫자 조합, 4~8자리로 입력해 주세요');
-					$('.pw_input_re').css('color', 'red');
+				} else if (!passwordRegex.test(pw)) {
+					invalidMsg.text("영문자와 숫자 조합, 4~8자리로 입력해 주세요.")
+					input.removeClass("is-valid").addClass("is-invalid");	
 					pwFinalCheck = false;
-				} else {
-					$('.pw_input_re').css('display', 'block');
-					$('.pw_input_re').text('유효한 비밀번호입니다');
-					$('.pw_input_re').css('color', 'green');
-					pwFinalCheck = true;
+				} else {					
+					input.removeClass("is-invalid").addClass("is-valid");
+					pwFinalCheck = true;					
 				}
 			} // end checkPasswordValid()
-
+			
+			// 비밀번호확인 유효성검사
 			function checkPasswordMatch() {
-				var pw = $('.pw_input').val();
-				var pwck = $('.pwck_input').val();
-
-				if (pw === "" && pwck === "") {
-					$('.pwck_input_re_1').css('display', 'none');
-					$('.pwck_input_re_2').css('display', 'none');
+				var pw = $('#pw_input').val();
+				var pwck = $('#pwck_input').val();
+				var input = $('#pwck_input');
+				var invalidMsg = input.siblings(".invalid-feedback");
+				
+				console.log(pw);
+				console.log(pwck);
+				
+				if(pwck === '') {
+					input.removeClass("is-valid is-invalid");
 					pwckFinalCheck = false;
-				} else if (pw == pwck) {
-					$('.pwck_input_re_1').css('display', 'block');
-					$('.pwck_input_re_2').css('display', 'none');
-					pwckFinalCheck = true;
-				} else {
-					$('.pwck_input_re_1').css('display', 'none');
-					$('.pwck_input_re_2').css('display', 'block');
-					pwckFinalCheck = false;
+					return;
 				}
-			};
+				
+				if (pw !== pwck) {
+					invalidMsg.text("비밀번호가 일치하지 않습니다.")
+					input.removeClass("is-valid").addClass("is-invalid");
+					pwckFinalCheck = false;
+				} else {
+					input.removeClass("is-invalid").addClass("is-valid");
+					pwckFinalCheck = true;
+				}				
+			}; // end checkPasswordMatch()
 
-			// 이름 유효성 검사	
-			$('.name_input').on("change", function() {
+			// 이름 필드 값이 변경될 때 검사 실행
+			$('#name_input').on("change", function() {
 				checkNameValid();
 			});
 
+			// 이름 유효성검사
 			function checkNameValid() {
-				var nm = $('.name_input').val();
-				var namePattern = /^[가-힣]{2,10}$/;
-				if (nm === "") {
-					$('.name_input_re').css('display', 'none');
+				var name = $('#name_input').val();
+				var nameRegex = /^[가-힣]{2,10}$/;
+				var input = $('#name_input');
+				var invalidMsg = input.siblings(".invalid-feedback");
+				
+				if (name === "") {
+					invalidMsg.text("이름: 입력해 주세요.")
+					input.removeClass("is-valid").addClass("is-invalid");
 					nameFinalCheck = false;
-				} else if (!namePattern.test(nm)) {
-					$('.name_input_re').css('display', 'block');
-					$('.name_input_re').text('이름을 확인해 주세요(2자~10자)');
-					$('.name_input_re').css('color', 'red');
+					return;
+				} 
+				
+				// 유효성 검사를 통과하지 못한경우
+				if (!nameRegex.test(name)) {
+					invalidMsg.text("이름 형식을 확인해 주세요(2~10자).")
+					input.removeClass("is-valid").addClass("is-invalid");	
+					console.log(name);
 					nameFinalCheck = false;
-				} else {
-					$('.name_input_re').css('display', 'none');
-					nameFinalCheck = true;
+					return;
 				}
+				input.removeClass("is-invalid").addClass("is-valid");
+				nameFinalCheck = true;
+
 			} // end checkNameValid()			
 
-			// 휴대폰번호 유효성 검사	
-			$('.pn_input').on("change", function() {
+			// 휴대폰번호 필드값 변경 시 검사 실행	
+			$('#phoneGroup01, #phoneGroup02, #phoneGroup03').on("change", function() {
 				checkPhoneValid();
 			});
-			// 전부숫자만 받고 첫번째는 0, 두번째는 1로 고정하고 3번째자리는 0, 1, 6, 7, 8, 9 만 가능하게 하고 총 자릿수는 10 혹은 11자리로 하고싶음
+			
+			// 휴대폰번호 유효성검사
 			function checkPhoneValid() {
-				var pn = $('.pn_input').val();
-				// ^01(?:0|1|[6-9])-(?:\\d{3}|\\d{4})-\\d{4}$
-				// ^01(?:0|1|[6-9])[.-]?(\\d{3}|\\d{4})[.-]?(\\d{4})$
-				var phonePattern = /^(01[016789]\d{7,8})$/;
-				// var phonePattern = new RegExp('^01(?:0|1|[6-9])(\\d{3}|\\d{4})(\\d{4})$');
-				if (pn === "") {
-					$('.pn_input_re').css('display', 'none');
+				var firstNum = $('#phoneGroup01').val();
+				var secondNum = $('#phoneGroup02').val();
+				var thirdNum = $('#phoneGroup03').val();
+				var phone = firstNum + '' + secondNum + '' + thirdNum;
+				
+				var phoneRegex = /^\d{10,11}$/;	
+				var input = $('#phone_input');
+				var invalidMsg = input.siblings(".invalid-feedback");
+				
+				console.log(thirdNum.length);
+				if(thirdNum.length < 4){
+					invalidMsg.text("세번째 칸은 4자리어야 합니다.")
+					input.removeClass("is-valid").addClass("is-invalid");
 					phoneFinalCheck = false;
-				} else if (!phonePattern.test(pn)) {
-					$('.pn_input_re').css('display', 'block');
-					$('.pn_input_re').text('휴대전화번호 형식을 확인해 주세요.');
-					$('.pn_input_re').css('color', 'red');
-					phoneFinalCheck = false;
-				} else {
-					$('.pn_input_re').css('display', 'none');
-					phoneFinalCheck = true;
+					return;
 				}
+				
+				if (!phoneRegex.test(phone)) {
+					invalidMsg.text("휴대폰번호를 확인해 주세요.")
+					input.removeClass("is-valid").addClass("is-invalid");
+					phoneFinalCheck = false;
+					return;
+				} 
+				
+				if (phoneRegex.test(phone)) {
+					input.removeClass("is-invalid").addClass("is-valid");
+					$('#phone_input').val(phone);
+					console.log($('#phone_input').val());
+					phoneFinalCheck = true;
+				}				
 			} // end checkPhoneValid()
-
-			// 카카오API
+		
+			
+			// 카카오API			
 			function sample6_execDaumPostcode() {
-				new daum.Postcode(
-						{
-							oncomplete : function(data) {
-								// 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
-
-								// 각 주소의 노출 규칙에 따라 주소를 조합한다.
-								// 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-								var addr = ''; // 주소 변수
-								var extraAddr = ''; // 참고항목 변수
-
-								//사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-								if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
-									addr = data.roadAddress;
-								} else { // 사용자가 지번 주소를 선택했을 경우(J)
-									addr = data.jibunAddress;
-								}
-
-								// 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
-								if (data.userSelectedType === 'R') {
-									// 법정동명이 있을 경우 추가한다. (법정리는 제외)
-									// 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
-									if (data.bname !== ''
-											&& /[동|로|가]$/g.test(data.bname)) {
-										extraAddr += data.bname;
-									}
-									// 건물명이 있고, 공동주택일 경우 추가한다.
-									if (data.buildingName !== ''
-											&& data.apartment === 'Y') {
-										extraAddr += (extraAddr !== '' ? ', '
-												+ data.buildingName
-												: data.buildingName);
-									}
-									// 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
-									if (extraAddr !== '') {
-										extraAddr = ' (' + extraAddr + ')';
-									}
-									// 조합된 참고항목을 해당 필드에 넣는다.
-									document
-											.getElementById("sample6_extraAddress").value = extraAddr;
-
-								} else {
-									document
-											.getElementById("sample6_extraAddress").value = '';
-								}
-
-								// 우편번호와 주소 정보를 해당 필드에 넣는다.
-								document.getElementById('sample6_postcode').value = data.zonecode;
-								document.getElementById("sample6_address").value = addr;
-								// 커서를 상세주소 필드로 이동한다.
-								document
-										.getElementById("sample6_detailAddress")
-										.focus();
+				new daum.Postcode({
+					oncomplete : function(data) {
+						// 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+	
+						// 각 주소의 노출 규칙에 따라 주소를 조합한다.
+						// 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+						var addr = ''; // 주소 변수
+						var extraAddr = ''; // 참고항목 변수
+	
+						//사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+						if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+							addr = data.roadAddress;
+						} else { // 사용자가 지번 주소를 선택했을 경우(J)
+							addr = data.jibunAddress;
+						}
+	
+						// 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+						if (data.userSelectedType === 'R') {
+							// 법정동명이 있을 경우 추가한다. (법정리는 제외)
+							// 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+							if (data.bname !== ''
+									&& /[동|로|가]$/g.test(data.bname)) {
+								extraAddr += data.bname;
 							}
-						}).open();
+							// 건물명이 있고, 공동주택일 경우 추가한다.
+							if (data.buildingName !== ''
+									&& data.apartment === 'Y') {
+								extraAddr += (extraAddr !== '' ? ', '
+										+ data.buildingName
+										: data.buildingName);
+							}
+							// 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+							if (extraAddr !== '') {
+								extraAddr = ' (' + extraAddr + ')';
+							}
+							// 조합된 참고항목을 해당 필드에 넣는다.
+							document.getElementById("sample6_extraAddress").value = extraAddr;
+	
+						} else {
+							document.getElementById("sample6_extraAddress").value = '';
+						}
+	
+						// 우편번호와 주소 정보를 해당 필드에 넣는다.
+						document.getElementById('sample6_postcode').value = data.zonecode;
+						document.getElementById("sample6_address").value = addr;
+						// 커서를 상세주소 필드로 이동한다.
+						document.getElementById("sample6_detailAddress").focus();
+					}
+				}).open();
 			} // end 카카오API
+
 
 			// 주소값 생성
 			$('#sample6_address').on("change", function() {
@@ -363,22 +473,9 @@
 				if (postAddress && basicAddress) {
 					addressFinalCheck = true;
 				}
-
 			} // end sumAddress()
+			
 		</script>
-
-		<input type="hidden" name="memberLevel" value="${memberLevel}">
-
-		<div class="form_instructor">
-			<p>강사소개</p>
-			<textarea name="memberIntroduce" rows="5" cols="25"></textarea>
-
-			<p>프로필 사진</p>
-			<input type="file" id="fileItem" name='uploadFile' style="height: 30px;">
-
-		</div>
-
-		<input type="hidden" name="memberProfileUrl">
 
 		<script>
 			var memberLevel = "${memberLevel}"; // memberLevel 값을 가져옴
@@ -443,93 +540,11 @@
 					}
 				});
 			}); // end on()
-
+		
+			
 
 		</script>
 
-		<br> <input type="submit" value="회원가입">
-	</form>
-
-	<div class="container">
-		<br>
-
-		<div class="card bg-light">
-			<article class="card-body mx-auto">
-				<h4 class="card-title mt-3 text-center">계정 만들기</h4>
-				<p class="text-center">무료로 시작하세요</p>
-				<form>
-					<!-- name -->
-					<div class="input-group input-group-lg mb-3">
-						<span class="input-group-text"> <i class="fa fa-user"></i></span> 
-						<input name="" class="form-control" placeholder="이름" type="text">
-						<div class="valid-feedback">Looks good!</div>
-						<div class="invalid-feedback">Looks bad!</div>
-					</div>
-					
-					<!-- email -->
-					<div class="input-group input-group-lg mb-3">
-						<span class="input-group-text"> <i class="fa fa-envelope"></i>
-						</span> <input name="" class="form-control" placeholder="Email address" type="email">
-					</div>
-
-					<!-- phone -->
-					<div class="input-group input-group-lg mb-3">
-						<span class="input-group-text"> <i class="fa fa-phone"></i>
-						</span>
-						<select class="form-select" id="inputGroupSelect01">
-							<option selected value="010">010</option>
-							<option value="011">011</option>
-							<option value="016">016</option>
-							<option value="017">017</option>
-							<option value="018">018</option>
-							<option value="019">019</option>
-						</select>
-						<input type="text" class="form-control" placeholder="xxxx" aria-label="Username"> <span class="input-group-text">-</span> <input type="text" class="form-control" placeholder="xxxx" aria-label="Server">
-					</div>
-
-					<!-- password -->
-					<div class="input-group input-group-lg mb-3">
-						<span class="input-group-text"> <i class="fa fa-lock"></i>
-						</span> <input class="form-control" placeholder="비밀번호" type="password">
-					</div>
-					<div class="input-group input-group-lg mb-3">
-						<span class="input-group-text"> <i class="fa fa-lock"></i>
-						</span> <input class="form-control" placeholder="비밀번호 확인" type="password">
-					</div>
-
-					<!-- address -->
-					<div class="input-group input-group-lg mb-3">
-						<input type="text" class="form-control" placeholder="우편번호" aria-label="Recipient's username" aria-describedby="button-addon2">
-						<button class="btn btn-outline-secondary" type="button" id="button-addon2">우편번호 찾기</button>
-					</div>
-					<div class="input-group input-group-lg mb-3">
-						<input type="text" class="form-control" placeholder="주소" aria-label="Recipient's username" aria-describedby="button-addon2">
-					</div>
-					<div class="input-group input-group-lg mb-3">
-						<input type="text" class="form-control" placeholder="상세 주소" aria-label="Recipient's username" aria-describedby="button-addon2"> <input type="text" class="form-control" placeholder="상세 주소 참고: 선택사항" aria-label="Recipient's username" aria-describedby="button-addon2">
-					</div>
-
-					<!-- introduce -->
-					<div class="input-group input-group-lg mb-3">
-						<span class="input-group-text">자기소개</span>
-						<textarea class="form-control" aria-label="With textarea"></textarea>
-					</div>
-
-					<!-- profile img -->
-					<div>
-						<label for="formFileLg" class="form-label">프로필 사진 이미지</label> <input class="form-control form-control-lg" id="formFileLg" type="file">
-					</div>
-
-					<!-- form-group end.// -->
-					<p class="text-center">
-						계정이 있으십니까? <a href="/blooming/member/login">로그인 하기</a>
-					</p>
-				</form>
-			</article>
-		</div>
-		<!-- card.// -->
-	</div>
-	<!--container end.//-->
 
 	<br>
 	<br>

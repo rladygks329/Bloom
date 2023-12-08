@@ -1,6 +1,7 @@
 package com.edu.blooming.controller;
 
 import java.util.List;
+import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +28,16 @@ public class BoardCommentController {
 
   // 코멘트 입력
   @PostMapping(value = "/{boardReplyId}")
-  public ResponseEntity<Integer> createComment(@PathVariable("boardReplyId") int boardReplyId,
-      @RequestBody BoardCommentVO vo) {
+  public ResponseEntity<Object> createComment(HttpSession session,
+      @PathVariable("boardReplyId") int boardReplyId, @RequestBody BoardCommentVO vo) {
     logger.info("createComment() 호출: boardReplyId = " + boardReplyId + " vo = " + vo.toString());
+
+    if (session.getAttribute("loginVo") == null) {
+      return new ResponseEntity<>("로그인이 필요합니다.", HttpStatus.UNAUTHORIZED);
+    }
+
     int result = boardCommentService.create(boardReplyId, vo);
-    return new ResponseEntity<Integer>(result, HttpStatus.OK);
+    return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
   // 댓글의 코멘트 가져오기

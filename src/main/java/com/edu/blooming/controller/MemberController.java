@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -43,8 +44,14 @@ public class MemberController {
   private BoardReplyService boardReplyService;
 
   @GetMapping("/login")
-  public void loginGET() {
+  public String loginGET(HttpServletRequest request) {
     logger.info("loginGET() 호출");
+    HttpSession session = request.getSession();
+    if (session.getAttribute("loginVo") != null) {
+      logger.info("로그인되지 않은 상태 - mypage-identify로 리다이렉트");
+      return "redirect:/main";
+    }
+    return "/member/login";
   }
 
   @PostMapping("/login")
@@ -95,6 +102,20 @@ public class MemberController {
     return "/member/mypage";
   }
 
+  @GetMapping("/mypage-update")
+  public String myPageUpdateGET(HttpServletRequest request) {
+    logger.info("myPageUpdateGET() 호출");
+
+    HttpSession session = request.getSession();
+    if (session.getAttribute("loginVo") == null) {
+      logger.info("로그인되지 않은 상태 - mypage-identify로 리다이렉트");
+      return "redirect:/member/mypage-identify";
+    }
+
+    return "/member/mypage-update";
+  }
+
+
   @PutMapping("/password")
   @ResponseBody
   public ResponseEntity<Void> changePasswordPOST(HttpServletRequest request,
@@ -114,11 +135,21 @@ public class MemberController {
   public ResponseEntity<Void> changeNicknamePUT(HttpServletRequest request,
       @RequestBody String memberNickname) {
     int memberId = (int) request.getAttribute("memberId");
-    int result = memberService.updatePassword(memberId, memberNickname);
+    int result = memberService.updateNickname(memberId, memberNickname);
 
     logger.info("결과값 : " + result);
     if (result != 1) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    // 회원 정보 업데이트 후 세션 업데이트
+    HttpSession session = request.getSession();
+    MemberVO loginVo = (MemberVO) session.getAttribute("loginVo");
+
+    if (loginVo != null) {
+      // 기존 세션에서 가져온 loginVo가 null이 아닌 경우에만 업데이트 수행
+      loginVo.setMemberNickname(memberNickname);
+      session.setAttribute("loginVo", loginVo);
     }
     return new ResponseEntity<>(HttpStatus.OK);
   }
@@ -126,18 +157,88 @@ public class MemberController {
   @PutMapping("/introduce")
   @ResponseBody
   public ResponseEntity<Void> changeIntroducePUT(@RequestBody String memberIntroduce,
-      HttpSession session) {
-    int result = 0;
-    if (session.getAttribute("loginVo") != null) {
-      int memberId = ((MemberVO) session.getAttribute("loginVo")).getMemberId();
-      result = memberService.updatePassword(memberId, memberIntroduce);
+      HttpServletRequest request) {
+    int memberId = (int) request.getAttribute("memberId");
+    logger.info(memberIntroduce);
+    int result = memberService.updateIntroduce(memberId, memberIntroduce);
+
+    logger.info("결과값 : " + result);
+    if (result != 1) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    // 회원 정보 업데이트 후 세션 업데이트
+    HttpSession session = request.getSession();
+    MemberVO loginVo = (MemberVO) session.getAttribute("loginVo");
+
+    if (loginVo != null) {
+      // 기존 세션에서 가져온 loginVo가 null이 아닌 경우에만 업데이트 수행
+      loginVo.setMemberIntroduce(memberIntroduce);
+      session.setAttribute("loginVo", loginVo);
+    }
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @PutMapping("/profile")
+  @ResponseBody
+  public ResponseEntity<Void> changeProfilePUT(HttpServletRequest request,
+      @RequestBody String memberProfileUrl) {
+    logger.info(memberProfileUrl);
+    int memberId = (int) request.getAttribute("memberId");
+
+    int result;
+    if (memberProfileUrl == null || memberProfileUrl.equals("null")) {
+      // 프로필 사진을 삭제하는 경우
+      logger.info("프로필 사진을 삭제하는 경우");
+      result = memberService.deleteProfileUrl(memberId);
+    } else {
+      // 프로필 사진을 업데이트하는 경우
+      logger.info("프로필 사진을 업데이트하는 경우");
+      result = memberService.updateProfileUrl(memberId, memberProfileUrl);
     }
 
     logger.info("결과값 : " + result);
     if (result != 1) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
+    // 회원 정보 업데이트 후 세션 업데이트
+    HttpSession session = request.getSession();
+    MemberVO loginVo = (MemberVO) session.getAttribute("loginVo");
+
+    if (loginVo != null) {
+      // 기존 세션에서 가져온 loginVo가 null이 아닌 경우에만 업데이트 수행
+      loginVo.setMemberProfileUrl(memberProfileUrl);
+      session.setAttribute("loginVo", loginVo);
+    }
     return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @GetMapping("/mypage-identify")
+  public void mypageIdentifyGET() {
+    logger.info("mypageIdentifyGET() 호출");
+  }
+
+  @PostMapping("/identify")
+  public String mypageIdentifyPOST(HttpServletRequest request, MemberVO vo, String targetURL,
+      RedirectAttributes rttr) {
+    logger.info("mypageIdentifyPOST() 호출");
+    MemberVO loginVo = memberService.login(vo);
+
+    if (loginVo == null) {
+      // Handle the case when login is not successful
+      String queryString = getLoginPageQueryString(targetURL);
+      logger.info("redirect:/member/mypage-identify" + queryString);
+      rttr.addFlashAttribute("errorMessage", "비밀번호를 확인해 주세요.");
+      return "redirect:/member/mypage-identify" + queryString;
+    }
+    return "redirect:/member/mypage-update";
+
+  }
+
+  @ExceptionHandler(IllegalStateException.class)
+  public ResponseEntity<String> duplicatedNickname(Exception e) {
+    return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
   }
 
   private String getLoginPageQueryString(String url) {
@@ -148,17 +249,20 @@ public class MemberController {
   }
 
   private String getRedirectURL(String url) {
+
     if (url.isBlank()) {
       return "/main";
     }
+
     try {
       url = URLDecoder.decode(url, "UTF-8");
     } catch (UnsupportedEncodingException e) {
       e.printStackTrace();
     }
-
     return url;
   }
+
+
 
 } // end LoginController()
 

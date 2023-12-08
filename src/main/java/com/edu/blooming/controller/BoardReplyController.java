@@ -1,6 +1,7 @@
 package com.edu.blooming.controller;
 
 import java.util.List;
+import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +28,18 @@ public class BoardReplyController {
   private BoardReplyService boardReplyService;
 
   @PostMapping(value = "/{boardId}")
-  public ResponseEntity<Integer> createReply(
+  public ResponseEntity<Object> createReply(
+      HttpSession session,
       @PathVariable("boardId") int boardId,
       @RequestBody BoardReplyVO vo) {
     logger.info("createReply() 호출 : boardId = " + boardId + " vo = " + vo);
+    
+    if(session.getAttribute("loginVo") == null) {
+      return new ResponseEntity<>("로그인이 필요합니다.", HttpStatus.UNAUTHORIZED); 
+    }
 
     int result = boardReplyService.create(boardId, vo);
-    return new ResponseEntity<Integer>(result, HttpStatus.OK);
+    return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
   @GetMapping(value = "/{boardId}")

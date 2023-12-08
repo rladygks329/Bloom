@@ -38,9 +38,15 @@ public class MemberServiceImple implements MemberService {
   }
 
   @Override
-  public int checkEmail(String email) {
+  public boolean checkEmail(String email) {
     logger.info("emailCheck() 호출: email = " + email);
     return memberDAO.checkEmail(email);
+  }
+
+  @Override
+  public boolean checkNickname(String nickname) {
+    logger.info("checkNickname() 호출: nickname = " + nickname);
+    return memberDAO.checkNickname(nickname);
   }
 
   @Override
@@ -51,9 +57,9 @@ public class MemberServiceImple implements MemberService {
   }
 
   @Override
-  public int updatePassword(int memberId, String memberPassword) {
+  public int updatePassword(int memberId, String password) {
     logger.info("updatePassword 호출");
-    return memberDAO.updatePassword(memberId, memberPassword);
+    return memberDAO.updatePassword(memberId, password);
   }
 
   @Override
@@ -75,21 +81,32 @@ public class MemberServiceImple implements MemberService {
   }
 
   @Override
-  public int checkNickname(String nickname) {
-    logger.info("checkNickname() 호출: nickname = " + nickname);
-    return memberDAO.checkNickname(nickname);
-  }
-
-  @Override
-  public int updateNickname(int memberId, String memberNickname) {
+  public int updateNickname(int memberId, String nickname) {
     logger.info("updateNickname 호출");
-    return memberDAO.updateNickname(memberId, memberNickname);
+    boolean isNicknameDuplicated = memberDAO.checkNickname(nickname);
+    if (isNicknameDuplicated) {
+      throw new IllegalStateException("중복된 닉네임입니다.");
+    }
+    return memberDAO.updateNickname(memberId, nickname);
   }
 
   @Override
-  public int updateIntroduce(int memberId, String memberIntroduce) {
+  public int updateIntroduce(int memberId, String introduce) {
     logger.info("updateIntroduce 호출");
-    return memberDAO.updateIntroduce(memberId, memberIntroduce);
+    logger.info(introduce);
+    return memberDAO.updateIntroduce(memberId, introduce);
+  }
+
+  @Override
+  public int updateProfileUrl(int memberId, String profileUrl) {
+    logger.info("updateprofileUrl 호출");
+    return memberDAO.updateProfileUrl(memberId, profileUrl);
+  }
+
+  @Override
+  public int deleteProfileUrl(int memberId) {
+    logger.info("deleteProfileUrl 호출");
+    return memberDAO.updateProfileUrl(memberId, null);
   }
 
 } // end MemberService

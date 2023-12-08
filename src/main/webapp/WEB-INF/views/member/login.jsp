@@ -13,40 +13,27 @@
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/component/navigation.jsp"%>
-	<h1>로그인</h1>
-	<form action="login" method="post">
-		<input type="text" name="memberEmail">
-		<br> 
-		<input type="password" name="memberPassword">
-		<br> 
-		<input type="hidden" name="targetURL" value="${param.targetURL }"> 
-		<input type="submit" value="로그인"> 
-		<a href="/blooming/member/register-type">회원가입</a>
-		<c:if test="${result == 0 }">
-			<div class="login_warn">사용자 ID 또는 비밀번호를 잘못 입력하셨습니다.</div>
-		</c:if>
-	</form>
 
-	<div class="container my-5">
+	<div class="container">
 		<br>
-		<div class="card bg-light">
+		<div class="card bg-light mb-5 py-5">
 			<article class="card-body mx-auto">
 				<h4 class="card-title mt-3 text-center">로그인</h4>
 				<p class="text-center">Bloom</p>
 				<br>
 				<br>
-				<form>
+				<form action="login" method="post">
 					<input type="hidden" name="targetURL" value="${param.targetURL }"> 
 					<!-- email -->
 					<div class="input-group input-group-lg mb-3">
 						<span class="input-group-text"> <i class="fa fa-envelope"></i>
-						</span> <input name="" class="form-control" placeholder="Email address" type="email">
+						</span> <input name="memberEmail" class="form-control" placeholder="Email address" type="email">
 					</div>
 
 					<!-- password -->
 					<div class="input-group input-group-lg mb-3">
 						<span class="input-group-text"> <i class="fa fa-lock"></i>
-						</span> <input class="form-control" placeholder="비밀번호" type="password">
+						</span> <input class="form-control" name="memberPassword" placeholder="비밀번호" type="password">
 						<div class="invalid-feedback">아이디나 비밀번호를 확인해주세요</div>
 					</div>
 					

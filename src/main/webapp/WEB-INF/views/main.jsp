@@ -226,5 +226,16 @@ $(function(){
 		</div>
 	</section>
 	<%@ include file="/WEB-INF/views/component/footer.jsp"%>
+	
+	<input type="hidden" id="result" value="${result}">
+	<script>
+        window.onload = function() {
+            var result = document.getElementById('result').value;
+            if (result === '1') {
+                alert("회원가입을 축하합니다!");
+            }
+        };
+    </script>	
+	
 </body>
 </html>
