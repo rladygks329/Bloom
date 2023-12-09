@@ -7,14 +7,14 @@ public class LectureReplyVO {
   private String lectureTitle;
   private String lectureReplyContent;
   private String authorName;
-  private String authorNickName;
+  private String authorNickname;
   private String authorProfileUrl;
   private int lectureReplyScore;
 
   public LectureReplyVO() {}
 
   public LectureReplyVO(int lectureReplyId, int memberId, int lectureId, String lectureTitle,
-      String lectureReplyContent, String authorName, String authorNickName, String authorProfileUrl,
+      String lectureReplyContent, String authorName, String authorNickname, String authorProfileUrl,
       int lectureReplyScore) {
     this.lectureReplyId = lectureReplyId;
     this.memberId = memberId;
@@ -22,7 +22,7 @@ public class LectureReplyVO {
     this.lectureTitle = lectureTitle;
     this.lectureReplyContent = lectureReplyContent;
     this.authorName = authorName;
-    this.authorNickName = authorNickName;
+    this.authorNickname = authorNickname;
     this.authorProfileUrl = authorProfileUrl;
     this.lectureReplyScore = lectureReplyScore;
   }
@@ -76,11 +76,11 @@ public class LectureReplyVO {
   }
 
   public String getAuthorNickName() {
-    return authorNickName;
+    return authorNickname;
   }
 
-  public void setAuthorNickName(String authorNickName) {
-    this.authorNickName = authorNickName;
+  public void setAuthorNickName(String authorNickname) {
+    this.authorNickname = authorNickname;
   }
 
   public String getAuthorProfileUrl() {
@@ -103,7 +103,7 @@ public class LectureReplyVO {
   public String toString() {
     return "LectureReplyVO [lectureReplyId=" + lectureReplyId + ", memberId=" + memberId
         + ", lectureId=" + lectureId + ", lectureTitle=" + lectureTitle + ", lectureReplyContent="
-        + lectureReplyContent + ", authorName=" + authorName + ", authorNickName=" + authorNickName
+        + lectureReplyContent + ", authorName=" + authorName + ", authorNickName=" + authorNickname
         + ", authorProfileUrl=" + authorProfileUrl + ", lectureReplyScore=" + lectureReplyScore
         + "]";
   }
