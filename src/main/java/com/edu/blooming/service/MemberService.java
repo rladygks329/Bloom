@@ -1,16 +1,19 @@
 package com.edu.blooming.service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
+import javax.mail.MessagingException;
 import com.edu.blooming.domain.MemberVO;
 
 public interface MemberService {
 
-  int register(MemberVO vo);
+  int register(MemberVO vo) throws MessagingException, UnsupportedEncodingException;
 
-  // 이메일 중복검사
   boolean checkEmail(String email);
 
   boolean checkNickname(String nickname);
+
+  boolean checkEmailAuth(String email);
 
   public MemberVO login(MemberVO member);
 
@@ -21,6 +24,10 @@ public interface MemberService {
   int updateProfileUrl(int memberId, String profileUrl);
 
   int updateIntroduce(int memberId, String introduce);
+
+  int updateEmailKey(String email, String emailKey);
+
+  int updateEmailAuth(String email, String emailKey);
 
   int deleteProfileUrl(int memberId);
 

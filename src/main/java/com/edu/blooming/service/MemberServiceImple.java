@@ -1,12 +1,17 @@
 package com.edu.blooming.service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.mail.MessagingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.edu.blooming.domain.LectureReplyVO;
 import com.edu.blooming.domain.MemberVO;
 import com.edu.blooming.persistence.LectureReplyDAO;
@@ -14,6 +19,8 @@ import com.edu.blooming.persistence.LessonDAO;
 import com.edu.blooming.persistence.MemberDAO;
 import com.edu.blooming.persistence.PurchaseDAO;
 import com.edu.blooming.util.Constants;
+import com.edu.blooming.util.MailHandler;
+import com.edu.blooming.util.TempKey;
 
 @Service
 public class MemberServiceImple implements MemberService {
@@ -31,10 +38,34 @@ public class MemberServiceImple implements MemberService {
   @Autowired
   private PurchaseDAO purchaseDAO;
 
+  @Autowired
+  private JavaMailSender mailSender;
+
+  @Value("${email.username}")
+  private String sendEmailAddress;
+
+  @Transactional(value = "transactionManager")
   @Override
-  public int register(MemberVO vo) {
+  public int register(MemberVO vo) throws MessagingException, UnsupportedEncodingException {
     logger.info("create()호출: vo = " + vo.toString());
-    return memberDAO.insert(vo);
+    String emailKey = new TempKey().getKey(30, false);
+    String memberEmail = vo.getMemberEmail();
+
+    int result = memberDAO.insert(vo);
+    memberDAO.updateEmailKey(memberEmail, emailKey);
+
+    // 회원가입 완료하면 인증을 위한 이메일 발송
+    MailHandler sendMail = new MailHandler(mailSender);
+    sendMail.setSubject("[RunninGo 이메일 인증메일 입니다.]"); // 메일제목
+    sendMail.setText(
+        "<h1>Blooming 메일인증</h1>" + "<br>Blooming에 오신것을 환영합니다!" + "<br>아래 [이메일 인증 확인]을 눌러주세요."
+            + "<br><a href='http://localhost:8080/blooming/member/confirm?email="
+            + vo.getMemberEmail() + "&emailKey=" + emailKey + "' target='_blank'>이메일 인증 확인</a>");
+    sendMail.setFrom(sendEmailAddress, "Blooming");
+    sendMail.setTo(vo.getMemberEmail());
+    sendMail.send();
+
+    return result;
   }
 
   @Override
@@ -107,6 +138,24 @@ public class MemberServiceImple implements MemberService {
   public int deleteProfileUrl(int memberId) {
     logger.info("deleteProfileUrl 호출");
     return memberDAO.updateProfileUrl(memberId, null);
+  }
+
+  @Override
+  public boolean checkEmailAuth(String email) {
+    logger.info("checkEmailAuth() 호출: email = " + email);
+    return memberDAO.checkEmailAuth(email);
+  }
+
+  @Override
+  public int updateEmailKey(String email, String emailKey) {
+    logger.info("updateEmailKey 호출");
+    return memberDAO.updateEmailKey(email, emailKey);
+  }
+
+  @Override
+  public int updateEmailAuth(String email, String emailKey) {
+    logger.info("updateEmailAuth 호출");
+    return memberDAO.updateEmailAuth(email, emailKey);
   }
 
 } // end MemberService

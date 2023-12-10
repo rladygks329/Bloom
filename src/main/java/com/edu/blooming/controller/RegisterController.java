@@ -1,5 +1,7 @@
 package com.edu.blooming.controller;
 
+import java.io.UnsupportedEncodingException;
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,10 +35,16 @@ public class RegisterController {
   @PostMapping("/register")
   public String registerPOST(MemberVO vo, Model model, HttpSession session) {
     logger.info("registerPOST() 호출");
-    int result = memberService.register(vo);
-    model.addAttribute("result", result);
-    if (result == 1) {
-      return "main";
+    try {
+      int result = memberService.register(vo);
+      model.addAttribute("result", result);
+      if (result == 1) {
+        return "main";
+      }
+    } catch (MessagingException | UnsupportedEncodingException e) {
+      // 예외 처리 로직 작성
+      e.printStackTrace(); // 예외를 콘솔에 출력하거나 로깅할 수 있음
+      model.addAttribute("result", -1); // 예외 발생 시 결과값을 -1로 설정 또는 다른 방법으로 처리
     }
     return "/register";
   } // end registerPOST()
@@ -81,6 +89,21 @@ public class RegisterController {
     }
     return new ResponseEntity<>(HttpStatus.OK);
   } // end checkNicknamePOST()
+
+  @GetMapping("/confirm")
+  public String emailConfirm(@RequestParam("email") String email,
+      @RequestParam("emailKey") String emailKey, Model model) {
+    logger.info("emailConfirm() 호출");
+    logger.info("email = " + email + " emailKey = " + emailKey);
+    memberService.updateEmailAuth(email, emailKey);
+    model.addAttribute("confirmationMessage", "인증완료! 환영합니다 :) 로그인 후 이용해 주세요.");
+    return "main";
+  }
+
+  @GetMapping("/emailAuthFail")
+  public void emailAuthFailGET() {
+    logger.info("emailAuthFailGET()");
+  } // end emailAuthFailGET()
 
 } // end RegisterController
 

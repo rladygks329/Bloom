@@ -55,7 +55,7 @@ public class MemberController {
   }
 
   @PostMapping("/login")
-  public String loginPOST(HttpServletRequest request, MemberVO vo, String targetURL,
+  public String loginPOST(HttpServletRequest request, MemberVO vo, String targetURL, Model model,
       RedirectAttributes rttr) throws Exception {
     MemberVO loginVo = memberService.login(vo);
 
@@ -63,6 +63,14 @@ public class MemberController {
       String queryString = getLoginPageQueryString(targetURL);
       logger.info("redirect:/member/login" + queryString);
       return "redirect:/member/login" + queryString;
+    }
+
+    String email = loginVo.getMemberEmail();
+    boolean authorEmail = memberService.checkEmailAuth(email);
+    logger.info("authorEmail= " + authorEmail);
+    model.addAttribute("authorEmail", authorEmail);
+    if (!authorEmail) {
+      return "redirect:/member/emailAuthFail";
     }
 
     HttpSession session = request.getSession();

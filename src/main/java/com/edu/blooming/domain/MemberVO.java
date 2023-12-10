@@ -11,22 +11,28 @@ public class MemberVO {
   private String memberLevel;
   private String memberIntroduce;
   private String memberProfileUrl;
+  private String memberEmailKey;
+  private String memberEmailAuth;
 
   public MemberVO() {}
 
   public MemberVO(int memberId, String memberEmail, String memberPassword, String memberName,
       String memberNickname, String memberPhone, String memberAddress, String memberLevel,
-      String memberIntroduce, String memberProfileUrl) {
+      String memberIntroduce, String memberProfileUrl, String memberEmailKey,
+      String memberEmailAuth) {
+    super();
     this.memberId = memberId;
     this.memberEmail = memberEmail;
     this.memberPassword = memberPassword;
     this.memberName = memberName;
-    this.memberName = memberNickname;
+    this.memberNickname = memberNickname;
     this.memberPhone = memberPhone;
     this.memberAddress = memberAddress;
     this.memberLevel = memberLevel;
     this.memberIntroduce = memberIntroduce;
     this.memberProfileUrl = memberProfileUrl;
+    this.memberEmailKey = memberEmailKey;
+    this.memberEmailAuth = memberEmailAuth;
   }
 
   public int getMemberId() {
@@ -59,6 +65,14 @@ public class MemberVO {
 
   public void setMemberName(String memberName) {
     this.memberName = memberName;
+  }
+
+  public String getMemberNickname() {
+    return memberNickname;
+  }
+
+  public void setMemberNickname(String memberNickname) {
+    this.memberNickname = memberNickname;
   }
 
   public String getMemberPhone() {
@@ -101,12 +115,20 @@ public class MemberVO {
     this.memberProfileUrl = memberProfileUrl;
   }
 
-  public String getMemberNickname() {
-    return memberNickname;
+  public String getMemberEmailKey() {
+    return memberEmailKey;
   }
 
-  public void setMemberNickname(String memberNickname) {
-    this.memberNickname = memberNickname;
+  public void setMemberEmailKey(String memberEmailKey) {
+    this.memberEmailKey = memberEmailKey;
+  }
+
+  public String getMemberEmailAuth() {
+    return memberEmailAuth;
+  }
+
+  public void setMemberEmailAuth(String memberEmailAuth) {
+    this.memberEmailAuth = memberEmailAuth;
   }
 
   @Override
@@ -115,7 +137,8 @@ public class MemberVO {
         + memberPassword + ", memberName=" + memberName + ", memberNickname=" + memberNickname
         + ", memberPhone=" + memberPhone + ", memberAddress=" + memberAddress + ", memberLevel="
         + memberLevel + ", memberIntroduce=" + memberIntroduce + ", memberProfileUrl="
-        + memberProfileUrl + "]";
+        + memberProfileUrl + ", memberEmailKey=" + memberEmailKey + ", memberEmailAuth="
+        + memberEmailAuth + "]";
   }
 
 }

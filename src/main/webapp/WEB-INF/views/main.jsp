@@ -231,13 +231,22 @@ $(function(){
 	<%@ include file="/WEB-INF/views/component/footer.jsp"%>
 	
 	<input type="hidden" id="result" value="${result}">
+	<input type="hidden" id="authorEmail" value="${authorEmail ? 'true' : 'false'}">
+	
 	<script>
         window.onload = function() {
             var result = document.getElementById('result').value;
             if (result === '1') {
-                alert("회원가입을 축하합니다!");
+                alert("회원가입을 축하합니다! 이메일 인증을 완료해 주세요.");
             }
-        };
+            /*
+            var authorEmail = document.getElementById('authorEmail').value;
+            console.log(authorEmail);
+            if (authorEmail === 'false') {
+            	alert("로그인을 위해서 이메일 인증을 완료해 주세요");
+            }
+            */
+        };    
     </script>	
 	
 </body>
