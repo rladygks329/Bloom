@@ -11,6 +11,7 @@ import java.util.UUID;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.edu.blooming.domain.BoardVO;
+import com.edu.blooming.domain.MemberVO;
 import com.edu.blooming.service.BoardService;
 import com.edu.blooming.util.MediaUtil;
 import com.edu.blooming.util.PageCriteria;
@@ -81,7 +83,7 @@ public class BoardController {
   public String detail(Model model, @RequestParam Integer boardId,
       @RequestParam(defaultValue = "1") Integer page, @RequestParam(required = false) String option,
       @RequestParam(required = false) String keyword, HttpServletRequest request,
-      HttpServletResponse response) {
+      HttpServletResponse response, HttpSession session) {
     // 게시글 조회 코드
     BoardVO vo = boardService.read(boardId);
 
@@ -90,6 +92,9 @@ public class BoardController {
       model.addAttribute("url", "list");
       return "alert";
     }
+    int memberId = ((MemberVO) session.getAttribute("loginVo")).getMemberId();
+    boolean isLike = boardService.checkIsLike(memberId, boardId);
+    model.addAttribute("isLike", isLike);
 
     model.addAttribute("vo", vo);
     model.addAttribute("page", page);

@@ -55,7 +55,7 @@
 			</c:if>
 			
 			<c:if test="${loginVo.memberId ne vo.memberId}">
-				<input type="button" id="boardLike" class="btn btn-light" value="좋아요">		
+    			<input type="button" id="boardLike" class="btn btn-light" value="${isLike ? '좋아요 취소' : '좋아요'}">		
 			</c:if>
 			<a href="list?&page=${page }&option=${option}&keyword=${keyword}"><input type="button" class="btn btn-light" value="글 목록"></a>
 		</div>
