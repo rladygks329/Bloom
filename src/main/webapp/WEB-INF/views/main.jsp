@@ -19,6 +19,12 @@
 .carousel-inner {
 	height: 450px;
 }
+
+:root{
+	--next-carousel-transform: translateX(20%);
+	--prev-carousel-transform: translateX(-20%);
+}
+
 @media ( max-width : 767px) {
 	.carousel-inner {
 		height: auto;
@@ -40,10 +46,10 @@
 /* medium and up screens */
 @media ( min-width : 768px) {
 	.carousel-inner .carousel-item-end.active, .carousel-inner .carousel-item-next{
-		transform: translateX(20%);
+		transform:  var(--next-carousel-transform);
 	}
 	.carousel-inner .carousel-item-start.active, .carousel-inner .carousel-item-prev{
-		transform: translateX(-20%);
+		transform: var(--prev-carousel-transform);
 	}
 }
 
@@ -56,6 +62,15 @@
 }
 </style>
 <script>
+function updateTransformVariables(divId, transform) {
+	const div = document.getElementById(divId);
+	if (div) {
+		div.style.setProperty('--prev-carousel-transform', "translateX" + "(-" + transform + "%)");
+		div.style.setProperty('--next-carousel-transform', "translateX" + "(" + transform + "%)");
+		console.log(div);
+	}
+}
+  
 $(function(){
 	const minPerSlide = 5 // if maxPerSlide = 3 / the transform is 100/3 => 33
 	
@@ -64,9 +79,17 @@ $(function(){
 	
 	$(".slide").each(function(index, slide){
 		let items = $(slide).find(".carousel-item");
+		if(items.length == 0){
+			$(slide).append("<div>").text("해당하는 강의가 없습니다.");
+			return;
+		}
+		
+		const id = $(slide).attr("id");
+		updateTransformVariables(id, 100/items.length);
+		
 		items.each(function(index, item){
 		    let next = item.nextElementSibling
-		    for (var i = 1; i < minPerSlide; i++) {
+		    for (var i = 1; i < items.length; i++) {
 		        if (!next) {
 		        	next = items[0] 
 		        } // wrap carousel by using first child
