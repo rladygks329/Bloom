@@ -150,7 +150,7 @@
 						<!-- introduce -->
 						<div class="input-group input-group-lg mb-3">
 							<span class="input-group-text">자기소개</span>
-							<textarea class="form-control" name="memberIntroduce" class="memberIntroduce" aria-label="With textarea" required></textarea>
+							<textarea class="form-control" name="memberIntroduce" id="introduce" aria-label="With textarea" required></textarea>
 						</div>
 						<div class="d-flex justify-content-center">
 							<p>100자 이내로 작성해 주세요.</p>	
@@ -195,11 +195,11 @@
 	    	// 소개글 출력
 	    	var memberIntroduce = $('#memberIntroduce').val();
 	    	console.log(memberIntroduce);
-	    	$(".memberIntroduce").val(memberIntroduce);
+	    	$("#introduce").val(memberIntroduce);
 	    	
 	    	// 소개글 변경버튼
 	    	$('#changeIntroduceBtn').click(function() {
-	    		var memberIntroduce = $(".memberIntroduce").val();
+	    		var memberIntroduce = $("#introduce").val();
 	    		console.log("memberIntroduce = " + memberIntroduce);
 	    		$.ajax({
 	                type: 'PUT',

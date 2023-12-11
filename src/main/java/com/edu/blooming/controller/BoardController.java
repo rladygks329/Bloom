@@ -83,6 +83,13 @@ public class BoardController {
       HttpServletResponse response) {
     // 게시글 조회 코드
     BoardVO vo = boardService.read(boardId);
+
+    if (vo == null) {
+      model.addAttribute("msg", "찾으시는 강의가 존재하지 않습니다.");
+      model.addAttribute("url", "list");
+      return "alert";
+    }
+
     model.addAttribute("vo", vo);
     model.addAttribute("page", page);
 
@@ -117,7 +124,7 @@ public class BoardController {
       @PathVariable("memberId") int memberId) {
     boolean isLike = boardService.checkIsLike(memberId, boardId);
     return isLike;
-  }
+  } // detail에서 같이 넘겨주기
 
   @GetMapping("/register")
   public void registerGET() {

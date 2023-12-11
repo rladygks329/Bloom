@@ -186,6 +186,8 @@
 					if(result == 1) {
 						alert('댓글 입력 성공');
 						getAllReplies();
+						location.reload(true);
+						
 					}
 				}
 			}); // end ajax()
@@ -264,8 +266,8 @@
 			// 선택된 댓글의 replyId, replyContent 값을 저장
 			// prevAll() : 선택된 노드 이전에 있는 모든 형제 노드를 접근
 			
-			var replyId = $(this).prevAll('#replyId').val();		
-			var boardReplyContent = $(this).prevAll('#boardReplyContent').val();
+			var replyId = $(this).parent().prevAll('#replyId').val();		
+			var boardReplyContent = $(this).parent().prevAll('#boardReplyContent').val();
 			console.log("선택된 댓글 번호 : " + replyId + ", 댓글 내용 : " + boardReplyContent);
 			
 			// ajax 요청
@@ -291,7 +293,7 @@
 			console.log(this);
 			
 			var boardId = $('#boardId').val();
-			var replyId = $(this).prevAll('#replyId').val();
+			var replyId = $(this).parent().prevAll('#replyId').val();
 			console.log("선택된 댓글 번호 : " + replyId);
 				
 			// ajax 요청
@@ -365,15 +367,15 @@
 								+ '<input type="hidden" id="authorNickname" value="' + this.authorNickname +'">'
 								+ '<i class="bi bi-arrow-return-right" style="font-size: 1rem"></i>'
 								+ '<div class="author-nickname">' + this.authorNickname + '님이 작성 · ' + formattedDate + '</div>'
-								
-								+ '<textarea class="form-control" rows="3" id="boardReplyContent" margin-bottom: 5px;">' + this.boardCommentContent + '</textarea>'
+								+ '<textarea class="form-control" rows="3" id="boardCommentContent" margin-bottom: 5px;">' + this.boardCommentContent + '</textarea>'
 								+ '<div style="text-align: right;">'
 								+ '<button id="btnUpdateComment" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;" ' + disabled + '>수정</button>'
 								+ '<button id="btnDeleteComment" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;" ' + disabled + '>삭제</button>'
-								+ '</div>';
+								+ '</div>'
 								+ '</pre>'
 								+ '</div>';
 						}); // end each()
+						console.log(list);
 	
 						// 답글을 모두 불러온 뒤에 새로운 답글을 작성할 수 있는 input 추가
 			            list += '<div class="comment_regist_item">'
@@ -390,15 +392,14 @@
 				); // end getJSON()
 		} // end getAllComments
 		
-
-		
-		
 		// 답글 입력
 	    $(document).on('click', '.btnAddComment', function(){    	
 	   		var replyItem = $(this).closest('.reply_item');   		
 	   		var memberId = $('#memberId').val(); 
 			var boardReplyId = $(this).closest('.reply_item').find('#replyId').val();
-		    var boardCommentContent = $(this).prevAll('#boardCommentContent').val(); 	    
+			console.log(boardReplyId);
+		    var boardCommentContent = $(this).prevAll('#boardCommentContent').val();
+		    console.log(boardCommentContent);
 		    var obj = {
 					'memberId' : memberId,
 					'boardReplyId' : boardReplyId, 
@@ -427,8 +428,8 @@
 	    $(document).on('click', '#btnUpdateComment', function(){   	 
 	   		var replyItem = $(this).closest('.reply_item');
 	   		var boardReplyId = $(this).closest('.reply_item').find('#replyId').val();
-			var boardCommentId = $(this).prevAll('#commentId').val();
-		    var boardCommentContent = $(this).prevAll('#boardCommentContent').val(); 	  
+			var boardCommentId = $(this).parent().prevAll('#commentId').val();
+		    var boardCommentContent = $(this).parent().prevAll('#boardCommentContent').val(); 	  
 		    console.log("boardCommentId = " + boardCommentId + " boardCommentContent = " + boardCommentContent);
 	   	 
 	   	 $.ajax({
@@ -454,6 +455,7 @@
 			var replyItem = $(this).closest('.reply_item');
 	   		var boardReplyId = $(this).closest('.reply_item').find('#replyId').val();
 			var boardCommentId = $(this).prevAll('#commentId').val();
+			console.log("boardReplyId = " + boardReplyId + " boardCommentId = " + boardCommentId);
 			 
 			$.ajax({
 				type : 'DELETE',

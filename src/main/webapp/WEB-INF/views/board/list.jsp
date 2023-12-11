@@ -39,10 +39,11 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 		<br>
 		
 		<div class="d-flex justify-content-between my-3">
-
-			<div id="register">
-				<a href="register"><button type="button" class="btn btn-light">새 글 작성</button></a>
-				<a href="list"><button type="button" class="btn btn-light">목록으로</button></a>
+			<div>
+				<div id="register">
+					<a href="register"><button type="button" class="btn btn-light">새 글 작성</button></a>
+				</div>
+					<a href="list"><button type="button" class="btn btn-light">목록으로</button></a>
 			</div>
 			<div class="w-50">
 				<form class="input-group search" action="list" method="GET">

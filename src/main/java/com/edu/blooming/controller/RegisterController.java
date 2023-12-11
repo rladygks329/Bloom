@@ -90,6 +90,14 @@ public class RegisterController {
     return new ResponseEntity<>(HttpStatus.OK);
   } // end checkNicknamePOST()
 
+  @PostMapping("/sendemail")
+  @ResponseBody
+  public ResponseEntity<String> sendEmailPOST() {
+
+    return null;
+
+  }
+
   @GetMapping("/confirm")
   public String emailConfirm(@RequestParam("email") String email,
       @RequestParam("emailKey") String emailKey, Model model) {

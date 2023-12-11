@@ -80,7 +80,16 @@
 					<div class="input-group input-group-lg mb-3">
 						<span class="input-group-text"> <i class="fa fa-envelope"></i></span> 
 						<input name="memberEmail" class="form-control" id="email_input" placeholder="Email address" type="email">
+						<button class="btn btn-outline-secondary" type="button" id="button-send-emailCode" onclick="" disabled>인증번호 전송</button>
 						<div class="valid-feedback">사용 가능한 이메일입니다.</div>
+						<div class="invalid-feedback"></div>
+					</div>
+					
+					<div class="input-group input-group-lg mb-3">
+						<span class="input-group-text"> <i class="fa fa-envelope"></i></span> 
+						<input name="emailCode" class="form-control" id="emailCode_input" placeholder="인증번호 입력" type="text">
+						<button class="btn btn-outline-secondary" type="button" id="button-check-emailCode" onclick="">인증번호 확인</button>
+						<div class="valid-feedback">인증번호가 일치합니다</div>
 						<div class="invalid-feedback"></div>
 					</div>
 					
@@ -177,6 +186,7 @@
 		<!-- 카카오톡 주소찾기 -->
 		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 		<script>
+		
 			// 이메일 유효성 및 중복검사
 			function checkEmailDuplication(email) {
 				var emailRegex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
@@ -187,6 +197,7 @@
 					invalidMsg.text("이메일이 비어있습니다.")
 					input.removeClass("is-valid").addClass("is-invalid");
 					emailFinalCheck = false;
+					$("#button-send-emailCode").prop("disabled", !emailFinalCheck);
 					return;
 				}
 				
@@ -195,6 +206,7 @@
 					invalidMsg.text("이메일 형식을 확인해주세요")
 					input.removeClass("is-valid").addClass("is-invalid");
 					emailFinalCheck = false;
+					$("#button-send-emailCode").prop("disabled", !emailFinalCheck);
 					return;
 				}
 				
@@ -207,12 +219,15 @@
 					data : data,
 					success: function (data) {				        
 						input.removeClass("is-invalid").addClass("is-valid");
-				    	emailFinalCheck = true; 
+				    	emailFinalCheck = true;
+				    	$("#button-send-emailCode").prop("disabled", !emailFinalCheck);
+				    	enableSendEmailButton();
 				    },
 					error: function(xhr, status, error) {
 						invalidMsg.text("중복된 이메일입니다")
 						input.removeClass("is-valid").addClass("is-invalid");
 						emailFinalCheck = false;
+						$("#button-send-emailCode").prop("disabled", !emailFinalCheck);
 	                }				
 				});
 			} // end checkEmailDuplication()
