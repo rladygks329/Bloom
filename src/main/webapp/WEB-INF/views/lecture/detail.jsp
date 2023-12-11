@@ -221,8 +221,9 @@
 							<div class="col-md-3 me-3">
 								<img class="img-fluid mb-1" src="${author.memberProfileUrl }" onerror="this.src='https://dummyimage.com/450x300/dee2e6/6c757d.jpg';" alt="..." loading="lazy"/>
 							</div>
+							${author.memberName }
 							<br>
-								${author.memberIntroduce }
+							${author.memberIntroduce }
 							</div>
 					</div>
 				</div>
