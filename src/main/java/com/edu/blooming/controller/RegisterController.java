@@ -2,6 +2,7 @@ package com.edu.blooming.controller;
 
 import java.io.UnsupportedEncodingException;
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,10 +93,32 @@ public class RegisterController {
 
   @PostMapping("/sendemail")
   @ResponseBody
-  public ResponseEntity<String> sendEmailPOST() {
+  public String sendEmailPOST(HttpServletRequest request, String memberEmail, Model model) {
+    HttpSession session = request.getSession();
+    session.setMaxInactiveInterval(180);
+    logger.info("세션 ID: " + session.getId() + ", 세션 유효 시간: " + session.getMaxInactiveInterval());
 
-    return null;
+    String result = memberService.sendEmail(memberEmail, session);
 
+    if (result != null && result.equals("success")) {
+      model.addAttribute("msg", "이메일 전송에 성공했습니다");
+      return "alert";
+    } else {
+      model.addAttribute("msg", "이메일 전송에 실패했습니다");
+      return "alert";
+    }
+
+  }
+
+  @PostMapping("/checkcode")
+  @ResponseBody
+  public ResponseEntity<Void> checkCodePOST(@RequestParam String emailCode, HttpSession session) {
+    String storedEmailCode = (String) session.getAttribute("emailCode");
+
+    if (storedEmailCode == null || !storedEmailCode.equals(emailCode)) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @GetMapping("/confirm")

@@ -15,6 +15,7 @@
 	<script>
 	
 		var emailFinalCheck = false;
+		var emailCodeFinalCheck = false;
 		var pwFinalCheck = false;
 		var pwckFinalCheck = false;
 		var nameFinalCheck = false;
@@ -26,6 +27,11 @@
 			if(!emailFinalCheck) {
 				alert("회원가입 정보를 확인해 주세요 : 이메일");
 				return false;	
+			}
+			
+			if(!emailCodeFinalCheck) {
+				alert("회원가입 정보를 확인해 주세요 : 이메일인증");
+				return false;
 			}
 			
 			if(!pwFinalCheck) {
@@ -221,7 +227,6 @@
 						input.removeClass("is-invalid").addClass("is-valid");
 				    	emailFinalCheck = true;
 				    	$("#button-send-emailCode").prop("disabled", !emailFinalCheck);
-				    	enableSendEmailButton();
 				    },
 					error: function(xhr, status, error) {
 						invalidMsg.text("중복된 이메일입니다")
@@ -236,7 +241,56 @@
 			$('#email_input').on("blur", function() {
 				checkEmailDuplication($('#email_input').val());
 			});
-						
+			
+			// 이메일 인증번호 전송
+			$('#button-send-emailCode').on('click', function(){
+				var email = $('#email_input').val()
+				var data = {
+					memberEmail : email
+				};
+				
+				$.ajax({
+					type : 'POST',
+					url : '/blooming/member/sendemail',
+					data : data,
+					success: function(data) {
+						alert('인증번호가 발송되었습니다. 확인해 주세요');
+					},
+					error: function(error) {
+						console.error('이메일 전송 실패', error);
+					}
+				});
+			}); 			
+			
+			// 이메일 인증번호 확인
+			$('#button-check-emailCode').on('click', function () {
+				var input = $('#emailCode_input');
+				var invalidMsg = input.siblings(".invalid-feedback");
+				var emailCode = $('#emailCode_input').val();
+				var data = {
+						emailCode : emailCode
+				};
+				
+				$.ajax({
+					type : 'POST',
+					url : '/blooming/member/checkcode',
+					data : data,
+					success: function(data) {
+						input.removeClass("is-invalid").addClass("is-valid");
+						emailCodeFinalCheck = true;
+						console.log(emailCodeFinalCheck);
+						$('#email_input, #button-send-emailCode, #emailCode_input, #button-check-emailCode')
+		                .prop('disabled', true);
+					},
+					error: function(error) {
+						invalidMsg.text("인증번호가 일치하지 않습니다")
+						input.removeClass("is-valid").addClass("is-invalid");
+						emailCodeFinalCheck = false;
+						console.log(emailCodeFinalCheck);
+					}
+				});			
+			});					
+			
 			// 닉네임 유효성 및 중복검사
 			function checkNicknameDuplication(nickname) {
 				var nicknameRegex = /^[가-힣a-zA-Z0-9]{2,6}$/;

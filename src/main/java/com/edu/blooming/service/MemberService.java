@@ -3,6 +3,7 @@ package com.edu.blooming.service;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpSession;
 import com.edu.blooming.domain.MemberVO;
 
 public interface MemberService {
@@ -30,6 +31,8 @@ public interface MemberService {
   int updateEmailAuth(String email, String emailKey);
 
   int deleteProfileUrl(int memberId);
+
+  String sendEmail(String memberEmail, HttpSession session);
 
   Map<String, Object> getInstuctorStatus(int memberId);
 

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,21 +49,7 @@ public class MemberServiceImple implements MemberService {
   @Override
   public int register(MemberVO vo) throws MessagingException, UnsupportedEncodingException {
     logger.info("create()호출: vo = " + vo.toString());
-    String emailKey = new TempKey().getKey(6, false);
-    String memberEmail = vo.getMemberEmail();
-
     int result = memberDAO.insert(vo);
-    memberDAO.updateEmailKey(memberEmail, emailKey);
-
-    // 회원가입 완료하면 인증을 위한 이메일 발송
-    MailHandler sendMail = new MailHandler(mailSender);
-    sendMail.setSubject("[RunninGo 이메일 인증메일 입니다.]"); // 메일제목
-    sendMail.setText("<h1>Blooming 메일인증</h1>" + "<br>Blooming에 오신것을 환영합니다!"
-        + "<br>아래 인증 번호를 입력해주세요." + "<br>인증번호 : " + emailKey);
-    sendMail.setFrom(sendEmailAddress, "Blooming");
-    sendMail.setTo(vo.getMemberEmail());
-    sendMail.send();
-
     return result;
   }
 
@@ -155,6 +142,26 @@ public class MemberServiceImple implements MemberService {
     logger.info("updateEmailAuth 호출");
     return memberDAO.updateEmailAuth(email, emailKey);
   }
+
+  @Override
+  public String sendEmail(String memberEmail, HttpSession session) {
+    String emailKey = new TempKey().getKey(6, false);
+    try {
+      // 회원가입 완료하면 인증을 위한 이메일 발송
+      MailHandler sendMail = new MailHandler(mailSender);
+      sendMail.setSubject("[RunninGo 이메일 인증메일 입니다.]"); // 메일제목
+      sendMail.setText("<h1>Blooming 메일인증</h1>" + "<br>Blooming에 오신것을 환영합니다!"
+          + "<br>아래 인증 번호를 입력해주세요." + "<br>인증번호 : " + emailKey);
+      sendMail.setFrom(sendEmailAddress, "Blooming");
+      sendMail.setTo(memberEmail);
+      sendMail.send();
+      session.setAttribute("emailCode", emailKey);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return emailKey;
+  }
+
 
 } // end MemberService
 
