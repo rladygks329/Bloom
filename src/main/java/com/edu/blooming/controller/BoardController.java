@@ -79,7 +79,8 @@ public class BoardController {
 
   @GetMapping("/detail")
   public String detail(Model model, @RequestParam Integer boardId,
-      @RequestParam(defaultValue = "1") Integer page, HttpServletRequest request,
+      @RequestParam(defaultValue = "1") Integer page, @RequestParam(required = false) String option,
+      @RequestParam(required = false) String keyword, HttpServletRequest request,
       HttpServletResponse response) {
     // 게시글 조회 코드
     BoardVO vo = boardService.read(boardId);
@@ -92,6 +93,11 @@ public class BoardController {
 
     model.addAttribute("vo", vo);
     model.addAttribute("page", page);
+    model.addAttribute("option", option);
+    model.addAttribute("keyword", keyword);
+    logger.info("page = " + page);
+    logger.info("option = " + option);
+    logger.info("keyword = " + keyword);
 
     // 쿠키 이름과 현재 게시글 ID 및 페이지를 조합하여 쿠키 이름 생성
     String cookieName = "viewed_" + boardId + "_page" + page;

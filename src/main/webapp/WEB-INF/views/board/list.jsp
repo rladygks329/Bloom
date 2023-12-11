@@ -73,7 +73,7 @@ integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="ano
 				<c:forEach var="vo" items="${list }">
 					<tr>
 						<td>${vo.boardId }</td>
-						<td><a href="detail?boardId=${vo.boardId }&page=${pageMaker.criteria.page}" style="color: black; text-decoration: none;">${vo.boardTitle }</a></td>
+						<td><a href="detail?boardId=${vo.boardId}&page=${page}&option=${option}&keyword=${keyword}" style="color: black; text-decoration: none;">${vo.boardTitle }</a></td>
 						<td>${vo.authorNickname }</td>
 						<td>${vo.boardViewCount }</td>
 						<td>${vo.boardReplyCount }</td>
