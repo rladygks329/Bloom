@@ -64,27 +64,6 @@
 		from ${member}
 		where ${memberLevel} = 'instructor' and ${memberId} = #{memberId}	
 	</select>
-	
-	<!-- 회원가입 시 인증 랜덤번호 업데이트 -->
-	<update id="update_email_key">
-		update ${member}
-		set ${memberEmailKey} = #{memberEmailKey} 
-		where ${memberEmail} = #{memberEmail}
-	</update>
-	
-	<!-- 인증 완료 시 mail_auth 컬럼 업데이트 -->
-	<update id="update_email_auth">
-		update ${member}
-		set ${memberEmailAuth} = '1' 
-		where ${memberEmail} = #{memberEmail} and ${memberEmailKey} = #{memberEmailKey}
-	</update>
-	
-	<!-- 로그인 시 mail_auth값 확인 -->
-	<select id="check_email_auth" resultType="Integer">
-		select count(*)
-		from ${member}
-		where ${memberEmail} = #{memberEmail} and ${memberEmailAuth} = '1'
-	</select>
 		
 </mapper>
 

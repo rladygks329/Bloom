@@ -11,8 +11,6 @@ public interface MemberDAO {
 
   boolean checkNickname(String nickname);
 
-  boolean checkEmailAuth(String memberEmail);
-
   MemberVO selectInstructor(int memberId);
 
   int updatePassword(int memberId, String password);
@@ -22,10 +20,5 @@ public interface MemberDAO {
   int updateIntroduce(int memberId, String introduce);
 
   int updateProfileUrl(int memberId, String profileUrl);
-
-  int updateEmailKey(String email, String emailKey);
-
-  int updateEmailAuth(String email, String emailKey);
-
 
 }

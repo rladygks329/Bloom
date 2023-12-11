@@ -65,14 +65,6 @@ public class MemberController {
       return "redirect:/member/login" + queryString;
     }
 
-    String email = loginVo.getMemberEmail();
-    boolean authorEmail = memberService.checkEmailAuth(email);
-    logger.info("authorEmail= " + authorEmail);
-    model.addAttribute("authorEmail", authorEmail);
-    if (!authorEmail) {
-      return "redirect:/member/emailAuthFail";
-    }
-
     HttpSession session = request.getSession();
     session.setAttribute("loginVo", loginVo);
     return "redirect:" + getRedirectURL(targetURL);

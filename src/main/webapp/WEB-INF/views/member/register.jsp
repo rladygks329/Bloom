@@ -279,8 +279,7 @@
 						input.removeClass("is-invalid").addClass("is-valid");
 						emailCodeFinalCheck = true;
 						console.log(emailCodeFinalCheck);
-						$('#email_input, #button-send-emailCode, #emailCode_input, #button-check-emailCode')
-		                .prop('disabled', true);
+						$('#button-send-emailCode, #emailCode_input, #button-check-emailCode').prop('disabled', true);
 					},
 					error: function(error) {
 						invalidMsg.text("인증번호가 일치하지 않습니다")

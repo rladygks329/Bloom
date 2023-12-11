@@ -92,32 +92,6 @@ public class MemberDAOImple implements MemberDAO {
     return sqlSession.selectOne(NAMESPACE + ".select_by_instructor_id", memberId);
   }
 
-  @Override
-  public boolean checkEmailAuth(String memberEmail) {
-    logger.info("checkEmailAuth() 호출");
-    int result = sqlSession.selectOne(NAMESPACE + ".check_email_auth", memberEmail);
-    return result == 1;
-  }
-
-  @Override
-  public int updateEmailKey(String memberEmail, String memberEmailKey) {
-    logger.info("updateEmailKey() 호출");
-    HashMap<String, Object> args = new HashMap<>();
-    args.put("memberEmail", memberEmail);
-    args.put("memberEmailKey", memberEmailKey);
-
-    return sqlSession.update(NAMESPACE + ".update_email_key", args);
-  }
-
-  @Override
-  public int updateEmailAuth(String memberEmail, String memberEmailKey) {
-    logger.info("upateEmailAuth() 호출");
-    HashMap<String, Object> args = new HashMap<>();
-    args.put("memberEmail", memberEmail);
-    args.put("memberEmailKey", memberEmailKey);
-    return sqlSession.update(NAMESPACE + ".update_email_auth", args);
-  }
-
 }
 
 

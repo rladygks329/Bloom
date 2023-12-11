@@ -15,8 +15,6 @@
 		<property name="memberIntroduce" value="member_introduce"/>
     	<property name="memberProfileUrl" value="member_profile_url"/>
 		<property name="memberLevel" value="member_level"/>
-		<property name="memberEmailKey" value="member_email_key"/>
-		<property name="memberEmailAuth" value="member_email_auth"/>
 		
 		<!-- LESSON -->
 		<property name="lesson" value="lesson"/>

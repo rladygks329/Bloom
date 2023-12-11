@@ -1,10 +1,8 @@
 package com.edu.blooming.service;
 
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +45,7 @@ public class MemberServiceImple implements MemberService {
 
   @Transactional(value = "transactionManager")
   @Override
-  public int register(MemberVO vo) throws MessagingException, UnsupportedEncodingException {
+  public int register(MemberVO vo) {
     logger.info("create()호출: vo = " + vo.toString());
     int result = memberDAO.insert(vo);
     return result;
@@ -123,24 +121,6 @@ public class MemberServiceImple implements MemberService {
   public int deleteProfileUrl(int memberId) {
     logger.info("deleteProfileUrl 호출");
     return memberDAO.updateProfileUrl(memberId, null);
-  }
-
-  @Override
-  public boolean checkEmailAuth(String email) {
-    logger.info("checkEmailAuth() 호출: email = " + email);
-    return memberDAO.checkEmailAuth(email);
-  }
-
-  @Override
-  public int updateEmailKey(String email, String emailKey) {
-    logger.info("updateEmailKey 호출");
-    return memberDAO.updateEmailKey(email, emailKey);
-  }
-
-  @Override
-  public int updateEmailAuth(String email, String emailKey) {
-    logger.info("updateEmailAuth 호출");
-    return memberDAO.updateEmailAuth(email, emailKey);
   }
 
   @Override

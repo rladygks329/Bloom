@@ -11,15 +11,12 @@ public class MemberVO {
   private String memberLevel;
   private String memberIntroduce;
   private String memberProfileUrl;
-  private String memberEmailKey;
-  private String memberEmailAuth;
 
   public MemberVO() {}
 
   public MemberVO(int memberId, String memberEmail, String memberPassword, String memberName,
       String memberNickname, String memberPhone, String memberAddress, String memberLevel,
-      String memberIntroduce, String memberProfileUrl, String memberEmailKey,
-      String memberEmailAuth) {
+      String memberIntroduce, String memberProfileUrl) {
     super();
     this.memberId = memberId;
     this.memberEmail = memberEmail;
@@ -31,8 +28,6 @@ public class MemberVO {
     this.memberLevel = memberLevel;
     this.memberIntroduce = memberIntroduce;
     this.memberProfileUrl = memberProfileUrl;
-    this.memberEmailKey = memberEmailKey;
-    this.memberEmailAuth = memberEmailAuth;
   }
 
   public int getMemberId() {
@@ -115,30 +110,12 @@ public class MemberVO {
     this.memberProfileUrl = memberProfileUrl;
   }
 
-  public String getMemberEmailKey() {
-    return memberEmailKey;
-  }
-
-  public void setMemberEmailKey(String memberEmailKey) {
-    this.memberEmailKey = memberEmailKey;
-  }
-
-  public String getMemberEmailAuth() {
-    return memberEmailAuth;
-  }
-
-  public void setMemberEmailAuth(String memberEmailAuth) {
-    this.memberEmailAuth = memberEmailAuth;
-  }
-
   @Override
   public String toString() {
     return "MemberVO [memberId=" + memberId + ", memberEmail=" + memberEmail + ", memberPassword="
         + memberPassword + ", memberName=" + memberName + ", memberNickname=" + memberNickname
         + ", memberPhone=" + memberPhone + ", memberAddress=" + memberAddress + ", memberLevel="
         + memberLevel + ", memberIntroduce=" + memberIntroduce + ", memberProfileUrl="
-        + memberProfileUrl + ", memberEmailKey=" + memberEmailKey + ", memberEmailAuth="
-        + memberEmailAuth + "]";
+        + memberProfileUrl + "]";
   }
-
 }
