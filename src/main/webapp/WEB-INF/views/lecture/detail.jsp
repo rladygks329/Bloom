@@ -219,10 +219,10 @@
 					<div class="">
 						<div class="d-flex">
 							<div class="col-md-3 me-3">
-								<img class="img-fluid mb-1" src="${author.memberProfileUrl }" onerror="this.src='https://dummyimage.com/450x300/dee2e6/6c757d.jpg';" alt="..." loading="lazy"/>
+								<img class="img-fluid mb-1" src="/blooming/image/display?fileName=${author.memberProfileUrl }" onerror="this.src='https://dummyimage.com/450x300/dee2e6/6c757d.jpg';" alt="..." loading="lazy"/>
 							</div>
 							${author.memberName }
-							<br>
+							<br/>
 							${author.memberIntroduce }
 							</div>
 					</div>
