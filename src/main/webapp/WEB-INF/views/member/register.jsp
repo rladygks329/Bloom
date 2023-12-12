@@ -64,6 +64,12 @@
 				return false;
 			}
 			
+			// diabled한 input은 넘어가지 않으므로 풀어준다.
+			$("input[name='memberEmail']").each(function(i) {
+		        $(this).removeAttr('disabled');
+			});
+			
+			return true;
 		} // end validateInputs()		
 	</script>
 
@@ -254,7 +260,7 @@
 					url : '/blooming/member/sendemail',
 					data : data,
 					success: function(data) {
-						alert('인증번호가 발송되었습니다. 확인해 주세요');
+
 					},
 					error: function(error) {
 						console.error('이메일 전송 실패', error);
@@ -608,11 +614,7 @@
 					}
 				});
 			}); // end on()
-		
-			
-
 		</script>
-
 
 	<br>
 	<br>

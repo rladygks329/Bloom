@@ -26,10 +26,17 @@ public class RegisterController {
   private MemberService memberService;
 
   @GetMapping("/register")
-  public void registerGET(@RequestParam("type") String type, Model model) {
+  public String registerGET(@RequestParam("type") String type, Model model,
+      HttpServletRequest request) {
     logger.info("registerGET() 호출");
+    HttpSession session = request.getSession();
+    if (session.getAttribute("loginVo") != null) {
+      return "redirect:/main";
+    }
     model.addAttribute("memberLevel", type);
+    return "/member/register";
   } // end registerGET()
+  /////
 
   @PostMapping("/register")
   public String registerPOST(MemberVO vo, Model model, HttpSession session) {
@@ -38,7 +45,7 @@ public class RegisterController {
     logger.info(vo.getMemberEmail());
     model.addAttribute("result", result);
     if (result == 1) {
-      return "main";
+      return "redirect:/main";
     }
     return "/register";
   } // end registerPOST()
@@ -94,7 +101,7 @@ public class RegisterController {
     String result = memberService.sendEmail(memberEmail, session);
 
     if (result != null && result.equals("success")) {
-      model.addAttribute("msg", "이메일 전송에 성공했습니다");
+      model.addAttribute("msg", "메일이 전송되었습니다. 인증번호를 확인해 주세요");
       return "alert";
     } else {
       model.addAttribute("msg", "이메일 전송에 실패했습니다");
@@ -110,6 +117,8 @@ public class RegisterController {
     if (storedEmailCode == null || !storedEmailCode.equals(emailCode)) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+    session.invalidate();
+    logger.info("세션 ID: " + session.getId() + ", 세션 유효 시간: " + session.getMaxInactiveInterval());
     return new ResponseEntity<>(HttpStatus.OK);
   }
 

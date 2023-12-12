@@ -90,12 +90,41 @@
 				<br>
 			</div>
 			<div class="container">
-				<div class="collapse" id="collapseExample02">
+				<div class="collapse show" id="collapseExample02">
 				<div id="replies"></div>
 				</div>
 			</div>	
 		</div>
 	</div>
+	
+	<!-- 모달start:확인필요 -->
+	<!-- Button trigger modal -->
+	<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+	  Launch static backdrop modal
+	</button>
+	
+	<!-- Modal -->
+	<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+	        ...
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary">Understood</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	<!-- 모달end:확인필요 -->
+	
+	
+	
 	<%@ include file="/WEB-INF/views/component/footer.jsp"%>
 	
 	<script>
@@ -107,23 +136,6 @@
 		getAllReplies();
 	  	var boardId = $('#boardId').val(); 
 	  	var memberId = $('#memberId').val(); 
-	
-		// Ajax 요청을 통해 초기 "좋아요" 상태를 가져옴
-	  	$.ajax({
-	        type: 'GET',
-	        url: '/blooming/board/like/' + boardId + '/' + memberId,
-	        success: function(data) {
-	            // "좋아요" 상태를 확인하고 버튼 텍스트를 업데이트
-	            if (data) {
-	                $('#boardLike').val('좋아요 취소');
-	            } else {
-	                $('#boardLike').val('좋아요');
-	            }
-	        },
-	        error: function(xhr, status, error) {
-	            console.error(error);
-	        }
-	    });
 		
 		// 좋아요 onclieck 기능
 	    $('#boardLike').click(function() {    	
@@ -378,13 +390,13 @@
 						console.log(list);
 	
 						// 답글을 모두 불러온 뒤에 새로운 답글을 작성할 수 있는 input 추가
-			            list += '<div class="comment_regist_item">'
+			            list += '<div class="comment_regist_item" style="margin-left: 20px;">'
 			                + '<pre>'
 							+ '<input type="hidden" id="authorNickname" value="' + this.authorNickname +'">'
-			                + '&nbsp;&nbsp;' // 공백
-			                + '<textarea rows="2" cols="50" id="boardCommentContent" placeholder="답글을 입력하세요"></textarea>'
-			                + '&nbsp;&nbsp;' // 공백
-			                + '<button class="btnAddComment" ' + disabledWrite + '>답글 추가</button>'
+			                + '<textarea class="form-control" rows="3" id="boardCommentContent" margin-bottom: 5px;" placeholder="답글을 입력하세요"></textarea>'
+			                + '<div style="text-align: right;">'
+			                + '<button id="btnAddComment" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;" ' + disabledWrite + '>답글 추가</button>'
+			                + '</div>'
 			                + '</pre>'
 			                + '</div>';
 			            commentContainer.append(list);
@@ -393,7 +405,7 @@
 		} // end getAllComments
 		
 		// 답글 입력
-	    $(document).on('click', '.btnAddComment', function(){    	
+	    $(document).on('click', '#btnAddComment', function(){    	
 	   		var replyItem = $(this).closest('.reply_item');   		
 	   		var memberId = $('#memberId').val(); 
 			var boardReplyId = $(this).closest('.reply_item').find('#replyId').val();

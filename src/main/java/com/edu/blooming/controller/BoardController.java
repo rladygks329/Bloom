@@ -88,18 +88,22 @@ public class BoardController {
     BoardVO vo = boardService.read(boardId);
 
     if (vo == null) {
-      model.addAttribute("msg", "찾으시는 강의가 존재하지 않습니다.");
+      model.addAttribute("msg", "찾으시는 게시글이 존재하지 않습니다.");
       model.addAttribute("url", "list");
       return "alert";
     }
-    int memberId = ((MemberVO) session.getAttribute("loginVo")).getMemberId();
-    boolean isLike = boardService.checkIsLike(memberId, boardId);
-    model.addAttribute("isLike", isLike);
+    model.addAttribute("option", option);
+    model.addAttribute("keyword", keyword);
+    model.addAttribute("isLike", false);
+
+    if ((MemberVO) session.getAttribute("loginVo") != null) {
+      int memberId = ((MemberVO) session.getAttribute("loginVo")).getMemberId();
+      boolean isLike = boardService.checkIsLike(memberId, boardId);
+      model.addAttribute("isLike", isLike);
+    }
 
     model.addAttribute("vo", vo);
     model.addAttribute("page", page);
-    model.addAttribute("option", option);
-    model.addAttribute("keyword", keyword);
     logger.info("page = " + page);
     logger.info("option = " + option);
     logger.info("keyword = " + keyword);
@@ -129,13 +133,13 @@ public class BoardController {
     return "board/detail"; // JSP 페이지 경로만 반환
   }
 
-  @GetMapping("/like/{boardId}/{memberId}")
-  @ResponseBody
-  public boolean getLikeStatus(@PathVariable("boardId") int boardId,
-      @PathVariable("memberId") int memberId) {
-    boolean isLike = boardService.checkIsLike(memberId, boardId);
-    return isLike;
-  } // detail에서 같이 넘겨주기
+  // @GetMapping("/like/{boardId}/{memberId}")
+  // @ResponseBody
+  // public boolean getLikeStatus(@PathVariable("boardId") int boardId,
+  // @PathVariable("memberId") int memberId) {
+  // boolean isLike = boardService.checkIsLike(memberId, boardId);
+  // return isLike;
+  // } // detail에서 같이 넘겨주기
 
   @GetMapping("/register")
   public void registerGET() {
@@ -155,11 +159,17 @@ public class BoardController {
   }
 
   @GetMapping("/update")
-  public void updateGET(Model model, Integer boardId, Integer page) {
+  public String updateGET(Model model, Integer boardId, Integer page, HttpSession session) {
     logger.info("updateGET() 호출 : boardId = " + boardId);
     BoardVO vo = boardService.read(boardId);
+    int memberId = vo.getMemberId();
+    int sesMemberId = ((MemberVO) session.getAttribute("loginVo")).getMemberId();
+    if (memberId != sesMemberId) {
+      return "redirect:/main";
+    }
     model.addAttribute("vo", vo);
     model.addAttribute("page", page);
+    return "/board/update";
   }
 
   @PostMapping("/update")
