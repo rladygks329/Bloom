@@ -24,8 +24,7 @@
 	
 	<!-- 로그인 -->
 	<select id="login" parameterType="String" resultType="MemberVO">
-		select ${memberId}, ${memberEmail}, ${memberPassword}, ${memberName}, ${memberPhone}, 
-			${memberAddress}, ${memberIntroduce}, ${memberProfileUrl}, ${memberLevel} 
+		select * 
 		from ${member} 
 		where ${memberEmail} = #{memberEmail} and ${memberPassword} = #{memberPassword} 		
 	</select>
