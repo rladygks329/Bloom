@@ -97,31 +97,43 @@
 		</div>
 	</div>
 	
-	<!-- 모달start:확인필요 -->
-	<!-- Button trigger modal -->
-	<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-	  Launch static backdrop modal
-	</button>
-	
-	<!-- Modal -->
-	<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	<!-- 댓글 수정 Modal -->
+	<div class="modal fade" id="replyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="replyModalLabel" aria-hidden="true">
 	  <div class="modal-dialog">
 	    <div class="modal-content">
 	      <div class="modal-header">
-	        <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+	        <h5 class="modal-title" id="replyModalLabel">댓글 수정</h5>
 	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	      </div>
 	      <div class="modal-body">
-	        ...
+	        <textarea class="form-control" rows="3" id="modalBoardReplyContent"></textarea>
 	      </div>
 	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-	        <button type="button" class="btn btn-primary">Understood</button>
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+	        <button type="button" class="btn btn-primary" id="btnModalUpdate">수정</button>
 	      </div>
 	    </div>
 	  </div>
 	</div>
-	<!-- 모달end:확인필요 -->
+	
+	<!-- 대댓글 수정 Modal -->
+	<div class="modal fade" id="commentModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="commentModalLabel">대댓글 수정</h5>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+	        <textarea class="form-control" rows="3" id="modalBoardCommentContent"></textarea>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+	        <button type="button" class="btn btn-primary" id="btnModalUpdate">수정</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 	
 	
 	
@@ -271,16 +283,23 @@
 			); // end getJSON()
 		} // end getAllReplies()
 		
-		// 수정 버튼을 클릭하면 선택된 댓글 수정
+		// 댓글 수정시 모달창
 		$('#replies').on('click', '.reply_item #btn_update', function(){
-			console.log(this);
-					
-			// 선택된 댓글의 replyId, replyContent 값을 저장
-			// prevAll() : 선택된 노드 이전에 있는 모든 형제 노드를 접근
-			
-			var replyId = $(this).parent().prevAll('#replyId').val();		
-			var boardReplyContent = $(this).parent().prevAll('#boardReplyContent').val();
-			console.log("선택된 댓글 번호 : " + replyId + ", 댓글 내용 : " + boardReplyContent);
+		    // 선택된 댓글의 replyId, replyContent 값을 저장
+		    var replyId = $(this).parent().prevAll('#replyId').val();
+		    var boardReplyContent = $(this).parent().prevAll('#boardReplyContent').val();
+		    console.log("선택된 댓글 번호 : " + replyId + ", 댓글 내용 : " + boardReplyContent);
+		    
+		    $('#replyModal').data('replyId', replyId);
+		    $('#replyModal').modal('show');
+		});
+		
+		// 모달 내의 수정 버튼 클릭 이벤트
+		$('#replyModal').on('click', '#btnModalUpdate', function(){
+		    var replyId = $('#replyModal').data('replyId');
+		    var boardReplyContent = $('#modalBoardReplyContent').val();
+		    console.log("replyId = " + replyId);
+		    console.log("boardReplyContent = " + boardReplyContent);
 			
 			// ajax 요청
 			$.ajax({
@@ -293,6 +312,7 @@
 				success : function(result) {
 					console.log(result);
 					if(result == 1) {
+						$('#replyModal').modal('hide');
 						alert('댓글 수정 성공!');
 						getAllReplies();
 					}
@@ -410,7 +430,7 @@
 	   		var memberId = $('#memberId').val(); 
 			var boardReplyId = $(this).closest('.reply_item').find('#replyId').val();
 			console.log(boardReplyId);
-		    var boardCommentContent = $(this).prevAll('#boardCommentContent').val();
+		    var boardCommentContent = $(this).parent().prevAll('#boardCommentContent').val();
 		    console.log(boardCommentContent);
 		    var obj = {
 					'memberId' : memberId,
@@ -436,37 +456,53 @@
 			}) // end ajax
 	    }) // end document()
 	    
-		// 대댓글 수정
+		// 대댓글 수정버튼 클릭 시 모달창
 	    $(document).on('click', '#btnUpdateComment', function(){   	 
 	   		var replyItem = $(this).closest('.reply_item');
 	   		var boardReplyId = $(this).closest('.reply_item').find('#replyId').val();
 			var boardCommentId = $(this).parent().prevAll('#commentId').val();
 		    var boardCommentContent = $(this).parent().prevAll('#boardCommentContent').val(); 	  
 		    console.log("boardCommentId = " + boardCommentId + " boardCommentContent = " + boardCommentContent);
+		    
+		    $('#commentModal').data('commentId', boardCommentId);
+		    $('#commentModal').data('boardReplyId', boardReplyId);
+		    $('#commentModal').data('replyItem', replyItem);
+		    $('#commentModal').modal('show');
+		});
+		
+		// 대댓글 모달창 수정버튼 클릭
+		$('#commentModal').on('click', '#btnModalUpdate', function(){
+			var boardCommentId = $('#commentModal').data('commentId');
+			var boardReplyId = $('#commentModal').data('boardReplyId');
+			var replyItem = $('#commentModal').data('replyItem');
+			var boardCommentContent = $('#modalBoardCommentContent').val();
+			console.log("코멘트아이디 = " + boardCommentId);
+			console.log("코멘트내용 = " + boardCommentContent);
 	   	 
-	   	 $.ajax({
-	   		 type : 'PUT',
-	   		 url : 'comments/' + boardCommentId,
-	   		 headers : {
-	   			 'Content-Type' : 'application/json'
-	   		 },
-	   		 data : boardCommentContent,
-	   		 success : function(result){
-	   			 console.log(result);
-	   			 if(result == 1){
-	   				 alert('답글 수정 성공!');
-	   				 getAllComments(boardReplyId, replyItem);
-	   				 console.log("수정 ajax 에서 this = " + this);
-	   			 }
-	   		 } // end success
-	   	 }) // end ajax
-	    }) // end document(*)
+	   		$.ajax({
+	   			type : 'PUT',
+	   		 	url : 'comments/' + boardCommentId,
+		   		headers : {
+		   			'Content-Type' : 'application/json'
+		   		},
+		   		data : boardCommentContent,
+		   		success : function(result){
+		   			console.log(result);
+		   			if(result == 1){
+		   				$('#replyModal').modal('hide');
+		   				alert('답글 수정 성공!');
+		   				getAllComments(boardReplyId, replyItem);
+		   			}
+		   		} // end success
+		   	}) // end ajax			
+		});
+
 	    
 	    $(document).on('click', '#btnDeleteComment', function(){
 	   	 console.log(this);
 			var replyItem = $(this).closest('.reply_item');
 	   		var boardReplyId = $(this).closest('.reply_item').find('#replyId').val();
-			var boardCommentId = $(this).prevAll('#commentId').val();
+			var boardCommentId = $(this).parent().prevAll('#commentId').val();
 			console.log("boardReplyId = " + boardReplyId + " boardCommentId = " + boardCommentId);
 			 
 			$.ajax({
