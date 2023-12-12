@@ -164,6 +164,12 @@ public class LectureServiceImple implements LectureService {
   }
 
   // --- lecture Like ---
+  @Override
+  public List<LectureVO> readLikedLecture(int memberId) {
+    logger.info("readLikedLecture() 호출");
+    return lectureDAO.selectLikedLecture(memberId);
+  }
+
   @Transactional(value = "transactionManager")
   @Override
   public int likeLecture(int memberId, int lectureId) throws AlreadyExistException {
