@@ -26,6 +26,9 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+<!-- Bootstrap table -->
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.css">
+<script src="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.js"></script>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
@@ -47,7 +50,7 @@
 	<div class="container" style="border: 1px solid #ddd; padding: 20px;">	
 		<h5>작성한 글</h5>
 		<hr>
-		<table class="table">
+		<table class="table" data-toggle="table" data-pagination="true">
 			<thead>
 				<tr>
 					<th scope="col">번호</th>
@@ -92,7 +95,7 @@
 	<div class="container" style="border: 1px solid #ddd; padding: 20px;">
 		<h5>좋아요 누른 글</h5>
 		<hr>
-		<table class="table">
+		<table class="table" data-toggle="table" data-pagination="true">
 			<thead>
 				<tr>
 					<th scope="col">번호</th>
@@ -138,7 +141,7 @@
 	<div class="container" style="border: 1px solid #ddd; padding: 20px;">
 		<h5>작성한 댓글</h5>
 		<hr>
-		<table class="table">
+		<table class="table" data-toggle="table" data-pagination="true">
 			<thead>
 				<tr>
 					<th scope="col">번호</th>
@@ -175,7 +178,7 @@
 		<h5>내가 구매한 강의</h5>
 
 		<hr>
-		<table class="table">
+		<table class="table" data-toggle="table" data-pagination="true">
 			<thead>
 				<tr>
 					<th scope="col">번호</th>
@@ -205,7 +208,7 @@
 	<div class="container" style="border: 1px solid #ddd; padding: 20px;">
 		<h5>좋아요 누른 강의 </h5>
 		<hr>
-		<table class="table">
+		<table class="table" data-toggle="table" data-pagination="true">
 			<thead>
 				<tr>
 					<th scope="col">번호</th>
