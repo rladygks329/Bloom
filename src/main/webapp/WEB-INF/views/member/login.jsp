@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> 
 <!DOCTYPE html>
 <html>
 <head>
@@ -36,8 +37,11 @@
 						</span> <input class="form-control" name="memberPassword" placeholder="비밀번호" type="password">
 						<div class="invalid-feedback">아이디나 비밀번호를 확인해주세요</div>
 					</div>
-					
-					<br>
+					<c:if test="${not empty errorMessage}">
+	 					<div class="alert alert-danger text-center" role="alert">
+	    		    		${errorMessage}
+				    	</div>
+					</c:if>
 					<br>
 					<!-- form-group end.// -->
 					<p class="text-center">

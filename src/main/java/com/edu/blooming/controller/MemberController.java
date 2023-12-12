@@ -60,6 +60,7 @@ public class MemberController {
 
     if (loginVo == null) {
       String queryString = getLoginPageQueryString(targetURL);
+      rttr.addFlashAttribute("errorMessage", "아이디 혹은 비밀번호를 확인해 주세요.");
       logger.info("redirect:/member/login" + queryString);
       return "redirect:/member/login" + queryString;
     }
