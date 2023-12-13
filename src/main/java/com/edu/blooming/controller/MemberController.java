@@ -23,10 +23,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.edu.blooming.domain.BoardReplyVO;
 import com.edu.blooming.domain.BoardVO;
+import com.edu.blooming.domain.LectureVO;
 import com.edu.blooming.domain.MemberVO;
 import com.edu.blooming.service.BoardReplyService;
 import com.edu.blooming.service.BoardService;
+import com.edu.blooming.service.LectureService;
 import com.edu.blooming.service.MemberService;
+import com.edu.blooming.service.PurchaseService;
 
 
 @Controller
@@ -39,6 +42,12 @@ public class MemberController {
 
   @Autowired
   private BoardService boardService;
+
+  @Autowired
+  private PurchaseService purchaseService;
+
+  @Autowired
+  private LectureService lectureService;
 
   @Autowired
   private BoardReplyService boardReplyService;
@@ -95,9 +104,15 @@ public class MemberController {
     List<BoardVO> listByLike = boardService.readByMemberIdAndLIke(memberId);
     List<BoardReplyVO> replyListByMemberId = boardReplyService.readByMemberId(memberId);
 
+    List<LectureVO> purchasedLectureList = purchaseService.getPurchaseList(memberId);
+    List<LectureVO> likedLectureListList = lectureService.readLikedLecture(memberId);
+
     model.addAttribute("listByMemberId", listByMemberId);
     model.addAttribute("listByLike", listByLike);
     model.addAttribute("replyListByMemberId", replyListByMemberId);
+
+    model.addAttribute("purchasedList", purchasedLectureList);
+    model.addAttribute("likedList", likedLectureListList);
 
     return "/member/mypage";
   }
@@ -114,7 +129,6 @@ public class MemberController {
 
     return "/member/mypage-update";
   }
-
 
   @PutMapping("/password")
   @ResponseBody

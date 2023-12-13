@@ -29,7 +29,7 @@
 	
 	<!-- 내가 쓴 강의 수강평 조회 -->
 	<select id="select" resultType="LectureReplyVO">
-		select r.*, m.${memberNickName} ${authorNickName}
+		select r.*, m.${memberNickname} ${authorNickname}
 		from ${lecture_reply} r join ${member} m on r.${memberId} = m.${memberId}
 		where r.${memberId} = #{memberId} and r.${lectureId} = #{lectureId}
 	</select>
@@ -43,7 +43,7 @@
 	
 	<!-- 특정 강의 수강평 조회 -->
 	<select id="select_by_lecture_id" resultType="LectureReplyVO">
-		select r.*, m.${memberNickName} ${authorNickName}
+		select r.*, m.${memberNickname} ${authorNickname}
 		from ${lecture_reply} r join ${member} m on r.${memberId} = m.${memberId}
 		where ${lectureId} = #{lectureId}
 		order by ${lectureReplyId}
@@ -51,7 +51,7 @@
 	
 	<!-- 나에게 쓴 강의 수강평 조회(강사용) -->
 	<select id="select_by_instructor_id" resultType="LectureReplyVO">
-		select lr.*, m.${memberNickName} ${authorNickName}, l.${lectureTitle}
+		select lr.*, m.${memberNickname} ${authorNickname}, l.${lectureTitle}
 		from ${lecture_reply} lr 
 			join ${lecture} l on lr.${lectureId} = l.${lectureId} 
 			join ${member} m on lr.${memberId} = m.${memberId}
@@ -66,7 +66,7 @@
 		(
 			select rownum rn, a.* 
 			from (
-				select r.*, m.${memberNickName} ${authorNickName}
+				select r.*, m.${memberNickname} ${authorNickname}
 				from ${lecture_reply} r 
 					join ${member} m 
 					on r.${memberId} = m.${memberId}

@@ -131,16 +131,16 @@
 					</a>
 					<ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start text-white w-100" id="menu">
 						<li class="nav-item ">
-							<a href="/blooming/main" class="nav-link align-middle px-0 text-white text-decoration-none">
+							<a href="/blooming/member/mypage" class="nav-link align-middle px-0 text-white text-decoration-none">
 									<i class="fs-4 bi-house"></i> <span
 									class="ms-1 d-none d-sm-inline">홈</span>
 							</a>
 						</li>
 						<li class="nav-item w-100">
-							<a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle text-white text-decoration-none">
+							<div class="nav-link px-0 align-middle text-white text-decoration-none">
 								<i class="fs-4 bi-speedometer2"></i> 
-								<span class="ms-1 d-none d-sm-inline">강의 목록</span>
-							</a>
+								<span class="ms-1 d-none d-sm-inline">커리 큘럼</span>
+							</div>
 							<ul class="nav flex-column ms-1" id="submenu" data-bs-parent="#menu">
 								<c:forEach var="lesson" items="${lessons}">
 									<li>

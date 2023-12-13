@@ -89,7 +89,7 @@
 	
 </script>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>강사 페이지</title>
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/component/navigation.jsp"%>

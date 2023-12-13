@@ -18,7 +18,7 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>개인정보확인</title>
 </head>
 <body>
     <%@ include file="/WEB-INF/views/component/navigation.jsp"%> 
