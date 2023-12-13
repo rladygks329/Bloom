@@ -395,8 +395,8 @@
 							var updateBtn = "";
 							var deleteBtn = "";
 							if(memberId == this.memberId) {
-								updateBtn= '<button id="btn_update" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;">수정</button>';
-								deleteBtn= '<button id="btn_delete" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;">삭제</button>';
+								updateBtn= '<button id="btn_comment_update" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;">수정</button>';
+								deleteBtn= '<button id="btn_comment_delete" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;">삭제</button>';
 							}						
 	
 			                // 포맷팅된 날짜 문자열 생성
@@ -478,7 +478,7 @@
 	    }) // end document()
 	    
 		// 대댓글 수정버튼 클릭 시 모달창
-	    $(document).on('click', '#btnUpdateComment', function(){   	 
+	    $(document).on('click', '#btn_comment_update', function(){   	 
 	   		var replyItem = $(this).closest('.reply_item');
 	   		var boardReplyId = $(this).closest('.reply_item').find('#replyId').val();
 			var boardCommentId = $(this).parent().prevAll('#commentId').val();
@@ -510,7 +510,7 @@
 		   		success : function(result){
 		   			console.log(result);
 		   			if(result == 1){
-		   				$('#replyModal').modal('hide');
+		   				$('#commentModal').modal('hide');
 		   				alert('답글 수정 성공!');
 		   				getAllComments(boardReplyId, replyItem);
 		   			}
@@ -519,7 +519,7 @@
 		});
 
 	    
-	    $(document).on('click', '#btnDeleteComment', function(){
+	    $(document).on('click', '#btn_comment_delete', function(){
 	   	 console.log(this);
 			var replyItem = $(this).closest('.reply_item');
 	   		var boardReplyId = $(this).closest('.reply_item').find('#replyId').val();
