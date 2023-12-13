@@ -3,7 +3,7 @@
 <br>
 > 프로젝트명 의미 - "BLOOM"은 꽃 피우다라는 뜻을 가지고 있습니다. "재능을 꽃 피우는 곳" 이라는 뜻을 담아 이름을 지었습니다.
 
-## 실행 방법 
+## 개발환경 세팅 방법
 1. <a href="https://www.oracle.com/database/technologies/xe-prior-release-downloads.html">Oracle Database 11g Express Edition Release 11.2.0.2.0</a> 설치
 2. sql 폴더에 있는 DDL을 실행
 3. <a href="https://ffmpeg.org/download.html"> ffmpeg 링크</a> 에서 OS에 맞는 ffmpeg파일을 받고 설치
@@ -27,7 +27,7 @@ database.password={ your password }
 pay.kakao.cid={TC0ONETIME(테스트 결제용 가맹점 코드)} 
 pay.kakao.admin.key={your admin key}
 ```
-## 앱 동작 모습
+## 웹 실행 모습
 
 <details>
   <summary> 로그인 & 회원가입 </summary> 
@@ -39,71 +39,77 @@ pay.kakao.admin.key={your admin key}
   <p>Cascading Style Sheets.</p>
 </details>
 
-<br>
-
-<!-- Details nested -->
-  <details> 
-    <summary>메인 페이지</summary> 
-    <img src="https://github.com/rladygks329/Bloom/assets/64533351/3c4cc365-6414-42d4-8646-ac381472a2d4">
-    <br>
-    <p>
-    멀티플 캐로셀이 적용되어 있습니다.<br>
-    한달 동안 가장 많이 팔린 강의, 한달동안 가장 많은 좋아요를 받은 강의를 보여줍니다.
-    </p>
-  </details>
+<details> 
+  <summary>메인 페이지</summary> 
+  <p>
+    한 달 동안 ‘좋아요’를 가장 많이 받은 강의를 보여줍니다. <br>
+    한 달 동안 결제가 가장 많이 일어난 강의를 보여줍니다.
+  </p>
+  <img loading="lazy" src="https://github.com/rladygks329/Bloom/assets/64533351/50c0b3ec-da2b-4a85-b081-55fd7a8b9a80">
+  <br>
+</details>
 
 <details>
   <summary>강의 목록</summary> 
-  <img src="https://github.com/rladygks329/Bloom/assets/64533351/4189b842-caea-4faa-9118-030ee34f5cb7">
-  <img src="https://github.com/rladygks329/Bloom/assets/64533351/0ac5ba31-fa82-4a35-984f-cadeb4baceb7">
-
-  <ol>
-    <li>페이지네이션이 적용되었습니다.</li>
-    <li>작성자명으로 검색하거나 제목 + 내용으로 검색할 수 있습니다.</li>
-    <li>
-    다양한 정렬기준 (최신순, 평점 순, 댓글 많은 순, 가격 높은 순,   가격 낮은 순, 구매많은 순)으로 정렬할 수 있습니다.
-    </li>
-  <ol>
+  <p>
+    1. 페이지네이션이 적용되었습니다.<br/>
+    2. 작성자명으로 검색하거나 제목 + 내용으로 검색할 수 있습니다.<br/>
+    3. 다양한 정렬기준 (최신순, 평점 순, 댓글 많은 순, 가격 높은 순, 가격 낮은 순, 구매많은 순)으로 정렬할 수 있습니다.<br/>
+  <p>
+  <img loading="lazy" src="https://github.com/rladygks329/Bloom/assets/64533351/701fab38-5bd7-4e7d-ba6e-61d91ef43a92">
 </details>
 
 <details>
-  <summary>수강 평</summary> 
-  <p>Hypertext Markup Language</p>
-  <details> 
-    <summary>정렬과 검색</summary> 
-    <p>Latest HTML recommendation by the  
-    W3C.</p>
-  </details>
+  <summary>수강 평</summary>
+   <p>
+    1. 클릭을 통해서 평점을 조절할 수 있습니다. <br>
+    2. 모달을 사용하여 수정합니다. <br>
+    3. 페이지네이션을 적용했습니다. <br>
+    4. 자신이 만든 수강평은 맨 위에 보입니다. 
+  <p>
+  <img loading="lazy" src="https://github.com/rladygks329/Bloom/assets/64533351/b7b3dd58-a764-4d0d-9dd4-aa50acd1ddf5">
 </details>
 
 <details>
-  <summary>장바구니</summary> 
-  <p>Hypertext Markup Language</p>
-  <details> 
-    <summary>정렬과 검색</summary> 
-    <p>Latest HTML recommendation by the  
-    W3C.</p>
-  </details>
+  <summary>강의 수강 페이지</summary>
+   <p>
+    1. 화질을 조절 할 수 있습니다. <br>
+    2. 커리큘럼 내에 다른 영상으로 전환 할 수 있습니다. <br>
+    3. HLS프로토콜을 사용하여 전송합니다.
+  <p>
+  <img loading="lazy" src="https://github.com/rladygks329/Bloom/assets/64533351/3c3dae1e-7c8f-4962-a8ed-6aee9a8a3c97">
 </details>
 
 <details>
-  <summary>결제</summary> 
-  <p>Hypertext Markup Language</p>
-  <details> 
-    <summary>정렬과 검색</summary> 
-    <p>Latest HTML recommendation by the  
-    W3C.</p>
-  </details>
+  <summary>장바구니와 결제</summary>
+   <p>
+    1. 상세 페이지에서 장바구니에 추가할 수 있습니다. <br>
+    2. 장바구니에서 삭제할 수 있습니다. <br>
+    3. 총 합이 계산됩니다. <br>
+    4. 카카오 페이를 통해 결제할 수 있습니다.
+  <p>
+  <img loading="lazy" src="https://github.com/rladygks329/Bloom/assets/64533351/3c4a7e2d-f051-4469-afe5-b69023fc4df7">
 </details>
 
 <details>
-  <summary>강의 수정 및 업로드</summary> 
-  <p>Hypertext Markup Language</p>
-  <details> 
-    <summary>정렬과 검색</summary> 
-    <p>Latest HTML recommendation by the  
-    W3C.</p>
-  </details>
+  <summary>강사 페이지와 강의 수정 및 업로드</summary>
+   <p>
+    1. 강좌 별 판매량, 월 수익을 확인할 수 있습니다. <br>
+    2. 자신에게 달린 수강평을 모아서 볼 수 있습니다. <br>
+    3. 강의를 수정할 수 있습니다. <br>
+    4. 강의 영상은 비동기로 FFmpeg를 통해 mp4 -> hls 형식으로 변환됩니다.
+  <p>
+  <img loading="lazy" src="https://github.com/rladygks329/Bloom/assets/64533351/d644ff14-7ec7-426a-ba8d-14b3dc51cedc">
+</details>
+
+<details>
+  <summary>강의 상세 정보 페이지</summary>
+   <p>
+    1. 강의 정보, 강사 정보를 확인 할 수 있습니다. <br>
+    2. 강사가 만든 다른 강의를 찾아 볼 수 있습니다. <br>
+    3. 사용자 상태에 따라서, 장바구니, 강의 보기 등 버튼이 달라집니다.
+  <p>
+  <img loading="lazy" src="https://github.com/rladygks329/Bloom/assets/64533351/afcd0e28-c84b-4208-87a5-35180b6f28ed">
 </details>
 
 ## 사용 기술
@@ -119,7 +125,7 @@ pay.kakao.admin.key={your admin key}
 
 
 ## ERD - Diagram
-![blooming erd](https://github.com/rladygks329/Bloom/assets/64533351/40a17f76-d8dc-49df-88bc-6a489e01e82d)
+![blooming ERD 최종본](https://github.com/rladygks329/Bloom/assets/64533351/13176e35-26b7-44b3-a819-a6e5b6d03cd2)
 
 ## 컨벤션과 협업전략
 <details>
