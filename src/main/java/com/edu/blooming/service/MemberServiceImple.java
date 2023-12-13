@@ -3,10 +3,14 @@ package com.edu.blooming.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.edu.blooming.domain.LectureReplyVO;
 import com.edu.blooming.domain.MemberVO;
 import com.edu.blooming.persistence.LectureReplyDAO;
@@ -14,6 +18,8 @@ import com.edu.blooming.persistence.LessonDAO;
 import com.edu.blooming.persistence.MemberDAO;
 import com.edu.blooming.persistence.PurchaseDAO;
 import com.edu.blooming.util.Constants;
+import com.edu.blooming.util.MailHandler;
+import com.edu.blooming.util.TempKey;
 
 @Service
 public class MemberServiceImple implements MemberService {
@@ -31,10 +37,18 @@ public class MemberServiceImple implements MemberService {
   @Autowired
   private PurchaseDAO purchaseDAO;
 
+  @Autowired
+  private JavaMailSender mailSender;
+
+  @Value("${email.username}")
+  private String sendEmailAddress;
+
+  @Transactional(value = "transactionManager")
   @Override
   public int register(MemberVO vo) {
     logger.info("create()호출: vo = " + vo.toString());
-    return memberDAO.insert(vo);
+    int result = memberDAO.insert(vo);
+    return result;
   }
 
   @Override
@@ -108,6 +122,26 @@ public class MemberServiceImple implements MemberService {
     logger.info("deleteProfileUrl 호출");
     return memberDAO.updateProfileUrl(memberId, null);
   }
+
+  @Override
+  public String sendEmail(String memberEmail, HttpSession session) {
+    String emailKey = new TempKey().getKey(6, false);
+    try {
+      // 회원가입 완료하면 인증을 위한 이메일 발송
+      MailHandler sendMail = new MailHandler(mailSender);
+      sendMail.setSubject("[RunninGo 이메일 인증메일 입니다.]"); // 메일제목
+      sendMail.setText("<h1>Blooming 메일인증</h1>" + "<br>Blooming에 오신것을 환영합니다!"
+          + "<br>아래 인증 번호를 입력해주세요." + "<br>인증번호 : " + emailKey);
+      sendMail.setFrom(sendEmailAddress, "Blooming");
+      sendMail.setTo(memberEmail);
+      sendMail.send();
+      session.setAttribute("emailCode", emailKey);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return emailKey;
+  }
+
 
 } // end MemberService
 

@@ -15,17 +15,24 @@
 	<script>
 	
 		var emailFinalCheck = false;
+		var emailCodeFinalCheck = false;
 		var pwFinalCheck = false;
 		var pwckFinalCheck = false;
 		var nameFinalCheck = false;
 		var nicknameFinalCheck = false;
 		var phoneFinalCheck = false;
 		var addressFinalCheck = false;
+		var imageFinalCheck = false;
 				
 		function validateInputs(event){
 			if(!emailFinalCheck) {
 				alert("회원가입 정보를 확인해 주세요 : 이메일");
 				return false;	
+			}
+			
+			if(!emailCodeFinalCheck) {
+				alert("회원가입 정보를 확인해 주세요 : 이메일인증");
+				return false;
 			}
 			
 			if(!pwFinalCheck) {
@@ -58,6 +65,12 @@
 				return false;
 			}
 			
+			// diabled한 input은 넘어가지 않으므로 풀어준다.
+			$("input[name='memberEmail']").each(function(i) {
+		        $(this).removeAttr('disabled');
+			});
+			
+			return true;
 		} // end validateInputs()		
 	</script>
 
@@ -80,7 +93,16 @@
 					<div class="input-group input-group-lg mb-3">
 						<span class="input-group-text"> <i class="fa fa-envelope"></i></span> 
 						<input name="memberEmail" class="form-control" id="email_input" placeholder="Email address" type="email">
+						<button class="btn btn-outline-secondary" type="button" id="button-send-emailCode" onclick="" disabled>인증번호 전송</button>
 						<div class="valid-feedback">사용 가능한 이메일입니다.</div>
+						<div class="invalid-feedback"></div>
+					</div>
+					
+					<div class="input-group input-group-lg mb-3">
+						<span class="input-group-text"> <i class="fa fa-envelope"></i></span> 
+						<input name="emailCode" class="form-control" id="emailCode_input" placeholder="인증번호 입력" type="text">
+						<button class="btn btn-outline-secondary" type="button" id="button-check-emailCode" onclick="">인증번호 확인</button>
+						<div class="valid-feedback">인증번호가 일치합니다</div>
 						<div class="invalid-feedback"></div>
 					</div>
 					
@@ -152,7 +174,7 @@
 						<!-- introduce -->
 						<div class="input-group input-group-lg mb-3">
 							<span class="input-group-text">자기소개</span>
-							<textarea class="form-control" name="memberIntroduce" aria-label="With textarea"></textarea>
+							<textarea class="form-control" name="memberIntroduce" aria-label="With textarea" maxlength="300" placeholder="300자 이내로 작성해주세요"></textarea>
 						</div>
 	
 						<!-- profile img -->
@@ -177,6 +199,7 @@
 		<!-- 카카오톡 주소찾기 -->
 		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 		<script>
+		
 			// 이메일 유효성 및 중복검사
 			function checkEmailDuplication(email) {
 				var emailRegex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
@@ -187,6 +210,7 @@
 					invalidMsg.text("이메일이 비어있습니다.")
 					input.removeClass("is-valid").addClass("is-invalid");
 					emailFinalCheck = false;
+					$("#button-send-emailCode").prop("disabled", !emailFinalCheck);
 					return;
 				}
 				
@@ -195,6 +219,7 @@
 					invalidMsg.text("이메일 형식을 확인해주세요")
 					input.removeClass("is-valid").addClass("is-invalid");
 					emailFinalCheck = false;
+					$("#button-send-emailCode").prop("disabled", !emailFinalCheck);
 					return;
 				}
 				
@@ -207,12 +232,14 @@
 					data : data,
 					success: function (data) {				        
 						input.removeClass("is-invalid").addClass("is-valid");
-				    	emailFinalCheck = true; 
+				    	emailFinalCheck = true;
+				    	$("#button-send-emailCode").prop("disabled", !emailFinalCheck);
 				    },
 					error: function(xhr, status, error) {
 						invalidMsg.text("중복된 이메일입니다")
 						input.removeClass("is-valid").addClass("is-invalid");
 						emailFinalCheck = false;
+						$("#button-send-emailCode").prop("disabled", !emailFinalCheck);
 	                }				
 				});
 			} // end checkEmailDuplication()
@@ -221,7 +248,55 @@
 			$('#email_input').on("blur", function() {
 				checkEmailDuplication($('#email_input').val());
 			});
-						
+			
+			// 이메일 인증번호 전송
+			$('#button-send-emailCode').on('click', function(){
+				var email = $('#email_input').val()
+				var data = {
+					memberEmail : email
+				};
+				
+				$.ajax({
+					type : 'POST',
+					url : '/blooming/member/sendemail',
+					data : data,
+					success: function(data) {
+						alert('인증번호가 발송되었습니다. 확인해 주세요');
+					},
+					error: function(error) {
+						console.error('이메일 전송 실패', error);
+					}
+				});
+			}); 			
+			
+			// 이메일 인증번호 확인
+			$('#button-check-emailCode').on('click', function () {
+				var input = $('#emailCode_input');
+				var invalidMsg = input.siblings(".invalid-feedback");
+				var emailCode = $('#emailCode_input').val();
+				var data = {
+						emailCode : emailCode
+				};
+				
+				$.ajax({
+					type : 'POST',
+					url : '/blooming/member/checkcode',
+					data : data,
+					success: function(data) {
+						input.removeClass("is-invalid").addClass("is-valid");
+						emailCodeFinalCheck = true;
+						console.log(emailCodeFinalCheck);
+						$('#email_input, #button-send-emailCode, #emailCode_input, #button-check-emailCode').prop('disabled', true);
+					},
+					error: function(error) {
+						invalidMsg.text("인증번호가 일치하지 않습니다")
+						input.removeClass("is-valid").addClass("is-invalid");
+						emailCodeFinalCheck = false;
+						console.log(emailCodeFinalCheck);
+					}
+				});			
+			});					
+			
 			// 닉네임 유효성 및 중복검사
 			function checkNicknameDuplication(nickname) {
 				var nicknameRegex = /^[가-힣a-zA-Z0-9]{2,6}$/;
@@ -490,12 +565,12 @@
 			var maxSize = 1048576; //1MB
 			function fileCheck(fileName, fileSize) {
 				if (fileSize >= maxSize) {
-					alert("파일 사이즈 초과");
+					alert("파일 사이즈 초과");					
 					return false;
 				}
 
 				if (!regex.test(fileName)) {
-					alert("해당 종류의 파일은 업로드할 수 없습니다.");
+					alert("해당 종류의 파일은 업로드할 수 없습니다.");					
 					return false;
 				}
 				return true;
@@ -540,11 +615,7 @@
 					}
 				});
 			}); // end on()
-		
-			
-
 		</script>
-
 
 	<br>
 	<br>

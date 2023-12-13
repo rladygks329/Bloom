@@ -48,19 +48,19 @@ public class MemberController {
     logger.info("loginGET() 호출");
     HttpSession session = request.getSession();
     if (session.getAttribute("loginVo") != null) {
-      logger.info("로그인되지 않은 상태 - mypage-identify로 리다이렉트");
       return "redirect:/main";
     }
     return "/member/login";
   }
 
   @PostMapping("/login")
-  public String loginPOST(HttpServletRequest request, MemberVO vo, String targetURL,
+  public String loginPOST(HttpServletRequest request, MemberVO vo, String targetURL, Model model,
       RedirectAttributes rttr) throws Exception {
     MemberVO loginVo = memberService.login(vo);
 
     if (loginVo == null) {
       String queryString = getLoginPageQueryString(targetURL);
+      rttr.addFlashAttribute("errorMessage", "아이디 혹은 비밀번호를 확인해 주세요.");
       logger.info("redirect:/member/login" + queryString);
       return "redirect:/member/login" + queryString;
     }
@@ -185,18 +185,7 @@ public class MemberController {
       @RequestBody String memberProfileUrl) {
     logger.info(memberProfileUrl);
     int memberId = (int) request.getAttribute("memberId");
-
-    int result;
-    if (memberProfileUrl == null || memberProfileUrl.equals("null")) {
-      // 프로필 사진을 삭제하는 경우
-      logger.info("프로필 사진을 삭제하는 경우");
-      result = memberService.deleteProfileUrl(memberId);
-    } else {
-      // 프로필 사진을 업데이트하는 경우
-      logger.info("프로필 사진을 업데이트하는 경우");
-      result = memberService.updateProfileUrl(memberId, memberProfileUrl);
-    }
-
+    int result = memberService.updateProfileUrl(memberId, memberProfileUrl);
     logger.info("결과값 : " + result);
     if (result != 1) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

@@ -231,13 +231,15 @@ $(function(){
 	<%@ include file="/WEB-INF/views/component/footer.jsp"%>
 	
 	<input type="hidden" id="result" value="${result}">
+	<input type="hidden" id="authorEmail" value="${authorEmail ? 'true' : 'false'}">
+	
 	<script>
         window.onload = function() {
             var result = document.getElementById('result').value;
             if (result === '1') {
                 alert("회원가입을 축하합니다!");
             }
-        };
+        };    
     </script>	
 	
 </body>
