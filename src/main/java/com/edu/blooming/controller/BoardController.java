@@ -73,6 +73,7 @@ public class BoardController {
     pageMaker.setCriteria(criteria);
     pageMaker.setPageData();
 
+    model.addAttribute("page", page);
     model.addAttribute("list", list);
     model.addAttribute("option", option);
     model.addAttribute("keyword", keyword);

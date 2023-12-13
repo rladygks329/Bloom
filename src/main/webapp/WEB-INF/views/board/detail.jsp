@@ -20,6 +20,7 @@
 
 	<br>
 	<br>
+	<input type="hidden" id="authorId" value="${vo.memberId}">
 	<div class="container" style="border: 1px solid #ddd; padding: 20px;">
 		<div class="container" >
 			<h1 style="font-size: 36px;">${vo.boardTitle }</h1>
@@ -63,21 +64,25 @@
 		<br>
 		<br>
 		<br>
+	
 		<div class="container" style="border: 1px solid #ddd; padding: 20px;">
 			<div class="container">
 				<p style="font-size: 18px;">댓글 ${vo.boardReplyCount }</p>		
 				<div class="d-flex">
+					<c:if test="${vo.memberId != 999999}">
 					<p class="me-2">
 						<button class="btn btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample01" aria-expanded="false" aria-controls="collapseExample">
 							댓글을 입력해 주세요
 						</button>
 					</p>
+					</c:if>
 					<p>
 						<button class="btn btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample02" aria-expanded="false" aria-controls="collapseExample">
 							댓글 보이기/숨기기
 						</button>
 					</p>
 				</div>
+
 				<div class="collapse" id="collapseExample01">
 					<div class="card card-body">
 						<input type="hidden" id="boardId" name="boardId" value="${vo.boardId }">
@@ -182,7 +187,12 @@
 		$('#btnAddReply').click(function(){
 			console.log("댓글입력");
 			var boardId = $('#boardId').val(); 
-			var memberId = $('#memberId').val(); 
+			var memberId = $('#memberId').val();
+			var authorId = $("#authorId").val();
+			
+			if(authorId == "999999"){
+				alert("삭제된 게시글에는 댓글을 달 수 없습니다.");
+			}
 			
 			if (memberId === "") {	    
 		        alert("댓글을 작성하려면 로그인이 필요합니다.");
@@ -244,6 +254,8 @@
 						console.log(this);
 						
 						var boardReplyDateCreated = new Date(this.boardReplyDateCreated);
+						var updateBtn = "";
+						var deleteBtn = "";
 						
 						var disabled = 'disabled';
 	
@@ -251,7 +263,8 @@
 						console.log(this.memberId);
 						
 						if(memberId == this.memberId) {
-							disabled = '';
+							updateBtn= '<button id="btn_update" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;">수정</button>'
+							deleteBtn= '<button id="btn_delete" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;">삭제</button>'
 						}
 						
 		                // 포맷팅된 날짜 문자열 생성
@@ -268,10 +281,10 @@
 							+ '<input type="hidden" id="memberId" value="' + this.memberId +'">'
 							+ '<input type="hidden" id="authorNickname" value="' + this.authorNickname +'">'
 							+ '<div class="author-nickname">' + this.authorNickname + '님이 작성 · ' + formattedDate + '</div>'
-							+ '<textarea class="form-control" rows="3" id="boardReplyContent" margin-bottom: 5px;">' + this.boardReplyContent + '</textarea>'
+							+ '<div class="form-control py-3" rows="3" id="boardReplyContent" margin-bottom: 5px;">' + this.boardReplyContent + '</div>'
 						    + '<div style="text-align: right;">'
-							+ '<button id="btn_update" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;" ' + disabled + '>수정</button>'
-							+ '<button id="btn_delete" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;" ' + disabled + '>삭제</button>'
+							+ updateBtn
+							+ deleteBtn
 							+ '<button id="btnComment" class="btn btn-outline-secondary btn-sm">답글</button>'	
 							+ '</div>'
 							+ '<div class="comments"></div>'
@@ -379,10 +392,11 @@
 							console.log(this);
 							
 							var boardCommentDateCreated = new Date(this.boardCommentDateCreated);						
-							var disabled = 'disabled';						
-							
+							var updateBtn = "";
+							var deleteBtn = "";
 							if(memberId == this.memberId) {
-								disabled = '';
+								updateBtn= '<button id="btn_update" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;">수정</button>';
+								deleteBtn= '<button id="btn_delete" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;">삭제</button>';
 							}						
 	
 			                // 포맷팅된 날짜 문자열 생성
@@ -399,10 +413,10 @@
 								+ '<input type="hidden" id="authorNickname" value="' + this.authorNickname +'">'
 								+ '<i class="bi bi-arrow-return-right" style="font-size: 1rem"></i>'
 								+ '<div class="author-nickname">' + this.authorNickname + '님이 작성 · ' + formattedDate + '</div>'
-								+ '<textarea class="form-control" rows="3" id="boardCommentContent" margin-bottom: 5px;">' + this.boardCommentContent + '</textarea>'
+								+ '<div class="form-control py-3" rows="3" id="boardCommentContent" margin-bottom: 5px;">' + this.boardCommentContent + '</div>'
 								+ '<div style="text-align: right;">'
-								+ '<button id="btnUpdateComment" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;" ' + disabled + '>수정</button>'
-								+ '<button id="btnDeleteComment" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;" ' + disabled + '>삭제</button>'
+								+ updateBtn
+								+ deleteBtn
 								+ '</div>'
 								+ '</pre>'
 								+ '</div>';
@@ -429,9 +443,16 @@
 	   		var replyItem = $(this).closest('.reply_item');   		
 	   		var memberId = $('#memberId').val(); 
 			var boardReplyId = $(this).closest('.reply_item').find('#replyId').val();
-			console.log(boardReplyId);
 		    var boardCommentContent = $(this).parent().prevAll('#boardCommentContent').val();
-		    console.log(boardCommentContent);
+			var authorId = $("#authorId").val();
+			
+			console.log(boardReplyId);
+			console.log(boardCommentContent);
+			if(authorId == "999999"){
+				alert("삭제된 게시글에는 답글을 달 수 없습니다.");
+				return;
+			}
+		    
 		    var obj = {
 					'memberId' : memberId,
 					'boardReplyId' : boardReplyId, 
