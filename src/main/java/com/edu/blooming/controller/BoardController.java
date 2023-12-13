@@ -164,6 +164,7 @@ public class BoardController {
     logger.info("updateGET() 호출 : boardId = " + boardId);
     BoardVO vo = boardService.read(boardId);
     int memberId = vo.getMemberId();
+    logger.info("memberId = " + memberId);
     int sesMemberId = ((MemberVO) session.getAttribute("loginVo")).getMemberId();
     if (memberId != sesMemberId) {
       return "redirect:/main";
@@ -174,7 +175,9 @@ public class BoardController {
   }
 
   @PostMapping("/update")
-  public String updatePOST(BoardVO vo, Integer page) {
+  public String updatePOST(BoardVO vo, Integer page, HttpSession session) {
+    int memberId = ((MemberVO) session.getAttribute("loginVo")).getMemberId();
+    vo.setMemberId(memberId);
     logger.info("updatePOST()호출: vo = " + vo.toString());
     int result = boardService.update(vo);
     logger.info("page : " + page + "result : " + result);

@@ -26,6 +26,7 @@
 	<h3>질문글 수정</h3>	
 	<form action="update" method="POST">
 		<input type="hidden" name="page" value="${page }">
+		<input type="hidden" name="boardId" value="${vo.boardId }">
 		
 		<div class="input-group mb-3">
 	  		<input type="text" name="boardTitle" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="${vo.boardTitle }" placeholder="제목에 내용을 요약해 보세요" required>
