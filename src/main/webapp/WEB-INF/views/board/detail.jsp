@@ -20,6 +20,7 @@
 
 	<br>
 	<br>
+	<input type="hidden" id="authorId" value="${vo.memberId}">
 	<div class="container" style="border: 1px solid #ddd; padding: 20px;">
 		<div class="container" >
 			<h1 style="font-size: 36px;">${vo.boardTitle }</h1>
@@ -55,29 +56,33 @@
 			</c:if>
 			
 			<c:if test="${loginVo.memberId ne vo.memberId}">
-				<input type="button" id="boardLike" class="btn btn-light" value="좋아요">		
+    			<input type="button" id="boardLike" class="btn btn-light" value="${isLike ? '좋아요 취소' : '좋아요'}">		
 			</c:if>
-			<a href="list?&page=${page }"><input type="button" class="btn btn-light" value="글 목록"></a>
+			<a href="list?&page=${page }&option=${option}&keyword=${keyword}"><input type="button" class="btn btn-light" value="글 목록"></a>
 		</div>
 
 		<br>
 		<br>
 		<br>
+	
 		<div class="container" style="border: 1px solid #ddd; padding: 20px;">
 			<div class="container">
 				<p style="font-size: 18px;">댓글 ${vo.boardReplyCount }</p>		
 				<div class="d-flex">
+					<c:if test="${vo.memberId != 999999}">
 					<p class="me-2">
 						<button class="btn btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample01" aria-expanded="false" aria-controls="collapseExample">
 							댓글을 입력해 주세요
 						</button>
 					</p>
+					</c:if>
 					<p>
 						<button class="btn btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample02" aria-expanded="false" aria-controls="collapseExample">
 							댓글 보이기/숨기기
 						</button>
 					</p>
 				</div>
+
 				<div class="collapse" id="collapseExample01">
 					<div class="card card-body">
 						<input type="hidden" id="boardId" name="boardId" value="${vo.boardId }">
@@ -90,12 +95,53 @@
 				<br>
 			</div>
 			<div class="container">
-				<div class="collapse" id="collapseExample02">
+				<div class="collapse show" id="collapseExample02">
 				<div id="replies"></div>
 				</div>
 			</div>	
 		</div>
 	</div>
+	
+	<!-- 댓글 수정 Modal -->
+	<div class="modal fade" id="replyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="replyModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="replyModalLabel">댓글 수정</h5>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+	        <textarea class="form-control" rows="3" id="modalBoardReplyContent"></textarea>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+	        <button type="button" class="btn btn-primary" id="btnModalUpdate">수정</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	<!-- 대댓글 수정 Modal -->
+	<div class="modal fade" id="commentModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="commentModalLabel">대댓글 수정</h5>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+	        <textarea class="form-control" rows="3" id="modalBoardCommentContent"></textarea>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+	        <button type="button" class="btn btn-primary" id="btnModalUpdate">수정</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	
+	
 	<%@ include file="/WEB-INF/views/component/footer.jsp"%>
 	
 	<script>
@@ -107,23 +153,6 @@
 		getAllReplies();
 	  	var boardId = $('#boardId').val(); 
 	  	var memberId = $('#memberId').val(); 
-	
-		// Ajax 요청을 통해 초기 "좋아요" 상태를 가져옴
-	  	$.ajax({
-	        type: 'GET',
-	        url: '/blooming/board/like/' + boardId + '/' + memberId,
-	        success: function(data) {
-	            // "좋아요" 상태를 확인하고 버튼 텍스트를 업데이트
-	            if (data) {
-	                $('#boardLike').val('좋아요 취소');
-	            } else {
-	                $('#boardLike').val('좋아요');
-	            }
-	        },
-	        error: function(xhr, status, error) {
-	            console.error(error);
-	        }
-	    });
 		
 		// 좋아요 onclieck 기능
 	    $('#boardLike').click(function() {    	
@@ -158,7 +187,12 @@
 		$('#btnAddReply').click(function(){
 			console.log("댓글입력");
 			var boardId = $('#boardId').val(); 
-			var memberId = $('#memberId').val(); 
+			var memberId = $('#memberId').val();
+			var authorId = $("#authorId").val();
+			
+			if(authorId == "999999"){
+				alert("삭제된 게시글에는 댓글을 달 수 없습니다.");
+			}
 			
 			if (memberId === "") {	    
 		        alert("댓글을 작성하려면 로그인이 필요합니다.");
@@ -186,6 +220,8 @@
 					if(result == 1) {
 						alert('댓글 입력 성공');
 						getAllReplies();
+						location.reload(true);
+						
 					}
 				}
 			}); // end ajax()
@@ -218,6 +254,8 @@
 						console.log(this);
 						
 						var boardReplyDateCreated = new Date(this.boardReplyDateCreated);
+						var updateBtn = "";
+						var deleteBtn = "";
 						
 						var disabled = 'disabled';
 	
@@ -225,7 +263,8 @@
 						console.log(this.memberId);
 						
 						if(memberId == this.memberId) {
-							disabled = '';
+							updateBtn= '<button id="btn_update" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;">수정</button>'
+							deleteBtn= '<button id="btn_delete" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;">삭제</button>'
 						}
 						
 		                // 포맷팅된 날짜 문자열 생성
@@ -242,10 +281,10 @@
 							+ '<input type="hidden" id="memberId" value="' + this.memberId +'">'
 							+ '<input type="hidden" id="authorNickname" value="' + this.authorNickname +'">'
 							+ '<div class="author-nickname">' + this.authorNickname + '님이 작성 · ' + formattedDate + '</div>'
-							+ '<textarea class="form-control" rows="3" id="boardReplyContent" margin-bottom: 5px;">' + this.boardReplyContent + '</textarea>'
+							+ '<div class="form-control py-3" rows="3" id="boardReplyContent" margin-bottom: 5px;">' + this.boardReplyContent + '</div>'
 						    + '<div style="text-align: right;">'
-							+ '<button id="btn_update" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;" ' + disabled + '>수정</button>'
-							+ '<button id="btn_delete" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;" ' + disabled + '>삭제</button>'
+							+ updateBtn
+							+ deleteBtn
 							+ '<button id="btnComment" class="btn btn-outline-secondary btn-sm">답글</button>'	
 							+ '</div>'
 							+ '<div class="comments"></div>'
@@ -257,16 +296,23 @@
 			); // end getJSON()
 		} // end getAllReplies()
 		
-		// 수정 버튼을 클릭하면 선택된 댓글 수정
+		// 댓글 수정시 모달창
 		$('#replies').on('click', '.reply_item #btn_update', function(){
-			console.log(this);
-					
-			// 선택된 댓글의 replyId, replyContent 값을 저장
-			// prevAll() : 선택된 노드 이전에 있는 모든 형제 노드를 접근
-			
-			var replyId = $(this).prevAll('#replyId').val();		
-			var boardReplyContent = $(this).prevAll('#boardReplyContent').val();
-			console.log("선택된 댓글 번호 : " + replyId + ", 댓글 내용 : " + boardReplyContent);
+		    // 선택된 댓글의 replyId, replyContent 값을 저장
+		    var replyId = $(this).parent().prevAll('#replyId').val();
+		    var boardReplyContent = $(this).parent().prevAll('#boardReplyContent').val();
+		    console.log("선택된 댓글 번호 : " + replyId + ", 댓글 내용 : " + boardReplyContent);
+		    
+		    $('#replyModal').data('replyId', replyId);
+		    $('#replyModal').modal('show');
+		});
+		
+		// 모달 내의 수정 버튼 클릭 이벤트
+		$('#replyModal').on('click', '#btnModalUpdate', function(){
+		    var replyId = $('#replyModal').data('replyId');
+		    var boardReplyContent = $('#modalBoardReplyContent').val();
+		    console.log("replyId = " + replyId);
+		    console.log("boardReplyContent = " + boardReplyContent);
 			
 			// ajax 요청
 			$.ajax({
@@ -279,6 +325,7 @@
 				success : function(result) {
 					console.log(result);
 					if(result == 1) {
+						$('#replyModal').modal('hide');
 						alert('댓글 수정 성공!');
 						getAllReplies();
 					}
@@ -291,7 +338,7 @@
 			console.log(this);
 			
 			var boardId = $('#boardId').val();
-			var replyId = $(this).prevAll('#replyId').val();
+			var replyId = $(this).parent().prevAll('#replyId').val();
 			console.log("선택된 댓글 번호 : " + replyId);
 				
 			// ajax 요청
@@ -345,10 +392,11 @@
 							console.log(this);
 							
 							var boardCommentDateCreated = new Date(this.boardCommentDateCreated);						
-							var disabled = 'disabled';						
-							
+							var updateBtn = "";
+							var deleteBtn = "";
 							if(memberId == this.memberId) {
-								disabled = '';
+								updateBtn= '<button id="btn_update" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;">수정</button>';
+								deleteBtn= '<button id="btn_delete" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;">삭제</button>';
 							}						
 	
 			                // 포맷팅된 날짜 문자열 생성
@@ -365,24 +413,24 @@
 								+ '<input type="hidden" id="authorNickname" value="' + this.authorNickname +'">'
 								+ '<i class="bi bi-arrow-return-right" style="font-size: 1rem"></i>'
 								+ '<div class="author-nickname">' + this.authorNickname + '님이 작성 · ' + formattedDate + '</div>'
-								
-								+ '<textarea class="form-control" rows="3" id="boardReplyContent" margin-bottom: 5px;">' + this.boardCommentContent + '</textarea>'
+								+ '<div class="form-control py-3" rows="3" id="boardCommentContent" margin-bottom: 5px;">' + this.boardCommentContent + '</div>'
 								+ '<div style="text-align: right;">'
-								+ '<button id="btnUpdateComment" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;" ' + disabled + '>수정</button>'
-								+ '<button id="btnDeleteComment" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;" ' + disabled + '>삭제</button>'
-								+ '</div>';
+								+ updateBtn
+								+ deleteBtn
+								+ '</div>'
 								+ '</pre>'
 								+ '</div>';
 						}); // end each()
+						console.log(list);
 	
 						// 답글을 모두 불러온 뒤에 새로운 답글을 작성할 수 있는 input 추가
-			            list += '<div class="comment_regist_item">'
+			            list += '<div class="comment_regist_item" style="margin-left: 20px;">'
 			                + '<pre>'
 							+ '<input type="hidden" id="authorNickname" value="' + this.authorNickname +'">'
-			                + '&nbsp;&nbsp;' // 공백
-			                + '<textarea rows="2" cols="50" id="boardCommentContent" placeholder="답글을 입력하세요"></textarea>'
-			                + '&nbsp;&nbsp;' // 공백
-			                + '<button class="btnAddComment" ' + disabledWrite + '>답글 추가</button>'
+			                + '<textarea class="form-control" rows="3" id="boardCommentContent" margin-bottom: 5px;" placeholder="답글을 입력하세요"></textarea>'
+			                + '<div style="text-align: right;">'
+			                + '<button id="btnAddComment" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;" ' + disabledWrite + '>답글 추가</button>'
+			                + '</div>'
 			                + '</pre>'
 			                + '</div>';
 			            commentContainer.append(list);
@@ -390,15 +438,21 @@
 				); // end getJSON()
 		} // end getAllComments
 		
-
-		
-		
 		// 답글 입력
-	    $(document).on('click', '.btnAddComment', function(){    	
+	    $(document).on('click', '#btnAddComment', function(){    	
 	   		var replyItem = $(this).closest('.reply_item');   		
 	   		var memberId = $('#memberId').val(); 
 			var boardReplyId = $(this).closest('.reply_item').find('#replyId').val();
-		    var boardCommentContent = $(this).prevAll('#boardCommentContent').val(); 	    
+		    var boardCommentContent = $(this).parent().prevAll('#boardCommentContent').val();
+			var authorId = $("#authorId").val();
+			
+			console.log(boardReplyId);
+			console.log(boardCommentContent);
+			if(authorId == "999999"){
+				alert("삭제된 게시글에는 답글을 달 수 없습니다.");
+				return;
+			}
+		    
 		    var obj = {
 					'memberId' : memberId,
 					'boardReplyId' : boardReplyId, 
@@ -423,37 +477,54 @@
 			}) // end ajax
 	    }) // end document()
 	    
-		// 대댓글 수정
+		// 대댓글 수정버튼 클릭 시 모달창
 	    $(document).on('click', '#btnUpdateComment', function(){   	 
 	   		var replyItem = $(this).closest('.reply_item');
 	   		var boardReplyId = $(this).closest('.reply_item').find('#replyId').val();
-			var boardCommentId = $(this).prevAll('#commentId').val();
-		    var boardCommentContent = $(this).prevAll('#boardCommentContent').val(); 	  
+			var boardCommentId = $(this).parent().prevAll('#commentId').val();
+		    var boardCommentContent = $(this).parent().prevAll('#boardCommentContent').val(); 	  
 		    console.log("boardCommentId = " + boardCommentId + " boardCommentContent = " + boardCommentContent);
+		    
+		    $('#commentModal').data('commentId', boardCommentId);
+		    $('#commentModal').data('boardReplyId', boardReplyId);
+		    $('#commentModal').data('replyItem', replyItem);
+		    $('#commentModal').modal('show');
+		});
+		
+		// 대댓글 모달창 수정버튼 클릭
+		$('#commentModal').on('click', '#btnModalUpdate', function(){
+			var boardCommentId = $('#commentModal').data('commentId');
+			var boardReplyId = $('#commentModal').data('boardReplyId');
+			var replyItem = $('#commentModal').data('replyItem');
+			var boardCommentContent = $('#modalBoardCommentContent').val();
+			console.log("코멘트아이디 = " + boardCommentId);
+			console.log("코멘트내용 = " + boardCommentContent);
 	   	 
-	   	 $.ajax({
-	   		 type : 'PUT',
-	   		 url : 'comments/' + boardCommentId,
-	   		 headers : {
-	   			 'Content-Type' : 'application/json'
-	   		 },
-	   		 data : boardCommentContent,
-	   		 success : function(result){
-	   			 console.log(result);
-	   			 if(result == 1){
-	   				 alert('답글 수정 성공!');
-	   				 getAllComments(boardReplyId, replyItem);
-	   				 console.log("수정 ajax 에서 this = " + this);
-	   			 }
-	   		 } // end success
-	   	 }) // end ajax
-	    }) // end document(*)
+	   		$.ajax({
+	   			type : 'PUT',
+	   		 	url : 'comments/' + boardCommentId,
+		   		headers : {
+		   			'Content-Type' : 'application/json'
+		   		},
+		   		data : boardCommentContent,
+		   		success : function(result){
+		   			console.log(result);
+		   			if(result == 1){
+		   				$('#replyModal').modal('hide');
+		   				alert('답글 수정 성공!');
+		   				getAllComments(boardReplyId, replyItem);
+		   			}
+		   		} // end success
+		   	}) // end ajax			
+		});
+
 	    
 	    $(document).on('click', '#btnDeleteComment', function(){
 	   	 console.log(this);
 			var replyItem = $(this).closest('.reply_item');
 	   		var boardReplyId = $(this).closest('.reply_item').find('#replyId').val();
-			var boardCommentId = $(this).prevAll('#commentId').val();
+			var boardCommentId = $(this).parent().prevAll('#commentId').val();
+			console.log("boardReplyId = " + boardReplyId + " boardCommentId = " + boardCommentId);
 			 
 			$.ajax({
 				type : 'DELETE',

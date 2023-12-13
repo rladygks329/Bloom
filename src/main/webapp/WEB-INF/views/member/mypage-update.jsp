@@ -118,7 +118,8 @@
 					<h4 class="card-title mt-3 text-center">프로필사진 변경</h4>
 					<!-- 기존 프로필 이미지 표시 -->
 					<div class="text-center">
-						<img src="/blooming/image/display?fileName=${loginVo.memberProfileUrl}" alt="프로필사진" id="profilePreview" onerror="this.src='https://dummyimage.com/450x300/dee2e6/6c757d.jpg';" alt="...">
+						<img src="/blooming/image/display?fileName=${loginVo.memberProfileUrl}"
+						 alt="..." id="profilePreview" onerror="this.src='	https://dummyimage.com/300x300/dee2e6/6c757d.jpg';">
 					</div>
 					<form id="changeProfileForm" enctype="multipart/form-data">
 						<input type="hidden" id="profileUrl" name="memberProfileUrl">
@@ -150,7 +151,7 @@
 						<!-- introduce -->
 						<div class="input-group input-group-lg mb-3">
 							<span class="input-group-text">자기소개</span>
-							<textarea class="form-control" name="memberIntroduce" class="memberIntroduce" aria-label="With textarea" required></textarea>
+							<textarea class="form-control" name="memberIntroduce" id="introduce" aria-label="With textarea" required></textarea>
 						</div>
 						<div class="d-flex justify-content-center">
 							<p>100자 이내로 작성해 주세요.</p>	
@@ -195,11 +196,11 @@
 	    	// 소개글 출력
 	    	var memberIntroduce = $('#memberIntroduce').val();
 	    	console.log(memberIntroduce);
-	    	$(".memberIntroduce").val(memberIntroduce);
+	    	$("#introduce").val(memberIntroduce);
 	    	
 	    	// 소개글 변경버튼
 	    	$('#changeIntroduceBtn').click(function() {
-	    		var memberIntroduce = $(".memberIntroduce").val();
+	    		var memberIntroduce = $("#introduce").val();
 	    		console.log("memberIntroduce = " + memberIntroduce);
 	    		$.ajax({
 	                type: 'PUT',
@@ -386,15 +387,15 @@
 	        }); // end changeNicknameBtn()
 	        
 			$('#deleteProfileBtn').click(function() {
+				var memberProfileUrl = "1";
 			    // AJAX 요청을 통해 서버로 프로필 사진 삭제 요청 전송
 			    $.ajax({
 			        type: 'PUT',
 			        url: '/blooming/member/profile', 
-			        headers: {
-			            'Content-Type': 'application/json'
-			        },
-			        data: JSON.stringify({ memberProfileUrl: null }),
-
+			        headers : {
+	    				'Content-Type' : 'application/json'
+	    			},
+			        data : memberProfileUrl,
 			        success: function(data) {
 			            alert("프로필 사진이 성공적으로 삭제되었습니다.");
 			            //$('#profilePreview').attr('src', '');

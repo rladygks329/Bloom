@@ -49,7 +49,7 @@
 		<property name="lectureReplyContent" value="lecture_reply_content"/>
 		<property name="lectureReplyScore" value="lecture_reply_score"/>
 		<property name="authorName" value="author_name"/>
-		<property name="authorNickName" value="author_nick_name"/>
+		<property name="authorNickname" value="author_nickname"/>
 		<property name="authorProfileUrl" value="author_Profile_Url"/>
 		
 		<!-- LECTURE_LIKE  -->

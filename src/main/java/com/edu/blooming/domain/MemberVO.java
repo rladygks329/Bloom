@@ -17,11 +17,12 @@ public class MemberVO {
   public MemberVO(int memberId, String memberEmail, String memberPassword, String memberName,
       String memberNickname, String memberPhone, String memberAddress, String memberLevel,
       String memberIntroduce, String memberProfileUrl) {
+    super();
     this.memberId = memberId;
     this.memberEmail = memberEmail;
     this.memberPassword = memberPassword;
     this.memberName = memberName;
-    this.memberName = memberNickname;
+    this.memberNickname = memberNickname;
     this.memberPhone = memberPhone;
     this.memberAddress = memberAddress;
     this.memberLevel = memberLevel;
@@ -59,6 +60,14 @@ public class MemberVO {
 
   public void setMemberName(String memberName) {
     this.memberName = memberName;
+  }
+
+  public String getMemberNickname() {
+    return memberNickname;
+  }
+
+  public void setMemberNickname(String memberNickname) {
+    this.memberNickname = memberNickname;
   }
 
   public String getMemberPhone() {
@@ -101,14 +110,6 @@ public class MemberVO {
     this.memberProfileUrl = memberProfileUrl;
   }
 
-  public String getMemberNickname() {
-    return memberNickname;
-  }
-
-  public void setMemberNickname(String memberNickname) {
-    this.memberNickname = memberNickname;
-  }
-
   @Override
   public String toString() {
     return "MemberVO [memberId=" + memberId + ", memberEmail=" + memberEmail + ", memberPassword="
@@ -117,5 +118,4 @@ public class MemberVO {
         + memberLevel + ", memberIntroduce=" + memberIntroduce + ", memberProfileUrl="
         + memberProfileUrl + "]";
   }
-
 }

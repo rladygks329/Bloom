@@ -89,14 +89,7 @@ public class LectureServiceImple implements LectureService {
   public MemberVO getInstructorInfo(int memberId) {
     logger.info("강사 Id: " + memberId);
 
-    /*
-     * MemberVO instructor = memberDAO.select(null); return instructor;
-     */
-    MemberVO vo = new MemberVO();
-    vo.setMemberName("임시이름");
-    vo.setMemberProfileUrl("임시 사진");
-    vo.setMemberIntroduce("임시 설명글");
-
+    MemberVO vo = memberDAO.selectInstructor(memberId);
     return vo;
   }
 
@@ -171,6 +164,12 @@ public class LectureServiceImple implements LectureService {
   }
 
   // --- lecture Like ---
+  @Override
+  public List<LectureVO> readLikedLecture(int memberId) {
+    logger.info("readLikedLecture() 호출");
+    return lectureDAO.selectLikedLecture(memberId);
+  }
+
   @Transactional(value = "transactionManager")
   @Override
   public int likeLecture(int memberId, int lectureId) throws AlreadyExistException {

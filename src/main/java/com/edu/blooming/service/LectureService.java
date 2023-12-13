@@ -33,6 +33,9 @@ public interface LectureService {
   Map<String, Object> getUserStatus(int memberId, int lectureId);
 
   // -- lecture Like ---
+
+  List<LectureVO> readLikedLecture(int memberId);
+
   int likeLecture(int memberId, int lectureId) throws AlreadyExistException;
 
   int dislikeLecture(int memberId, int lectureId);

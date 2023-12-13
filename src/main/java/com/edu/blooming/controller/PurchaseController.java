@@ -59,7 +59,7 @@ public class PurchaseController {
     purchaseService.success(memberId);
     logger.info("Purchase 호출 : memberId : " + memberId);
     logger.info("result : " + result.toString());
-    return "redirect:/lecture/list";
+    return "redirect:/member/mypage";
   }
 
   private String getToken(HttpServletRequest request, String type) {

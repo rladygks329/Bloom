@@ -24,8 +24,7 @@
 	
 	<!-- 로그인 -->
 	<select id="login" parameterType="String" resultType="MemberVO">
-		select ${memberId}, ${memberEmail}, ${memberPassword}, ${memberName}, ${memberPhone}, 
-			${memberAddress}, ${memberIntroduce}, ${memberProfileUrl}, ${memberLevel} 
+		select * 
 		from ${member} 
 		where ${memberEmail} = #{memberEmail} and ${memberPassword} = #{memberPassword} 		
 	</select>
@@ -57,14 +56,6 @@
 		set ${memberProfileUrl} = #{memberProfileUrl, jdbcType=VARCHAR}
 		where ${memberId} = #{memberId}
 	</update>
-
-	<!-- 비밀번호 확인 
-	<select id="identify_password" resultType="Integer">
-		select count(*) 
-		from ${member}
-		where 
-	</select>
-	-->
 	
 	<!-- 강사정보 조회 -->
 	<select id="select_by_instructor_id" resultType="MemberVO">
@@ -72,6 +63,6 @@
 		from ${member}
 		where ${memberLevel} = 'instructor' and ${memberId} = #{memberId}	
 	</select>
-	
+		
 </mapper>
 

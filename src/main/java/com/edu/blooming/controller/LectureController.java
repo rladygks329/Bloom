@@ -122,7 +122,7 @@ public class LectureController {
                                       .mapToObj(i -> new LessonVO(lessonId[i], -1, -1, -1, lessonName[i], lessonUrl[i]))
                                       .collect(Collectors.toList());
     lectureService.create(lecture, lessons);
-    return "redirect:/lecture/list";
+    return "redirect:/member/instructor-page";
   }
   // @formatter:on
 

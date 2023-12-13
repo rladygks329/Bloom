@@ -23,10 +23,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.edu.blooming.domain.BoardReplyVO;
 import com.edu.blooming.domain.BoardVO;
+import com.edu.blooming.domain.LectureVO;
 import com.edu.blooming.domain.MemberVO;
 import com.edu.blooming.service.BoardReplyService;
 import com.edu.blooming.service.BoardService;
+import com.edu.blooming.service.LectureService;
 import com.edu.blooming.service.MemberService;
+import com.edu.blooming.service.PurchaseService;
 
 
 @Controller
@@ -41,6 +44,12 @@ public class MemberController {
   private BoardService boardService;
 
   @Autowired
+  private PurchaseService purchaseService;
+
+  @Autowired
+  private LectureService lectureService;
+
+  @Autowired
   private BoardReplyService boardReplyService;
 
   @GetMapping("/login")
@@ -48,19 +57,19 @@ public class MemberController {
     logger.info("loginGET() 호출");
     HttpSession session = request.getSession();
     if (session.getAttribute("loginVo") != null) {
-      logger.info("로그인되지 않은 상태 - mypage-identify로 리다이렉트");
       return "redirect:/main";
     }
     return "/member/login";
   }
 
   @PostMapping("/login")
-  public String loginPOST(HttpServletRequest request, MemberVO vo, String targetURL,
+  public String loginPOST(HttpServletRequest request, MemberVO vo, String targetURL, Model model,
       RedirectAttributes rttr) throws Exception {
     MemberVO loginVo = memberService.login(vo);
 
     if (loginVo == null) {
       String queryString = getLoginPageQueryString(targetURL);
+      rttr.addFlashAttribute("errorMessage", "아이디 혹은 비밀번호를 확인해 주세요.");
       logger.info("redirect:/member/login" + queryString);
       return "redirect:/member/login" + queryString;
     }
@@ -95,9 +104,15 @@ public class MemberController {
     List<BoardVO> listByLike = boardService.readByMemberIdAndLIke(memberId);
     List<BoardReplyVO> replyListByMemberId = boardReplyService.readByMemberId(memberId);
 
+    List<LectureVO> purchasedLectureList = purchaseService.getPurchaseList(memberId);
+    List<LectureVO> likedLectureListList = lectureService.readLikedLecture(memberId);
+
     model.addAttribute("listByMemberId", listByMemberId);
     model.addAttribute("listByLike", listByLike);
     model.addAttribute("replyListByMemberId", replyListByMemberId);
+
+    model.addAttribute("purchasedList", purchasedLectureList);
+    model.addAttribute("likedList", likedLectureListList);
 
     return "/member/mypage";
   }
@@ -114,7 +129,6 @@ public class MemberController {
 
     return "/member/mypage-update";
   }
-
 
   @PutMapping("/password")
   @ResponseBody
@@ -185,18 +199,7 @@ public class MemberController {
       @RequestBody String memberProfileUrl) {
     logger.info(memberProfileUrl);
     int memberId = (int) request.getAttribute("memberId");
-
-    int result;
-    if (memberProfileUrl == null || memberProfileUrl.equals("null")) {
-      // 프로필 사진을 삭제하는 경우
-      logger.info("프로필 사진을 삭제하는 경우");
-      result = memberService.deleteProfileUrl(memberId);
-    } else {
-      // 프로필 사진을 업데이트하는 경우
-      logger.info("프로필 사진을 업데이트하는 경우");
-      result = memberService.updateProfileUrl(memberId, memberProfileUrl);
-    }
-
+    int result = memberService.updateProfileUrl(memberId, memberProfileUrl);
     logger.info("결과값 : " + result);
     if (result != 1) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

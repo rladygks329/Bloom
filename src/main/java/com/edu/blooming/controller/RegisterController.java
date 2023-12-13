@@ -1,5 +1,6 @@
 package com.edu.blooming.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.edu.blooming.domain.MemberVO;
+import com.edu.blooming.service.LectureService;
 import com.edu.blooming.service.MemberService;
 
 @Controller
@@ -24,19 +26,32 @@ public class RegisterController {
   @Autowired
   private MemberService memberService;
 
+  @Autowired
+  LectureService lectureService;
+
   @GetMapping("/register")
-  public void registerGET(@RequestParam("type") String type, Model model) {
+  public String registerGET(@RequestParam("type") String type, Model model,
+      HttpServletRequest request) {
     logger.info("registerGET() 호출");
+    HttpSession session = request.getSession();
+    if (session.getAttribute("loginVo") != null) {
+      return "redirect:/main";
+    }
     model.addAttribute("memberLevel", type);
+    return "/member/register";
   } // end registerGET()
+  /////
 
   @PostMapping("/register")
   public String registerPOST(MemberVO vo, Model model, HttpSession session) {
     logger.info("registerPOST() 호출");
     int result = memberService.register(vo);
+    logger.info(vo.getMemberEmail());
     model.addAttribute("result", result);
+    model.addAttribute("list_hot_like", lectureService.readHotLikeLectures(1, 5));
+    model.addAttribute("list_hot_sale", lectureService.readHotSaleLectures(1, 5));
     if (result == 1) {
-      return "main";
+      return "/main";
     }
     return "/register";
   } // end registerPOST()
@@ -81,6 +96,38 @@ public class RegisterController {
     }
     return new ResponseEntity<>(HttpStatus.OK);
   } // end checkNicknamePOST()
+
+  @PostMapping("/sendemail")
+  @ResponseBody
+  public String sendEmailPOST(HttpServletRequest request, String memberEmail, Model model) {
+    HttpSession session = request.getSession();
+    session.setMaxInactiveInterval(180);
+    logger.info("세션 ID: " + session.getId() + ", 세션 유효 시간: " + session.getMaxInactiveInterval());
+
+    String result = memberService.sendEmail(memberEmail, session);
+
+    if (result != null && result.equals("success")) {
+      logger.info("result = " + result);
+      model.addAttribute("msg", "메일이 전송되었습니다. 인증번호를 확인해 주세요");
+      return "alert";
+    } else {
+      model.addAttribute("msg", "이메일 전송에 실패했습니다");
+      return "alert";
+    }
+  }
+
+  @PostMapping("/checkcode")
+  @ResponseBody
+  public ResponseEntity<Void> checkCodePOST(@RequestParam String emailCode, HttpSession session) {
+    String storedEmailCode = (String) session.getAttribute("emailCode");
+
+    if (storedEmailCode == null || !storedEmailCode.equals(emailCode)) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+    session.invalidate();
+    logger.info("세션 ID: " + session.getId() + ", 세션 유효 시간: " + session.getMaxInactiveInterval());
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 
 } // end RegisterController
 

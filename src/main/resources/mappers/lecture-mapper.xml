@@ -108,6 +108,7 @@
 				) a
 			) l join ${member} m on l.${memberId} = m.${memberId}
 		where rn between #{start} and #{end}
+		ORDER BY rn asc
 	</select>
 	
 	<!-- 강좌 검색 조회 PageNation -->
@@ -131,6 +132,7 @@
 				) a
 			) l join ${member} m on l.${memberId} = m.${memberId}
 		where rn between #{start} and #{end}
+		ORDER BY rn asc
 	</select>
 	
 	<!-- 강좌 작성자 검색 조회 PageNation -->
@@ -154,6 +156,7 @@
 				) a
 			) b
 		where rn between #{start} and #{end}
+		ORDER BY rn asc
 	</select>
 	
 	<!-- n달 동안 좋아요를 많이 받은 강의 조회  -->

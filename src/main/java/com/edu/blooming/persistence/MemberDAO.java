@@ -21,5 +21,4 @@ public interface MemberDAO {
 
   int updateProfileUrl(int memberId, String profileUrl);
 
-
 }

@@ -158,7 +158,9 @@
 	<input id="memberId" type="hidden" value="${memberId}" />
 	<input id="purchase" type="hidden" value="${purchaseStatus}" />
 	<input id="cart" type="hidden" value="${cartStatus}" />
-
+	<input id="purchase" type="hidden" value="${purchaseStatus}" />
+	<input id="authorNickname" type="hidden" value="${loginVo.memberNickname}" />
+	
 	<section class="py-5">
 		<div class="container px-4 px-lg-5 my-5">
 			<div class="row gx-4 gx-lg-5 align-items-center">
@@ -219,10 +221,11 @@
 					<div class="">
 						<div class="d-flex">
 							<div class="col-md-3 me-3">
-								<img class="img-fluid mb-1" src="${author.memberProfileUrl }" onerror="this.src='https://dummyimage.com/450x300/dee2e6/6c757d.jpg';" alt="..." loading="lazy"/>
+								<img class="img-fluid mb-1" src="/blooming/image/display?fileName=${author.memberProfileUrl }" onerror="this.src='https://dummyimage.com/450x300/dee2e6/6c757d.jpg';" alt="..." loading="lazy"/>
 							</div>
-							<br>
-								${author.memberIntroduce }
+							${author.memberName }
+							<br/>
+							${author.memberIntroduce }
 							</div>
 					</div>
 				</div>
@@ -406,6 +409,7 @@
 		    const lectureId = $("#lectureId").val();
 		    const lectureReplyScore = $("#review-score").val();
 		    const lectureReplyContent = $("#review-content").val();
+		    const authorNickName = $("#authorNickname").val();
 	
 		    if(memberId === ''){
 		        alert("로그인한 유저만 이용가능합니다.");
@@ -434,7 +438,7 @@
 		        statusCode : {
 		        	201: function(result) {
 			            console.log("addReplies 성공 result : " + result);
-			            const newReply = {...data, lectureReplyId : result }; 
+			            const newReply = {...data, lectureReplyId : result, authorNickName: authorNickName}; 
 			            makeMyComment(newReply);
 			         	// 기존 값 지우기
 			            $("#review-content").val("");
