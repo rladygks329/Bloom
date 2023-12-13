@@ -365,6 +365,7 @@
 			var boardReplyId = $(this).closest('.reply_item').find('#replyId').val();
 			console.log("답글버튼클릭 boardReplyId = " + boardReplyId);
 			getAllComments(boardReplyId, this);
+			
 	    }) // end btnComment.click()     
 	     
 		// 게시판 답글 전체 가져오기
@@ -443,11 +444,17 @@
 	   		var replyItem = $(this).closest('.reply_item');   		
 	   		var memberId = $('#memberId').val(); 
 			var boardReplyId = $(this).closest('.reply_item').find('#replyId').val();
+			var authorReplyId = $(this).closest('.reply_item').find('#memberId').val();
 		    var boardCommentContent = $(this).parent().prevAll('#boardCommentContent').val();
 			var authorId = $("#authorId").val();
 			
 			console.log(boardReplyId);
 			console.log(boardCommentContent);
+			if(authorReplyId == "999999"){
+				alert("삭제된 댓글에는 답글을 달 수 없습니다.");
+				return;
+			}
+			
 			if(authorId == "999999"){
 				alert("삭제된 게시글에는 답글을 달 수 없습니다.");
 				return;
