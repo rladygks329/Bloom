@@ -28,7 +28,10 @@
 			<div>
 				<p style="font-size: 14px;">작성자: ${vo.authorNickname } </p>
 				<fmt:formatDate value="${vo.boardDateCreated }" pattern="yyyy-MM-dd HH:mm:ss" var="boardDateCreated"/>
-				<p style="font-size: 14px;">${boardDateCreated }에 작성 · 조회수 ${vo.boardViewCount } · 좋아요 ${vo.boardLikeCount } </p>	
+				<p style="font-size: 14px;">
+    				${boardDateCreated }에 작성 · 조회수 ${vo.boardViewCount } · 좋아요 
+    				<span id="boardLikeCount">${vo.boardLikeCount}</span>
+				</p>	
 			</div>
 			<hr>
 		</div>
@@ -175,6 +178,7 @@
 	                } else {
 	                    $('#boardLike').val('좋아요');
 	                }
+	                $('#boardLikeCount').text(data);
 	            },
 	            error: function(xhr, status, error) {
 	                // 처리 실패 시 예외 처리
