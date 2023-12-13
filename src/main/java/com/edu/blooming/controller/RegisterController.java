@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.edu.blooming.domain.MemberVO;
+import com.edu.blooming.service.LectureService;
 import com.edu.blooming.service.MemberService;
 
 @Controller
@@ -24,6 +25,9 @@ public class RegisterController {
 
   @Autowired
   private MemberService memberService;
+
+  @Autowired
+  LectureService lectureService;
 
   @GetMapping("/register")
   public String registerGET(@RequestParam("type") String type, Model model,
@@ -44,8 +48,10 @@ public class RegisterController {
     int result = memberService.register(vo);
     logger.info(vo.getMemberEmail());
     model.addAttribute("result", result);
+    model.addAttribute("list_hot_like", lectureService.readHotLikeLectures(1, 5));
+    model.addAttribute("list_hot_sale", lectureService.readHotSaleLectures(1, 5));
     if (result == 1) {
-      return "redirect:/main";
+      return "/main";
     }
     return "/register";
   } // end registerPOST()
@@ -101,6 +107,7 @@ public class RegisterController {
     String result = memberService.sendEmail(memberEmail, session);
 
     if (result != null && result.equals("success")) {
+      logger.info("result = " + result);
       model.addAttribute("msg", "메일이 전송되었습니다. 인증번호를 확인해 주세요");
       return "alert";
     } else {

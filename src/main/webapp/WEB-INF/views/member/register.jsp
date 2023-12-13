@@ -22,6 +22,7 @@
 		var nicknameFinalCheck = false;
 		var phoneFinalCheck = false;
 		var addressFinalCheck = false;
+		var imageFinalCheck = false;
 				
 		function validateInputs(event){
 			if(!emailFinalCheck) {
@@ -173,7 +174,7 @@
 						<!-- introduce -->
 						<div class="input-group input-group-lg mb-3">
 							<span class="input-group-text">자기소개</span>
-							<textarea class="form-control" name="memberIntroduce" aria-label="With textarea"></textarea>
+							<textarea class="form-control" name="memberIntroduce" aria-label="With textarea" maxlength="300" placeholder="300자 이내로 작성해주세요"></textarea>
 						</div>
 	
 						<!-- profile img -->
@@ -260,7 +261,7 @@
 					url : '/blooming/member/sendemail',
 					data : data,
 					success: function(data) {
-
+						alert('인증번호가 발송되었습니다. 확인해 주세요');
 					},
 					error: function(error) {
 						console.error('이메일 전송 실패', error);
@@ -285,7 +286,7 @@
 						input.removeClass("is-invalid").addClass("is-valid");
 						emailCodeFinalCheck = true;
 						console.log(emailCodeFinalCheck);
-						$('#button-send-emailCode, #emailCode_input, #button-check-emailCode').prop('disabled', true);
+						$('#email_input, #button-send-emailCode, #emailCode_input, #button-check-emailCode').prop('disabled', true);
 					},
 					error: function(error) {
 						invalidMsg.text("인증번호가 일치하지 않습니다")
@@ -564,12 +565,12 @@
 			var maxSize = 1048576; //1MB
 			function fileCheck(fileName, fileSize) {
 				if (fileSize >= maxSize) {
-					alert("파일 사이즈 초과");
+					alert("파일 사이즈 초과");					
 					return false;
 				}
 
 				if (!regex.test(fileName)) {
-					alert("해당 종류의 파일은 업로드할 수 없습니다.");
+					alert("해당 종류의 파일은 업로드할 수 없습니다.");					
 					return false;
 				}
 				return true;
