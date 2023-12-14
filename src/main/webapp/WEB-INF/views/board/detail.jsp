@@ -28,7 +28,10 @@
 			<div>
 				<p style="font-size: 14px;">작성자: ${vo.authorNickname } </p>
 				<fmt:formatDate value="${vo.boardDateCreated }" pattern="yyyy-MM-dd HH:mm:ss" var="boardDateCreated"/>
-				<p style="font-size: 14px;">${boardDateCreated }에 작성 · 조회수 ${vo.boardViewCount } · 좋아요 ${vo.boardLikeCount } </p>	
+				<p style="font-size: 14px;">
+    				${boardDateCreated }에 작성 · 조회수 ${vo.boardViewCount } · 좋아요 
+    				<span id="boardLikeCount">${vo.boardLikeCount}</span>
+				</p>	
 			</div>
 			<hr>
 		</div>
@@ -175,6 +178,7 @@
 	                } else {
 	                    $('#boardLike').val('좋아요');
 	                }
+	                $('#boardLikeCount').text(data);
 	            },
 	            error: function(xhr, status, error) {
 	                // 처리 실패 시 예외 처리
@@ -365,6 +369,7 @@
 			var boardReplyId = $(this).closest('.reply_item').find('#replyId').val();
 			console.log("답글버튼클릭 boardReplyId = " + boardReplyId);
 			getAllComments(boardReplyId, this);
+			
 	    }) // end btnComment.click()     
 	     
 		// 게시판 답글 전체 가져오기
@@ -395,8 +400,8 @@
 							var updateBtn = "";
 							var deleteBtn = "";
 							if(memberId == this.memberId) {
-								updateBtn= '<button id="btn_update" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;">수정</button>';
-								deleteBtn= '<button id="btn_delete" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;">삭제</button>';
+								updateBtn= '<button id="btn_comment_update" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;">수정</button>';
+								deleteBtn= '<button id="btn_comment_delete" class="btn btn-outline-secondary btn-sm" style="margin-right: 3px;">삭제</button>';
 							}						
 	
 			                // 포맷팅된 날짜 문자열 생성
@@ -443,11 +448,17 @@
 	   		var replyItem = $(this).closest('.reply_item');   		
 	   		var memberId = $('#memberId').val(); 
 			var boardReplyId = $(this).closest('.reply_item').find('#replyId').val();
+			var authorReplyId = $(this).closest('.reply_item').find('#memberId').val();
 		    var boardCommentContent = $(this).parent().prevAll('#boardCommentContent').val();
 			var authorId = $("#authorId").val();
 			
 			console.log(boardReplyId);
 			console.log(boardCommentContent);
+			if(authorReplyId == "999999"){
+				alert("삭제된 댓글에는 답글을 달 수 없습니다.");
+				return;
+			}
+			
 			if(authorId == "999999"){
 				alert("삭제된 게시글에는 답글을 달 수 없습니다.");
 				return;
@@ -478,7 +489,7 @@
 	    }) // end document()
 	    
 		// 대댓글 수정버튼 클릭 시 모달창
-	    $(document).on('click', '#btnUpdateComment', function(){   	 
+	    $(document).on('click', '#btn_comment_update', function(){   	 
 	   		var replyItem = $(this).closest('.reply_item');
 	   		var boardReplyId = $(this).closest('.reply_item').find('#replyId').val();
 			var boardCommentId = $(this).parent().prevAll('#commentId').val();
@@ -510,7 +521,7 @@
 		   		success : function(result){
 		   			console.log(result);
 		   			if(result == 1){
-		   				$('#replyModal').modal('hide');
+		   				$('#commentModal').modal('hide');
 		   				alert('답글 수정 성공!');
 		   				getAllComments(boardReplyId, replyItem);
 		   			}
@@ -519,7 +530,7 @@
 		});
 
 	    
-	    $(document).on('click', '#btnDeleteComment', function(){
+	    $(document).on('click', '#btn_comment_delete', function(){
 	   	 console.log(this);
 			var replyItem = $(this).closest('.reply_item');
 	   		var boardReplyId = $(this).closest('.reply_item').find('#replyId').val();

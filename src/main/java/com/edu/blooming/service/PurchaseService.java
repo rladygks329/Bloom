@@ -8,7 +8,7 @@ import com.edu.blooming.payment.PaymentMethod;
 
 public interface PurchaseService {
 
-  Map<String, Object> readyForPurchase(PaymentMethod method, int memberId);
+  Map<String, Object> readyForPurchase(PaymentMethod method, String baseURL, int memberId);
 
   Map<String, Object> approvePurchase(PaymentMethod method, int memberId, String token);
 

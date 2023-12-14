@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.edu.blooming.payment.KakaoPayment;
 import com.edu.blooming.payment.PaymentMethod;
 import com.edu.blooming.service.PurchaseService;
+import com.edu.blooming.util.Utils;
 
 @RequestMapping("/purchase")
 @Controller
@@ -41,8 +42,9 @@ public class PurchaseController {
     int memberId = (int) request.getAttribute("memberId");
     logger.info("purchaseReady 호출 : memberId : " + memberId + " type : " + type);
     PaymentMethod payment = paymentMap.get(type);
-
-    Map<String, Object> result = purchaseService.readyForPurchase(payment, memberId);
+    String baseURL = Utils.getBaseUrl(request);
+    logger.info("baseURL: " + baseURL);
+    Map<String, Object> result = purchaseService.readyForPurchase(payment, baseURL, memberId);
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
