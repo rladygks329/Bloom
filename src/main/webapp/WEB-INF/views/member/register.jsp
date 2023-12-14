@@ -261,12 +261,13 @@
 					url : '/blooming/member/sendemail',
 					data : data,
 					success: function(data) {
-						alert('인증번호가 발송되었습니다. 확인해 주세요');
+						
 					},
 					error: function(error) {
 						console.error('이메일 전송 실패', error);
 					}
 				});
+				alert('인증번호가 발송되었습니다. 확인해 주세요');
 			}); 			
 			
 			// 이메일 인증번호 확인

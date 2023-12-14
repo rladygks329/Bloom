@@ -48,9 +48,9 @@ public class RegisterController {
     int result = memberService.register(vo);
     logger.info(vo.getMemberEmail());
     model.addAttribute("result", result);
-    model.addAttribute("list_hot_like", lectureService.readHotLikeLectures(1, 5));
-    model.addAttribute("list_hot_sale", lectureService.readHotSaleLectures(1, 5));
     if (result == 1) {
+      model.addAttribute("list_hot_like", lectureService.readHotLikeLectures(1, 5));
+      model.addAttribute("list_hot_sale", lectureService.readHotSaleLectures(1, 5));
       return "/main";
     }
     return "/register";

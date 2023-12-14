@@ -126,6 +126,8 @@ public class BoardController {
     if (!isViewed) {
       // 쿠키가 없는 경우: 조회수 증가 및 쿠키 설정
       boardService.updateViewCount(boardId);
+      vo.setBoardViewCount(vo.getBoardViewCount() + 1);
+      model.addAttribute("vo", vo);
       Cookie viewedCookie = new Cookie(cookieName, "1");
       viewedCookie.setMaxAge(3600);
       viewedCookie.setPath("/"); // 모든 경로에서 쿠키 사용

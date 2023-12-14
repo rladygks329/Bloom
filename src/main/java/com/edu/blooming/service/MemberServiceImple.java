@@ -129,7 +129,7 @@ public class MemberServiceImple implements MemberService {
     try {
       // 회원가입 완료하면 인증을 위한 이메일 발송
       MailHandler sendMail = new MailHandler(mailSender);
-      sendMail.setSubject("[RunninGo 이메일 인증메일 입니다.]"); // 메일제목
+      sendMail.setSubject("[Blooming 이메일 인증메일 입니다.]"); // 메일제목
       sendMail.setText("<h1>Blooming 메일인증</h1>" + "<br>Blooming에 오신것을 환영합니다!"
           + "<br>아래 인증 번호를 입력해주세요." + "<br>인증번호 : " + emailKey);
       sendMail.setFrom(sendEmailAddress, "Blooming");
