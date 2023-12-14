@@ -32,7 +32,7 @@ public class KakaoPayment implements PaymentMethod {
    * 결제 준비
    */
   @Override
-  public Map<String, Object> readyForPay(int memberId, String name, int price) {
+  public Map<String, Object> readyForPay(String baseURL, int memberId, String name, int price) {
     MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 
     String orderNum = "aaaaaaaa";
@@ -46,9 +46,9 @@ public class KakaoPayment implements PaymentMethod {
     parameters.add("total_amount", Integer.toString(price));
     parameters.add("vat_amount", "0"); // 부가세
     parameters.add("tax_free_amount", "0"); // 상품 비과세 금액
-    parameters.add("approval_url", "http://localhost:8080/blooming/purchase/kakao/success");
-    parameters.add("cancel_url", "http://localhost:8080/blooming/purchase/cancel");
-    parameters.add("fail_url", "http://localhost:8080/blooming/purchase/fail");
+    parameters.add("approval_url", baseURL + "/blooming/purchase/kakao/success");
+    parameters.add("cancel_url", baseURL + "/blooming/purchase/cancel");
+    parameters.add("fail_url", baseURL + "/blooming/purchase/fail");
 
     // 파라미터, 헤더
     HttpEntity<MultiValueMap<String, String>> requestEntity =

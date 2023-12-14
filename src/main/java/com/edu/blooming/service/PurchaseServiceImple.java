@@ -29,7 +29,7 @@ public class PurchaseServiceImple implements PurchaseService {
   private CartDAO cartDAO;
 
   @Override
-  public Map<String, Object> readyForPurchase(PaymentMethod method, int memberId) {
+  public Map<String, Object> readyForPurchase(PaymentMethod method, String baseURL, int memberId) {
     List<LectureVO> list = cartDAO.select(memberId);
     if (list.isEmpty()) {
       throw new IllegalStateException("장바구니가 비어 있습니다.");
@@ -45,7 +45,7 @@ public class PurchaseServiceImple implements PurchaseService {
       name += " 그 외 " + (list.size() - 1) + "개의 강의";
     }
 
-    return method.readyForPay(memberId, name, total_price);
+    return method.readyForPay(baseURL, memberId, name, total_price);
   }
 
   @Override
